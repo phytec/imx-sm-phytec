@@ -75,15 +75,11 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr)
 {
     int32_t status = SM_ERR_SUCCESS;
+    static uint32_t s_deviceId = 0U;
+    static uint32_t s_siRev = 0U;
+    static uint32_t s_partNum = 0U;
     static char s_siName[16];
     static bool s_updated = false;
-
-    /* Return initial data */
-    *deviceId = OSC24M->DIGPROG_DEVICE_ID;
-    *siRev = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_SI_REV_MASK)
-        >> FSB_FUSE_HW_CFG0_SI_REV_SHIFT;
-    *partNum = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
-        >> FSB_FUSE_HW_CFG0_PART_NUM_SHIFT;
 
     if (!s_updated)
     {
@@ -91,15 +87,22 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         uint32_t fuseMinor;
         uint32_t newVal;
 
+        /* Get data */
+        s_deviceId = OSC24M->DIGPROG_DEVICE_ID;
+        s_siRev = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_SI_REV_MASK)
+            >> FSB_FUSE_HW_CFG0_SI_REV_SHIFT;
+        s_partNum = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
+            >> FSB_FUSE_HW_CFG0_PART_NUM_SHIFT;
+
         /* Copy name */
         DEV_SM_StrCpy(s_siName, "i.MX95 A0", 15U);
 
         /* Update minor version */
-        tmpMinor = (*deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
+        tmpMinor = (s_deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
             >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
         tmpMinor -= MINOR_BASE(1U);
-        fuseMinor = MINOR_BASE(REV_BASE(*siRev))
-            | MINOR_METAL(REV_METAL(*siRev));
+        fuseMinor = MINOR_BASE(REV_BASE(s_siRev))
+            | MINOR_METAL(REV_METAL(s_siRev));
         tmpMinor = MAX(tmpMinor, fuseMinor);
 
         /* Update name */
@@ -112,11 +115,58 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         s_updated = true;
     }
 
+    /* Return device ID */
+    if (deviceId != NULL)
+    {
+        *deviceId = s_deviceId;
+    }
+
+    /* Return silicon rev */
+    if (siRev != NULL)
+    {
+        *siRev = s_siRev;
+    }
+
+    /* Return part number */
+    if (partNum != NULL)
+    {
+        *partNum = s_partNum;
+    }
+
     /* Return name */
-    *siNameAddr = s_siName;
+    if (siNameAddr != NULL)
+    {
+        *siNameAddr = s_siName;
+    }
 
     /* Return result */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get silicon version                                                      */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_SiVerGet(void)
+{
+    uint32_t deviceId = 0U;
+    uint32_t siRev = 0U;
+    uint32_t tmpMinor = 0U;
+
+    if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL) == SM_ERR_SUCCESS)
+    {
+        uint32_t fuseMinor;
+
+        /* Update minor version */
+        tmpMinor = (deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
+            >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
+        tmpMinor -= MINOR_BASE(1U);
+        fuseMinor = MINOR_BASE(REV_BASE(siRev))
+            | MINOR_METAL(REV_METAL(siRev));
+        tmpMinor = MAX(tmpMinor, fuseMinor);
+    }
+
+    /* Return version */
+    return (TMP_BASE(tmpMinor) << 16U) | TMP_METAL(tmpMinor);
 }
 
 /*--------------------------------------------------------------------------*/

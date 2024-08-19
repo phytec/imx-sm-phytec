@@ -102,10 +102,14 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SensorInit(void)
 {
-    int32_t status;
+    int32_t status = SM_ERR_SUCCESS;
 
-    /* Power on ANA sensor */
-    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
+    /* Check silicon version */
+    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+    {
+        /* Power on ANA sensor */
+        status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
+    }
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);

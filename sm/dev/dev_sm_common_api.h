@@ -71,6 +71,13 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr);
 
 /*!
+ * Get silicon version.
+ *
+ * @return Returns the silicon version.
+ */
+uint32_t DEV_SM_SiVerGet(void);
+
+/*!
  * Get the syslog.
  *
  * @param[in]     flags    Syslog flags

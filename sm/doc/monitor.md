@@ -42,6 +42,9 @@ Info Commands
 |-----------------------------|--------------------------------------------------------------|
 | info                        | display SM/SoC info like unique ID, etc.                     |
 | ele info                    | display ELE info like FW version, lifecycle, etc.            |
+| ele dump                    | dump ELE debug data                                          |
+| v2x info                    | display V2X info like FW load status                         |
+| v2x ping                    | ask ELE to ping V2X                                          |
 | err                         | display logged errors (API or RDC captured), clears log      |
 | btime                       | display boot time info                                       |
 | trdc.raw *rdc* [*did*]      | raw dump of TRDC *rdc*, limit to *did* if specified          |

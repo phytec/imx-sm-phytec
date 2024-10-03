@@ -81,6 +81,11 @@ static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
 #endif
+#ifdef DEVICE_HAS_V2X
+static int32_t MONITOR_CmdV2x(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdV2xInfo(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdV2xPing(int32_t argc, const char * const argv[]);
+#endif
 static int32_t MONITOR_CmdErr(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdBtime(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdReason(int32_t argc, const char * const argv[]);
@@ -163,6 +168,7 @@ int32_t MONITOR_Dispatch(char *line)
         "quit",
         "info",
         "ele",
+        "v2x",
         "err",
         "btime",
         "trdc.raw",
@@ -246,164 +252,169 @@ int32_t MONITOR_Dispatch(char *line)
                 status = MONITOR_CmdEle(argc - 1, &argv[1]);
                 break;
 #endif
-            case 6:  /* err */
+#ifdef DEVICE_HAS_V2X
+            case 6: /* v2x */
+                status = MONITOR_CmdV2x(argc - 1, &argv[1]);
+                break;
+#endif
+            case 7:  /* err */
                 status = MONITOR_CmdErr(argc - 1, &argv[1]);
                 break;
-            case 7:  /* btime */
+            case 8:  /* btime */
                 status = MONITOR_CmdBtime(argc - 1, &argv[1]);
                 break;
 #ifdef DEVICE_HAS_TRDC
-            case 8:  /* trdc.raw */
+            case 9:  /* trdc.raw */
                 status = MONITOR_CmdTrdcRaw(argc - 1, &argv[1]);
                 break;
-            case 9:  /* trdc */
+            case 10:  /* trdc */
                 status = MONITOR_CmdTrdc(argc - 1, &argv[1]);
                 break;
 #endif
-            case 10:  /* reset reason */
+            case 11:  /* reset reason */
                 status = MONITOR_CmdReason(argc - 1, &argv[1]);
                 break;
-            case 11:  /* shutdown */
+            case 12:  /* shutdown */
                 status = MONITOR_CmdShutdown(argc - 1, &argv[1]);
                 break;
-            case 12:  /* reset */
+            case 13:  /* reset */
                 status = MONITOR_CmdReset(argc - 1, &argv[1]);
                 break;
-            case 13:  /* stage */
+            case 14:  /* stage */
                 status = MONITOR_CmdStage(argc - 1, &argv[1]);
                 break;
-            case 14:  /* suspend */
+            case 15:  /* suspend */
                 status = MONITOR_CmdSuspend(argc - 1, &argv[1]);
                 break;
-            case 15:  /* wake */
+            case 16:  /* wake */
                 status = MONITOR_CmdWake(argc - 1, &argv[1]);
                 break;
 #ifdef BOARD_HAS_WDOG
-            case 16:  /* wdog */
+            case 17:  /* wdog */
                 status = MONITOR_CmdWdog(argc - 1, &argv[1]);
                 break;
 #endif
-            case 17:  /* fault */
+            case 18:  /* fault */
                 status = MONITOR_CmdFault(argc - 1, &argv[1]);
                 break;
-            case 18:  /* lm */
+            case 19:  /* lm */
                 status = MONITOR_CmdLm(argc - 1, &argv[1]);
                 break;
-            case 19:  /* power.r */
+            case 20:  /* power.r */
                 status = MONITOR_CmdPower(argc - 1, &argv[1], READ);
                 break;
-            case 20:  /* power.w */
+            case 21:  /* power.w */
                 status = MONITOR_CmdPower(argc - 1, &argv[1], WRITE);
                 break;
-            case 21:  /* perf.r */
+            case 22:  /* perf.r */
                 status = MONITOR_CmdPerf(argc - 1, &argv[1], READ);
                 break;
-            case 22:  /* perf.w */
+            case 23:  /* perf.w */
                 status = MONITOR_CmdPerf(argc - 1, &argv[1], WRITE);
                 break;
-            case 23:  /* clock.reset */
+            case 24:  /* clock.reset */
                 status = MONITOR_CmdClock(argc - 1, &argv[1], RESET);
                 break;
-            case 24:  /* clock.r */
+            case 25:  /* clock.r */
                 status = MONITOR_CmdClock(argc - 1, &argv[1], READ);
                 break;
-            case 25:  /* clock.w */
+            case 26:  /* clock.w */
                 status = MONITOR_CmdClock(argc - 1, &argv[1], WRITE);
                 break;
-            case 26:  /* sensor.r */
+            case 27:  /* sensor.r */
                 status = MONITOR_CmdSensor(argc - 1, &argv[1], READ);
                 break;
-            case 27:  /* sensor.w */
+            case 28:  /* sensor.w */
                 status = MONITOR_CmdSensor(argc - 1, &argv[1], WRITE);
                 break;
-            case 28:  /* volt.r */
+            case 29:  /* volt.r */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], READ);
                 break;
-            case 29:  /* volt.w */
+            case 30:  /* volt.w */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], WRITE);
                 break;
-            case 30:  /* bb.r */
+            case 31:  /* bb.r */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], READ);
                 break;
-            case 31:  /* bb.w */
+            case 32:  /* bb.w */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], WRITE);
                 break;
-            case 32:  /* cpu.r */
+            case 33:  /* cpu.r */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], READ);
                 break;
-            case 33:  /* cpu.w */
+            case 34:  /* cpu.w */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], WRITE);
                 break;
-            case 34:  /* ctrl.r */
+            case 35:  /* ctrl.r */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 35:  /* ctrl.w */
+            case 36:  /* ctrl.w */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 36:  /* ctrl.notify */
+            case 37:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 37:  /* extctrl.r */
+            case 38:  /* extctrl.r */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 38:  /* extctrl.w */
+            case 39:  /* extctrl.w */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 39:  /* md.b */
+            case 40:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 40:  /* md.w */
+            case 41:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 41:  /* md.l */
+            case 42:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 42:  /* mm.b */
+            case 43:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 43:  /* mm.w */
+            case 44:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 44:  /* mm.l */
+            case 45:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 45:  /* fuse.r */
+            case 46:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 46:  /* fuse.w */
+            case 47:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 47:  /* pmic.r */
+            case 48:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 48:  /* pmic.w */
+            case 49:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 49:  /* idle */
+            case 50:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 50:  /* assert */
+            case 51:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 51:  /* syslog */
+            case 52:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 52:  /* group */
+            case 53:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 53:  /* ssm */
+            case 54:  /* ssm */
                 status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
-            case 54:  /* custom */
+            case 55:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
-            case 55:  /* test */
+            case 56:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
 #if defined(GCOV) && !defined(SIMU)
-            case 56:  /* gcov */
+            case 57:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -730,6 +741,169 @@ static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[])
     }
 
     return SM_ERR_SUCCESS;
+}
+#endif
+
+#ifdef DEVICE_HAS_V2X
+/*--------------------------------------------------------------------------*/
+/* V2X commands (accessed through ELE)                                      */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdV2x(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    static string cmds[] =
+    {
+        "info",
+        "ping",
+    };
+
+    /* Parse argument */
+    if (argc != 0)
+    {
+        int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+            argv[0]);
+
+        switch (sub)
+        {
+            case 0:  /* info */
+                status = MONITOR_CmdV2xInfo(argc - 1, &argv[1]);
+                break;
+            case 1:  /* ping */
+                status = MONITOR_CmdV2xPing(argc - 1, &argv[1]);
+                break;
+            default:
+                status = SM_ERR_INVALID_PARAMETERS;
+                break;
+        }
+
+        if ((sub < (int32_t) ARRAY_SIZE(cmds))
+            && (status != SM_ERR_SUCCESS))
+        {
+            printf("ELE err: 0x%X\n", ELE_ErrNumber());
+        }
+    }
+    else
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump V2X info                                                            */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdV2xInfo(int32_t argc, const char * const argv[])
+{
+    uint32_t status = SM_ERR_SUCCESS;
+    uint32_t info = 0U, v2x_error = 0U;
+
+    ELE_V2xInfoGet(&info, &v2x_error);
+    if (g_eleStatus == SM_ERR_SUCCESS)
+    {
+        printf("V2X state:\n");
+        if (info & 0x01U)
+        {
+            printf("  Auth request received\n");
+        }       
+        if (info & 0x02U)
+        {
+            printf("  V2X provisioned successfully in normal mode\n");
+        }
+        if (info & 0x04U)
+        {
+            printf("  V2X provisioned successfully in debug mode\n");
+        }
+        if (info & 0x08U)
+        {
+            printf("  V2X auth ongoing\n");
+        }
+        if (info & 0x10U)
+        {
+            printf("  V2X auth successful\n");
+        }
+        if (info & 0x20U)
+        {
+            printf("  V2X auth failed\n");
+        }
+        if (info & 0x40U)
+        {
+            printf("  V2X crypto disabled\n");
+        }
+        if (info & 0x80U)
+        {
+            printf("  V2X double auth hash received\n");
+        }
+        if ((info & 0xFFU) == 0U)
+        {
+            printf(" Unknown\n");
+        }
+
+        printf("V2X error code: 0x%X\n", v2x_error);
+
+        printf("V2X power state: ");
+        switch ((info >> 8U) & 0xFFU)
+        {
+            case 1U:
+                printf("on\n");
+                break;
+            case 2U:
+                printf("low power\n");
+                break;
+            case 3U:
+                printf("standby\n");
+                break;
+            case 4U:
+                printf("off\n");
+                break;
+            default:
+                printf("unknown (%d)\n", (info >> 8U) & 0xFFU);
+                break;
+        }
+    }
+    else
+    {
+        status = g_eleStatus;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Ping V2X via ELE                                                         */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdV2xPing(int32_t argc, const char * const argv[])
+{
+    uint32_t status = SM_ERR_SUCCESS;
+    uint32_t info = 0U, v2x_error = 0U;
+
+    ELE_V2xInfoGet(&info, &v2x_error);
+    if ( (g_eleStatus == SM_ERR_SUCCESS) &&
+         ((info & 0x6U) != 0U)  && /* V2X is provisioned */
+         (((info >> 8U) & 0xFFU) == 1U) ) /* V2X is on */
+    {
+        ELE_V2xPing();
+        if (g_eleStatus == SM_ERR_SUCCESS)
+        {
+            printf("V2X answered\n");
+        }
+        else
+        {
+            printf("No answer from V2X\n");
+            status = g_eleStatus;
+        }
+    }
+    else
+    {
+        printf("V2X is not provisioned / on\n");
+        status = g_eleStatus;
+    }
+
+    /* Return status */
+    return status;
 }
 #endif
 

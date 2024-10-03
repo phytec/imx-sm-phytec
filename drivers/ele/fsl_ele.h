@@ -262,6 +262,25 @@ uint32_t ELE_EventGet(uint8_t idx);
 void ELE_InfoGet(ele_info_t *info);
 
 /*!
+ * Get V2X info.
+ *
+ * @param[out]    info Pointer to return info
+ * @param[out]    v2x_error Pointer to return v2x error code
+ *
+ * This function is used to return V2X state.
+ * See the ELE API Reference Guide for more info.
+ */
+void ELE_V2xInfoGet(uint32_t *state, uint32_t *v2x_error);
+
+/*!
+ * Ping V2X
+ *
+ * This function is used to ping the V2X
+ * See the ELE API Reference Guide for more info.
+ */
+void ELE_V2xPing(void);
+
+/*!
  * Dump ELE debug info.
  *
  * This function dumps low-level ELE debug info to the SCU debug

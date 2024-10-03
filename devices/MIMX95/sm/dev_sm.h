@@ -76,7 +76,8 @@
  */
 /** @{ */
 #define DEVICE_HAS_ELE   /*!< Has ELE */
-#define DEVICE_HAS_FCCU  /*!< Has ELE */
+#define DEVICE_HAS_V2X   /*!< Has V2X */
+#define DEVICE_HAS_FCCU  /*!< Has FCCU */
 #define DEVICE_HAS_TRDC  /*!< Has TRDC */
 /** @} */
 

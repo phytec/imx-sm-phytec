@@ -89,10 +89,8 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 
         /* Get data */
         s_deviceId = OSC24M->DIGPROG_DEVICE_ID;
-        s_siRev = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_SI_REV_MASK)
-            >> FSB_FUSE_HW_CFG0_SI_REV_SHIFT;
-        s_partNum = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
-            >> FSB_FUSE_HW_CFG0_PART_NUM_SHIFT;
+        s_siRev = DEV_SM_FuseGet(DEV_SM_FUSE_SI_REV);
+        s_partNum = DEV_SM_FuseGet(DEV_SM_FUSE_PART_NUM);
 
         /* Copy name */
         DEV_SM_StrCpy(s_siName, "i.MX95 A0", 15U);

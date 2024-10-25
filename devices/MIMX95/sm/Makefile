@@ -134,7 +134,8 @@ SM_OBJS = \
 	$(OUT)/dev_sm_control.o  \
 	$(OUT)/dev_sm_rom.o  \
 	$(OUT)/dev_sm_rdc.o  \
-	$(OUT)/dev_sm_fault.o
+	$(OUT)/dev_sm_fault.o \
+	$(OUT)/dev_sm_fuse.o
 
 ROM_OBJS = \
 	$(OUT)/rom_$(SOC)_c$(cpu).o

@@ -82,7 +82,7 @@ void DEV_SM_RomInit(void)
     if ((OSC24M->DIGPROG_DEVICE_ID & 0xF0U) == 0x10U)
     {
         /* No ROM patch? */
-        if (FSB->FUSE[FSB_FUSE_M33_ROM_PATCH_VER] == 0x0U)
+        if (DEV_SM_FuseGet(DEV_SM_FUSE_M33_ROM_PATCH_VER) == 0x0U)
         {
             /* Is M7 powered? */
             if (SRC_MixIsPwrSwitchOn(DEV_SM_PD_M7))

@@ -66,6 +66,7 @@
 #include "dev_sm_common.h"
 #include "dev_sm_rom.h"
 #include "dev_sm_fault.h"
+#include "dev_sm_fuse.h"
 #include "dev_sm_handlers.h"
 
 /* Defines */

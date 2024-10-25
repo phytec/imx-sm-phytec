@@ -1388,17 +1388,13 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
     /* Number of perf levels for A55 depends on speed grade fuses */
-    uint32_t fuseHwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
-    uint32_t speedGrade = (fuseHwCfg0 & FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK)
-        >> FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT;
-    switch (speedGrade)
+    switch (DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING))
     {
         case 0x1:   /* 2.2 GHz */
         case 0x2:   /* 2.1 GHz */
         case 0x3:   /* 2.0 GHz */
             s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
             break;
-
         default:
             s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
             break;

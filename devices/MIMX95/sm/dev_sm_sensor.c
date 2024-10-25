@@ -56,8 +56,8 @@ typedef struct
     uint8_t numThresholds;   /* Number of thresholds */
     uint8_t firstThreshold;  /* First threshold */
     uint8_t panicThreshold;  /* Panic threshold */
-    uint16_t fuseTrim1;      /* Fuse word for trim 1 */
-    uint16_t fuseTrim2;      /* Fuse word for trim 1 */
+    uint32_t fuseTrim1;      /* Fuse index for trim 1 */
+    uint32_t fuseTrim2;      /* Fuse index for trim 2 */
 } dev_sm_sensor_t;
 
 /* Local variables */
@@ -72,8 +72,8 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
         .numThresholds = 2U,
         .firstThreshold = 1U,
         .panicThreshold = 0U,
-        .fuseTrim1 = FSB_FUSE_ANA_CFG0,
-        .fuseTrim2 = FSB_FUSE_ANA_CFG1
+        .fuseTrim1 = DEV_SM_FUSE_TSENSOR0_TRIM1,
+        .fuseTrim2 = DEV_SM_FUSE_TSENSOR0_TRIM2
     },
     [DEV_SM_SENSOR_TEMP_A55] =
     {
@@ -82,8 +82,8 @@ static const dev_sm_sensor_t s_tmpsns[DEV_SM_NUM_SENSOR] =
         .numThresholds = 2U,
         .firstThreshold = 1U,
         .panicThreshold = 0U,
-        .fuseTrim1 = FSB_FUSE_ANA_CFG2,
-        .fuseTrim2 = FSB_FUSE_ANA_CFG3
+        .fuseTrim1 = DEV_SM_FUSE_TSENSOR1_TRIM1,
+        .fuseTrim2 = DEV_SM_FUSE_TSENSOR1_TRIM2
     }
 };
 
@@ -137,8 +137,6 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
     {
         TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
         tmpsns_config_t config;
-        uint32_t hwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
-        uint32_t mktSeg;
 
         /* Panic temps */
         const int64_t panicTemp[4] =
@@ -158,10 +156,11 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         config.pud = 236U;
 
         /* Apply trim */
-        if (FSB->FUSE[s_tmpsns[sensorId].fuseTrim1] != 0U)
+        uint32_t trim1 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim1);
+        if (trim1 != 0U)
         {
-            config.trim1 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim1];
-            config.trim2 = FSB->FUSE[s_tmpsns[sensorId].fuseTrim2];
+            config.trim1 = trim1;
+            config.trim2 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim2);
         }
         /* Check if ELE enabled */
         if (!TMPSNS_Enabled(base))
@@ -177,8 +176,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         TMPSNS_InitNs(base, &config);
 
         /* Configure panic */
-        mktSeg = (hwCfg0 & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
-            >> FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT;
+        uint32_t mktSeg = DEV_SM_FuseGet(DEV_SM_FUSE_MARKET_SEGMENT);
         status = TMPSNS_ThresholdSet(sensorId,
             s_tmpsns[sensorId].panicThreshold, panicTemp[mktSeg],
             DEV_SM_SENSOR_TP_HIGH);

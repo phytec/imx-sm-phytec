@@ -48,56 +48,6 @@ typedef struct {
   __IO uint32_t FUSE[8192];                     /**< Fuse Value Registers, offset: 0x8000 */
 } FSB_Type;
 
-/* ----------------------------------------------------------------------------
-   -- FSB Register Masks
-   ---------------------------------------------------------------------------- */
-
-/*!
- * @addtogroup FSB_Register_Masks FSB Register Masks
- * @{
- */
-
-#define FSB_FUSE_HW_CFG0_SI_REV_MASK            (0xFU)
-#define FSB_FUSE_HW_CFG0_SI_REV_SHIFT           (0U)
-#define FSB_FUSE_HW_CFG0_SI_REV(x)              (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_SI_REV_SHIFT)) & FSB_FUSE_HW_CFG0_SI_REV_MASK)
-
-#define FSB_FUSE_HW_CFG0_PART_NUM_MASK          (0xFF0U)
-#define FSB_FUSE_HW_CFG0_PART_NUM_SHIFT         (4U)
-#define FSB_FUSE_HW_CFG0_PART_NUM(x)            (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_PART_NUM_SHIFT)) & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
-
-#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK    (0x3000U)
-#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT   (12U)
-#define FSB_FUSE_HW_CFG0_MARKET_SEGMENT(x)      (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_MARKET_SEGMENT_SHIFT)) & FSB_FUSE_HW_CFG0_MARKET_SEGMENT_MASK)
-
-#define FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK      (0x3C000U)
-#define FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT     (14U)
-#define FSB_FUSE_HW_CFG0_SPEEDGRADING(x)        (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT)) & FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK)
-
-#define FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK     (0x40U)
-#define FSB_FUSE_HW_CFG2_PCIE1_DISABLE_SHIFT    (6U)
-#define FSB_FUSE_HW_CFG2_PCIE1_DISABLE(x)       (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG2_PCIE1_DISABLE_SHIFT)) & FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK)
-
-#define FSB_FUSE_HW_CFG2_PCIE2_DISABLE_MASK     (0x80U)
-#define FSB_FUSE_HW_CFG2_PCIE2_DISABLE_SHIFT    (7U)
-#define FSB_FUSE_HW_CFG2_PCIE2_DISABLE(x)       (((uint32_t)(((uint32_t)(x)) << FSB_FUSE_HW_CFG2_PCIE2_DISABLE_SHIFT)) & FSB_FUSE_HW_CFG2_PCIE2_DISABLE_MASK)
-
-#define FSB_FUSE_ANA_CFG4_FRO_TRIM_MASK         (0xFFFU)
-#define FSB_FUSE_ANA_CFG4_FRO_TRIM_SHIFT        (0U)
-
-/*!
- * @}
- */ /* end of group FSB_Register_Masks */
-
-#define FSB_FUSE_HW_CFG0            17U
-#define FSB_FUSE_HW_CFG1            18U
-#define FSB_FUSE_HW_CFG2            19U
-#define FSB_FUSE_ANA_CFG0           38U
-#define FSB_FUSE_ANA_CFG1           39U
-#define FSB_FUSE_ANA_CFG2           40U
-#define FSB_FUSE_ANA_CFG3           41U
-#define FSB_FUSE_ANA_CFG4           42U
-#define FSB_FUSE_M33_ROM_PATCH_VER  328U
-
 /* FSB - Peripheral instance base addresses */
 /** Peripheral FSB base address */
 #define FSB_BASE                                (0x47510000u)

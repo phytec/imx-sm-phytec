@@ -74,6 +74,12 @@ Lots of detail here.
 */
 
 /*!
+@defgroup DEV_SM_MX95_FUSE DEVICE_MX95_FUSE: SM i.MX95 Device (FUSE)
+
+@brief Module for the i.MX95 device fuse functions.
+*/
+
+/*!
 @defgroup DEV_SM_MX95_RDC DEVICE_MX95_RDC: SM i.MX95 Device (RDC)
 
 @brief Module for the i.MX95 device RDC functions.

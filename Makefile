@@ -117,6 +117,8 @@ ifeq ($(USES_FUSA),1)
 	FLAGS += -DUSES_FUSA
 endif
 
+FLAGS += -DGEN_CONFIG_VER=$(GEN_CONFIG_VER)
+
 INCLUDE += -I$(ROOT_DIR)/configs/$(CONFIG)
 
 # Include boot

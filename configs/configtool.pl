@@ -44,6 +44,7 @@ use List::Util qw(first);
 sub load_config_files;
 sub load_file;
 sub do_substitutions;
+sub sanity_check;
 sub generate_dox;
 sub generate_mb;
 sub generate_xport;
@@ -72,6 +73,9 @@ sub copyright;
 sub startstop;
 sub error_line;
 sub get_define;
+
+# Config version
+my $configVer = 1;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
     'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
@@ -140,6 +144,9 @@ if (! -e $outDir)
 
 # Load config files
 my @cfg = &load_config_files($inputFile); 
+
+# Generate DOX file
+&sanity_check(\@cfg);
 
 # Generate DOX file
 &generate_dox($outDir, \@cfg);
@@ -478,6 +485,111 @@ sub do_substitutions
     }
 
     return $sub;
+}
+
+###############################################################################
+
+sub sanity_check
+{
+    my ($cfgRef) = @_;
+
+	# Get list of LM and agents
+    my @list = grep(/^LM\d*\b/ || /^SCMI_AGENT\d*\b/, @$cfgRef);
+
+    # Loop over the list
+    my $lmCnt = -1;
+    my $agentCnt = -1;
+    foreach my $l (@list)
+    {
+		# Handle LM
+		if ($l =~ /^LM(\d*)\b/)
+		{
+            my $lmIdx = $1;
+            my $lmHandle = 'LM' . $lmIdx;
+
+            # Check LM order
+            $lmCnt++;
+            if ($lmIdx != $lmCnt)
+            {
+			    print STDERR 'error: invalid LM numerical order' . "\n";
+			    exit;
+            }
+
+	        if ((my $parm = &param($l, 'name')) ne '!')
+	        {
+	            $parm =~ s/\"//g;
+
+				# Check SM LM
+				if ($lmHandle eq 'LM0')
+				{
+					if ($parm ne 'SM')
+					{
+					    print STDERR 'error: invalid LM0 name (must be SM)'
+					        . "\n";
+					    exit;
+					}
+				}
+				if ($parm eq 'SM')
+				{
+					if ($lmHandle ne 'LM0')
+					{
+					    print STDERR 'error: invalid SM LM (must be LM0)'
+					        . "\n";
+					    exit;
+					}
+				}
+	        }
+	        if ((my $parm = &param($l, 'did')) ne '!')
+	        {
+				# Check SM DID
+				if ($lmHandle eq 'LM0')
+				{
+					if ($parm ne '2')
+					{
+					    print STDERR 'error: invalid SM/LM0 DID (must be 2)'
+					        . "\n";
+					    exit;
+					}
+				}
+	        }
+	        if ((my $parm = &param($l, 'rpc')) ne '!')
+	        {
+	            my $rpcType = $parm;
+
+				# Check SM info
+				if ($lmHandle eq 'LM0')
+				{
+					if ($parm ne 'none')
+					{
+					    print STDERR 'error: invalid SM/LM0 RPC type (must be none)'
+					        . "\n";
+					    exit;
+					}
+				}
+            }
+	    }
+
+        # Handle agent
+        if ($l =~ /^SCMI_AGENT(\d*)\b/)
+        {
+            my $agentIdx = $1;
+
+            # Check agent order
+            $agentCnt++;
+            if ($agentIdx != $agentCnt)
+            {
+			    print STDERR 'error: invalid agent numerical order' . "\n";
+			    exit;
+            }
+
+            # Check LM defined before agent
+            if ($lmCnt == -1)
+            {
+			    print STDERR 'error: agent before lm' . "\n";
+			    exit;
+            }
+        }
+    }
 }
 
 ###############################################################################
@@ -923,7 +1035,6 @@ sub generate_scmi
 
     print $out '/* Includes */' . "\n\n";
     print $out '#include "config_user.h"' . "\n\n";
-
     print $out '/* Defines */' . "\n\n";
 
     # Loop over the list
@@ -1229,7 +1340,6 @@ sub generate_lmm
 
     print $out '/* Includes */' . "\n\n";
     print $out '#include "config_user.h"' . "\n\n";
-
     print $out '/* Defines */' . "\n\n";
 
 	# Get list of start/stop */
@@ -1402,36 +1512,6 @@ sub generate_lmm
 	        {
 	            $parm =~ s/\"//g;
 	            print $out '        .name = "' . $parm . '", \\' . "\n";
-
-				# Check SM info
-				if ($lm_handle eq 'LM0')
-				{
-					if ($parm ne 'SM')
-					{
-					    print STDERR 'error: invalid LM0 name (must be SM)' . "\n";
-					    exit;
-					}
-				}
-				if ($parm eq 'SM')
-				{
-					if ($lm_handle ne 'LM0')
-					{
-					    print STDERR 'error: invalid SM LM (must be LM0)' . "\n";
-					    exit;
-					}
-				}
-	        }
-	        if ((my $parm = &param($lm, 'did')) ne '!')
-	        {
-				# Check SM info
-				if ($lm_handle eq 'LM0')
-				{
-					if ($parm ne '2')
-					{
-					    print STDERR 'error: invalid SM/LM0 DID (must be 2)' . "\n";
-					    exit;
-					}
-				}
 	        }
 	        if ((my $parm = &param($lm, 'rpc')) ne '!')
 	        {
@@ -1439,16 +1519,6 @@ sub generate_lmm
 	            print $out '        .rpcType = SM_RPC_'
 	                . uc $parm . ', \\' . "\n";
 	            $rpcInst{$parm}++;
-
-				# Check SM info
-				if ($lm_handle eq 'LM0')
-				{
-					if ($parm ne 'none')
-					{
-					    print STDERR 'error: invalid SM/LM0 RPC type (must be none)' . "\n";
-					    exit;
-					}
-				}
 	        }
 			if ($rpcType ne 'none')
 			{
@@ -2018,7 +2088,6 @@ sub generate_test
 
     print $out '/* Includes */' . "\n\n";
     print $out '#include "config_user.h"' . "\n\n";
-
     print $out '/* Defines */' . "\n\n";
 
     # Loop over the LM+MB list
@@ -2212,6 +2281,9 @@ sub generate_make
 
     # Output copyright
     print $out $cr;
+
+	# Output config version
+    print $out 'GEN_CONFIG_VER ?= ' . $configVer . "U\n\n";
 
 	# Output board define
     if ((my $parm = &param($make[0], 'board')) ne '!')

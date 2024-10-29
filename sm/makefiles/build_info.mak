@@ -55,6 +55,8 @@ $(OUT)/build_info.h :
 	$(AT)/bin/echo '' >> $@
 	$(AT)/bin/echo '#define SM_DEVICES "$(SM_DEVICES)"' >> $@
 	$(AT)/bin/echo '#define SM_ELE_VER "$(SM_ELE_VER)"' >> $@
+	$(AT)/bin/echo -n '#define ' >> $@
+	$(AT)-grep -o "configVer = [0-9]*" ./configs/configtool.pl >> $@
 	$(AT)/bin/echo '' >> $@
 ifeq (0,$(GIT_EXISTS))
 	$(AT)/bin/echo '#define SM_BRANCH Unknown' >> $@
@@ -86,6 +88,7 @@ endif
 	$(AT)/bin/echo '#define SM_MKIMAGE_N "$(MKIMAGE_N)"' >> $@
 	$(AT)/bin/echo '' >> $@
 	$(AT)/bin/echo '#endif' >> $@
+	$(AT)-sed -i 's/configVer = \([0-9]*\)/SM_CONFIG_VER \1U/g' $@ 
 
 rn_info.sed :
 	$(AT)/bin/echo '' > $@
@@ -93,6 +96,7 @@ rn_info.sed :
 	$(AT)/bin/echo "sed -i 's/\#SM_PREV_VER/$(SM_PREV_VER)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#SM_DEVICES/$(SM_DEVICES)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#SM_ELE_VER/$(SM_ELE_VER)/g' rn.md" >> $@
+	$(AT)/bin/echo "sed -i 's/\#SM_CONFIG_VER/$(SM_CONFIG_VER)/g' rn.md" >> $@
 	$(AT)/bin/echo -n "sed -i 's/\#SM_BRANCH/" >> $@
 ifeq ($(origin BRANCH),undefined)
 	$(AT)-git rev-parse --abbrev-ref HEAD >> $@

@@ -166,8 +166,17 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    static uint32_t const s_fuseId[DEV_SM_NUM_POWER] =
+    {
+        [DEV_SM_PD_GPU] =     DEV_SM_FUSE_GPU3D_DISABLE,
+        [DEV_SM_PD_VPU] =     DEV_SM_FUSE_VPU_DISABLE,
+        [DEV_SM_PD_DISPLAY] = DEV_SM_FUSE_DCSS_DISABLE
+    };
+
+    /* Check domain and fuse disable */
+    if ((domainId >= DEV_SM_NUM_POWER)
+        || ((s_fuseId[domainId] > 0U)
+        && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U)))
     {
         status = SM_ERR_NOT_FOUND;
     }

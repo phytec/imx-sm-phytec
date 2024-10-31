@@ -241,6 +241,9 @@ int32_t DEV_SM_GpuConfigLoad(void)
     }
 #endif
 
+    /* Deassert GPU reset */
+    BLK_CTRL_GPUMIX->GPURESET = BLK_CTRL_GPUMIX_GPURESET_GPURR(1U);
+
     /* Return status */
     return status;
 }

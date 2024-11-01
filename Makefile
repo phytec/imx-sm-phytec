@@ -117,7 +117,9 @@ ifeq ($(USES_FUSA),1)
 	FLAGS += -DUSES_FUSA
 endif
 
+ifdef GEN_CONFIG_VER
 FLAGS += -DGEN_CONFIG_VER=$(GEN_CONFIG_VER)
+endif
 
 INCLUDE += -I$(ROOT_DIR)/configs/$(CONFIG)
 

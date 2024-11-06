@@ -43,6 +43,8 @@
 
 /* Local defines */
 
+#define NUM_FUSES  610U
+
 /* Local types */
 
 /* Fuse map */
@@ -72,6 +74,7 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_A55_CORE5_DISABLE]  = {582U,   1U},
     [DEV_SM_FUSE_DCSS_DISABLE]       = {598U,   1U},
     [DEV_SM_FUSE_ISP_DISABLE]        = {605U,   1U},
+    [DEV_SM_FUSE_NETC_DISABLE]       = {612U,   1U},
     [DEV_SM_FUSE_PCIE1_DISABLE]      = {614U,   1U},
     [DEV_SM_FUSE_PCIE2_DISABLE]      = {615U,   1U},
     [DEV_SM_FUSE_GPU3D_DISABLE]      = {625U,   1U},
@@ -81,10 +84,30 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_TSENSOR1_TRIM1]     = {1280U,  32U},
     [DEV_SM_FUSE_TSENSOR1_TRIM2]     = {1312U,  32U},
     [DEV_SM_FUSE_FRO_TRIM]           = {1344U,  18U},
-    [DEV_SM_FUSE_M33_ROM_PATCH_VER]  = {10496U, 32U},
+    [DEV_SM_FUSE_M33_ROM_PATCH_VER]  = {10496U, 32U}
 };
 
 /* Local functions */
+
+/*--------------------------------------------------------------------------*/
+/* Get address of a fuse word                                               */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (fuseWord < NUM_FUSES)
+    {
+        *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return result */
+    return status;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Read a fuse field                                                        */
@@ -125,5 +148,65 @@ uint32_t DEV_SM_FuseSpeedGet(void)
 
     /* Return frequency */
     return freq;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the fuse state of a power domain                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_FusePdDisabled(uint32_t domainId)
+{
+    bool pdDisabled = false;
+
+    static uint32_t const s_fuseId[DEV_SM_NUM_POWER] =
+    {
+        [DEV_SM_PD_A55C0] =   DEV_SM_FUSE_A55_CORE0_DISABLE,
+        [DEV_SM_PD_A55C1] =   DEV_SM_FUSE_A55_CORE1_DISABLE,
+        [DEV_SM_PD_A55C2] =   DEV_SM_FUSE_A55_CORE2_DISABLE,
+        [DEV_SM_PD_A55C3] =   DEV_SM_FUSE_A55_CORE3_DISABLE,
+        [DEV_SM_PD_A55C4] =   DEV_SM_FUSE_A55_CORE4_DISABLE,
+        [DEV_SM_PD_A55C5] =   DEV_SM_FUSE_A55_CORE5_DISABLE,
+        [DEV_SM_PD_GPU] =     DEV_SM_FUSE_GPU3D_DISABLE,
+        [DEV_SM_PD_VPU] =     DEV_SM_FUSE_VPU_DISABLE,
+        [DEV_SM_PD_DISPLAY] = DEV_SM_FUSE_DCSS_DISABLE,
+        [DEV_SM_PD_NETC] =    DEV_SM_FUSE_NETC_DISABLE
+    };
+
+    /* Check fuse state */
+    if ((s_fuseId[domainId] > 0U)
+        && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+    {
+        pdDisabled = true;
+    }
+
+    /* Return state */
+    return pdDisabled;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the fuse state of a CPU ID                                           */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
+{
+    bool cpuDisabled = false;
+
+    static uint32_t const s_fuseId[DEV_SM_NUM_CPU] =
+    {
+        [DEV_SM_CPU_A55C0] = DEV_SM_FUSE_A55_CORE0_DISABLE,
+        [DEV_SM_CPU_A55C1] = DEV_SM_FUSE_A55_CORE1_DISABLE,
+        [DEV_SM_CPU_A55C2] = DEV_SM_FUSE_A55_CORE2_DISABLE,
+        [DEV_SM_CPU_A55C3] = DEV_SM_FUSE_A55_CORE3_DISABLE,
+        [DEV_SM_CPU_A55C4] = DEV_SM_FUSE_A55_CORE4_DISABLE,
+        [DEV_SM_CPU_A55C5] = DEV_SM_FUSE_A55_CORE5_DISABLE
+    };
+
+    /* Check fuse state */
+    if ((s_fuseId[cpuId] > 0U)
+        && (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U))
+    {
+        cpuDisabled = true;
+    }
+
+    /* Return state */
+    return cpuDisabled;
 }
 

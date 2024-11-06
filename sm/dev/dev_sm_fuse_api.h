@@ -58,6 +58,19 @@
 /* Functions */
 
 /*!
+ * Get fuse info.
+ *
+ * @param[in]     fuseWord  Index of word
+ * @param[out]    addr      Pointer to return address of fuse word
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if fuseWord is not valid.
+ */
+int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr);
+
+/*!
  * Get fuse state.
  *
  * @param[in]     fuseId      Id of fuse to read
@@ -65,6 +78,24 @@
  * @return Returns the fuse value.
  */
 uint32_t DEV_SM_FuseGet(uint32_t fuseId);
+
+/*!
+ * Get fuse state of a power domain.
+ *
+ *@param[in]  domainId    Id of the power domain
+ *
+ * @return    Returns true if the power domain is disabled, else false.
+ */
+bool DEV_SM_FusePdDisabled(uint32_t domainId);
+
+/*!
+ * Get fuse state of a CPU ID.
+ *
+ *@param[in]  cpuId    Id of the CPU
+ *
+ * @return    Returns true if the CPU is disabled, else false.
+ */
+bool DEV_SM_FuseCpuDisabled(uint32_t cpuId);
 
 #endif /* DEV_SM_FUSE_API_H */
 

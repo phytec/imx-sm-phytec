@@ -75,7 +75,15 @@ void TEST_LmmPower(void)
 
         printf("LMM_PowerStateSet(%u, %u, %u)\n", lmId, domainId,
             powerState);
-        CHECK(LMM_PowerStateSet(lmId, domainId, powerState));
+        if (!DEV_SM_FusePdDisabled(domainId))
+        {
+            CHECK(LMM_PowerStateSet(lmId, domainId, powerState));
+            LMM_PowerStateReset(lmId, domainId);
+        }
+        else
+        {
+            printf(".. Domain %s fused off \n", name);
+        }
     }
 
     /* Test API correct calls per power state */

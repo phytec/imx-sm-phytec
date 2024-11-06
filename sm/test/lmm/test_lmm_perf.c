@@ -74,7 +74,7 @@ void TEST_LmmPerf(void)
 
         /* Set the Level */
         printf("LMM_PerfLevelSet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_PerfLevelSet(lmId, domainId, perfLevel));
+        CHECK(LMM_PerfLevelSet(lmId, domainId, perfLevel, false));
     }
 
     /* Test API bounds */
@@ -82,12 +82,12 @@ void TEST_LmmPerf(void)
 
     /* INVALID PARAMS -- lmId */
     printf("LMM_PerfLevelSet(%u, %u)\n", SM_NUM_LM, 0U);
-    NECHECK(LMM_PerfLevelSet(SM_NUM_LM, 0U, perfLevel),
+    NECHECK(LMM_PerfLevelSet(SM_NUM_LM, 0U, perfLevel, false),
         SM_ERR_INVALID_PARAMETERS);
 
     /* NOT FOUND -- domainId */
     printf("LMM_PerfLevelSet(%u, %u)\n", lmId, SM_NUM_PERF);
-    NECHECK(LMM_PerfLevelSet(lmId, SM_NUM_PERF, perfLevel),
+    NECHECK(LMM_PerfLevelSet(lmId, SM_NUM_PERF, perfLevel, false),
         SM_ERR_NOT_FOUND);
 
     /* INVALID PARAMS -- numLevels */
@@ -96,7 +96,7 @@ void TEST_LmmPerf(void)
     CHECK(DEV_SM_PerfNumLevelsGet(0U, &numLevels));
 
     printf("LMM_PerfLevelSet(%u, %u)\n", lmId, 0U);
-    NECHECK(LMM_PerfLevelSet(lmId, 0U, numLevels),
+    NECHECK(LMM_PerfLevelSet(lmId, 0U, numLevels, false),
         SM_ERR_INVALID_PARAMETERS);
 
     printf("\n");

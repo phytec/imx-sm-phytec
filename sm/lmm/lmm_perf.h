@@ -144,6 +144,7 @@ int32_t LMM_PerfDescribe(uint32_t lmId, uint32_t domainId,
  * @param[in]  lmId              LM call is for
  * @param[in]  domainId          Identifier for the domain
  * @param[in]  performanceLevel  Performance level to set
+ * @param[in]  roundDown         True to <= level
  *
  * This function allows the caller to set the level of a performance
  * domain synchronously. The level is recorded per LM and aggregated.
@@ -158,7 +159,7 @@ int32_t LMM_PerfDescribe(uint32_t lmId, uint32_t domainId,
  * - others returned by ::SM_PERFLEVELSET
  */
 int32_t LMM_PerfLevelSet(uint32_t lmId, uint32_t domainId,
-    uint32_t performanceLevel);
+    uint32_t performanceLevel, bool roundDown);
 
 /*!
  * Get an LM performance level.

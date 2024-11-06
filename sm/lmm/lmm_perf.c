@@ -93,9 +93,10 @@ int32_t LMM_PerfDescribe(uint32_t lmId, uint32_t domainId,
 /* Set performance domain level                                             */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_PerfLevelSet(uint32_t lmId, uint32_t domainId,
-    uint32_t performanceLevel)
+    uint32_t performanceLevel, bool roundDown)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t newLevel = performanceLevel;
 
     /* Check LM ID */
     if (lmId >= SM_NUM_LM)
@@ -117,9 +118,15 @@ int32_t LMM_PerfLevelSet(uint32_t lmId, uint32_t domainId,
         /* Get number of levels */
         status = DEV_SM_PerfNumLevelsGet(domainId, &numLevels);
 
+        /* Round down */
+        if (roundDown && (newLevel >= numLevels))
+        {
+            newLevel = numLevels - 1U;
+        }
+
         /* Check number */
         if ((status == SM_ERR_SUCCESS)
-            && (performanceLevel >= numLevels))
+            && (newLevel >= numLevels))
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }
@@ -131,7 +138,7 @@ int32_t LMM_PerfLevelSet(uint32_t lmId, uint32_t domainId,
         uint8_t newPerfLevel = 0U;
 
         /* Record new level */
-        s_perfLevel[domainId][lmId] = performanceLevel;
+        s_perfLevel[domainId][lmId] = newLevel;
 
         /* Aggregate perf level */
         for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)

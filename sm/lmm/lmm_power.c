@@ -49,6 +49,8 @@
 
 /* Local variables */
 
+static uint8_t s_powerState[SM_NUM_POWER][SM_NUM_LM];
+
 /*--------------------------------------------------------------------------*/
 /* Return power domain name                                                 */
 /*--------------------------------------------------------------------------*/
@@ -91,7 +93,6 @@ int32_t LMM_PowerStateSet(uint32_t lmId, uint32_t domainId,
 
     if (status == SM_ERR_SUCCESS)
     {
-        static uint8_t s_powerState[SM_NUM_POWER][SM_NUM_LM];
         uint8_t newPowerState = 0U;
 
         /* Record new state */
@@ -111,6 +112,15 @@ int32_t LMM_PowerStateSet(uint32_t lmId, uint32_t domainId,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Reset power domain state                                                 */
+/*--------------------------------------------------------------------------*/
+void LMM_PowerStateReset(uint32_t lmId, uint32_t domainId)
+{
+    /* Record state as off */
+    s_powerState[domainId][lmId] = DEV_SM_POWER_STATE_OFF;
 }
 
 /*--------------------------------------------------------------------------*/

@@ -239,26 +239,6 @@ uint64_t DEV_SM_Usec64Get(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Get address of a fuse word                                               */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    if (fuseWord < 610U)
-    {
-        *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return result */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Dump device errors                                                       */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_ErrorDump(void)

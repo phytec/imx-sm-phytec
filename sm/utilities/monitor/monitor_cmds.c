@@ -1587,7 +1587,8 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
                     uint32_t perfLevel = strtoul(argv[1], NULL, 0);
                     if (errno == 0)
                     {
-                        status = LMM_PerfLevelSet(s_lm, domain, perfLevel);
+                        status = LMM_PerfLevelSet(s_lm, domain, perfLevel,
+                            false);
                     }
                     else
                     {

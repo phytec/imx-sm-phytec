@@ -78,8 +78,10 @@ void TEST_DevSmPower(void)
         CHECK(DEV_SM_PowerStateGet(domainId, &powerState));
         printf("  powerState=%u\n", powerState);
 
-        CHECK(DEV_SM_PowerStateSet(domainId, powerState));
-
+        if (!DEV_SM_FusePdDisabled(domainId))
+        {
+            CHECK(DEV_SM_PowerStateSet(domainId, powerState));
+        }
 #ifdef SIMU
         CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
 #endif

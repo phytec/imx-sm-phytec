@@ -1070,7 +1070,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 
 /* Setpoint PLL configuration for A55 */
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
+static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -1163,7 +1163,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint descriptions for A55 */
-static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
+static dev_sm_perf_desc_t s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
@@ -1397,17 +1397,41 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
-    /* Number of perf levels for A55 depends on speed grade fuses */
-    switch (DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING))
+    /* Query A55 speed grade from fuses */
+    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
+
+    if (speedGrade >= 2000000000U)
     {
-        case 0x1:   /* 2.2 GHz */
-        case 0x2:   /* 2.1 GHz */
-        case 0x3:   /* 2.0 GHz */
-            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
-            break;
-        default:
-            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
-            break;
+        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
+    }
+    else if (speedGrade == 1000000000U)
+    {
+        /* 1GHz devices support PRK, LOW, NOM setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
+
+        /* 1GHz devices require updated PERF table entries for NOM setpoint */
+        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
+
+        /*
+         * PLL_VCO = 24MHz * 150 = 3600MHz
+         */
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
+
+        /*
+         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
+         */
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+    }
+    else
+    {
+        /* All other devices support PRK, LOW, NOM, ODV setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
     }
 
     if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
@@ -2373,7 +2397,7 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (perfLevel >= DEV_SM_NUM_PERF_LVL_ARM)
+    if (perfLevel >= s_perfNumLevels[PS_VDD_ARM])
     {
         status = SM_ERR_OUT_OF_RANGE;
     }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2024 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -33,81 +33,67 @@
 */
 
 /*==========================================================================*/
-/*!
- * @addtogroup DEV_SM_SIMU
- *
- * @{
- * @file
- * @brief
- *
- * Header file containing the SM API for the device.
- */
+/* File containing the implementation of the fuse access functions.         */
 /*==========================================================================*/
-
-#ifndef DEV_SM_H
-#define DEV_SM_H
 
 /* Includes */
 
 #include "sm.h"
-#include "dev_sm_config.h"
-#include "dev_sm_power.h"
-#include "dev_sm_system.h"
-#include "dev_sm_perf.h"
-#include "dev_sm_clock.h"
-#include "dev_sm_sensor.h"
-#include "dev_sm_reset.h"
-#include "dev_sm_voltage.h"
-#include "dev_sm_bbm.h"
-#include "dev_sm_cpu.h"
-#include "dev_sm_pin.h"
-#include "dev_sm_control.h"
-#include "dev_sm_rdc.h"
-#include "dev_sm_common.h"
-#include "dev_sm_rom.h"
-#include "dev_sm_fault.h"
-#include "dev_sm_fuse.h"
+#include "dev_sm.h"
 
-/* Defines */
+/* Local defines */
 
-/* Types */
+/* Local types */
 
-/* Functions */
+/* Local variables */
 
-/*!
- * Initialize the device.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_Init(void);
+/* Local functions */
 
-/*!
- * Return lists of resources used by the SM.
- *
- * @param[in]  numClock    Number of clocks
- * @param[in]  clockList   Return pointer to array of clocks
- */
-void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
+/*--------------------------------------------------------------------------*/
+/* Get address of a fuse word                                               */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
+{
+    int32_t status = SM_ERR_SUCCESS;
 
-/*!
- * Configure power domain hardware after power up.
- *
- * @param[in]  domainId    power domain powered up
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerUpPost(uint32_t domainId);
+    if (fuseWord != 50U)
+    {
+        uint32_t val = 0x80008000U + (fuseWord * 4U);
+        *addr = val;
+    }
+    else
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
 
-/*!
- * Configure power domain hardware before power down.
- *
- * @param[in]  domainId    power domain to be powered down
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerDownPre(uint32_t domainId);
+    /* Return result */
+    return status;
+}
 
-#endif /* DEV_SM_H */
+/*--------------------------------------------------------------------------*/
+/* Read a fuse field                                                        */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_FuseGet(uint32_t fuseId)
+{
+    /* Return result */
+    return 0U;
+}
 
-/** @} */
+/*--------------------------------------------------------------------------*/
+/* Get the fuse state of a power domain                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_FusePdDisabled(uint32_t domainId)
+{
+    /* Return state */
+    return false;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the fuse state of a CPU ID                                           */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
+{
+    /* Return state */
+    return false;
+}
 

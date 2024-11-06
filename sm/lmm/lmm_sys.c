@@ -1029,7 +1029,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_PERF:
                     status = LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0]);
+                        (uint32_t) ptr->arg[0], true);
                     break;
                 case LMM_SS_CLK:
                     status = LM_ClockStart(ptr->lmId, ptr->rsrc,
@@ -1122,7 +1122,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_PERF:
                     (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0]);
+                        (uint32_t) ptr->arg[0], true);
                     break;
                 case LMM_SS_CLK:
                     (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);

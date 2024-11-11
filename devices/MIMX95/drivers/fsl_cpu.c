@@ -74,8 +74,6 @@ static bool CPU_VirtLpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx,
 /* Local Variables */
 
 static GPC_CPU_CTRL_Type *const s_gpcCpuCtrlPtrs[] = GPC_CPU_CTRL_BASE_PTRS;
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
-static GICR_Type *const s_gicrPtrs[] = GICR_BASE_PTRS;
 
 static uint32_t s_cpuDdrMixDependMask;
 static uint32_t s_cpuNocMixDependMask;
@@ -839,7 +837,8 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
                     uint32_t gicdIdxLast = CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                     for (uint32_t gicdIdx = 0U; gicdIdx <= gicdIdxLast; gicdIdx++)
                     {
-                        GICR_Type *GICR = s_gicrPtrs[gicdIdx];
+                        GICR_Type *const gicrPtrs[] = GICR_BASE_PTRS;
+                        GICR_Type *GICR = gicrPtrs[gicdIdx];
 
                         /* Set ProcessorSleep to quiesce GIC redistributor instance */
                         GICR->GICR_WAKER |= GICR_WAKER_PROCESSORSLEEP_MASK;

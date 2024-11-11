@@ -807,7 +807,7 @@ static int32_t MONITOR_CmdV2xInfo(int32_t argc, const char * const argv[])
         if (info & 0x01U)
         {
             printf("  Auth request received\n");
-        }       
+        }
         if (info & 0x02U)
         {
             printf("  V2X provisioned successfully in normal mode\n");

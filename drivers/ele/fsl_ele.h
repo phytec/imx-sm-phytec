@@ -270,7 +270,7 @@ void ELE_InfoGet(ele_info_t *info);
  * This function is used to return V2X state.
  * See the ELE API Reference Guide for more info.
  */
-void ELE_V2xInfoGet(uint32_t *state, uint32_t *v2x_error);
+void ELE_V2xInfoGet(uint32_t *info, uint32_t *v2x_error);
 
 /*!
  * Ping V2X

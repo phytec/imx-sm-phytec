@@ -882,8 +882,8 @@ static int32_t MONITOR_CmdV2xPing(int32_t argc, const char * const argv[])
 
     ELE_V2xInfoGet(&info, &v2x_error);
     if ( (g_eleStatus == SM_ERR_SUCCESS) &&
-         ((info & 0x6U) != 0U)  && /* V2X is provisioned */
-         (((info >> 8U) & 0xFFU) == 1U) ) /* V2X is on */
+        ((info & 0x6U) != 0U)  && /* V2X is provisioned */
+        (((info >> 8U) & 0xFFU) == 1U) ) /* V2X is on */
     {
         ELE_V2xPing();
         if (g_eleStatus == SM_ERR_SUCCESS)

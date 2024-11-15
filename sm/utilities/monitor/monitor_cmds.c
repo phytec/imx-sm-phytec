@@ -841,7 +841,7 @@ static int32_t MONITOR_CmdV2xInfo(int32_t argc, const char * const argv[])
             printf(" Unknown\n");
         }
 
-        printf("V2X error code: 0x%X\n", v2x_error);
+        printf("V2X err code: 0x%X\n", v2x_error);
 
         printf("V2X power state: ");
         switch ((info >> 8U) & 0xFFU)

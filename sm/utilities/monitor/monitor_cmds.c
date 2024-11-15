@@ -881,9 +881,10 @@ static int32_t MONITOR_CmdV2xPing(int32_t argc, const char * const argv[])
     uint32_t info = 0U, v2x_error = 0U;
 
     ELE_V2xInfoGet(&info, &v2x_error);
-    if ( (g_eleStatus == SM_ERR_SUCCESS) &&
-        ((info & 0x6U) != 0U)  && /* V2X is provisioned */
-        (((info >> 8U) & 0xFFU) == 1U) ) /* V2X is on */
+    if ((g_eleStatus == SM_ERR_SUCCESS)
+        && ((info & 0x6U) != 0U) /* V2X is provisioned */
+        && (((info >> 8U) & 0xFFU) == 1U) /* V2X is on */
+        && ((info & 0x10U) != 0U)) /* Auth successful */
     {
         ELE_V2xPing();
         if (g_eleStatus == SM_ERR_SUCCESS)
@@ -898,7 +899,7 @@ static int32_t MONITOR_CmdV2xPing(int32_t argc, const char * const argv[])
     }
     else
     {
-        printf("V2X is not provisioned / on\n");
+        printf("V2X is not provisioned/on/authenticated\n");
         status = g_eleStatus;
     }
 

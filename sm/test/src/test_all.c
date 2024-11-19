@@ -67,9 +67,7 @@ void TEST_All(void)
     TEST_DevSmPower();
     TEST_DevSmClock();
     TEST_DevSmPerf();
-#ifdef SIMU
     TEST_DevSmSensor();
-#endif
     TEST_DevSmReset();
     TEST_DevSmVoltage();
     TEST_DevSmBbm();

@@ -78,7 +78,7 @@ void TEST_DevSmSensor(void)
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
 
-        /*Branch coverage */
+        /* Branch coverage */
         SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
         NECHECK((DEV_SM_SensorNameGet(sensorId, &name, &len)),
             SM_ERR_TEST);
@@ -88,12 +88,13 @@ void TEST_DevSmSensor(void)
         CHECK(DEV_SM_SensorDescribe(sensorId, &sensor));
 
         printf("  sensorType=%u\n", sensor.sensorType);
-        printf("  sensorExponent=%u\n", sensor.sensorExponent);
+        printf("  sensorExponent=%d\n", sensor.sensorExponent);
         printf("  numTripPoints=%u\n", sensor.numTripPoints);
         printf("  timestampSupport=%u\n", sensor.timestampSupport);
-        printf("  timestampExponent=%u\n",
+        printf("  timestampExponent=%d\n",
             sensor.timestampExponent);
 
+#ifdef SIMU
         /* Enable sensor */
         printf("DEV_SM_SensorEnable(%u)\n", sensorId);
         CHECK(DEV_SM_SensorEnable(sensorId, enable, timestampReporting));
@@ -109,7 +110,6 @@ void TEST_DevSmSensor(void)
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
 
-
         printf("DEV_SM_SensorReadingGet(%u)\n", sensorId);
         CHECK(DEV_SM_SensorReadingGet(sensorId, &sensorValue,
             &sensorTimestamp));
@@ -124,6 +124,7 @@ void TEST_DevSmSensor(void)
             &timestampReporting));
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
+#endif
 
         /* Run ReadingGet with sensor disabled to make sure
            it returns error */

@@ -57,6 +57,6 @@ int32_t DEV_SM_RdcAccessSet(uint32_t deviceId, bool allow, uint8_t domId,
         secure);
 
     /* Return status */
-    return SM_ERR_SUCCESS;
+    return SM_ERR_NOT_SUPPORTED;
 }
 

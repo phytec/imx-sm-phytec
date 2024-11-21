@@ -144,8 +144,14 @@ int32_t DEV_SM_SystemReset(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Request warm reset */
-    RST_SystemRequestReset();
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request warm reset */
+        RST_SystemRequestReset();
+    }
 
     /* Return status */
     return status;
@@ -161,11 +167,13 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
     /* Configure stage */
     status = DEV_SM_RomStageSet(stage);
 
-    /* Configure container */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Configure container */
         status = DEV_SM_RomContainerSet(container);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     if (status == SM_ERR_SUCCESS)
     {
@@ -184,8 +192,14 @@ int32_t DEV_SM_SystemShutdown(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Request shutdown */
-    PWR_SystemPowerDown();
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request shutdown */
+        PWR_SystemPowerDown();
+    }
 
     /* Return status */
     return status;
@@ -196,8 +210,16 @@ int32_t DEV_SM_SystemShutdown(void)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 {
-    /* Store shutdown record */
-    BRD_SM_ShutdownRecordSave(shutdownRec);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Store shutdown record */
+        BRD_SM_ShutdownRecordSave(shutdownRec);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -307,18 +329,30 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
-    return SM_SYSTEMRSTCOMP(resetRec);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request shutdown */
+        status = SM_SYSTEMRSTCOMP(resetRec);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
-void DEV_SM_SystemError(int32_t status, uint32_t pc)
+void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
 {
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
-        .errId = (uint32_t) status,
+        .errId = (uint32_t) errStatus,
         .validErr = true,
         .valid = true
     };

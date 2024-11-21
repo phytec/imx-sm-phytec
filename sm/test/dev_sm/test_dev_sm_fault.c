@@ -126,6 +126,17 @@ void TEST_DevSmFault(void)
         NECHECK(DEV_SM_FaultSet(lmId, faultId, 0), SM_ERR_OUT_OF_RANGE);
     }
 
+    /* Get a fault state */
+    {
+        uint32_t faultId = 18U /*DEV_SM_FAULT_WDOG2*/;
+        bool state = false;
+
+        printf("DEV_SM_FaultGet faultId:(%u)\n", faultId);
+        CHECK(DEV_SM_FaultGet(faultId, &state));
+        printf("DEV_SM_FaultGet fault(%u) state: %s\n", 18U /*DEV_SM_FAULT_WDOG2*/,
+            state ? "true" : "false");
+    }
+
     printf("\n");
 }
 

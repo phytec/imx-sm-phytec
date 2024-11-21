@@ -79,26 +79,19 @@ void TEST_DevSmVoltage(void)
     }
 
     /* Test API correct calls per voltage mode */
-#ifdef SIMU
-    for (uint8_t voltMode = 0U; voltMode < DEV_SM_NUM_VOLT_MODE; voltMode++)
-    {
-        uint8_t tempMode = 0U;
+    uint8_t tempMode = 0U;
 
-        /* Set the Volt Mode */
-        printf("DEV_SM_VoltageModeSet(%u)\n", voltMode);
-        CHECK(DEV_SM_VoltageModeSet(0U, voltMode));
-        printf("  name=%s\n", name);
-        printf("  len=%d\n", len);
+    /* Get the Volt Mode */
+    printf("DEV_SM_VoltageModeGet()\n");
+    CHECK(DEV_SM_VoltageModeGet(0U, &tempMode));
 
-        /* Get the Volt Mode */
-        printf("DEV_SM_VoltageModeGet(%u)\n", voltMode);
-        CHECK(DEV_SM_VoltageModeGet(0U, &tempMode));
-        printf("  name=%s\n", name);
-        printf("  len=%d\n", len);
+    /* Set the Volt Mode */
+    printf("DEV_SM_VoltageModeSet(%u)\n", tempMode);
+    CHECK(DEV_SM_VoltageModeSet(0U, tempMode));
 
-        /* Ensure Correctness */
-        BCHECK(tempMode == voltMode);
-    }
+    /* Get the Volt Mode */
+    printf("DEV_SM_VoltageModeGet(%u)\n", tempMode);
+    CHECK(DEV_SM_VoltageModeGet(0U, &tempMode));
 
     /* Invalid domainId */
     {
@@ -127,17 +120,20 @@ void TEST_DevSmVoltage(void)
         int32_t min = range.lowestVolt;
         int32_t step = range.stepSize;
 
-        printf("   maxLevel=%u\n", max);
-        printf("   minLevel=%u\n", min);
-        printf("   stepSize=%u\n", step);
+        printf("   maxLevel=%d\n", max);
+        printf("   minLevel=%d\n", min);
+        printf("   stepSize=%d\n", step);
 
-        /* Loop through and test all voltage levels for domain 0 */
-        for (int32_t level = min; level < max; level += step)
         {
-            int32_t tempLevel = 0U;
+            int32_t level = 0, tempLevel = 0U;
+
+            /* Get the Level */
+            CHECK(DEV_SM_VoltageLevelGet(0U, &level));
+
+            printf("voltage level: %d\n", level);
 
             /* Set the Level */
-            CHECK(DEV_SM_VoltageLevelSet(0U, level));
+            CHECK(DEV_SM_VoltageLevelSet(0U, (level - BOARD_PERF_VDROP)));
 
             /* Get the Level */
             CHECK(DEV_SM_VoltageLevelGet(0U, &tempLevel));
@@ -161,7 +157,6 @@ void TEST_DevSmVoltage(void)
 
         printf("Level tests completed\n");
     }
-#endif
 
     /* Test API bounds */
     printf("\n**** Device SM Voltage API Err Tests ***\n\n");

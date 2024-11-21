@@ -60,10 +60,10 @@
  * @name Device clock domain indexes
  */
 /** @{ */
-#define DEV_SM_CLK_0  0U  /*!< Clock 0 */
-#define DEV_SM_CLK_1  1U  /*!< Clock 1 */
-#define DEV_SM_CLK_2  2U  /*!< Clock 2 */
-#define DEV_SM_CLK_3  3U  /*!< Clock 3 */
+#define DEV_SM_CLK_0            0U  /*!< Clock 0 */
+#define DEV_SM_CLK_1            1U  /*!< Clock 1 */
+#define DEV_SM_CLK_2            2U  /*!< Clock 2 */
+#define DEV_SM_CLK_3            3U  /*!< Clock 3 */
 /** @} */
 
 /*!

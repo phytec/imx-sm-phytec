@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -54,67 +54,15 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test device SM                                                           */
+/* Test device SM fuse                                                      */
 /*--------------------------------------------------------------------------*/
-void TEST_DevSm(void)
+void TEST_DevSmFuse(void)
 {
+    printf("**** Device SM Fuse Tests ***\n\n");
 
-    printf("**** Device SM API Tests ***\n\n");
-
-#ifdef SIMU
-    printf("PowerUpPost(DEV_SM_PD_0)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_0));
-
-    printf("PowerUpPost(DEV_SM_PD_1)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_1));
-
-    printf("PowerUpPost(DEV_SM_PD_2)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_2));
-
-    printf("PowerUpPost(DEV_SM_PD_3)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_3));
-
-    printf("PowerUpPost(DEV_SM_PD_4)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_4));
-
-    printf("PowerUpPost(DEV_SM_PD_5)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_5));
-
-    printf("PowerUpPost(DEV_SM_PD_6)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_6));
-
-#else
-    printf("PowerUpPost(DEV_SM_PD_A55C0)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C0));
-
-    printf("PowerUpPost(DEV_SM_PD_A55C1)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C1));
-
-    printf("PowerUpPost(DEV_SM_PD_A55C2)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C2));
-
-    printf("PowerUpPost(DEV_SM_PD_A55C3)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C3));
-
-    printf("PowerUpPost(DEV_SM_PD_A55C4)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C4));
-
-    printf("PowerUpPost(DEV_SM_PD_A55C5)\n");
-    CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C5));
-
-    printf("DEV_SM_PowerUpAckComplete(DEV_SM_PD_A55P)\n");
-    CHECK(DEV_SM_PowerUpAckComplete(DEV_SM_PD_A55P));
-
-    /* To call the default case */
-    printf("DEV_SM_PowerUpAckComplete(DEV_SM_NUM_POWER)\n");
-    NECHECK(DEV_SM_PowerUpAckComplete(DEV_SM_NUM_POWER), SM_ERR_NOT_FOUND);
+#ifdef HAS_FUSE_GET_SPEED
+    printf("DEV_SM_FuseSpeedGet() freq: %u\n", DEV_SM_FuseSpeedGet());
 #endif
-
-    /* Test API bounds */
-    printf("\n**** Device SM BBM API Err Tests ***\n\n");
-
-    printf("PowerUpPost(DEV_SM_NUM_POWER)\n");
-    NECHECK(DEV_SM_PowerUpPost(DEV_SM_NUM_POWER), SM_ERR_NOT_FOUND);
 
     printf("\n");
 }

@@ -37,7 +37,15 @@
 
 /* Includes */
 
+#include "MIMX95_SRC_GEN.h"
+
 /* Defines */
+
+#define ROM_CONTAINER_1  0x55CCU
+#define ROM_CONTAINER_2  0xAA33U
+#define BOARD_PERF_VDROP  20000U
+
+#define HAS_FUSE_GET_SPEED
 
 /* Local defines */
 

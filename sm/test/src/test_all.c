@@ -78,6 +78,7 @@ void TEST_All(void)
     TEST_DevSmPin();
     TEST_DevSmFault();
     TEST_DevSm();
+    TEST_DevSmFuse();
 
     /* Run board SM tests */
 #ifdef SIMU

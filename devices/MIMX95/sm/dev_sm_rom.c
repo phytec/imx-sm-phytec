@@ -291,6 +291,17 @@ int32_t DEV_SM_RomStageSet(uint32_t stage)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get boot stage                                                           */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomStageGet(void)
+{
+    uint32_t stage = (SRC_GEN->GPR16 & ROM_STAGE_MASK) >> ROM_STAGE_SHIFT;
+
+    /* Return the current stage */
+    return stage;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set boot container                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RomContainerSet(uint32_t container)
@@ -315,3 +326,14 @@ int32_t DEV_SM_RomContainerSet(uint32_t container)
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get boot container                                                       */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomContainerGet(void)
+{
+    /* get the current container value */
+    uint32_t container = SRC_GEN->GPR15;
+
+    /* return the current container value */
+    return container;
+}

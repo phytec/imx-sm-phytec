@@ -206,12 +206,12 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec);
 /*!
  * Report an SM system error.
  *
- * @param[in]     status  Status code
- * @param[in]     pc      PC of caller
+ * @param[in]     errStatus  Status code
+ * @param[in]     pc         PC of caller
  *
  * Error is logged as reset reason and then system reset.
  */
-void DEV_SM_SystemError(int32_t status, uint32_t pc);
+void DEV_SM_SystemError(int32_t errStatus, uint32_t pc);
 
 /*!
  * Transition the system to sleep mode.

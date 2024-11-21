@@ -210,6 +210,71 @@ void TEST_DevSmSystem(void)
     }
 #endif
 
+#ifndef SIMU
+    /* dev_sm stage reset coverage */
+    {
+        uint32_t curr_stage = DEV_SM_RomStageGet();
+        uint32_t current_container = DEV_SM_RomContainerGet();
+
+        printf("current stage: %u current container: %u\n", curr_stage, current_container);
+
+        /* Set the test mode */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+
+        /* container 0 */
+        NECHECK(DEV_SM_SystemStageReset(curr_stage, 0U), SM_ERR_TEST);
+
+        /* container 1 */
+        NECHECK(DEV_SM_SystemStageReset(curr_stage, 1U), SM_ERR_TEST);
+
+        /* container Invalid container */
+        NECHECK(DEV_SM_SystemStageReset(curr_stage, 3U), SM_ERR_TEST);
+
+        /* restore to original*/
+        if (current_container == ROM_CONTAINER_1)
+        {
+            NECHECK(DEV_SM_SystemStageReset(curr_stage, 0U), SM_ERR_TEST);
+        }
+        else if (current_container == ROM_CONTAINER_2)
+        {
+            NECHECK(DEV_SM_SystemStageReset(curr_stage, 1U), SM_ERR_TEST);
+        }
+        else
+        {
+            NECHECK(DEV_SM_SystemStageReset(curr_stage, 0U), SM_ERR_TEST);
+            SRC_GEN->GPR15 = current_container;
+        }
+
+        /* Reset the test mode */
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+
+    }
+
+    {
+        /* Set the test mode */
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+
+        /* System reset coverage */
+        NECHECK(DEV_SM_SystemReset(), SM_ERR_TEST);
+
+        /* DEV_SM_SystemShutdown coverage */
+        NECHECK(DEV_SM_SystemShutdown(), SM_ERR_TEST);
+
+        dev_sm_rst_rec_t shutdownRec = {0};
+        /* DEV_SM_SystemShutdownRecSet coverage */
+        DEV_SM_SystemShutdownRecSet(shutdownRec);
+
+        /* DEV_SM_SystemRstComp coverage */
+        NECHECK(DEV_SM_SystemRstComp(NULL), SM_ERR_TEST);
+
+        /* DEV_SM_SystemError coverage */
+        DEV_SM_SystemError(0U, 0U);
+
+        /* Reset the test mode */
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+#endif
+
     printf("\n");
 }
 

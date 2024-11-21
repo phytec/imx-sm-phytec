@@ -39,6 +39,8 @@
 
 /* Defines */
 
+#define BOARD_PERF_VDROP  0U
+
 /* Local defines */
 
 /* Types */

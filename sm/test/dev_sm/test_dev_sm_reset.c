@@ -70,6 +70,24 @@ void TEST_DevSmReset(void)
     {
         NECHECK(DEV_SM_ResetDomainNameGet(DEV_SM_NUM_RESET, &name, &len),
             SM_ERR_NOT_FOUND);
+
+        /* Reset Domain converage */
+        {
+            /* Toggle flag = true */
+            NECHECK(DEV_SM_ResetDomain(58U /* RST_NUM_LINE */, 0U /*reset state*/,
+                true /* Toggle */, true /* assertNegate */),
+                SM_ERR_NOT_FOUND);
+
+            /* Toggle flag = false, assert Negate = true*/
+            NECHECK(DEV_SM_ResetDomain(58U /* RST_NUM_LINE */, 0U /*reset state*/,
+                false /* Toggle */, true /* assertNegate */),
+                SM_ERR_NOT_FOUND);
+
+            /* Toggle flag = false, assert Negate = false*/
+            NECHECK(DEV_SM_ResetDomain(58U /* RST_NUM_LINE */, 0U /*reset state*/,
+                false /* Toggle */, false /* assertNegate */),
+                SM_ERR_NOT_FOUND);
+        }
     }
 
     printf("\n");

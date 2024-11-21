@@ -307,7 +307,7 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
             }
             else
             {
-                status = SM_ERR_NOT_FOUND;
+                status = SM_ERR_INVALID_PARAMETERS;
             }
             break;
 
@@ -338,7 +338,7 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
             }
             else
             {
-                status = SM_ERR_NOT_FOUND;
+                status = SM_ERR_INVALID_PARAMETERS;
             }
             break;
 

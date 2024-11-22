@@ -72,6 +72,46 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /* Check sensor */
+    if (sensorId >= DEV_SM_NUM_SENSOR)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Power up a sensor                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SensorPowerUp(uint32_t sensorId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check sensor */
+    if (sensorId >= DEV_SM_NUM_SENSOR)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Power down sensor                                                        */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check sensor */
+    if (sensorId >= DEV_SM_NUM_SENSOR)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
     /* Return status */
     return status;
 }

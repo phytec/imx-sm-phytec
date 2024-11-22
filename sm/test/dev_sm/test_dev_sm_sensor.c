@@ -103,6 +103,14 @@ void TEST_DevSmSensor(void)
         printf("DEV_SM_SensorConfigStart(%u)\n", sensorId);
         CHECK(DEV_SM_SensorConfigStart(sensorId));
 
+        /* Sensor power down */
+        printf("DEV_SM_SensorPowerDown(%u)\n", sensorId);
+        CHECK(DEV_SM_SensorPowerDown(sensorId));
+
+        /* Sensor power up */
+        printf("DEV_SM_SensorPowerUp(%u)\n", sensorId);
+        CHECK(DEV_SM_SensorPowerUp(sensorId));
+
         /* Check to see if sensor got enabled */
         printf("DEV_SM_SensorIsEnabled(%u)\n", sensorId);
         CHECK(DEV_SM_SensorIsEnabled(sensorId, &enabled,
@@ -110,6 +118,7 @@ void TEST_DevSmSensor(void)
         printf("  enable=%u\n",  enabled);
         printf("  timestampReporting=%u\n",  timestampReporting);
 
+        /* Sensor reading get */
         printf("DEV_SM_SensorReadingGet(%u)\n", sensorId);
         CHECK(DEV_SM_SensorReadingGet(sensorId, &sensorValue,
             &sensorTimestamp));
@@ -164,13 +173,21 @@ void TEST_DevSmSensor(void)
     NECHECK(DEV_SM_SensorDescribe(DEV_SM_NUM_SENSOR, &sensor),
         SM_ERR_NOT_FOUND);
 
-    printf("DEV_SM_SensorReadingGet(%lu)\n", DEV_SM_NUM_SENSOR);
-    NECHECK(DEV_SM_SensorReadingGet(DEV_SM_NUM_SENSOR, &sensorValue,
-        &sensorTimestamp), SM_ERR_NOT_FOUND);
+    printf("DEV_SM_SensorPowerUp(%lu)\n", DEV_SM_NUM_SENSOR);
+    NECHECK(DEV_SM_SensorPowerUp(DEV_SM_NUM_SENSOR),
+        SM_ERR_NOT_FOUND);
+
+    printf("DEV_SM_SensorConfigStart(%lu)\n", DEV_SM_NUM_SENSOR);
+    NECHECK(DEV_SM_SensorConfigStart(DEV_SM_NUM_SENSOR),
+        SM_ERR_NOT_FOUND);
 
     printf("DEV_SM_SensorEnable(%lu)\n", DEV_SM_NUM_SENSOR);
     NECHECK(DEV_SM_SensorEnable(DEV_SM_NUM_SENSOR, enable,
         timestampReporting), SM_ERR_NOT_FOUND);
+
+    printf("DEV_SM_SensorReadingGet(%lu)\n", DEV_SM_NUM_SENSOR);
+    NECHECK(DEV_SM_SensorReadingGet(DEV_SM_NUM_SENSOR, &sensorValue,
+        &sensorTimestamp), SM_ERR_NOT_FOUND);
 
     printf("DEV_SM_SensorIsEnabled(%lu)\n", DEV_SM_NUM_SENSOR);
     NECHECK(DEV_SM_SensorIsEnabled(DEV_SM_NUM_SENSOR,
@@ -179,6 +196,10 @@ void TEST_DevSmSensor(void)
     printf("DEV_SM_SensorTripPointSet(%lu)\n", DEV_SM_NUM_SENSOR);
     NECHECK(DEV_SM_SensorTripPointSet(DEV_SM_NUM_SENSOR,
         0U, 0, 0U), SM_ERR_NOT_FOUND);
+
+    printf("DEV_SM_SensorPowerDown(%lu)\n", DEV_SM_NUM_SENSOR);
+    NECHECK(DEV_SM_SensorPowerDown(DEV_SM_NUM_SENSOR),
+        SM_ERR_NOT_FOUND);
 
     printf("\n");
 }

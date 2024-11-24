@@ -803,6 +803,14 @@ static void MONITOR_DisplayDErr(char rdcLabel, bool mrc, uint32_t inst,
     {
         printf("sec ");
     }
+    if ((eatr & 0x2U) != 0U)
+    {
+        printf("prv ");
+    }
+    else
+    {
+        printf("usr ");
+    }
     if ((eatr & 0x1U) != 0U)
     {
         if (erw != 0U)

@@ -1005,8 +1005,9 @@ so far, and clear the error log. Only the first error for each agent is logged, 
 of the "err" command output, and how to interpret them:
 
 * API access issues: *SCMI err (chn=0): protocolId=0x81, messageId=0xA, status=-3*
-    - chn=0 identifies the SCMI agent declared in the configuration file. For the `mx95evk.cfg` file,
-      this corresponds to SCMI_AGENT0, that is the only agent in LM1 (M7 Logical Machine).
+    - chn=0 identifies the SMT channel used. Channels numbers are assigned in their declaration order in the
+      configuration file. chn=0 is the first channel declared. In the `mx95evk.cfg` file, this is the A2P
+      channel in the SCMI_AGENT0: the communication channel from M7 to system manager.
     - protocolId, messageId and status identify which SCMI access generated the error. As mentioned above,
       status will always be -3 (ERR_DENIED). The protocol and message IDs are listed in the include files
       in the `components/scmi` directory in the SM source tree.
@@ -1017,4 +1018,4 @@ of the "err" command output, and how to interpret them:
     - The next part describes the access: here a non-secure privileged write to address 0x2002F914.
     - The last part shows the corresponding TRDC registers (sometimes this is decoded incorrectly).
     - The example above will occur when the A55 tries to do a non-secure write to address 0x2002F914.
-    
+

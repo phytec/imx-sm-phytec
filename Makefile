@@ -98,6 +98,11 @@ ifdef config
     CONFIG := $(config)
 endif
 
+# Configure profiling
+ifdef p
+    P := $(p)
+endif
+
 # Default to MX95 EVK
 CONFIG ?= mx95evk
 
@@ -119,6 +124,10 @@ endif
 
 ifdef GEN_CONFIG_VER
 FLAGS += -DGEN_CONFIG_VER=$(GEN_CONFIG_VER)
+endif
+
+ifdef P
+FLAGS += -DDEV_SM_MSG_PROF_CNT=$(P)
 endif
 
 INCLUDE += -I$(ROOT_DIR)/configs/$(CONFIG)

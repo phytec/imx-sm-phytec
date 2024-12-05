@@ -227,6 +227,11 @@ void MB_MU_Handler(uint32_t mu)
     uint32_t flags;
     uint32_t mb;
 
+#ifdef DEV_SM_MSG_PROF_CNT
+    /* Start profile for this message */
+    DEV_SM_SystemMsgProfStart(mu);
+#endif
+
     /* Get interrupt status flags */
     flags = MU_GetStatusFlags(base);
 
@@ -261,5 +266,10 @@ void MB_MU_Handler(uint32_t mu)
             }
         }
     }
+
+#ifdef DEV_SM_MSG_PROF_CNT
+    /* Complete profile for this message */
+    DEV_SM_SystemMsgProfEnd(mu);
+#endif
 }
 

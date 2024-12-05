@@ -95,6 +95,7 @@ There are several options that can be specified on the make command line:
 | M=0                | no debug monitor                           |
 | M=1                | include debug monitor (default)            |
 | M=2                | include debug monitor with optional entry  |
+| P=\<n\>            | Compile with profiling depth of n.         |
 | T=\<test\>         | run tests rather than boot next core       |
 | GCOV=1             | Compile with gcov info. Simulation only.   |
 

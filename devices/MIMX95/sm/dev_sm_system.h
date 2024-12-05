@@ -169,6 +169,29 @@ typedef struct
     uint32_t sysSleepFlags;
 } dev_sm_sys_sleep_rec_t;
 
+#ifdef DEV_SM_MSG_PROF_CNT
+/*!
+ * Message profile log entry
+ */
+typedef struct
+{
+    uint32_t scmiChannel;   /*!< Caller SCMI channel */
+    uint32_t chanType;      /*!< SCMI channel type */
+    uint32_t protocolId;    /*!< SCMI protocol ID */
+    uint32_t msgId;         /*!< SCMI message ID */
+    uint32_t msgLatUsec;    /*!< Message latency */
+} dev_sm_sys_msg_prof_t;
+
+/*!
+ * Message profile record
+ */
+typedef struct
+{
+    /*! MSG profile log */
+    dev_sm_sys_msg_prof_t msgProf[DEV_SM_MSG_PROF_CNT];
+} dev_sm_sys_msg_rec_t;
+#endif
+
 /* Functions */
 
 /* Externs */

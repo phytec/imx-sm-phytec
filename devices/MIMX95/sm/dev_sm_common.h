@@ -90,6 +90,11 @@ typedef struct
 {
     /*! System sleep record */
     dev_sm_sys_sleep_rec_t sysSleepRecord;
+
+#ifdef DEV_SM_MSG_PROF_CNT
+    /*! Message profiling record */
+    dev_sm_sys_msg_rec_t sysMsgRecord;
+#endif
 } dev_sm_syslog_t;
 
 /* Global variables */

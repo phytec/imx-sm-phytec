@@ -208,6 +208,21 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
         printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
         printf("Sleep count = %u\n", sysSleepRecord->sleepCnt);
+
+#ifdef DEV_SM_MSG_PROF_CNT
+        printf("\nMessage profile log:\n");
+        printf("LOG_ID    LATENCY[usec]    CHAN    TYPE    PROTOCOL"
+            "     MSG\n");
+        for (uint32_t idx = 0U; idx < DEV_SM_MSG_PROF_CNT; idx++)
+        {
+            dev_sm_sys_msg_prof_t *pMsgProf
+                = &g_syslog.sysMsgRecord.msgProf[idx];
+
+            printf("%6u    %13u    %4u    %4u        0x%02X    0x%02X\n",
+                idx, pMsgProf->msgLatUsec, pMsgProf->scmiChannel,
+                pMsgProf->chanType, pMsgProf->protocolId, pMsgProf->msgId);
+        }
+#endif
     }
 #endif
 

@@ -251,6 +251,32 @@ int32_t DEV_SM_SystemDramRetentionEnter(void);
  */
 int32_t DEV_SM_SystemDramRetentionExit(void);
 
+/*!
+ * Message profile start notification.
+ *
+ * @param[in]   mu              MU instance for the message
+ */
+void DEV_SM_SystemMsgProfStart(uint32_t mu);
+
+/*!
+ * Message profile describe notification.
+ *
+ * @param[in]   scmiChannel     SCMI channel
+ * @param[in]   chanType        SCMI channel type
+ * @param[in]   protocolId      SCMI protocol ID
+ * @param[in]   messageId       SCMI message ID
+ */
+void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
+    uint32_t protocolId,uint32_t messageId);
+
+/*!
+ * Message profile end notification.
+ *
+ * @param[in]   mu              MU instance for the message
+ *
+ */
+void DEV_SM_SystemMsgProfEnd(uint32_t mu);
+
 #endif /* DEV_SM_SYSTEM_API_H */
 
 /** @} */

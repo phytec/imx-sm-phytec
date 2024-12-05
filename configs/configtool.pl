@@ -2964,7 +2964,7 @@ sub get_trdc
             {
                 my $a = $m;
                 $a =~ s/\bdid=\d+/did=$debugDid/g;
-                $a =~ s/\bperm=\w+/perm=0x6600/g;
+                $a =~ s/\bperm=\w+/perm=0x6666/g;
                 push @debugLines, $a;            
             }
         }
@@ -3192,6 +3192,32 @@ sub get_trdc
         }
 		
 	}
+
+	# Collapse MBC
+	my @nRdc;
+	my %h;
+    foreach my $m (@rdc)
+    {
+        # Handle MBC
+        if ($m =~ /(TRDC[A-Z]+_MBC\d+_DOM\d+_MEM\d+_BLK_CFG_W\d+\[\d+\]) = (\d+)/)
+        {
+			my $elm = $1;
+			my $b = $2;
+			
+			$h{$elm} |= ($b + 0);
+		}
+		else
+		{
+			push @nRdc, $m;
+		}
+	}
+    foreach my $key (keys %h)
+    {
+		my $u = sprintf("%s = %d", $key, $h{$key});
+
+		push @nRdc, $u;
+    }
+	@rdc = sort @nRdc;
 
 	# Determine MBC GLBAC and substitute
 	@rdc = sort @rdc;
@@ -3421,7 +3447,7 @@ sub get_trdc
 
 	# Collapse MBC into registers
 	my @reg;
-	my %h;
+	%h = ();
 	my $w = 0;
     foreach my $m (@rdc)
     {

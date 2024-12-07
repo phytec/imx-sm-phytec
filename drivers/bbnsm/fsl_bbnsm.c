@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 NXP
+ * Copyright 2021, 2025 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -140,18 +140,18 @@ void BBNSM_RTC_GetDefaultConfig(bbnsm_rtc_config_t *config)
 
 uint32_t BBNSM_RTC_GetSeconds(BBNSM_Type *base)
 {
-    uint32_t seconds = 0;
-    uint32_t tmp     = 0;
+    uint32_t ls, ms, ls2;
 
     /* Do consecutive reads until value is correct */
+    ls2 = (base->BBNSM_RTC_LS >> 15U);
     do
     {
-        seconds = tmp;
-        tmp     = (base->BBNSM_RTC_MS << 17U);
-        tmp |= (base->BBNSM_RTC_LS >> 15U);
-    } while (tmp != seconds);
+        ls = ls2;
+        ms = (base->BBNSM_RTC_MS << 17U);
+        ls2 = (base->BBNSM_RTC_LS >> 15U);
+    } while (ls != ls2);
 
-    return seconds;
+    return ms | ls;
 }
 
 /*!
@@ -162,18 +162,25 @@ uint32_t BBNSM_RTC_GetSeconds(BBNSM_Type *base)
  */
 void BBNSM_RTC_SetSeconds(BBNSM_Type *base, uint32_t seconds)
 {
-    uint32_t tmp = base->BBNSM_CTRL;
+    uint32_t origCtrl = base->BBNSM_CTRL;
+    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3); 
 
-    /* disable RTC */
-    BBNSM_RTC_StopTimer(base);
+    /* Disable RTC */
+    base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x1);
+    while ((base->BBNSM_CTRL & (BBNSM_BBNSM_CTRL_RTC_EN(0x1))) == 0U)
+    {
+    }
 
     base->BBNSM_RTC_MS = (uint32_t)(seconds >> 17U);
     base->BBNSM_RTC_LS = (uint32_t)(seconds << 15U);
 
-    /* reenable RTC in case that it was enabled before */
-    if ((tmp & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) != 0U)
+    /* Reenable RTC in case that it was enabled before */
+    if ((origCtrl & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) != 0U)
     {
-        BBNSM_RTC_StartTimer(base);
+        base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x2);
+        while ((base->BBNSM_CTRL & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) == 0U)
+        {
+        }
     }
 }
 
@@ -208,7 +215,7 @@ status_t BBNSM_RTC_SetAlarm(BBNSM_Type *base, uint32_t alarmSeconds)
         return kStatus_Fail;
     }
 
-    /* disable RTC alarm interrupt */
+    /* Disable RTC alarm interrupt */
     tmp = base->BBNSM_INT_EN &
           ~BBNSM_BBNSM_INT_EN_TA_INT_EN(
               0x3); /* Clear TA_INT_EN field to avoid writing an invalid value(0b00/0b11) to the TA_INT_EN field */
@@ -222,9 +229,6 @@ status_t BBNSM_RTC_SetAlarm(BBNSM_Type *base, uint32_t alarmSeconds)
     base->BBNSM_TA = alarmSeconds;
 
     /* Enable RTC alarm interrupt */
-    tmp = base->BBNSM_INT_EN &
-          ~BBNSM_BBNSM_INT_EN_TA_INT_EN(
-              0x3); /* Clear TA_INT_EN field to avoid writing an invalid value(0b11) to the TA_INT_EN field */
     base->BBNSM_INT_EN = tmp | BBNSM_BBNSM_INT_EN_TA_INT_EN(0x2);
 
     /* Time alarm enable */
@@ -245,6 +249,22 @@ uint32_t BBNSM_RTC_GetAlarm(BBNSM_Type *base)
 {
     /* Get alarm in seconds  */
     return base->BBNSM_TA;
+}
+
+/*!
+ * @brief Disable the BBNSM RTC alarm.
+ *
+ * @param base     BBNSM peripheral base address
+ */
+void BBNSM_RTC_DisableAlarm(BBNSM_Type *base)
+{
+    uint32_t tmp;
+
+    /* Time alarm disable */
+    tmp =
+        base->BBNSM_CTRL &
+        ~BBNSM_BBNSM_CTRL_TA_EN(0x3); /* Clear TA_EN field to avoid writing an invalid value(0b11) to the TA_EN field */
+    base->BBNSM_CTRL = tmp | BBNSM_BBNSM_CTRL_TA_EN(0x1);
 }
 
 /*!
@@ -275,15 +295,16 @@ uint32_t BBNSM_GetEnabledInterrupts(BBNSM_Type *base)
 
 uint64_t BBNSM_RTC_GetTicks(BBNSM_Type * base)
 {
-    uint32_t ls, ms, ms2;
+    uint32_t ls, ms, ls2;
 
     /* Do consecutive reads of RTC_MS to guard against RTC_LS ripple */
+    ls2 = base->BBNSM_RTC_LS;
     do
     {
+        ls = ls2;
         ms = base->BBNSM_RTC_MS;
-        ls = base->BBNSM_RTC_LS;
-        ms2 = base->BBNSM_RTC_MS;
-    } while (ms != ms2);
+        ls2 = base->BBNSM_RTC_LS;
+    } while ((ls & 0x80000000U) != (ls2 & 0x80000000U));
 
     uint64_t ticks = ms;
     ticks = (ticks << 32U) | ls;
@@ -293,18 +314,25 @@ uint64_t BBNSM_RTC_GetTicks(BBNSM_Type * base)
 
 void BBNSM_RTC_SetTicks(BBNSM_Type *base, uint64_t ticks)
 {
-    uint32_t tmp = base->BBNSM_CTRL;
+    uint32_t origCtrl = base->BBNSM_CTRL;
+    uint32_t clrCtrl = origCtrl & ~BBNSM_BBNSM_CTRL_RTC_EN(0x3); 
 
-    /* disable RTC */
-    BBNSM_RTC_StopTimer(base);
+    /* Disable RTC */
+    base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x1);
+    while ((base->BBNSM_CTRL & (BBNSM_BBNSM_CTRL_RTC_EN(0x1))) == 0U)
+    {
+    }
 
     base->BBNSM_RTC_MS = (uint32_t)(ticks >> 32U);
     base->BBNSM_RTC_LS = (uint32_t)(ticks & 0xFFFFFFFFU);
 
-    /* reenable RTC in case that it was enabled before */
-    if ((tmp & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) != 0U)
+    /* Reenable RTC in case that it was enabled before */
+    if ((origCtrl & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) != 0U)
     {
-        BBNSM_RTC_StartTimer(base);
+        base->BBNSM_CTRL = clrCtrl | BBNSM_BBNSM_CTRL_RTC_EN(0x2);
+        while ((base->BBNSM_CTRL & BBNSM_BBNSM_CTRL_RTC_EN(0x2)) == 0U)
+        {
+        }
     }
 }
 bool BBNSM_GprGetValue(BBNSM_Type *base, uint8_t gprIdx, uint32_t *gprVal)

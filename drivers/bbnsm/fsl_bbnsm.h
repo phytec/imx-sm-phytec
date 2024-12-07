@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2024 NXP
+ * Copyright 2021, 2024-2025 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -157,6 +157,13 @@ status_t BBNSM_RTC_SetAlarm(BBNSM_Type *base, uint32_t alarmSeconds);
  * @return The alarm time.
  */
 uint32_t BBNSM_RTC_GetAlarm(BBNSM_Type *base);
+
+/*!
+ * @brief Disable the BBNSM RTC alarm.
+ *
+ * @param base     BBNSM peripheral base address
+ */
+void BBNSM_RTC_DisableAlarm(BBNSM_Type *base);
 
 /*! @}*/
 

@@ -52,6 +52,7 @@ typedef struct
     uint64_t alarmTime[SM_NUM_LM];
     uint64_t updateTime;
     bool alarmEnable[SM_NUM_LM];
+    bool updateEnable;
 } lm_rtc_info_t;
 
 /* Local variables */
@@ -295,9 +296,14 @@ void LMM_BbmButtonEvent(void)
 /*--------------------------------------------------------------------------*/
 static int32_t LMM_BbmRtcAlarmUpdate(uint32_t rtcId)
 {
-    bool updateEnable = false;
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Get previous alarm state */
+    bool prevEnable = s_rtcInfo[rtcId].updateEnable;
+    uint64_t prevTime = s_rtcInfo[rtcId].updateTime;
 
     /* Find next nearest alarm */
+    s_rtcInfo[rtcId].updateEnable = false;
     s_rtcInfo[rtcId].updateTime = UINT64_MAX;
     for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
     {
@@ -308,15 +314,22 @@ static int32_t LMM_BbmRtcAlarmUpdate(uint32_t rtcId)
             if (s_rtcInfo[rtcId].alarmTime[lm]
                 < s_rtcInfo[rtcId].updateTime)
             {
+                s_rtcInfo[rtcId].updateEnable = true;
                 s_rtcInfo[rtcId].updateTime
                     = s_rtcInfo[rtcId].alarmTime[lm];
-                updateEnable = s_rtcInfo[rtcId].alarmEnable[lm];
             }
         }
     }
 
-    /* Inform board/device of new alarm */
-    return SM_BBMRTCALARMSET(rtcId, updateEnable,
-        s_rtcInfo[rtcId].updateTime);
+    if ((s_rtcInfo[rtcId].updateEnable != prevEnable)
+        || (s_rtcInfo[rtcId].updateTime != prevTime))
+    {
+        /* Inform board/device of new alarm */
+        status = SM_BBMRTCALARMSET(rtcId, s_rtcInfo[rtcId].updateEnable,
+            s_rtcInfo[rtcId].updateTime);
+    }
+
+    /* Return status */
+    return status;
 }
 

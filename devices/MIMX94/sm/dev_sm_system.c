@@ -326,7 +326,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
     uint32_t priMask;
 
     /* Clear BBM */
-    status = DEV_SM_BbmClear();
+    status = DEV_SM_BbmClear(true);
 
     /* Disable interrupts */
     priMask = DisableGlobalIRQ();

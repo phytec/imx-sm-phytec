@@ -8,8 +8,6 @@ New Feature {#RN_KN_NEW}
 
 | Key     | Summary                        | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|---|---|
-| [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode | Y | Y |
-| [SM-137](https://jira.sw.nxp.com/projects/SM/issues/SM-137) | Support system sleep modes | Y | Y |
 | [SM-197](https://jira.sw.nxp.com/projects/SM/issues/SM-197) | Support i.MX95 B0 | | |
 
 Improvement {#RN_KN_IMP}

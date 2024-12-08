@@ -17,29 +17,29 @@ New Feature {#RN_CL_NEW}
 |------------|-------------------------------|-------|---|---|
 | [SM-7](https://jira.sw.nxp.com/projects/SM/issues/SM-7) | Add support for i.MX943 |   | | |
 | [SM-9](https://jira.sw.nxp.com/projects/SM/issues/SM-9) | Add support for the i.MX943 EVK |   | | |
+| [SM-198](https://jira.sw.nxp.com/projects/SM/issues/SM-198) | Add support for message profiling |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-75](https://jira.sw.nxp.com/projects/SM/issues/SM-75) | Do not start ANA TMPSNS if ELE starts |   | Y | Y |
+| [SM-75](https://jira.sw.nxp.com/projects/SM/issues/SM-75) | Do not start ANA TMPSNS if started by ELE [[detail]](@ref RN_DETAIL_SM_75) |   | Y | Y |
 | [SM-178](https://jira.sw.nxp.com/projects/SM/issues/SM-178) | Add V2X command to debug monitor [[detail]](@ref RN_DETAIL_SM_178) |   | Y | Y |
 | [SM-182](https://jira.sw.nxp.com/projects/SM/issues/SM-182) | Support device abstraction to fuses/features |   | Y | Y |
 | [SM-183](https://jira.sw.nxp.com/projects/SM/issues/SM-183) | Add versioning and additional checks to the configtool [[detail]](@ref RN_DETAIL_SM_183) |   | Y | Y |
-| [SM-184](https://jira.sw.nxp.com/projects/SM/issues/SM-184) | Deassert the GPU reset when the GPUMIX is powered up [[detail]](@ref RN_DETAIL_SM_184) |   | | Y |
+| [SM-184](https://jira.sw.nxp.com/projects/SM/issues/SM-184) | Deassert the GPU reset when the GPUMIX is powered up [[detail]](@ref RN_DETAIL_SM_184) |   | Y | Y |
 | [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations |   | Y | Y |
 | [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes |   | Y | Y |
 | [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements |   | Y | Y |
 
-Silicon Workaround {#RN_CL_REQ}
+Bug {#RN_CL_BUG}
 ------------
-
-These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-196](https://jira.sw.nxp.com/projects/SM/issues/SM-196) | Provide transition latency as property of SCMI performance level |   | Y | Y |
+| [SM-196](https://jira.sw.nxp.com/projects/SM/issues/SM-196) | Provide transition latency as property of SCMI performance level [[detail]](@ref RN_DETAIL_SM_196) |   | Y | Y |
+| [SM-199](https://jira.sw.nxp.com/projects/SM/issues/SM-199) | Incorrect configtool handling or overlapping block permissions [[detail]](@ref RN_DETAIL_SM_199) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -52,6 +52,11 @@ Details {#CL_DETAIL}
 =======
 
 This section provides details for select changes.
+
+SM-75: Do not start ANA TMPSNS if started by ELE {#RN_DETAIL_SM_75}
+----------
+
+Modified code to not start ANA TMPSNS if ELE starts. This is based mostly on silicon version.
 
 SM-178: Add V2X command to debug monitor {#RN_DETAIL_SM_178}
 ----------
@@ -75,4 +80,16 @@ SM-184: Deassert the GPU reset when the GPUMIX is powered up {#RN_DETAIL_SM_184}
 SM was modified to take the GPU out of reset when the GPUMIX is powered on. This requires the SM own access to the BLK_CTRL_CPU module. Access to this module is removed from the AP. Customer need to make the same change to their SM cfg files.
 
 Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at their reset state and the AP cannot set these. ANy need to change these would have to be done in the SM config_user.h file.
+
+SM-196: Provide transition latency as property of SCMI performance level {#RN_DETAIL_SM_196}
+----------
+
+Properties returned by the SCMI PERFORMANCE_DESCRIBE_LEVELS command include a worst-case transition latency in microseconds to move from any supported performance level to the level for which properties are being queried. 
+
+Previously SM returned zero for the latency property.  SM has been updated to reflect the worst-case latency expected during PERFORMANCE_LEVEL_SET commands.  Note that this worst-case latency includes delay associated with the performance level transition, latency from outstanding agent commands, and latency from SM periodic servicing.
+
+SM-199: Incorrect configtool handling or overlapping block permissions {#RN_DETAIL_SM_199}
+----------
+
+Modified configtool to properly combine MBC permissions when multiple settings are found. The result will be the OR of the permissions. This was only observed for the fuse block (FSB) as it was explicitly granted to the debug DOM9 as RO (0x4444) and again to DOM9 generically with RW access (0x6600).
 

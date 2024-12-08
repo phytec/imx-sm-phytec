@@ -32,8 +32,8 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Added support for dynamic rate adjust of audio and video PLLs
-- Added support for PF09 B0
+- Added support for i.MX943 and the i.MX943 EVK
+- Added option to profile SCMI message latency
 - Misc. improvements and bug fixes
 
 Note these are highlights of the original release. These do not cover changes

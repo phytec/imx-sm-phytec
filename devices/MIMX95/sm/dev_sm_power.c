@@ -242,12 +242,19 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check domain */
-    if (!(SRC_MemRetentionModeSet(domainId, memRetMask)))
+    /* Check fuse state of power domain */
+    if (DEV_SM_FusePdDisabled(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
-
+    else
+    {
+        /* Check domain */
+        if (!(SRC_MemRetentionModeSet(domainId, memRetMask)))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
+    }
     /* Return status */
     return status;
 }

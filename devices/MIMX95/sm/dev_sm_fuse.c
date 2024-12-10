@@ -171,11 +171,18 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
         [DEV_SM_PD_NETC] =    DEV_SM_FUSE_NETC_DISABLE
     };
 
-    /* Check fuse state */
-    if ((s_fuseId[domainId] > 0U)
-        && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+    if (domainId >= DEV_SM_NUM_POWER)
     {
         pdDisabled = true;
+    }
+    else
+    {
+        /* Check fuse state */
+        if ((s_fuseId[domainId] > 0U)
+            && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+        {
+            pdDisabled = true;
+        }
     }
 
     /* Return state */
@@ -200,10 +207,17 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
     };
 
     /* Check fuse state */
-    if ((s_fuseId[cpuId] > 0U)
-        && (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U))
+    if (cpuId >= DEV_SM_NUM_CPU)
     {
         cpuDisabled = true;
+    }
+    else
+    {
+        if ((s_fuseId[cpuId] > 0U)
+            && (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U))
+        {
+            cpuDisabled = true;
+        }
     }
 
     /* Return state */

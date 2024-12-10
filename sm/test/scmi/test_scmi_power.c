@@ -187,7 +187,6 @@ void TEST_ScmiPower(void)
             TEST_ScmiPowerSet(perm >= SM_SCMI_PERM_SET, channel, domainId,
                 lmId);
         }
-
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_PD, &agentId,
             &channel, &domainId, &lmId);

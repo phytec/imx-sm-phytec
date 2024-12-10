@@ -251,6 +251,7 @@ int32_t DEV_SM_SystemDramRetentionEnter(void);
  */
 int32_t DEV_SM_SystemDramRetentionExit(void);
 
+#ifdef DEV_SM_MSG_PROF_CNT
 /*!
  * Message profile start notification.
  *
@@ -276,6 +277,7 @@ void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
  *
  */
 void DEV_SM_SystemMsgProfEnd(uint32_t mu);
+#endif
 
 #endif /* DEV_SM_SYSTEM_API_H */
 

@@ -116,13 +116,9 @@ void TEST_DevSmVoltage(void)
         printf("DEV_SM_VoltageDescribe\n");
         CHECK(DEV_SM_VoltageDescribe(0U, &range));
 
-        int32_t max = range.highestVolt;
-        int32_t min = range.lowestVolt;
-        int32_t step = range.stepSize;
-
-        printf("   maxLevel=%d\n", max);
-        printf("   minLevel=%d\n", min);
-        printf("   stepSize=%d\n", step);
+        printf("   maxLevel=%d\n", range.highestVolt);
+        printf("   minLevel=%d\n", range.lowestVolt);
+        printf("   stepSize=%d\n", range.stepSize);
 
         {
             int32_t level = 0, tempLevel = 0U;

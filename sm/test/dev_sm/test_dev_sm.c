@@ -84,26 +84,40 @@ void TEST_DevSm(void)
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_6));
 
 #else
+#ifdef DEV_SM_PD_A55C0
     printf("PowerUpPost(DEV_SM_PD_A55C0)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C0));
+#endif
 
+#ifdef DEV_SM_PD_A55C1
     printf("PowerUpPost(DEV_SM_PD_A55C1)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C1));
+#endif
 
+#ifdef DEV_SM_PD_A55C2
     printf("PowerUpPost(DEV_SM_PD_A55C2)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C2));
+#endif
 
+#ifdef DEV_SM_PD_A55C3
     printf("PowerUpPost(DEV_SM_PD_A55C3)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C3));
+#endif
 
+#ifdef DEV_SM_PD_A55C4
     printf("PowerUpPost(DEV_SM_PD_A55C4)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C4));
+#endif
 
+#ifdef DEV_SM_PD_A55C5
     printf("PowerUpPost(DEV_SM_PD_A55C5)\n");
     CHECK(DEV_SM_PowerUpPost(DEV_SM_PD_A55C5));
+#endif
 
+#ifdef DEV_SM_PD_A55P
     printf("DEV_SM_PowerUpAckComplete(DEV_SM_PD_A55P)\n");
     CHECK(DEV_SM_PowerUpAckComplete(DEV_SM_PD_A55P));
+#endif
 
     /* To call the default case */
     printf("DEV_SM_PowerUpAckComplete(DEV_SM_NUM_POWER)\n");

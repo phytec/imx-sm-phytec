@@ -203,10 +203,10 @@ void TEST_DevSmClock(void)
     NECHECK(DEV_SM_ClockExtendedSet(DEV_SM_NUM_CLOCK,
         DEV_SM_CLOCK_EXT_SSC + 1U, 0x0U), SM_ERR_NOT_FOUND);
 
-    NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
-        DEV_SM_CLOCK_EXT_SSC + 1U, 0x0U), SM_ERR_NOT_FOUND);
-
     uint32_t extConfigValue = 0U;
+    NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
+        DEV_SM_CLOCK_EXT_SSC + 1U, &extConfigValue), SM_ERR_NOT_FOUND);
+
     NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
         DEV_SM_CLOCK_EXT_SSC, &extConfigValue), SM_ERR_INVALID_PARAMETERS);
 

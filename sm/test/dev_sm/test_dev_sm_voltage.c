@@ -121,7 +121,7 @@ void TEST_DevSmVoltage(void)
         printf("   stepSize=%d\n", range.stepSize);
 
         {
-            int32_t level = 0, tempLevel = 0U;
+            int32_t level = 0, tempLevel = 0;
 
             /* Get the Level */
             CHECK(DEV_SM_VoltageLevelGet(0U, &level));

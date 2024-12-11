@@ -39,7 +39,7 @@
 
 /* Defines */
 
-#define BOARD_PERF_VDROP  0U
+#define BOARD_PERF_VDROP  0
 
 /* Local defines */
 

@@ -268,7 +268,7 @@ void TEST_DevSmSystem(void)
         NECHECK(DEV_SM_SystemRstComp(NULL), SM_ERR_TEST);
 
         /* DEV_SM_SystemError coverage */
-        DEV_SM_SystemError(0U, 0U);
+        DEV_SM_SystemError(0, 0U);
 
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);

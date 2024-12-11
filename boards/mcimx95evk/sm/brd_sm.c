@@ -105,7 +105,6 @@
 
 /* Performance parameters */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
-#define BOARD_PERF_VDROP  20000                /* Perf voltage drop */
 #if BOARD_VOLT_SOC >= ES_ODV_UV_VDD_SOC
 #define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf overdrive */
 #elif BOARD_VOLT_SOC >= ES_NOM_UV_VDD_SOC

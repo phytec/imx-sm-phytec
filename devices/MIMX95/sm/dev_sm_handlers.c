@@ -259,6 +259,8 @@ static void IrqPrioUpdate(irq_prio_info_t *pInfo);
 /*--------------------------------------------------------------------------*/
 void NMI_Handler(const uint32_t *sp)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_FCCU,
@@ -273,11 +275,17 @@ void NMI_Handler(const uint32_t *sp)
     /* Save reset reason info */
     DEV_SM_SystemShutdownRecSet(resetRec);
 
-    /* Wait for delayed FCCU reaction (PMIC reset) */
-    // coverity[infinite_loop:FALSE]
-    while (true)
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
     {
-        ; /* Intentional empty while */
+        /* Wait for delayed FCCU reaction (PMIC reset) */
+        // coverity[infinite_loop:FALSE]
+        while (true)
+        {
+            ;  /* Intentional empty while */
+        }
     }
 }
 
@@ -420,8 +428,16 @@ void TMPSNS_ANA_2_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 void TMPSNS_CORTEXA_1_IRQHandler(void)
 {
-    DEV_SM_SensorHandler(1U, 1U);
-    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1]);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        DEV_SM_SensorHandler(1U, 1U);
+        IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_1]);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -429,8 +445,16 @@ void TMPSNS_CORTEXA_1_IRQHandler(void)
 /*--------------------------------------------------------------------------*/
 void TMPSNS_CORTEXA_2_IRQHandler(void)
 {
-    DEV_SM_SensorHandler(1U, 2U);
-    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2]);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        DEV_SM_SensorHandler(1U, 2U);
+        IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_TMPSNS_CORTEXA_2]);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -821,6 +845,8 @@ int32_t DEV_SM_IrqPrioUpdate(void)
 static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,
@@ -838,8 +864,14 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     LMM_FuSaExceptionHandler(&resetRec);
 #endif
 
-    /* Finalize system reset flow */
-    (void) DEV_SM_SystemRstComp(&resetRec);
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Finalize system reset flow */
+        (void) DEV_SM_SystemRstComp(&resetRec);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -847,7 +879,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
 /*--------------------------------------------------------------------------*/
 static void FaultHandler(uint32_t faultId)
 {
-    int32_t status;
+    int32_t status = SM_ERR_SUCCESS;
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_FCCU,
@@ -856,8 +888,14 @@ static void FaultHandler(uint32_t faultId)
         .valid = true
     };
 
-    /* Finalize fault flow */
-    status = DEV_SM_FaultComplete(resetRec);
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Finalize fault flow */
+        status = DEV_SM_FaultComplete(resetRec);
+    }
 
     /* Reset if fault handling failed */
     if (status != SM_ERR_SUCCESS)

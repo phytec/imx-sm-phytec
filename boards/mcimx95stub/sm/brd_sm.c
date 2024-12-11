@@ -103,7 +103,6 @@
 /* Performance parameters */
 #define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf level */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
-#define BOARD_PERF_VDROP  20000                /* Perf voltage drop */
 
 /* Local types */
 

@@ -39,7 +39,8 @@
 
 /* Defines */
 
-#define BOARD_PERF_VDROP  0
+#define BOARD_PERF_VDROP    0
+#define DEV_SM_CPU_A55P     8U
 
 /* Local defines */
 

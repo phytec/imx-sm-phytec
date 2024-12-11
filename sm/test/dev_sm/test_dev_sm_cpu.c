@@ -211,8 +211,8 @@ void TEST_DevSmCpu(void)
         uint32_t cpuWakeList = 0U;
 
         /* CpuWakeListGet */
-        printf("DEV_SM_CpuWakeListGet(%u)\n", 8U /*DEV_SM_CPU_A55P*/);
-        CHECK(DEV_SM_CpuWakeListGet(8U, &cpuWakeList));
+        printf("DEV_SM_CpuWakeListGet(%u)\n", DEV_SM_CPU_A55P);
+        CHECK(DEV_SM_CpuWakeListGet(DEV_SM_CPU_A55P, &cpuWakeList));
         printf("CPU wakelist : %x\n", cpuWakeList);
 
         /* CpuWakeListGet Invalid CPUID*/
@@ -221,8 +221,8 @@ void TEST_DevSmCpu(void)
             SM_ERR_NOT_FOUND);
 
         /* CpuWakeListSet */
-        printf("DEV_SM_CpuWakeListSet(%u)\n", 8U /*DEV_SM_CPU_A55P*/);
-        CHECK(DEV_SM_CpuWakeListSet(8U, cpuWakeList));
+        printf("DEV_SM_CpuWakeListSet(%u)\n", DEV_SM_CPU_A55P);
+        CHECK(DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, cpuWakeList));
         printf("CPU wakelist : %x\n", cpuWakeList);
 
         /* CpuWakeListSet Invalid CPUID*/

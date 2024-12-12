@@ -2652,3 +2652,4 @@ static uint32_t DEV_SM_PerfDramTypeGet(void)
 
     return s_perfDramType;
 }
+

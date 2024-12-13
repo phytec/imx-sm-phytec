@@ -17,7 +17,7 @@ New Feature {#RN_CL_NEW}
 |------------|-------------------------------|-------|---|---|
 | [SM-7](https://jira.sw.nxp.com/projects/SM/issues/SM-7) | Add support for i.MX943 |   | | |
 | [SM-9](https://jira.sw.nxp.com/projects/SM/issues/SM-9) | Add support for the i.MX943 EVK |   | | |
-| [SM-198](https://jira.sw.nxp.com/projects/SM/issues/SM-198) | Add support for message profiling |   | Y | Y |
+| [SM-198](https://jira.sw.nxp.com/projects/SM/issues/SM-198) | Add support for message profiling [[detail]](@ref RN_DETAIL_SM_198) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -26,11 +26,11 @@ Improvement {#RN_CL_IMP}
 |------------|-------------------------------|-------|---|---|
 | [SM-75](https://jira.sw.nxp.com/projects/SM/issues/SM-75) | Do not start ANA TMPSNS if started by ELE [[detail]](@ref RN_DETAIL_SM_75) |   | Y | Y |
 | [SM-178](https://jira.sw.nxp.com/projects/SM/issues/SM-178) | Add V2X command to debug monitor [[detail]](@ref RN_DETAIL_SM_178) |   | Y | Y |
-| [SM-182](https://jira.sw.nxp.com/projects/SM/issues/SM-182) | Support device abstraction to fuses/features |   | Y | Y |
+| [SM-182](https://jira.sw.nxp.com/projects/SM/issues/SM-182) | Support device abstraction to fuses/features [[detail]](@ref RN_DETAIL_SM_182) |   | Y | Y |
 | [SM-183](https://jira.sw.nxp.com/projects/SM/issues/SM-183) | Add versioning and additional checks to the configtool [[detail]](@ref RN_DETAIL_SM_183) |   | Y | Y |
 | [SM-184](https://jira.sw.nxp.com/projects/SM/issues/SM-184) | Deassert the GPU reset when the GPUMIX is powered up [[detail]](@ref RN_DETAIL_SM_184) |   | Y | Y |
-| [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations |   | Y | Y |
-| [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes |   | Y | Y |
+| [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_187) |   | Y | Y |
+| [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_190) |   | Y | Y |
 | [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements |   | Y | Y |
 
 Bug {#RN_CL_BUG}
@@ -65,6 +65,11 @@ Add two v2x monitor commands used for debug of V2X.
 - v2x info
 - v2x ping
 
+SM-182: Support device abstraction to fuses/features {#RN_DETAIL_SM_182}
+----------
+
+Support imx95 phantom part numbers. 
+
 SM-183: Add versioning and additional checks to the configtool {#RN_DETAIL_SM_183}
 ----------
 
@@ -81,12 +86,33 @@ SM was modified to take the GPU out of reset when the GPUMIX is powered on. This
 
 Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at their reset state and the AP cannot set these. ANy need to change these would have to be done in the SM config_user.h file.
 
+SM-187: Misc. updates to SM configurations {#RN_DETAIL_SM_187}
+----------
+
+Updated device cfg files to zero out TRDC info left over from ELE.  Customers will need to rerun the configtool on their cfg files to pick up these changes.
+
+Add an unsupported cfg file (mx95rte.cfg) for real-time edge.
+
+SM-190: Misc. coding standards fixes {#RN_DETAIL_SM_190}
+----------
+
+Misc. fixes of coding standards, style, MISRA, coverity, uncrustify, and cppcheck.
+
 SM-196: Provide transition latency as property of SCMI performance level {#RN_DETAIL_SM_196}
 ----------
 
 Properties returned by the SCMI PERFORMANCE_DESCRIBE_LEVELS command include a worst-case transition latency in microseconds to move from any supported performance level to the level for which properties are being queried. 
 
 Previously SM returned zero for the latency property.  SM has been updated to reflect the worst-case latency expected during PERFORMANCE_LEVEL_SET commands.  Note that this worst-case latency includes delay associated with the performance level transition, latency from outstanding agent commands, and latency from SM periodic servicing.
+
+SM-198: Add support for message profiling {#RN_DETAIL_SM_198}
+----------
+
+SM has added the ability to profile messages during SM execution.  A new SM build option is available to enable message profiling support and set the depth of the profile log as follows:
+
+_*P=<n>*_ adds message profiling support with a depth of *n*.
+
+Messages with the highest latency will be sorted and retained in the SM syslog.  The message log can be queried with SCMI_MiscSyslog or displayed via the SM monitor _*syslog*_ command.  
 
 SM-199: Incorrect configtool handling or overlapping block permissions {#RN_DETAIL_SM_199}
 ----------

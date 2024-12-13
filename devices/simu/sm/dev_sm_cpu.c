@@ -122,9 +122,10 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 int32_t DEV_SM_CpuStart(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -139,9 +140,10 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
 int32_t DEV_SM_CpuHold(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -156,9 +158,10 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
 int32_t DEV_SM_CpuStop(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -174,9 +177,10 @@ int32_t DEV_SM_CpuResetVectorCheck(uint32_t cpuId, uint64_t resetVector,
     bool table)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -191,9 +195,10 @@ int32_t DEV_SM_CpuResetVectorCheck(uint32_t cpuId, uint64_t resetVector,
 int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -209,9 +214,10 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
     uint32_t sleepFlags)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -240,8 +246,10 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     }
     else
     {
+        bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
+
         /* Check CPU */
-        if (cpuId >= DEV_SM_NUM_CPU)
+        if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -265,12 +273,15 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     }
     else
     {
+        bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
+
         /* Check CPU */
-        if (cpuId >= DEV_SM_NUM_CPU)
+        if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
         {
             status = SM_ERR_NOT_FOUND;
         }
     }
+
     /* Return status */
     return status;
 }
@@ -282,9 +293,10 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     uint32_t lpmSetting, uint32_t retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -300,9 +312,10 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     uint32_t lpmSetting)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }

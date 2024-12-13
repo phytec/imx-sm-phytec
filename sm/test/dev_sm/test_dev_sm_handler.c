@@ -63,22 +63,22 @@ void TEST_DevSmHandler(void)
     SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
 
     NVIC_EnableIRQ(NMI_INT_TRIGGER);
-    SCB->ICSR |= 1U << SCB_ICSR_PENDNMISET_Pos;
+    SCB->ICSR |= 1UL << SCB_ICSR_PENDNMISET_Pos;
 
 #ifdef BUS_FAULT_INT_TRIGGER
-    BusFault_Handler(0x0U);
+    BusFault_Handler(NULL);
 #endif
 
 #ifdef USAGE_FAULT_INT_TRIGGER
-    UsageFault_Handler(0x0U);
+    UsageFault_Handler(NULL);
 #endif
 
 #ifdef MEM_MANAGEMENT_FAULT_INT
-    MemManage_Handler(0x0U);
+    MemManage_Handler(NULL);
 #endif
 
 #ifdef HARD_FAULT_INT_TRIGGER
-    HardFault_Handler(0x0U);
+    HardFault_Handler(NULL);
 #endif
 
 #ifdef WDOG1_IRQ_HANDLER
@@ -194,3 +194,4 @@ void TEST_DevSmHandler(void)
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif
 }
+

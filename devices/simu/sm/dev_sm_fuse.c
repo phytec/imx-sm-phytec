@@ -84,8 +84,22 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 /*--------------------------------------------------------------------------*/
 bool DEV_SM_FusePdDisabled(uint32_t domainId)
 {
+    bool pdDisabled = false;
+
+    if (domainId >= DEV_SM_NUM_POWER)
+    {
+        pdDisabled = true;
+    }
+    else
+    {
+        if (DEV_SM_FuseGet(domainId) != 0U)
+        {
+            pdDisabled = true;
+        }
+    }
+
     /* Return state */
-    return false;
+    return pdDisabled;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -93,7 +107,14 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
 /*--------------------------------------------------------------------------*/
 bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
 {
+    bool cpuDisabled = false;
+
+    if (cpuId >= DEV_SM_NUM_POWER)
+    {
+        cpuDisabled = true;
+    }
+
     /* Return state */
-    return false;
+    return cpuDisabled;
 }
 

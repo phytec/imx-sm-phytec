@@ -130,9 +130,9 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
 int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
 
-    /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    if (pdDisabled || (domainId >= DEV_SM_NUM_POWER))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -186,8 +186,16 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
 {
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check fuse state of power domain */
+    if (DEV_SM_FusePdDisabled(domainId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
     /* Return status */
-    return SM_ERR_SUCCESS;
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

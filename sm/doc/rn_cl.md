@@ -31,7 +31,7 @@ Improvement {#RN_CL_IMP}
 | [SM-184](https://jira.sw.nxp.com/projects/SM/issues/SM-184) | Deassert the GPU reset when the GPUMIX is powered up [[detail]](@ref RN_DETAIL_SM_184) |   | Y | Y |
 | [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_187) |   | Y | Y |
 | [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_190) |   | Y | Y |
-| [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements |   | Y | Y |
+| [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements [[detail]](@ref RN_DETAIL_SM_191) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -39,7 +39,7 @@ Bug {#RN_CL_BUG}
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
 | [SM-196](https://jira.sw.nxp.com/projects/SM/issues/SM-196) | Provide transition latency as property of SCMI performance level [[detail]](@ref RN_DETAIL_SM_196) |   | Y | Y |
-| [SM-199](https://jira.sw.nxp.com/projects/SM/issues/SM-199) | Incorrect configtool handling or overlapping block permissions [[detail]](@ref RN_DETAIL_SM_199) |   | Y | Y |
+| [SM-199](https://jira.sw.nxp.com/projects/SM/issues/SM-199) | Incorrect configtool handling of overlapping block permissions [[detail]](@ref RN_DETAIL_SM_199) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -98,6 +98,11 @@ SM-190: Misc. coding standards fixes {#RN_DETAIL_SM_190}
 
 Misc. fixes of coding standards, style, MISRA, coverity, uncrustify, and cppcheck.
 
+SM-191: Misc. unit test improvements {#RN_DETAIL_SM_191}
+----------
+
+Added unit tests to increase test coverage of the device layer.
+
 SM-196: Provide transition latency as property of SCMI performance level {#RN_DETAIL_SM_196}
 ----------
 
@@ -110,12 +115,12 @@ SM-198: Add support for message profiling {#RN_DETAIL_SM_198}
 
 SM has added the ability to profile messages during SM execution.  A new SM build option is available to enable message profiling support and set the depth of the profile log as follows:
 
-_*P=<n>*_ adds message profiling support with a depth of *n*.
+**P=\<n\>** adds message profiling support with a depth of **n**.
 
-Messages with the highest latency will be sorted and retained in the SM syslog.  The message log can be queried with SCMI_MiscSyslog or displayed via the SM monitor _*syslog*_ command.  
+Messages with the highest latency will be sorted and retained in the SM syslog.  The message log can be queried with SCMI_MiscSyslog() or displayed via the SM monitor **syslog** command.  
 
-SM-199: Incorrect configtool handling or overlapping block permissions {#RN_DETAIL_SM_199}
+SM-199: Incorrect configtool handling of overlapping block permissions {#RN_DETAIL_SM_199}
 ----------
 
-Modified configtool to properly combine MBC permissions when multiple settings are found. The result will be the OR of the permissions. This was only observed for the fuse block (FSB) as it was explicitly granted to the debug DOM9 as RO (0x4444) and again to DOM9 generically with RW access (0x6600).
+Modified configtool to properly combine MBC permissions when multiple settings are found. The result will be the OR of the permissions. This was only observed for the fuse block (FSB) as it was explicitly granted to the debug DOM9 as RO (0x4444) and again to DOM9 generically with RW access (0x6600). Customers will need to rerun the configtool on their cfg files to pick up these changes.
 

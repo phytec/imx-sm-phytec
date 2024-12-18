@@ -2946,6 +2946,16 @@ sub get_trdc
                 $e .= ' big=0';
             }
 
+            # Extract no debug
+            if ($line =~ /\bnodbg /)
+            {
+                $e .= ' nodbg=1';
+            }
+            else
+            {
+                $e .= ' nodbg=0';
+            }
+
             push @rdc, $e . ' ';
         }
     }
@@ -2960,7 +2970,8 @@ sub get_trdc
         foreach my $m (@rdc)
         {
             if (($m =~ /\bM[BR]C_\w+=/)
-                && ($m =~ /\bdid=\d+ /))
+                && ($m =~ /\bdid=\d+ /)
+                && !($m =~ /nodbg=1/))
             {
                 my $a = $m;
                 $a =~ s/\bdid=\d+/did=$debugDid/g;

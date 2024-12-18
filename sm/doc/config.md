@@ -829,6 +829,7 @@ Resources support the following key=value pairs.
 |                | end       | End of range to define permissions |
 |                | size      | Alternative to end, size of range to define permissions |
 |                | nrgns     | Number of regions |
+|                | nodbg     | Do not map to DAP DID |
 
 Notes:
 

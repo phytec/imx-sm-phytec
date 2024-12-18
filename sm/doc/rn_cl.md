@@ -89,7 +89,7 @@ Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at the
 SM-187: Misc. updates to SM configurations {#RN_DETAIL_SM_187}
 ----------
 
-Updated device cfg files to zero out TRDC info left over from ELE.  Customers will need to rerun the configtool on their cfg files to pick up these changes.
+Updated device cfg files to zero out TRDC info left over from ELE.  Added nodbg option for memory regions to not map to the DAP. Added DDR region for V2X to access DDR holding the V2X firmware. Marked the V2X and ELE DDR regions as nodbg. Customers will need to make similar changes and rerun the configtool on their cfg files .
 
 Add an unsupported cfg file (mx95rte.cfg) for real-time edge.
 

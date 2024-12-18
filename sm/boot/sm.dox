@@ -84,6 +84,11 @@
  */
 
 /*!
+ * @defgroup glitchfilter GLITCHFILTER: Glitch Filter
+ * @ingroup drivers
+ */
+
+/*!
  * @defgroup lpi2c LPI2C: Low Power Inter-Integrated Circuit Driver
  * @ingroup drivers
  */
@@ -125,6 +130,11 @@
 
 /*!
  * @defgroup mx95_drivers MX95: MX95 Drivers
+ * @ingroup drivers
+ */
+
+/*!
+ * @defgroup mx94_drivers MX94: MX94 Drivers
  * @ingroup drivers
  */
 

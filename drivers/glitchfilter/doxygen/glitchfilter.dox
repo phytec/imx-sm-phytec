@@ -1,0 +1,14 @@
+/*!
+@defgroup glitchfilter GLITCHFILTER: Glitch Filter
+@ingroup drivers
+@brief Driver for GLITCHFILTER IP.
+@details The MCUXpresso SDK provides a driver for the GLITCHFILTER module of MCUXpresso SDK devices.
+
+# Function description {#GLITCHFILTERFunc}
+
+The GLITCHFILTER driver provides these functions:
+ - Functions to initialize the GLITCHFILTER module.
+ - Function to read the status.
+ - Function to force the output state.
+
+*/

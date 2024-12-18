@@ -1,5 +1,5 @@
 /**
-*   @file    eMcem_Vfccu_MIMX943X.c
+*   @file    eMcem_Vfccu_MIMX94XX.c
 *   @version 0.4.0
 *
 *   @brief   MIMX_SAF eMcem - Specific VFCCU IP source.

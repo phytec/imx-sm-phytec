@@ -1,0 +1,20 @@
+
+/*!
+ * @addtogroup components
+ * @{
+ */
+
+/*!
+@defgroup pcal6416a PCAL6416A Driver
+@brief Component driver for a PCAL6416A I2C bus expander
+@details Component driver for a PCAL6416A I2C bus expander.
+
+This expander supports 16 GPIO pins with the following capabilities:
+- Configuration of the expander
+- Read of input pins
+- Write of output pins
+- Interrupt management
+*/
+
+/** @} */
+

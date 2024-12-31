@@ -15,8 +15,8 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
 |------------|-------------------------------|-------|---|---|
-| [SM-7](https://jira.sw.nxp.com/projects/SM/issues/SM-7) | Add support for i.MX943 |   | | |
-| [SM-9](https://jira.sw.nxp.com/projects/SM/issues/SM-9) | Add support for the i.MX943 EVK |   | | |
+| [SM-7](https://jira.sw.nxp.com/projects/SM/issues/SM-7) | Add support for i.MX94 |   | | |
+| [SM-9](https://jira.sw.nxp.com/projects/SM/issues/SM-9) | Add support for the i.MX94 EVK |   | | |
 | [SM-198](https://jira.sw.nxp.com/projects/SM/issues/SM-198) | Add support for message profiling [[detail]](@ref RN_DETAIL_SM_198) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}

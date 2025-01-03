@@ -56,93 +56,99 @@ Lots of detail here.
  */
 
 /*!
-@defgroup DEV_SM_SIMU_CONFIG DEVICE_SIMU_CONFIG: SM i.SIMU Device (CONFIG)
+@defgroup DEV_SM_SIMU_CONFIG DEVICE_SIMU_CONFIG: SM SIMU Device (CONFIG)
 
-@brief Module for the i.SIMU device configuration functions.
+@brief Module for the SIMU device configuration functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_ROM DEVICE_SIMU_ROM: SM i.SIMU Device (ROM)
+@defgroup DEV_SM_SIMU_ROM DEVICE_SIMU_ROM: SM SIMU Device (ROM)
 
-@brief Module for the i.SIMU device ROM functions.
+@brief Module for the SIMU device ROM functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_RDC DEVICE_SIMU_RDC: SM i.SIMU Device (RDC)
+@defgroup DEV_SM_SIMU_FUSE DEVICE_SIMU_FUSE: SM SIMU Device (FUSE)
 
-@brief Module for the i.SIMU device RDC functions.
+@brief Module for the SIMU device fuse functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_POWER DEVICE_SIMU_POWER: SM i.SIMU Device (POWER)
+@defgroup DEV_SM_SIMU_RDC DEVICE_SIMU_RDC: SM SIMU Device (RDC)
+
+@brief Module for the SIMU device RDC functions.
+*/
+
+/*!
+@defgroup DEV_SM_SIMU_POWER DEVICE_SIMU_POWER: SM SIMU Device (POWER)
 
 @brief Module for the i.SIMU device power functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_SYS DEVICE_SIMU_SYS: SM i.SIMU Device (SYS)
+@defgroup DEV_SM_SIMU_SYS DEVICE_SIMU_SYS: SM SIMU Device (SYS)
 
-@brief Module for the i.SIMU device system functions.
+@brief Module for the SIMU device system functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_PERF DEVICE_SIMU_PERF: SM i.SIMU Device (PERF)
+@defgroup DEV_SM_SIMU_PERF DEVICE_SIMU_PERF: SM SIMU Device (PERF)
 
-@brief Module for the i.SIMU device performance functions.
+@brief Module for the SIMU device performance functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_CLOCK DEVICE_SIMU_CLOCK: SM i.SIMU Device (CLOCK)
+@defgroup DEV_SM_SIMU_CLOCK DEVICE_SIMU_CLOCK: SM SIMU Device (CLOCK)
 
-@brief Module for the i.SIMU device clock functions.
+@brief Module for the SIMU device clock functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_SENSOR DEVICE_SIMU_SENSOR: SM i.SIMU Device (SENSOR)
+@defgroup DEV_SM_SIMU_SENSOR DEVICE_SIMU_SENSOR: SM SIMU Device (SENSOR)
 
-@brief Module for the i.SIMU device sensor functions.
+@brief Module for the SIMU device sensor functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_RESET DEVICE_SIMU_RESET: SM i.SIMU Device (RESET)
+@defgroup DEV_SM_SIMU_RESET DEVICE_SIMU_RESET: SM SIMU Device (RESET)
 
-@brief Module for the i.SIMU device reset functions.
+@brief Module for the SIMU device reset functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_VOLTAGE DEVICE_SIMU_VOLTAGE: SM i.SIMU Device (VOLTAGE)
+@defgroup DEV_SM_SIMU_VOLTAGE DEVICE_SIMU_VOLTAGE: SM SIMU Device (VOLTAGE)
 
-@brief Module for the i.SIMU device voltage functions.
+@brief Module for the SIMU device voltage functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_PIN DEVICE_SIMU_PIN: SM i.SIMU Device (PIN)
+@defgroup DEV_SM_SIMU_PIN DEVICE_SIMU_PIN: SM SIMU Device (PIN)
 
-@brief Module for the i.SIMU device pin functions.
+@brief Module for the SIMU device pin functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_BBM DEVICE_SIMU_BBM: SM i.SIMU Device (BBM)
+@defgroup DEV_SM_SIMU_BBM DEVICE_SIMU_BBM: SM SIMU Device (BBM)
 
-@brief Module for the i.SIMU device BBM functions.
+@brief Module for the SIMU device BBM functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_CPU DEVICE_SIMU_CPU: SM i.SIMU Device (CPU)
+@defgroup DEV_SM_SIMU_CPU DEVICE_SIMU_CPU: SM SIMU Device (CPU)
 
-@brief Module for the i.SIMU device CPU functions.
+@brief Module for the SIMU device CPU functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_CTRL DEVICE_SIMU_CTRL: SM i.SIMU Device (CTRL)
+@defgroup DEV_SM_SIMU_CTRL DEVICE_SIMU_CTRL: SM SIMU Device (CTRL)
 
-@brief Module for the i.SIMU device control functions.
+@brief Module for the SIMU device control functions.
 */
 
 /*!
-@defgroup DEV_SM_SIMU_FAULT DEVICE_SIMU_FAULT: SM i.SIMU Device (FAULT)
+@defgroup DEV_SM_SIMU_FAULT DEVICE_SIMU_FAULT: SM SIMU Device (FAULT)
 
-@brief Module for the i.SIMU device fault functions.
+@brief Module for the SIMU device fault functions.
 */
 
 /** @} */

@@ -761,7 +761,7 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
         bootOrder++)
     {
         /* Loop over LMs */
-        for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+        for (uint32_t lm = 1U; lm < SM_NUM_LM; lm++)
         {
             /* Boot if LM requested in this order */
             if ((g_lmmConfig[lm].group == group)
@@ -820,7 +820,7 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
     *noReturn = false;
 
     /* Loop over LMs */
-    for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+    for (uint32_t lm = 1U; lm < SM_NUM_LM; lm++)
     {
         /* LM in group? */
         if (g_lmmConfig[lm].group == group)

@@ -87,6 +87,7 @@ my @xportTypes = ('SMT');
 my %makeInclude;
 my %args;
 my $log;
+my $copyright = '';
 
 my $seenvid = 0;
 
@@ -374,6 +375,18 @@ sub load_file
     {
         # Remove LF
         chomp $_;
+
+		# Get copyright
+		if (/Copyright\s+[0-9]/)
+		{
+			if ($copyright eq '')
+			{
+				$copyright = $_;
+
+			    # Replace hashs
+			    $copyright =~ s/#/*/g;				
+			}
+		}
 
         # Continue line?
         if (/\\$/)
@@ -3753,7 +3766,14 @@ sub copyright
     $rtn .= '/*' . "\n";
     $rtn .= '** ###################################################################' . "\n";
     $rtn .= '**' . "\n";
-    $rtn .= '** Copyright 2023-2025 NXP' . "\n";
+	if ($copyright eq '')
+	{
+	    $rtn .= '** Copyright 2023-2025 NXP' . "\n";
+	}
+	else
+	{
+	    $rtn .= $copyright . "\n";
+	}
     $rtn .= '**' . "\n";
     $rtn .= '** Redistribution and use in source and binary forms, with or without modification,' . "\n";
     $rtn .= '** are permitted provided that the following conditions are met:' . "\n";

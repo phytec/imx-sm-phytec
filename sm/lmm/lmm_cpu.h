@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -186,6 +186,7 @@ int32_t LMM_CpuResetVectorSet(uint32_t lmId, uint32_t cpuId,
  *
  * @param[in]     lmId         LM call is for
  * @param[in]     cpuId        Identifier for the CPU
+ * @param[in]     hw           Load into HW
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
@@ -193,7 +194,7 @@ int32_t LMM_CpuResetVectorSet(uint32_t lmId, uint32_t cpuId,
  * - ::SM_ERR_SUCCESS: if the reset vector is set
  * - ::SM_ERR_NOT_FOUND: if the CPU is invalid
  */
-int32_t LMM_CpuResetVectorReset(uint32_t lmId, uint32_t cpuId);
+int32_t LMM_CpuResetVectorReset(uint32_t lmId, uint32_t cpuId, bool hw);
 
 /*!
  * Set a CPU sleep target mode.

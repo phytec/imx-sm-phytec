@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -1361,7 +1361,7 @@ static int32_t CpuResetAgentConfig(uint32_t lmId, uint32_t agentId,
         /* Reset vector */
         if (s_cpuAgent[cpuId] == (((uint8_t) agentId) + 1U))
         {
-            (void) LMM_CpuResetVectorReset(lmId, cpuId);
+            (void) LMM_CpuResetVectorReset(lmId, cpuId, false);
             s_cpuAgent[cpuId] = 0U;
         }
     }

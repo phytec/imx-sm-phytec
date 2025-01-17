@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,52 +32,68 @@
 ** ###################################################################
 */
 
+#ifndef BRD_SM_HANDLERS_H
+#define BRD_SM_HANDLERS_H
+
+/*==========================================================================*/
 /*!
-
-@defgroup BRD_SM BOARD: SM Board Interface
-
-@brief Module for the board interface for the SM.
-
-Board Module
-============
-
-This module abstracts the board. It contains a common API and implementations for each
-supported board.
-
-*/
-
-/*!
- * @addtogroup BRD_SM
+ * @addtogroup BRD_SM_MX95LIBRA
  * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header file containing the implementation of interrupt handlers for the
+ * board.
  */
+/*==========================================================================*/
+
+/* Includes */
+
+#include "sm.h"
+#include "dev_sm.h"
+#include "fsl_pf09.h"
+#include "fsl_pf53.h"
+
+/* Defines */
+
+/*! Number of board IRQs participating dynamic prioritization */
+#define BOARD_NUM_IRQ_PRIO_IDX                 1U
+
+/*! Dynamic IRQ priority table index for GPIO1 */
+#define BOARD_IRQ_PRIO_IDX_GPIO1_0             0U
+
+/* Types */
+
+/* External variables */
+
+/*! Handle to acces PF09 */
+extern PF09_Type g_pf09Dev;
+
+/*! Handle to acces PF5301 */
+extern PF53_Type g_pf5301Dev;
+
+/*! Handle to acces PF5302 */
+extern PF53_Type g_pf5302Dev;
+
+/*! Array of dynamic priority info for board IRQs */
+extern irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
+
+/* Functions */
 
 /*!
- * @defgroup BRD_SM_API SM Board API
- * @brief Module for the board interface API.
+ * Init serial devices.
  *
- * This module provides a common API for the SM board layer. It contains most functions
- * and types to call the SM board layer of code. The brd_sm.h file also allows defines
- * to redirect calls from the SM device API that go to device functions to instead
- * go to board functions. Those functions then usually add resources or functionality
- * but still call the device function for device resources. See the
- * [device API](@ref DEV_SM_API) for a list of these redirection defines.
- *
- * For example, in brd_sm.h:
- *
- *     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet
- *
- * Would redirct calls for device sensors names made via ::SM_SENSORNAMEGET to
- * BRD_SM_SensorNameGet() instead of DEV_SM_SensorNameGet().
- *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
+int32_t BRD_SM_SerialDevicesInit(void);
 
 /*!
- * @defgroup BRD_SM_API SM Board API
- * @defgroup BRD_SM_MX95EVK BOARD_MX95EVK: i.MX95 EVK SM Implementation
- * @defgroup BRD_SM_MX95LIBRA BOARD_MX95LIBRA: i.MX95 Libra SM Implementation
- * @defgroup BRD_SM_MX95STUB BOARD_MX95STUB: i.MX95 Stub SM Implementation
- * @defgroup BRD_SM_SIMU BOARD_SIMU: Simulation Board SM Implementation
+ * GPIO 1 interrupt 0 handler.
  */
+void GPIO1_0_IRQHandler(void);
 
 /** @} */
+
+#endif /* BRD_SM_HANDLERS_H */
 

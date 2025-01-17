@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,52 +32,65 @@
 ** ###################################################################
 */
 
+#ifndef BRD_SM_H
+#define BRD_SM_H
+
+/*==========================================================================*/
 /*!
+ * @addtogroup BRD_SM_MX95LIBRA
+ * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header file containing the API for the SM abstraction of the board.
+ */
+/*==========================================================================*/
 
-@defgroup BRD_SM BOARD: SM Board Interface
+/* Includes */
 
-@brief Module for the board interface for the SM.
+#include "sm.h"
+#include "brd_sm_handlers.h"
+#include "brd_sm_control.h"
+#include "brd_sm_sensor.h"
+#include "brd_sm_voltage.h"
+#include "board.h"
+#include "brd_sm_api.h"
 
-Board Module
-============
+/* Defines */
 
-This module abstracts the board. It contains a common API and implementations for each
-supported board.
+/*! Board name string */
+#define BRD_SM_NAME  "i.MX95 Libra"
 
-*/
+/*! Board attributes */
+#define BRD_SM_ATTR  0x0
 
 /*!
- * @addtogroup BRD_SM
+ * @name Board redirection defines
  * @{
  */
+#define SM_SYSTEMRESET  BRD_SM_SystemReset       /*!< Reset */
+/** @} */
+
+/* Types */
+
+/* External variables */
+
+/* Functions */
 
 /*!
- * @defgroup BRD_SM_API SM Board API
- * @brief Module for the board interface API.
+ * Reset the system.
  *
- * This module provides a common API for the SM board layer. It contains most functions
- * and types to call the SM board layer of code. The brd_sm.h file also allows defines
- * to redirect calls from the SM device API that go to device functions to instead
- * go to board functions. Those functions then usually add resources or functionality
- * but still call the device function for device resources. See the
- * [device API](@ref DEV_SM_API) for a list of these redirection defines.
+ * Redirect to just spin.
  *
- * For example, in brd_sm.h:
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
- *     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet
- *
- * Would redirct calls for device sensors names made via ::SM_SENSORNAMEGET to
- * BRD_SM_SensorNameGet() instead of DEV_SM_SensorNameGet().
- *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS
  */
-
-/*!
- * @defgroup BRD_SM_API SM Board API
- * @defgroup BRD_SM_MX95EVK BOARD_MX95EVK: i.MX95 EVK SM Implementation
- * @defgroup BRD_SM_MX95LIBRA BOARD_MX95LIBRA: i.MX95 Libra SM Implementation
- * @defgroup BRD_SM_MX95STUB BOARD_MX95STUB: i.MX95 Stub SM Implementation
- * @defgroup BRD_SM_SIMU BOARD_SIMU: Simulation Board SM Implementation
- */
+int32_t BRD_SM_SystemReset(void);
 
 /** @} */
+
+#endif /* BRD_SM_H */
 

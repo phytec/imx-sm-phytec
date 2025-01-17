@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2024 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -32,52 +32,38 @@
 ** ###################################################################
 */
 
+/*==========================================================================*/
 /*!
-
-@defgroup BRD_SM BOARD: SM Board Interface
-
-@brief Module for the board interface for the SM.
-
-Board Module
-============
-
-This module abstracts the board. It contains a common API and implementations for each
-supported board.
-
-*/
-
-/*!
- * @addtogroup BRD_SM
+ * @addtogroup CONFIG_MX95LIBRA
  * @{
+ *
+ * @file
+ * @brief
+ *
+ * Header file containing coniguration info for the board abstraction.
  */
+/*==========================================================================*/
 
-/*!
- * @defgroup BRD_SM_API SM Board API
- * @brief Module for the board interface API.
- *
- * This module provides a common API for the SM board layer. It contains most functions
- * and types to call the SM board layer of code. The brd_sm.h file also allows defines
- * to redirect calls from the SM device API that go to device functions to instead
- * go to board functions. Those functions then usually add resources or functionality
- * but still call the device function for device resources. See the
- * [device API](@ref DEV_SM_API) for a list of these redirection defines.
- *
- * For example, in brd_sm.h:
- *
- *     #define SM_SENSORNAMEGET       BRD_SM_SensorNameGet
- *
- * Would redirct calls for device sensors names made via ::SM_SENSORNAMEGET to
- * BRD_SM_SensorNameGet() instead of DEV_SM_SensorNameGet().
- *
- */
+#ifndef CONFIG_BOARD_H
+#define CONFIG_BOARD_H
 
-/*!
- * @defgroup BRD_SM_API SM Board API
- * @defgroup BRD_SM_MX95EVK BOARD_MX95EVK: i.MX95 EVK SM Implementation
- * @defgroup BRD_SM_MX95LIBRA BOARD_MX95LIBRA: i.MX95 Libra SM Implementation
- * @defgroup BRD_SM_MX95STUB BOARD_MX95STUB: i.MX95 Stub SM Implementation
- * @defgroup BRD_SM_SIMU BOARD_SIMU: Simulation Board SM Implementation
- */
+/* Includes */
+
+#include "config.h"
+
+/* Defines */
+
+/*! Config for UART instance */
+#define BOARD_DEBUG_UART_INSTANCE    2U
+/*! Config for UART baudrate */
+#define BOARD_DEBUG_UART_BAUDRATE    115200U
+
+/*! Config for PMIC I2C instance */
+#define BOARD_I2C_INSTANCE           2U
+/*! Config for PMIC I2C baudrate */
+#define BOARD_I2C_BAUDRATE           400000U
+
+#endif /* CONFIG_BOARD_H */
 
 /** @} */
 

@@ -68,16 +68,16 @@
 /* External variables */
 
 /*! Handle to acces PF09 */
-extern PF09_Type pf09Dev;
+extern PF09_Type g_pf09Dev;
 
 /*! Handle to acces PF5301 */
-extern PF53_Type pf5301Dev;
+extern PF53_Type g_pf5301Dev;
 
 /*! Handle to acces PF5302 */
-extern PF53_Type pf5302Dev;
+extern PF53_Type g_pf5302Dev;
 
 /*! Array of dynamic priority info for board IRQs */
-extern irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
+extern irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX];
 
 /* Functions */
 

@@ -56,12 +56,11 @@
 /* Local variables */
 
 /* Global variables */
+PF09_Type g_pf09Dev;
+PF53_Type g_pf5301Dev;
+PF53_Type g_pf5302Dev;
 
-PF09_Type pf09Dev;
-PF53_Type pf5301Dev;
-PF53_Type pf5302Dev;
-
-irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
+irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
 {
     [BOARD_IRQ_PRIO_IDX_GPIO1_0] =
     {
@@ -71,6 +70,10 @@ irq_prio_info_t s_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
         .dynPrioEn = false
     }
 };
+
+bool g_pca2131Used = false;
+
+uint32_t g_pmicFaultFlags = 0U;
 
 /* Local functions */
 
@@ -86,29 +89,29 @@ int32_t BRD_SM_SerialDevicesInit(void)
 
     if (status == SM_ERR_SUCCESS) {
         /* Fill in PF09 PMIC handle */
-        pf09Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
-        pf09Dev.devAddr = BOARD_PF09_DEV_ADDR;
-        pf09Dev.crcEn = true;
+        g_pf09Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+        g_pf09Dev.devAddr = BOARD_PF09_DEV_ADDR;
+        g_pf09Dev.crcEn = true;
 
         /* Inialize PF09 PMIC */
-        if (!PF09_Init(&pf09Dev))
+        if (!PF09_Init(&g_pf09Dev))
             status = SM_ERR_HARDWARE_ERROR;
 
         /* Disable XRESET monitor in STANDBY */
         if (status == SM_ERR_SUCCESS) {
-            if (!PF09_XrstStbyEnable(&pf09Dev, false))
+            if (!PF09_XrstStbyEnable(&g_pf09Dev, false))
                 status = SM_ERR_HARDWARE_ERROR;
         }
 
         /* Disable voltage monitor 1 */
         if (status == SM_ERR_SUCCESS) {
-            if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON1, false))
+            if (!PF09_MonitorEnable(&g_pf09Dev, PF09_VMON1, false))
                 status = SM_ERR_HARDWARE_ERROR;
         }
 
         /* Disable voltage monitor 2 */
         if (status == SM_ERR_SUCCESS) {
-            if (!PF09_MonitorEnable(&pf09Dev, PF09_VMON2, false))
+            if (!PF09_MonitorEnable(&g_pf09Dev, PF09_VMON2, false))
                 status = SM_ERR_HARDWARE_ERROR;
         }
 
@@ -119,7 +122,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
                 [PF09_MASK_IDX_STATUS1] = 0x08U
             };
 
-            if (!PF09_IntEnable(&pf09Dev, mask, PF09_MASK_LEN, false))
+            if (!PF09_IntEnable(&g_pf09Dev, mask, PF09_MASK_LEN, false))
                 status = SM_ERR_HARDWARE_ERROR;
         }
 
@@ -130,21 +133,21 @@ int32_t BRD_SM_SerialDevicesInit(void)
 
     if (status == SM_ERR_SUCCESS) {
         /* Fill in PF5301 PMIC handle */
-        pf5301Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
-        pf5301Dev.devAddr = BOARD_PF5301_DEV_ADDR;
+        g_pf5301Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+        g_pf5301Dev.devAddr = BOARD_PF5301_DEV_ADDR;
 
         /* Inialize PF0901 PMIC */
-        if (!PF53_Init(&pf5301Dev))
+        if (!PF53_Init(&g_pf5301Dev))
             status = SM_ERR_HARDWARE_ERROR;
     }
 
     if (status == SM_ERR_SUCCESS) {
         /* Fill in PF5302 PMIC handle */
-        pf5302Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
-        pf5302Dev.devAddr = BOARD_PF5302_DEV_ADDR;
+        g_pf5302Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
+        g_pf5302Dev.devAddr = BOARD_PF5302_DEV_ADDR;
 
         /* Inialize PF0901 PMIC */
-        if (!PF53_Init(&pf5302Dev))
+        if (!PF53_Init(&g_pf5302Dev))
             status = SM_ERR_HARDWARE_ERROR;
     }
 
@@ -193,10 +196,10 @@ static void BRD_SM_Pf09Handler(void)
     uint8_t stat[PF09_MASK_LEN] = { 0 };
 
     /* Read status of interrupts */
-    (void) PF09_IntStatus(&pf09Dev, stat, PF09_MASK_LEN);
+    (void) PF09_IntStatus(&g_pf09Dev, stat, PF09_MASK_LEN);
 
     /* Clear pending */
-    (void) PF09_IntClear(&pf09Dev, stat, PF09_MASK_LEN);
+    (void) PF09_IntClear(&g_pf09Dev, stat, PF09_MASK_LEN);
 
     /* Handle pending temp interrupts */
     if ((stat[PF09_MASK_IDX_STATUS2] & 0x0FU) != 0U)

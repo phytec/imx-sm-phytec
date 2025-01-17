@@ -33,6 +33,7 @@
 #define BOARD_SWI_IRQn          Reserved110_IRQn  /*!< SWI IRQ */
 #define BOARD_HAS_WDOG                            /*!< Has a watchdog */
 #define BOARD_HAS_PMIC                            /*!< Has a PMIC */
+#define BOARD_PMIC_RESUME_TICKS ((20U * 32768U) / 10000U) /*!< 2ms in 32K ticks */
 /** @} */
 
 /*!

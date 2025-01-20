@@ -194,6 +194,9 @@ void ELE_FwStatusGet(uint32_t *status)
 {
     static uint32_t s_statWord2Cache = 0xFFFFFFFFUL;
 
+    /* Clear status in case cached */
+    g_eleStatus = SM_ERR_SUCCESS;
+
     /* Check if status cached? */
     if (s_statWord2Cache == 0xFFFFFFFFUL)
     {
@@ -225,6 +228,7 @@ void ELE_RomIdGet(uint32_t *id, uint32_t *commit, bool *dirty)
     static uint32_t s_idWord2Cache = 0U;
     static uint32_t s_idWord3Cache = 0U;
 
+    /* Clear status in case cached */
     g_eleStatus = SM_ERR_SUCCESS;
 
     /* Check if version cached? */
@@ -262,6 +266,7 @@ void ELE_FwVersionGet(uint32_t *version, uint32_t *commit, bool *dirty,
     static uint32_t s_verWord2Cache = 0U;
     static uint32_t s_verWord3Cache = 0U;
 
+    /* Clear status in case cached */
     g_eleStatus = SM_ERR_SUCCESS;
 
     /* Check if version cached? */

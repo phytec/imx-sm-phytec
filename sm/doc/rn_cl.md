@@ -40,6 +40,12 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|
 | [SM-196](https://jira.sw.nxp.com/projects/SM/issues/SM-196) | Provide transition latency as property of SCMI performance level [[detail]](@ref RN_DETAIL_SM_196) |   | Y | Y |
 | [SM-199](https://jira.sw.nxp.com/projects/SM/issues/SM-199) | Incorrect configtool handling of overlapping block permissions [[detail]](@ref RN_DETAIL_SM_199) |   | Y | Y |
+| [SM-202](https://jira.sw.nxp.com/projects/SM/issues/SM-202) | System sleep entry can miss SM hardware handshakes [[detail]](@ref RN_DETAIL_SM_202) |   | Y | Y |
+| [SM-203](https://jira.sw.nxp.com/projects/SM/issues/SM-203) | GPIO 4/5 memory map incorrect [[detail]](@ref RN_DETAIL_SM_203) |   | Y | Y |
+| [SM-205](https://jira.sw.nxp.com/projects/SM/issues/SM-205) | Group shutdown results in LM0 (SM) shown in off state [[detail]](@ref RN_DETAIL_SM_205) |   | Y | Y |
+| [SM-206](https://jira.sw.nxp.com/projects/SM/issues/SM-206) | Cannot configure some reset permissions [[detail]](@ref RN_DETAIL_SM_206) |   | Y | Y |
+| [SM-207](https://jira.sw.nxp.com/projects/SM/issues/SM-207) | Cortex-M address not configured prior to power on [[detail]](@ref RN_DETAIL_SM_207) |   | Y | Y |
+| [SM-210](https://jira.sw.nxp.com/projects/SM/issues/SM-210) | Incorrect ELE error code caching [[detail]](@ref RN_DETAIL_SM_210) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -123,4 +129,36 @@ SM-199: Incorrect configtool handling of overlapping block permissions {#RN_DETA
 ----------
 
 Modified configtool to properly combine MBC permissions when multiple settings are found. The result will be the OR of the permissions. This was only observed for the fuse block (FSB) as it was explicitly granted to the debug DOM9 as RO (0x4444) and again to DOM9 generically with RW access (0x6600). Customers will need to rerun the configtool on their cfg files to pick up these changes.
+
+SM-202: System sleep entry can miss SM hardware handshakes {#RN_DETAIL_SM_202}
+----------
+
+SM queries the status of the GPC CMC (CPU Mode Controller) registers to determine if the current conditions allow system sleep mode entry.  Some CMC status registers report that a CPU has entered the SUSPEND sleep state before hardware state machines have fully completed the transition to SUSPEND.  SM usage of these CMC registers may result in wake sources being misconfigured during system sleep and missed wakeup events.
+
+The SM algorithm has been updated to ensure all hardware state machines have completed the transition to SUSPEND prior to entering system sleep.
+
+SM-203: GPIO 4/5 memory map incorrect {#RN_DETAIL_SM_203}
+----------
+
+Update to address for GPIO4 and add GPIO5 in i.MX95 SoC header files.
+
+SM-205: Group shutdown results in LM0 (SM) shown in off state {#RN_DETAIL_SM_205}
+----------
+
+Change group command iterations to exclude LM0.
+
+SM-206: Cannot configure some reset permissions {#RN_DETAIL_SM_206}
+----------
+
+Updated reset protocol defines list to contain all of them for i.MX95.
+
+SM-207: Cortex-M address not configured prior to power on {#RN_DETAIL_SM_207}
+----------
+
+Modified LM start/stop code to configure hardware boot addresses prior to any power on or off of the power domain containing the CPU. This solves issues with latching of the boot address by the hardware. Modified all cfg files to include a power up step in the start script. Customers will have to do the same if they wish to use SCMI_LmmPowerOn().
+
+SM-210: Incorrect ELE error code caching {#RN_DETAIL_SM_210}
+----------
+
+Calls to ELE_RomIdGet() return the error status from any previous ELE call. This could be seen using the monitor 'ele info' command after a failed fuse command. This change fixed how cached ELE info handles the error status.
 

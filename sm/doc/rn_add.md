@@ -33,6 +33,9 @@ The following are cfg file changes that customers **must** make to their cfg fil
 and rebuild their config headers.
 
 - Move access to BLK_CTRL_GPUMIX from any clients to the SM (LM0).
+- Add nodbg to the ELE DDR region (if defined).
+- Define V2X DDR region to contain the V2X FW (if using V2X).
+- Add power domain start for any Cortex-M that might have FW loaded by another core.
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================

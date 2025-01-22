@@ -42,6 +42,7 @@ Info Commands
 |-----------------------------|--------------------------------------------------------------|
 | info                        | display SM/SoC info like unique ID, etc.                     |
 | ele info                    | display ELE info like FW version, lifecycle, etc.            |
+| ele ext                     | display ELE extended info like ROM patch SHA, etc.           |
 | ele dump                    | dump ELE debug data                                          |
 | v2x info                    | display V2X info like FW load status                         |
 | v2x ping                    | ask ELE to ping V2X                                          |

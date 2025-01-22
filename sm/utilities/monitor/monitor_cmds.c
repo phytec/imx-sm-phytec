@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,9 +77,11 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[]);
 #ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 #endif
 #ifdef DEVICE_HAS_V2X
 static int32_t MONITOR_CmdV2x(int32_t argc, const char * const argv[]);
@@ -556,7 +558,8 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
         "lifecycle",
         "events",
         "dump",
-        "abort"
+        "abort",
+        "ext"
     };
 
     /* Parse argument */
@@ -581,6 +584,9 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
                 break;
             case 4:  /* abort */
                 ELE_Abort();
+                break;
+            case 5:  /* ext */
+                status = MONITOR_CmdEleExt(argc - 1, &argv[1]);
                 break;
             default:
                 status = SM_ERR_INVALID_PARAMETERS;
@@ -693,16 +699,41 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
         printf("IMEM state     = 0x%X\n", info.imemState);
 
         /* Display UID */
-        printf("UID[127:96]    = 0x%08X\n", info.uid[0]);
-        printf("UID[95:64]     = 0x%08X\n", info.uid[1]);
-        printf("UID[63:32]     = 0x%08X\n", info.uid[2]);
-        printf("UID[31:0]      = 0x%08X\n", info.uid[3]);
+        MONITOR_DumpLongHex("UID            = 0x", &info.uid[0], 4U);
     }
 
     /* Display ELE abort */
     if (ELE_IsAborted() != false)
     {
         printf("ELE Aborted\n");
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump ELE ext                                                             */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+    ele_info_t info = { 0 };
+
+    ELE_InfoGet(&info);
+    if (g_eleStatus == SM_ERR_SUCCESS)
+    {
+        /* Display patch SHA256 */
+        MONITOR_DumpLongHex("Patch SHA = 0x", &info.shaPatch[0], 8U);
+
+        /* Display FW SHA256 */
+        MONITOR_DumpLongHex("FW SHA    = 0x", &info.shaFw[0], 8U);
+
+        /* Display patch SHA256 */
+        MONITOR_DumpLongHex("OEM SRKH  = 0x", &info.oemSrkh[0], 16U);
+
+        /* Display patch SHA256 */
+        MONITOR_DumpLongHex("PQC SRKH  = 0x", &info.oemPqcSrkh[0], 16U);
     }
 
     /* Return status */
@@ -741,6 +772,35 @@ static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[])
     }
 
     return SM_ERR_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump a long array of words as one big hex number                         */
+/*--------------------------------------------------------------------------*/
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt)
+{
+    printf("%s", str);
+
+    for (uint32_t idx = 0U; idx < cnt; idx++)
+    {
+        if ((idx != 0U) && ((idx % 8U) == 0U))
+        {
+            const char *p = str;
+
+            printf("\n");
+
+            /* Loop over string */
+            while (*p != EOL)
+            {
+                printf(" ");
+                p++;
+            }
+        }
+
+        printf("%08X", ptr[idx]);
+    }
+
+    printf("\n");
 }
 #endif
 

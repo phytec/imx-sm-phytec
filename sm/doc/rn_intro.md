@@ -32,7 +32,7 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Added support for i.MX943 and the i.MX943 EVK
+- Added support for i.MX94 and the i.MX94 EVK
 - Added option to profile SCMI message latency
 - Misc. improvements and bug fixes
 

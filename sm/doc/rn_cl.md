@@ -99,7 +99,7 @@ This port is used mostly for emulation, early bring-up, and the DDR stress test 
 SM-75: Do not start ANA TMPSNS if started by ELE {#RN_DETAIL_SM_75}
 ----------
 
-Modified code to not start ANA TMPSNS if ELE starts. This is based mostly on silicon version.
+Modified code to not start the ANA TMPSNS if ELE starts it. This is based mostly on silicon version.
 
 SM-178: Add V2X command to debug monitor {#RN_DETAIL_SM_178}
 ----------

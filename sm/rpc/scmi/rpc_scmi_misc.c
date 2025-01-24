@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -1558,7 +1558,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
 /*   by this call                                                           */
 /*                                                                          */
 /* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the syslog returned successfully.                    */
+/* - SM_ERR_SUCCESS: if the syslog returned successfully.                   */
 /* - SM_ERR_NOT_SUPPORTED: if the syslog is not available.                  */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -311,6 +311,7 @@ static void TEST_ScmiLmmGet(bool pass, uint32_t channel, uint32_t lm)
                 &state, &errStatus, name));
             printf("  state=0x%08x\n", state);
             printf("  errStatus=0x%08x\n", errStatus);
+            printf("  numAgents=%u\n", SCMI_LMM_ATTR_AGENTS(attributes));
             printf("  name=%s\n", name);
         }
         /* ACCESS DENIED */

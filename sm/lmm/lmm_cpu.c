@@ -267,7 +267,7 @@ int32_t LMM_CpuResetVectorSet(uint32_t lmId, uint32_t cpuId,
             s_bootFlags[cpuId] = true;
         }
 
-        /* Save boot address */
+        /* Save start address */
         if (start)
         {
             s_startVector[cpuId] = resetVector;

@@ -780,9 +780,11 @@ static int32_t CpuStop(const scmi_caller_t *caller, const msg_rcpu5_t *in,
 /*   Set to 1 to update the reset vector used on resume.                    */
 /*   Bit[30] Boot flag.                                                     */
 /*   Set to 1 to update the reset vector used for boot.                     */
-/*   Bits[29:1] Reserved, must be zero.                                     */
+/*   Bit[29] Start flag.                                                    */
+/*   Set to 1 to update the reset vector used for CPU start.                */
+/*   Bits[28:1] Reserved, must be zero.                                     */
 /*   Bit[0] Table flag.                                                     */
-/*   Set to 1 if vector is the vector table base address.                   */
+/*   Set to 1 if vector is the vector table base address                    */
 /* - in->resetVectorLow: Lower vector:                                      */
 /*   If bit[0] of flags is 0, the lower 32 bits of the physical address     */
 /*   where the CPU should execute from on reset.                            */

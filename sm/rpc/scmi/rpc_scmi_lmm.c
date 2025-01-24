@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x10000U
+#define PROTOCOL_VERSION  0x10001U
 
 /* SCMI lmm protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -60,8 +60,9 @@
 #define COMMAND_LMM_NOTIFY                   0x9U
 #define COMMAND_LMM_RESET_REASON             0xAU
 #define COMMAND_LMM_POWER_ON                 0xBU
+#define COMMAND_LMM_RESET_VECTOR_SET         0xCU
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
-#define COMMAND_SUPPORTED_MASK               0x10FFFULL
+#define COMMAND_SUPPORTED_MASK               0x11FFFULL
 
 /* SCMI LMM max argument lengths */
 #define LMM_MAX_NAME     16U
@@ -79,6 +80,9 @@
 
 /* SCMI LMM protocol attributes */
 #define LMM_PROTO_ATTR_NUM_LM(x)  (((x) & 0xFFU) << 0U)
+
+/* SCMI LM attributes */
+#define LMM_ATTR_AGENTS(x)  (((x) & 0xFFU) << 0U)
 
 /* SCMI LM request flags */
 #define LMM_FLAGS_GRACEFUL(x)  (((x) & 0x1U) >> 0U)
@@ -105,6 +109,9 @@
 #define LMM_NOTIFY_SHUTDOWN(x)  (((x) & 0x2U) >> 1U)
 #define LMM_NOTIFY_SUSPEND(x)   (((x) & 0x4U) >> 2U)
 #define LMM_NOTIFY_WAKE(x)      (((x) & 0x8U) >> 3U)
+
+/* SCMI LMM reset vector set flags */
+#define LMM_VEC_FLAGS_TABLE(x)  (((x) & 0x1U) >> 0U)
 
 /* SCMI LM event flags */
 #define LMM_EVENT_BOOT(x)      (((x) & 0x1U) << 0U)
@@ -277,6 +284,23 @@ typedef struct
     uint32_t lmId;
 } msg_rlmm11_t;
 
+/* Request type for LmmResetVectorSet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the logical machine */
+    uint32_t lmId;
+    /* Identifier for the CPU */
+    uint32_t cpuId;
+    /* Reset vector flags */
+    uint32_t flags;
+    /* Lower vector */
+    uint32_t resetVectorLow;
+    /* Upper vector */
+    uint32_t resetVectorHigh;
+} msg_rlmm12_t;
+
 /* Request type for NegotiateProtocolVersion() */
 typedef struct
 {
@@ -325,6 +349,8 @@ static int32_t LmmResetReason(const scmi_caller_t *caller,
     const msg_rlmm10_t *in, msg_tlmm10_t *out, uint32_t *len);
 static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
     const scmi_msg_status_t *out);
+static int32_t LmmResetVectorSet(const scmi_caller_t *caller,
+    const msg_rlmm12_t *in, const scmi_msg_status_t *out);
 static int32_t LmmNegotiateProtocolVersion(const scmi_caller_t *caller,
     const msg_rlmm16_t *in, const scmi_msg_status_t *out);
 static int32_t LmmEvent(scmi_msg_id_t msgId,
@@ -408,6 +434,11 @@ int32_t RPC_SCMI_LmmDispatchCommand(scmi_caller_t *caller,
         case COMMAND_LMM_POWER_ON:
             lenOut = sizeof(const scmi_msg_status_t);
             status = LmmPowerOn(caller, (const msg_rlmm11_t*) in,
+                (const scmi_msg_status_t*) out);
+            break;
+        case COMMAND_LMM_RESET_VECTOR_SET:
+            lenOut = sizeof(const scmi_msg_status_t);
+            status = LmmResetVectorSet(caller, (const msg_rlmm12_t*) in,
                 (const scmi_msg_status_t*) out);
             break;
         case COMMAND_NEGOTIATE_PROTOCOL_VERSION:
@@ -617,7 +648,8 @@ static int32_t LmmProtocolMessageAttributes(const scmi_caller_t *caller,
 /*   - Identical to the lmId field passed via the calling parameters, in    */
 /*   all other cases                                                        */
 /* - out->attributes: LM attributes:                                        */
-/*   Bits[31:0] Reserved, must be zero                                      */
+/*   Bits[31:8] Reserved, must be zero.                                     */
+/*   Bits[7:0] Number of agents                                             */
 /* - out->state: Current state of the LM                                    */
 /* - out->errStatus: Last error status recorded                             */
 /* - out->name: A NULL terminated ASCII string with the LM name, of up to   */
@@ -626,6 +658,9 @@ static int32_t LmmProtocolMessageAttributes(const scmi_caller_t *caller,
 /* Process the LMM_ATTRIBUTES message. Platform handler for                 */
 /* SCMI_LmmAttributes(). Requires access greater than or equal to           */
 /* NONE/GET.                                                                */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - LMM_ATTR_AGENTS() - Number of agents in this LM                        */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if valid attributes are returned.                      */
@@ -691,8 +726,9 @@ static int32_t LmmAttributes(const scmi_caller_t *caller,
     /* Return data */
     if (status == SM_ERR_SUCCESS)
     {
-        /* Clear attributes */
-        out->attributes = 0U;
+        /* Return number of agents */
+        out->attributes = LMM_ATTR_AGENTS(
+            (uint32_t) g_scmiConfig[caller->scmiInst].numAgents);
 
         /* Copy out name */
         RPC_SCMI_StrCpy(out->name, nameAddr, LMM_MAX_NAME);
@@ -1304,6 +1340,101 @@ static int32_t LmmPowerOn(const scmi_caller_t *caller, const msg_rlmm11_t *in,
     {
         status = LMM_SystemLmPowerOn(caller->lmId, caller->instAgentId,
             in->lmId);
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Configure boot address for an LM CPU                                     */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->lmId: Identifier for the logical machine                           */
+/* - in->cpuId: Identifier for the CPU                                      */
+/* - in->flags: Reset vector flags:                                         */
+/*   Bits[31:1] Reserved, must be zero.                                     */
+/*   Bit[0] Table flag.                                                     */
+/*   Set to 1 if vector is the vector table base address                    */
+/* - in->resetVectorLow: Lower vector:                                      */
+/*   If bit[0] of flags is 0, the lower 32 bits of the physical address     */
+/*   where the CPU should execute from on reset.                            */
+/*   If bit[0] of flags is 1, the lower 32 bits of the vector table base    */
+/*   address                                                                */
+/* - in->resetVectorHigh: Upper vector:                                     */
+/*   If bit[0] of flags is 0, the upper 32 bits of the physical address     */
+/*   where the CPU should execute from on reset.                            */
+/*   If bit[0] of flags is 1, the upper 32 bits of the vector table base    */
+/*   address                                                                */
+/*                                                                          */
+/* Process the LMM_RESET_VECTOR_SET message. Platform handler for           */
+/* SCMI_LmmResetVectorSet(). Requires access greater than or equal to       */
+/* PRIV.                                                                    */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - LMM_VEC_FLAGS_TABLE() - Table flag                                     */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the CPU reset vector is set successfully.           */
+/* - SM_ERR_NOT_FOUND: if the LM identified by lmId does not exist or if    */
+/*   cpuId does not point to a valid CPU.                                   */
+/* - SM_ERR_INVALID_PARAMETERS: if the requested vector type is not         */
+/*   supported by this CPU.                                                 */
+/* - SM_ERR_DENIED: if the calling agent is not allowed to set the reset    */
+/*   vector for this LM.                                                    */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t LmmResetVectorSet(const scmi_caller_t *caller,
+    const msg_rlmm12_t *in, const scmi_msg_status_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    bool table = LMM_VEC_FLAGS_TABLE(in->flags) != 0U;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check LM */
+    if ((status == SM_ERR_SUCCESS) && (in->lmId >= SM_NUM_LM))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Check CPU */
+    if ((status == SM_ERR_SUCCESS) && (in->cpuId >= SM_NUM_CPU))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Check permissions */
+    if ((status == SM_ERR_SUCCESS)
+        && (g_scmiAgentConfig[caller->agentId].lmmPerms[in->lmId]
+        < SM_SCMI_PERM_PRIV))
+    {
+        status = SM_ERR_DENIED;
+    }
+
+    /* Check if the CPU is part of this LM */
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (!LM_CpuCheck(in->lmId, in->cpuId))
+        {
+            status = SM_ERR_DENIED;
+        }
+    }
+
+    /* Set boot address */
+    if (status == SM_ERR_SUCCESS)
+    {
+        uint64_t resetVector = (((uint64_t) in->resetVectorHigh) << 32U)
+            | (uint64_t) in->resetVectorLow;
+
+        /* Update vector */
+        status = LMM_CpuResetVectorSet(caller->lmId, in->cpuId,
+            resetVector, true, false, false, table);
     }
 
     /* Return status */

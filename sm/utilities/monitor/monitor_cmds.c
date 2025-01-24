@@ -2734,7 +2734,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                                 {
                                     status = LMM_CpuResetVectorSet(s_lm,
                                         cpuId, resetVector, true, true,
-                                        true,false);
+                                        true, false);
                                 }
                             }
                             break;

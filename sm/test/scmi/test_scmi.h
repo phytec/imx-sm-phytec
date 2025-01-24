@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@
 /*! SCMI pin control protocol version */
 #define SCMI_PINCTRL_PROT_VER   0x10000U
 /*! SCMI LMM protocol version */
-#define SCMI_LMM_PROT_VER       0x10000U
+#define SCMI_LMM_PROT_VER       0x10001U
 /*! SCMI BBM protocol version */
 #define SCMI_BBM_PROT_VER       0x10000U
 /*! SCMI CPU protocol version */

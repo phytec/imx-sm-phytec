@@ -116,6 +116,7 @@ and some of the optional messages are supported.
 | Lmm | 0x80 | [LMM_NOTIFY](@ref SCMI_PROTO_LMM_LMM_NOTIFY) | 0x9 | NOTIFY |
 | Lmm | 0x80 | [LMM_RESET_REASON](@ref SCMI_PROTO_LMM_LMM_RESET_REASON) | 0xA | GET |
 | Lmm | 0x80 | [LMM_POWER_ON](@ref SCMI_PROTO_LMM_LMM_POWER_ON) | 0xB | PRIV |
+| Lmm | 0x80 | [LMM_RESET_VECTOR_SET](@ref SCMI_PROTO_LMM_LMM_RESET_VECTOR_SET) | 0xC | PRIV |
 | Lmm | 0x80 | [NEGOTIATE_PROTOCOL_VERSION](@ref SCMI_PROTO_LMM_NEGOTIATE_PROTOCOL_VERSION) | 0x10 |  |
 | Lmm\n(notification) | 0x80 | [LMM_EVENT](@ref SCMI_PROTO_LMM_LMM_EVENT) | 0x0 |  |
 | Bbm | 0x81 | [PROTOCOL_VERSION](@ref SCMI_PROTO_BBM_PROTOCOL_VERSION) | 0x0 |  |
@@ -2165,6 +2166,32 @@ See SCMI_LmmPowerOn() for details.
     Receive
     ---------------------------------------------------------------------------------
     | uint32         | header (type=0, proto=0x80, msg=0xB                          |
+    ---------------------------------------------------------------------------------
+    | int32          | status                                                       |
+    ---------------------------------------------------------------------------------
+
+## Lmm: LMM_RESET_VECTOR_SET ## {#SCMI_PROTO_LMM_LMM_RESET_VECTOR_SET}
+
+See SCMI_LmmResetVectorSet() for details.
+
+    Send
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0xC                          |
+    ---------------------------------------------------------------------------------
+    | uint32         | lm_id                                                        |
+    ---------------------------------------------------------------------------------
+    | uint32         | cpu_id                                                       |
+    ---------------------------------------------------------------------------------
+    | uint32         | flags                                                        |
+    ---------------------------------------------------------------------------------
+    | uint32         | reset_vector_low                                             |
+    ---------------------------------------------------------------------------------
+    | uint32         | reset_vector_high                                            |
+    ---------------------------------------------------------------------------------
+
+    Receive
+    ---------------------------------------------------------------------------------
+    | uint32         | header (type=0, proto=0x80, msg=0xC                          |
     ---------------------------------------------------------------------------------
     | int32          | status                                                       |
     ---------------------------------------------------------------------------------

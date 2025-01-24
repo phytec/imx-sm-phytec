@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -70,6 +70,8 @@
 #define SCMI_MSG_LMM_RESET_REASON            0xAU
 /*! Power up an LM */
 #define SCMI_MSG_LMM_POWER_ON                0xBU
+/*! Configure boot address for an LM CPU */
+#define SCMI_MSG_LMM_RESET_VECTOR_SET        0xCU
 /*! Negotiate the protocol version */
 #define SCMI_MSG_NEGOTIATE_PROTOCOL_VERSION  0x10U
 /*! Read LM notification event */
@@ -122,6 +124,14 @@
 /** @{ */
 /*! Number of logical machines */
 #define SCMI_LMM_PROTO_ATTR_NUM_LM(x)  (((x) & 0xFFU) >> 0U)
+/** @} */
+
+/*!
+ * @name SCMI LM attributes
+ */
+/** @{ */
+/*! Number of agents in this LM */
+#define SCMI_LMM_ATTR_AGENTS(x)  (((x) & 0xFFU) >> 0U)
 /** @} */
 
 /*!
@@ -182,6 +192,14 @@
 #define SCMI_LMM_NOTIFY_SUSPEND(x)   (((x) & 0x1U) << 2U)
 /*! Enable notifications for wake (resume) */
 #define SCMI_LMM_NOTIFY_WAKE(x)      (((x) & 0x1U) << 3U)
+/** @} */
+
+/*!
+ * @name SCMI LMM reset vector set flags
+ */
+/** @{ */
+/*! Table flag */
+#define SCMI_LMM_VEC_FLAGS_TABLE(x)  (((x) & 0x1U) << 0U)
 /** @} */
 
 /*!
@@ -270,7 +288,8 @@ int32_t SCMI_LmmProtocolMessageAttributes(uint32_t channel,
  *                            - Identical to the lmId field passed via the
  *                            calling parameters, in all other cases
  * @param[out]    attributes  LM attributes:<BR>
- *                            Bits[31:0] Reserved, must be zero
+ *                            Bits[31:8] Reserved, must be zero.<BR>
+ *                            Bits[7:0] Number of agents
  * @param[out]    state       Current state of the LM
  * @param[out]    errStatus   Last error status recorded
  * @param[out]    name        A NULL terminated ASCII string with the LM name,
@@ -282,6 +301,9 @@ int32_t SCMI_LmmProtocolMessageAttributes(uint32_t channel,
  * cannot generate notifications on suspend/wake so the
  * ::SCMI_LMM_STATE_SUSPEND state may not be returned. Max name length is
  * ::SCMI_LMM_MAX_NAME.
+ *
+ * Access macros:
+ * - ::SCMI_LMM_ATTR_AGENTS() - Number of agents in this LM
  *
  * @return Returns the status (::SCMI_ERR_SUCCESS = success).
  *
@@ -564,6 +586,54 @@ int32_t SCMI_LmmResetReason(uint32_t channel, uint32_t lmId,
  *   specified by \a lmId.
  */
 int32_t SCMI_LmmPowerOn(uint32_t channel, uint32_t lmId);
+
+/*!
+ * Configure boot address for an LM CPU.
+ *
+ * @param[in]     channel          A2P channel for comms
+ * @param[in]     lmId             Identifier for the logical machine
+ * @param[in]     cpuId            Identifier for the CPU
+ * @param[in]     flags            Reset vector flags:<BR>
+ *                                 Bits[31:1] Reserved, must be zero.<BR>
+ *                                 Bit[0] Table flag.<BR>
+ *                                 Set to 1 if vector is the vector table base
+ *                                 address
+ * @param[in]     resetVectorLow   Lower vector:<BR>
+ *                                 If bit[0] of flags is 0, the lower 32 bits
+ *                                 of the physical address where the CPU should
+ *                                 execute from on reset.<BR>
+ *                                 If bit[0] of flags is 1, the lower 32 bits
+ *                                 of the vector table base address
+ * @param[in]     resetVectorHigh  Upper vector:<BR>
+ *                                 If bit[0] of flags is 0, the upper 32 bits
+ *                                 of the physical address where the CPU should
+ *                                 execute from on reset.<BR>
+ *                                 If bit[0] of flags is 1, the upper 32 bits
+ *                                 of the vector table base address
+ *
+ * This function configures the boot address for the CPU. Some CPUs allow the
+ * reset vector (the address where the CPU will start execution) to be
+ * configured. Other CPUs instead allow the base address of the vector table to
+ * be configured. CPUs support one type or the other and if \a flags indicates
+ * the wrong type then an error will be returned.
+ *
+ * Access macros:
+ * - ::SCMI_LMM_VEC_FLAGS_TABLE() - Table flag
+ *
+ * @return Returns the status (::SCMI_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref SCMI_STATUS "SCMI error codes"):
+ * - ::SCMI_ERR_SUCCESS: if the CPU reset vector is set successfully.
+ * - ::SCMI_ERR_NOT_FOUND: if the LM identified by \a lmId does not exist or
+ *   if \a cpuId does not point to a valid CPU.
+ * - ::SCMI_ERR_INVALID_PARAMETERS: if the requested vector type is not
+ *   supported by this CPU.
+ * - ::SCMI_ERR_DENIED: if the calling agent is not allowed to set the reset
+ *   vector for this LM.
+ */
+int32_t SCMI_LmmResetVectorSet(uint32_t channel, uint32_t lmId,
+    uint32_t cpuId, uint32_t flags, uint32_t resetVectorLow,
+    uint32_t resetVectorHigh);
 
 /*!
  * Negotiate the protocol version.

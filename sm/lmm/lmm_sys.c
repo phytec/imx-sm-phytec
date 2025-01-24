@@ -473,6 +473,43 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Check if a CPU is started when an LM boots                               */
+/*--------------------------------------------------------------------------*/
+bool LM_CpuCheck(uint32_t lmId, uint32_t cpuId)
+{
+    bool rtn = false;
+    uint32_t idx = g_lmmConfig[lmId].start - 1U;
+
+    /* Loop over start list to check for CPU */
+    while ((!rtn) && (idx < SM_LM_NUM_START))
+    {
+        const lmm_startstop_t *ptr = &s_lmmStart[idx];
+
+        /* End for this LM? */
+        if (ptr->lmId != lmId)
+        {
+            break;
+        }
+
+        /* For this mode? */
+        if (ptr->mSel == s_modeSel)
+        {
+            /* Process start command */
+            if ((ptr->ss == LMM_SS_CPU) && (ptr->rsrc == cpuId))
+            {
+                rtn = true;
+            }
+        }
+
+        /* Next entry */
+        idx++;
+    }
+
+    /* Return state */
+    return rtn;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Power on LM                                                              */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
@@ -1007,7 +1044,6 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
     uint32_t idx = start;
 
     /* Loop over start list to load reset vectors */
-
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
     {
         const lmm_startstop_t *ptr = &s_lmmStart[idx];

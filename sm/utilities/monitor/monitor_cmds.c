@@ -541,6 +541,10 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     }
 #endif
 
+#if (defined(__GNUC__) && !defined(__DCC__))
+    printf("Compiler      = gcc %s\n", __VERSION__);
+#endif
+
     return SM_ERR_SUCCESS;
 }
 

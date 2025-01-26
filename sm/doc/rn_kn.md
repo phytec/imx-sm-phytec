@@ -24,4 +24,5 @@ Bug {#RN_KN_BUG}
 |------------|-------------------------------|---|---|---|
 | [SM-212](https://jira.sw.nxp.com/projects/SM/issues/SM-212) | Insufficient argument checking for monitor pmic commands | Y | Y | Y |
 | [SM-213](https://jira.sw.nxp.com/projects/SM/issues/SM-213) | Insufficient argument checking for monitor trdc commands | Y | Y | Y |
+| [SM-214](https://jira.sw.nxp.com/projects/SM/issues/SM-214) | Insufficient argument checking for monitor fuse commands | Y | Y | Y |
 

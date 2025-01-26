@@ -32,6 +32,8 @@ Improvement {#RN_CL_IMP}
 | [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_187) |   | Y | Y | |
 | [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_190) |   | Y | Y | |
 | [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements [[detail]](@ref RN_DETAIL_SM_191) |   | Y | Y | |
+| [SM-211](https://jira.sw.nxp.com/projects/SM/issues/SM-211) | Add new ele ext monitor command to display additional info [[detail]](@ref RN_DETAIL_SM_211) |   | Y | Y | Y |
+| [SM-216](https://jira.sw.nxp.com/projects/SM/issues/SM-216) | Add gcc compiler version to info [[detail]](@ref RN_DETAIL_SM_216) |   | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -127,7 +129,7 @@ SM-184: Deassert the GPU reset when the GPUMIX is powered up {#RN_DETAIL_SM_184}
 
 SM was modified to take the GPU out of reset when the GPUMIX is powered on. This requires the SM own access to the BLK_CTRL_CPU module. Access to this module is removed from the AP. Customer need to make the same change to their SM cfg files.
 
-Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at their reset state and the AP cannot set these. ANy need to change these would have to be done in the SM config_user.h file.
+Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at their reset state and the AP cannot set these. Any need to change these would have to be done in the SM config_user.h file.
 
 SM-187: Misc. updates to SM configurations {#RN_DETAIL_SM_187}
 ----------
@@ -198,4 +200,14 @@ SM-210: Incorrect ELE error code caching {#RN_DETAIL_SM_210}
 ----------
 
 Calls to ELE_RomIdGet() return the error status from any previous ELE call. This could be seen using the monitor 'ele info' command after a failed fuse command. This change fixed how cached ELE info handles the error status.
+
+SM-211: Add new ele ext monitor command to display additional info {#RN_DETAIL_SM_211}
+----------
+
+Add new 'ele ext' command. Displays ELE ROM patch SHA256, FW SHA256, and other ELE info.
+
+SM-216: Add gcc compiler version to info {#RN_DETAIL_SM_216}
+----------
+
+In the SM monitor info command, print the gcc version. If gcc was not used to compile the SM then nothing additional is printed.
 

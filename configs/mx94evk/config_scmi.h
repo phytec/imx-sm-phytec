@@ -559,6 +559,7 @@
         .clkPerms[DEV_SM_CLK_CCMCKO3] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_CCMCKO4] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISPPIX] = SM_SCMI_PERM_ALL, \
+        .clkPerms[DEV_SM_CLK_ECAT] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETREF] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER2] = SM_SCMI_PERM_ALL, \
@@ -635,6 +636,8 @@
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN4_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN5_RX] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_ECAT_MDIO] = SM_SCMI_PERM_ALL, \
+        .daisyPerms[DEV_SM_DAISY_ECAT_PROM] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_ETH4_RXD_0] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_ETH4_RXD_1] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_ETH4_RXD_2] = SM_SCMI_PERM_ALL, \
@@ -945,6 +948,7 @@
         .pinPerms[DEV_SM_PIN_XSPI1_SCLK] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_XSPI1_SS0_B] = SM_SCMI_PERM_ALL, \
         .pinPerms[DEV_SM_PIN_XSPI1_SS1_B] = SM_SCMI_PERM_ALL, \
+        .rstPerms[DEV_SM_RST_ECAT_IP_RESETN] = SM_SCMI_PERM_ALL, \
         .rtcPerms[BRD_SM_RTC_PCA2131] = SM_SCMI_PERM_PRIV, \
         .rtcPerms[DEV_SM_RTC_BBNSM] = SM_SCMI_PERM_ALL, \
         .sensorPerms[BRD_SM_SENSOR_TEMP_PF09] = SM_SCMI_PERM_ALL, \

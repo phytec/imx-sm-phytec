@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <errno.h>
+#include <inttypes.h>
 #include "sm.h"
 #include "monitor.h"
 #include "monitor_cmds.h"
@@ -113,6 +114,8 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
     int32_t rw);
 static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
+    int32_t rw);
+static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
     int32_t rw);
 static int32_t MONITOR_CmdVolt(int32_t argc, const char * const argv[],
     int32_t rw);
@@ -193,6 +196,8 @@ int32_t MONITOR_Dispatch(char *line)
         "clock.w",
         "sensor.r",
         "sensor.w",
+        "rst.r",
+        "rst.w",
         "volt.r",
         "volt.w",
         "bb.r",
@@ -329,94 +334,100 @@ int32_t MONITOR_Dispatch(char *line)
             case 28:  /* sensor.w */
                 status = MONITOR_CmdSensor(argc - 1, &argv[1], WRITE);
                 break;
-            case 29:  /* volt.r */
+            case 29:  /* rst.r */
+                status = MONITOR_CmdRst(argc - 1, &argv[1], READ);
+                break;
+            case 30:  /* rst.w */
+                status = MONITOR_CmdRst(argc - 1, &argv[1], WRITE);
+                break;
+            case 31:  /* volt.r */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], READ);
                 break;
-            case 30:  /* volt.w */
+            case 32:  /* volt.w */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], WRITE);
                 break;
-            case 31:  /* bb.r */
+            case 33:  /* bb.r */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], READ);
                 break;
-            case 32:  /* bb.w */
+            case 34:  /* bb.w */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], WRITE);
                 break;
-            case 33:  /* cpu.r */
+            case 35:  /* cpu.r */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], READ);
                 break;
-            case 34:  /* cpu.w */
+            case 36:  /* cpu.w */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], WRITE);
                 break;
-            case 35:  /* ctrl.r */
+            case 37:  /* ctrl.r */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 36:  /* ctrl.w */
+            case 38:  /* ctrl.w */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 37:  /* ctrl.notify */
+            case 39:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 38:  /* extctrl.r */
+            case 40:  /* extctrl.r */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 39:  /* extctrl.w */
+            case 41:  /* extctrl.w */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 40:  /* md.b */
+            case 42:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 41:  /* md.w */
+            case 43:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 42:  /* md.l */
+            case 44:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 43:  /* mm.b */
+            case 45:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 44:  /* mm.w */
+            case 46:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 45:  /* mm.l */
+            case 47:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 46:  /* fuse.r */
+            case 48:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 47:  /* fuse.w */
+            case 49:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 48:  /* pmic.r */
+            case 50:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 49:  /* pmic.w */
+            case 51:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 50:  /* idle */
+            case 52:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 51:  /* assert */
+            case 53:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 52:  /* syslog */
+            case 54:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 53:  /* group */
+            case 55:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 54:  /* ssm */
+            case 56:  /* ssm */
                 status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
-            case 55:  /* custom */
+            case 57:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
-            case 56:  /* test */
+            case 58:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
 #if defined(GCOV) && !defined(SIMU)
-            case 57:  /* gcov */
+            case 59:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -2165,6 +2176,105 @@ static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
 }
 
 /*--------------------------------------------------------------------------*/
+/* Rst command                                                              */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
+    int32_t rw)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (rw)
+    {
+        default:  /* read */
+            {
+                for (uint32_t domain = 0U; domain < SM_NUM_RESET;
+                    domain++)
+                {
+                    string rstNameAddr;
+                    int32_t wName = 0;
+                    bool assertNegate = false;
+
+                    status = LMM_ResetDomainNameGet(s_lm, domain,
+                        &rstNameAddr, &wName);
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = LMM_ResetDomainGet(s_lm, domain,
+                            &assertNegate);
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        if (assertNegate)
+                        {
+                            printf("%03u: %*s = asserted\n", domain,
+                                -wName, rstNameAddr);
+                        }
+                        else
+                        {
+                            printf("%03u: %*s = negated\n", domain,
+                                -wName, rstNameAddr);
+                        }
+                    }
+                }
+            }
+            break;
+        case WRITE:  /* write */
+            {
+                uint32_t domain = 0U;
+
+                string const rstModes[] =
+                {
+                    "assert",
+                    "negate",
+                    "auto"
+                };
+
+                if (argc < 2)
+                {
+                    status = SM_ERR_MISSING_PARAMETERS;
+                }
+                else
+                {
+                    status = MONITOR_NameToId(argv[0], &domain,
+                        LMM_ResetDomainNameGet, SM_NUM_RESET);
+                }
+
+                if (status == SM_ERR_SUCCESS)
+                {
+                    uint8_t rstMode = (uint8_t) MONITOR_Find(rstModes,
+                        (int32_t) ARRAY_SIZE(rstModes), argv[1]);
+
+                    switch(rstMode)
+                    {
+                        /* assert */
+                        case 0:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, false, true);
+                            break;
+                        /* negate (aka de-assert) */
+                        case 1:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, false, false);
+                            break;
+                        /* auto (aka toggle) */
+                        case 2:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, true, false);
+                            break;
+                        default:
+                            status = SM_ERR_INVALID_PARAMETERS;
+                            break;
+                    }
+                }
+            }
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Volt command                                                             */
 /*--------------------------------------------------------------------------*/
 static int32_t MONITOR_CmdVolt(int32_t argc, const char * const argv[],
@@ -2866,7 +2976,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
     if (argc != 0)
     {
         errno = 0;
-        uint32_t addr = strtoul(argv[0], NULL, 0);
+        uintptr_t addr = strtoul(argv[0], NULL, 0);
         if (errno != 0)
         {
             addr = 0x80000000UL;
@@ -2893,7 +3003,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                     {
                         if ((i % 16U) == 0U)
                         {
-                            printf("%08x: ", (uint32_t) x);
+                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
                         }
 
                         uint8_t v = 0U;
@@ -2927,7 +3037,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                     {
                         if ((i % 8U) == 0U)
                         {
-                            printf("%08x: ", (uint32_t) x);
+                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
                         }
 
                         uint16_t v = 0U;
@@ -2961,7 +3071,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                     {
                         if ((i % 4U) == 0U)
                         {
-                            printf("%08x: ", (uint32_t) x);
+                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
                         }
 
                         uint32_t v = 0U;

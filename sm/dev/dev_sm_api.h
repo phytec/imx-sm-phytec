@@ -376,8 +376,13 @@
 #endif
 
 #ifndef SM_RESETDOMAIN
-/*! Redirector (device/board) to reset a reset domain name */
+/*! Redirector (device/board) to set reset domain state */
 #define SM_RESETDOMAIN          DEV_SM_ResetDomain
+#endif
+
+#ifndef SM_RESETDOMAINGET
+/*! Redirector (device/board) to get reset domain state */
+#define SM_RESETDOMAINGET       DEV_SM_ResetDomainGet
 #endif
 
 #ifndef SM_VOLTAGENAMEGET

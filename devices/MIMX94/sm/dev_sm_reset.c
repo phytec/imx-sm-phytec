@@ -178,3 +178,33 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get reset domain status                                                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t resetType;
+
+    /* Perform requested reset action */
+    if (!SRC_MixGetResetLine(domainId, &resetType))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        if (resetType == RST_LINE_CTRL_ASSERT)
+        {
+            *assertNegate = true;
+        }
+        else
+        {
+            *assertNegate = false;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+

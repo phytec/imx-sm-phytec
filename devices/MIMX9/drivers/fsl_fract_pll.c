@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -324,8 +324,11 @@ static bool FRACTPLL_DynamicSetRate(uint32_t pllIdx, uint64_t vcoRate)
         /* Query power status of PLL */
         bool pllActive = FRACTPLL_GetEnable(pllIdx, PLL_CTRL_POWERUP_MASK);
 
-        /* Dynamic set rate requires fractional PLL to be active */
-        if (g_pllAttrs[pllIdx].isFrac && pllActive)
+        /* Dynamic set rate requires fractional PLL to be active and
+         * initalized with default MFD
+         */
+        if (g_pllAttrs[pllIdx].isFrac && pllActive &&
+            (pll->DENOMINATOR.RW == PLL_DENOMINATOR_MFD(CLOCK_PLL_MFD)))
         {
             uint32_t mfi = (pll->DIV.RW & PLL_DIV_MFI_MASK) >> PLL_DIV_MFI_SHIFT;
 

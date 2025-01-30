@@ -130,16 +130,28 @@
 /** @} */
 
 /*! Macro to get upper 32 bits of an unsigned 64-bit value */
-#define SM_UINT64_H(X)  ((uint32_t)((((uint64_t) (X)) >> 32U) & 0x0FFFFFFFFULL))
+#define SM_UINT64_H(X)  ((uint32_t)((((uint64_t) (X)) >> 32U) & 0xFFFFFFFFULL))
 
 /*! Macro to get lower 32 bits of an unsigned 64-bit value */
-#define SM_UINT64_L(X)  ((uint32_t)(((uint64_t) (X)) & 0x0FFFFFFFFULL))
+#define SM_UINT64_L(X)  ((uint32_t)(((uint64_t) (X)) & 0xFFFFFFFFULL))
 
 /*! Macro to get upper 32 bits of a signed 64-bit value */
-#define SM_INT64_H(X)  ((int32_t)((((uint64_t) (X)) >> 32U) & 0x0FFFFFFFFULL))
+#define SM_INT64_H(X)  ((int32_t)((((uint64_t) (X)) >> 32U) & 0xFFFFFFFFULL))
 
 /*! Macro to get lower 32 bits of a signed 64-bit value */
-#define SM_INT64_L(X)  ((int32_t)(((uint64_t) (X)) & 0x0FFFFFFFFULL))
+#define SM_INT64_L(X)  ((int32_t)(((uint64_t) (X)) & 0xFFFFFFFFULL))
+
+/*! Macro to convert a U64 to a U32 */
+#define SM_U64_U32(X)  ((uint32_t)(((uint64_t) (X)) & 0xFFFFFFFFULL))
+
+/*! Macro to convert a U32 to a U16 */
+#define SM_U32_U16(X)  ((uint16_t)(((uint64_t) (X)) & 0xFFFFUL))
+
+/*! Macro to convert a U32 to a U8 */
+#define SM_U32_U8(X)  ((uint8_t)(((uint32_t) (X)) & 0xFFUL))
+
+/*! Macro to convert a U32 to a I32 */
+#define SM_U32_I32(X)  ((int32_t)(((uint32_t) (X)) & 0x7FFFFFFFUL))
 
 /*! Macro to create bit field */
 #define BIT8(X)   (((uint8_t) 1U) << (((uint32_t) (X)) % 8UL))

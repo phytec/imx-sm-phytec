@@ -210,13 +210,13 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
             sec64 = val / 100U;
             hun64 = val - (sec64 * 100U);
 
-            secs = (uint32_t) sec64;
-            hun = (uint32_t) hun64;
+            secs = SM_UINT64_L(sec64);
+            hun = SM_UINT64_L(hun64);
         }
         else
         {
             hun = 0U;
-            secs = (uint32_t) val;
+            secs = SM_UINT64_L(val);
         }
 
         /* Calculate totals */

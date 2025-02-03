@@ -49,6 +49,13 @@
 
 /* Local types */
 
+typedef struct
+{
+    bool valid;
+    bool freqUpdate;
+    uint32_t perfLevel;
+} mix_pdn_context;
+
 /* Local variables */
 
 static bool s_tempSensorA55Enabled = false;
@@ -58,6 +65,10 @@ static fracpll_context_t s_pllContextDdr;
 static bool s_pllContextValidHsio = false;
 static bool s_pllContextValidLdb = false;
 static bool s_pllContextValidDdr = false;
+static mix_pdn_context s_mixPdnContext55 =
+{
+    .valid = false
+};
 
 /* Global constant data */
 
@@ -95,6 +106,26 @@ int32_t DEV_SM_A55pConfigLoad(void)
         {
             s_tempSensorA55Enabled = true;
         }
+    }
+
+    /* Check if A55 resuming with saved power-down context */
+    if ((status == SM_ERR_SUCCESS) && (s_mixPdnContext55.valid))
+    {
+        uint32_t perfLevel = s_mixPdnContext55.perfLevel;
+
+        if (s_mixPdnContext55.freqUpdate)
+        {
+            /* A55 resume requires clocking restore */
+            status = DEV_SM_PerfFreqSet(DEV_SM_PERF_A55, perfLevel);
+        }
+        else
+        {
+            /* A55 resume requires performance level restore */
+            status = DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, perfLevel);
+        }
+
+        /* Clear A55 power down context */
+        s_mixPdnContext55.valid = false;
     }
 
     /* Return status */
@@ -568,14 +599,72 @@ int32_t DEV_SM_CcmsrcgpcConfigLoad(void)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_A55pPowerDownPre(void)
 {
+    int32_t status;
+
     /* Reflect that A55 temp sensor is going down */
     s_tempSensorA55Enabled = false;
 
     /* Disable sensor */
     (void) DEV_SM_SensorPowerDown(DEV_SM_SENSOR_TEMP_A55);
 
-    /* Move A55 perf level to a setpoint that does not require ARM_PLL */
-    return DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
+    /* Query A55 sleep mode target */
+    uint32_t sleepMode = CPU_SLEEP_MODE_RUN;
+    (void) CPU_SleepModeGet(CPU_IDX_A55P, &sleepMode);
+
+    /* Save A55 power down context based on sleep mode target */
+    switch (sleepMode)
+    {
+        case CPU_SLEEP_MODE_WAIT:
+            status = DEV_SM_PerfLevelGet(DEV_SM_PERF_A55,
+                &s_mixPdnContext55.perfLevel);
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* WAIT mode updates A55 clocking context */
+                status = DEV_SM_PerfFreqSet(DEV_SM_PERF_A55,
+                    DEV_SM_PERF_LVL_PRK);
+
+                /* Performance context restored if not already parked */
+                if ((status == SM_ERR_SUCCESS) &&
+                    (s_mixPdnContext55.perfLevel != DEV_SM_PERF_LVL_PRK))
+                {
+                    /* Restore A55 clocking during resume */
+                    s_mixPdnContext55.freqUpdate = true;
+                    s_mixPdnContext55.valid = true;
+                }
+            }
+            break;
+
+        case CPU_SLEEP_MODE_STOP:
+        case CPU_SLEEP_MODE_SUSPEND:
+            status = DEV_SM_PerfLevelGet(DEV_SM_PERF_A55,
+                &s_mixPdnContext55.perfLevel);
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* STOP/SUSPEND mode updates A55 performance level */
+                status = DEV_SM_PerfLevelSet(DEV_SM_PERF_A55,
+                    DEV_SM_PERF_LVL_PRK);
+
+                /* Performance context restored if not already parked */
+                if ((status == SM_ERR_SUCCESS) &&
+                    (s_mixPdnContext55.perfLevel != DEV_SM_PERF_LVL_PRK))
+                {
+                    /* Restore performance level during resume */
+                    s_mixPdnContext55.freqUpdate = false;
+                    s_mixPdnContext55.valid = true;
+                }
+            }
+            break;
+
+        default:
+            /* Move to parked performance level */
+            status = DEV_SM_PerfLevelSet(DEV_SM_PERF_A55,
+                DEV_SM_PERF_LVL_PRK);
+            break;
+    }
+
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

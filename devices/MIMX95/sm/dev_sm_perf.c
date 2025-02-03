@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -1740,6 +1740,14 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set frequency of performance domain                                      */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel)
+{
+    return DEV_SM_PerfFreqUpdate(domainId, perfLevel);
 }
 
 /*--------------------------------------------------------------------------*/

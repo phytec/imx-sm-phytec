@@ -1266,6 +1266,14 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Set frequency of performance domain                                      */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel)
+{
+    return DEV_SM_PerfFreqUpdate(domainId, perfLevel);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Configure performance level for system sleep                             */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)

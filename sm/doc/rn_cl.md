@@ -48,6 +48,8 @@ Bug {#RN_CL_BUG}
 | [SM-206](https://jira.sw.nxp.com/projects/SM/issues/SM-206) | Cannot configure some reset permissions [[detail]](@ref RN_DETAIL_SM_206) |   | Y | Y | |
 | [SM-207](https://jira.sw.nxp.com/projects/SM/issues/SM-207) | Cortex-M address not configured prior to power on [[detail]](@ref RN_DETAIL_SM_207) |   | Y | Y | |
 | [SM-210](https://jira.sw.nxp.com/projects/SM/issues/SM-210) | Incorrect ELE error code caching [[detail]](@ref RN_DETAIL_SM_210) |   | Y | Y | |
+| [SM-218](https://jira.sw.nxp.com/projects/SM/issues/SM-218) | Dynamic rate update can fail with uninitialized PLL VCO |   | Y | Y | Y |
+| [SM-219](https://jira.sw.nxp.com/projects/SM/issues/SM-219) | Restore A55 perf level based on cpu target mode. |   | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------

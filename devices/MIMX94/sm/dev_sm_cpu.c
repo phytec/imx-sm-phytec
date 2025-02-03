@@ -210,7 +210,7 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
     {
         if (cpuId == DEV_SM_CPU_A55P)
         {
-             (void) DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
+            (void) DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
         }
         /* Set CPU run mode to STOP */
         if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_STOP))

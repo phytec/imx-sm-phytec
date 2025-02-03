@@ -106,7 +106,7 @@ int32_t DEV_SM_SystemInit(void)
 #ifdef DEVICE_HAS_ELE
     /* Enable GPC-to-ELE handshake */
     GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
- #endif
+#endif
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
@@ -116,7 +116,7 @@ int32_t DEV_SM_SystemInit(void)
     /* Default to keep M71 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_1_CFG |=
         (BLK_CTRL_S_AONMIX_M7_1_CFG_CORECLK_FORCE_ON_MASK |
-        BLK_CTRL_S_AONMIX_M7_1_CFG_HCLK_FORCE_ON_MASK);
+            BLK_CTRL_S_AONMIX_M7_1_CFG_HCLK_FORCE_ON_MASK);
 
     /* Configure PMIC standby timings */
     pmicAckCtrl = GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL;

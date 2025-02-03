@@ -2250,7 +2250,7 @@ static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
                     uint8_t rstMode = (uint8_t) MONITOR_Find(rstModes,
                         (int32_t) ARRAY_SIZE(rstModes), argv[1]);
 
-                    switch(rstMode)
+                    switch (rstMode)
                     {
                         /* assert */
                         case 0:

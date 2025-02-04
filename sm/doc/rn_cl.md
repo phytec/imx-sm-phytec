@@ -32,8 +32,8 @@ Improvement {#RN_CL_IMP}
 | [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_187) |   | Y | Y | |
 | [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_190) |   | Y | Y | |
 | [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements [[detail]](@ref RN_DETAIL_SM_191) |   | Y | Y | |
-| [SM-211](https://jira.sw.nxp.com/projects/SM/issues/SM-211) | Add new ele ext monitor command to display additional info [[detail]](@ref RN_DETAIL_SM_211) |   | Y | Y | Y |
-| [SM-216](https://jira.sw.nxp.com/projects/SM/issues/SM-216) | Add gcc compiler version to info [[detail]](@ref RN_DETAIL_SM_216) |   | Y | Y | Y |
+| [SM-211](https://jira.sw.nxp.com/projects/SM/issues/SM-211) | Add new ele ext monitor command to display additional info [[detail]](@ref RN_DETAIL_SM_211) |   | Y | Y | |
+| [SM-216](https://jira.sw.nxp.com/projects/SM/issues/SM-216) | Add gcc compiler version to info [[detail]](@ref RN_DETAIL_SM_216) |   | Y | Y | |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -48,8 +48,8 @@ Bug {#RN_CL_BUG}
 | [SM-206](https://jira.sw.nxp.com/projects/SM/issues/SM-206) | Cannot configure some reset permissions [[detail]](@ref RN_DETAIL_SM_206) |   | Y | Y | |
 | [SM-207](https://jira.sw.nxp.com/projects/SM/issues/SM-207) | Cortex-M address not configured prior to power on [[detail]](@ref RN_DETAIL_SM_207) |   | Y | Y | |
 | [SM-210](https://jira.sw.nxp.com/projects/SM/issues/SM-210) | Incorrect ELE error code caching [[detail]](@ref RN_DETAIL_SM_210) |   | Y | Y | |
-| [SM-218](https://jira.sw.nxp.com/projects/SM/issues/SM-218) | Dynamic rate update can fail with uninitialized PLL VCO |   | Y | Y | Y |
-| [SM-219](https://jira.sw.nxp.com/projects/SM/issues/SM-219) | Restore A55 perf level based on cpu target mode. |   | Y | Y | Y |
+| [SM-218](https://jira.sw.nxp.com/projects/SM/issues/SM-218) | Dynamic rate update can fail with uninitialized PLL VCO [[detail]](@ref RN_DETAIL_SM_218) |   | Y | Y | |
+| [SM-219](https://jira.sw.nxp.com/projects/SM/issues/SM-219) | Save/restore A55 performance context during A55P power gating [[detail]](@ref RN_DETAIL_SM_219) |   | Y | Y | |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -212,4 +212,23 @@ SM-216: Add gcc compiler version to info {#RN_DETAIL_SM_216}
 ----------
 
 In the SM monitor info command, print the gcc version. If gcc was not used to compile the SM then nothing additional is printed.
+
+SM-218: Dynamic rate update can fail with uninitialized PLL VCO {#RN_DETAIL_SM_218}
+----------
+
+SM supports dynamic updates of PLLs without relock if the new rate meets hardware constraints defined by the fractional PLL module.  SM code supporting dynamic PLL updates previously calculated an invalid PLL VCO rate under the following circumstances:
+ - PLL has the reset register value (e.g. PLL VCO rate has not been set by an agent)
+ - PLL is powered on with reset register values
+ - PLL set rate is requested with a rate that falls within the hardware constraints to perform a dynamic PLL VCO update
+
+SM has been updated to avoid dynamic PLL updates until initialized with a VCO rate specified by the agent. 
+
+SM-219: Save/restore A55 performance context during A55P power gating {#RN_DETAIL_SM_219}
+----------
+
+A55 low-power modes that gate off power to the CORTEXMIX platform (A55P) require the clock source to be switched to the CCM-based clock root (ARM_A55_CLK_ROOT) since the ARM_PLL is physically located in CORTEXMIX.  SM previously achieved this by moving the A55 performance domain to DEV_SM_PERF_LVL_PRK during the CORTEXMIX low-power flow.  Upon resume, SM did not restore the A55 performance level which may result in disparities between the A55 performance level after resume and the level requested by the A55 agent prior to entering low-power mode.
+
+SM has been updated to restore the performance context using the following policies:
+ - If A55P is power gated with target sleep mode of WAIT, SM will save/restore the A55 clocking context associated with the A55 performance domain at sleep entry.  During A55 sleep, only the A55 clocking context will be lowered to DEV_SM_PERF_LVL_PRK.
+ - If A55P is power gated with target sleep mode of STOP/SUSPEND, SM will save/restore the A55 performance domain level at sleep entry.  During A55 sleep, the A55 performance domain level will be lowered to DEV_SM_PERF_LVL_PRK.
 

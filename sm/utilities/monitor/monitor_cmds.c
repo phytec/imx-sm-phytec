@@ -715,12 +715,6 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
 
         /* Display UID */
         MONITOR_DumpLongHex("UID            = 0x", &info.uid[0], 4U);
-
-        /* Display reserved data */
-        for (uint32_t idx = 0U; idx < 8U; idx++)
-        {
-            printf("reserved[%u]    = 0x%X\n", idx, info.reserved[idx]);
-        }
     }
 
     /* Display ELE abort */

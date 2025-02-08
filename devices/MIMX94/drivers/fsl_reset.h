@@ -124,7 +124,7 @@
 #define RST_LINE_ENDAT2_RESETN          28U
 #define RST_LINE_HIPERFACE_RESETN       29U
 
-/* Regional resets (RSTR) */      
+/* Regional resets (RSTR) */
 #define RST_LINE_ANAMIX                 30U
 #define RST_LINE_AONMIX_TOP             31U
 #define RST_LINE_AONMIX_M33             32U

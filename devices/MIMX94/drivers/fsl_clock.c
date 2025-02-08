@@ -483,10 +483,10 @@ const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
     [CLOCK_ROOT_CCMCKO4][2] = CLOCK_SRC_SYSPLL1_PFD1,
     [CLOCK_ROOT_CCMCKO4][3] = CLOCK_SRC_AUDIOPLL2,
 
-    [CLOCK_ROOT_BISS][0] = CLOCK_SRC_OSC24M, 
-    [CLOCK_ROOT_BISS][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2, 
-    [CLOCK_ROOT_BISS][2] = CLOCK_SRC_SYSPLL1_PFD1_DIV2, 
-    [CLOCK_ROOT_BISS][3] = CLOCK_SRC_FRO, 
+    [CLOCK_ROOT_BISS][0] = CLOCK_SRC_OSC24M,
+    [CLOCK_ROOT_BISS][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2,
+    [CLOCK_ROOT_BISS][2] = CLOCK_SRC_SYSPLL1_PFD1_DIV2,
+    [CLOCK_ROOT_BISS][3] = CLOCK_SRC_FRO,
 
     [CLOCK_ROOT_BUSWAKEUP][0] = CLOCK_SRC_OSC24M,
     [CLOCK_ROOT_BUSWAKEUP][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2,
@@ -875,7 +875,7 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
 {
     bool pdOn = true;
 
-    switch(sourceIdx)
+    switch (sourceIdx)
     {
         case CLOCK_SRC_ARMPLL_VCO:
         case CLOCK_SRC_ARMPLL_PFD0:
@@ -918,10 +918,10 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
 bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 {
     bool clkEnable = false;
-    
+
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_EXT:
                 clkEnable = true;
@@ -963,7 +963,7 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
                     PLL_NO_OF_DFS_ENABLE_MASK);
                 break;
-            
+
             case CLOCK_SRC_SYSPLL1_PFD1:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
                     PLL_NO_OF_DFS_CLKOUT_EN_MASK);
@@ -983,7 +983,7 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
                     PLL_NO_OF_DFS_CLKOUT_EN_MASK);
                 break;
-            
+
             case CLOCK_SRC_SYSPLL1_PFD2_DIV2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
                     PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK);
@@ -1131,7 +1131,7 @@ bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_OSC32K:
                 updateEnable = true;
@@ -1330,7 +1330,7 @@ bool CLOCK_SourceSetBypass(uint32_t sourceIdx, bool bypass)
     /* Bypass configuration is restricted to PLLs available as CCM clock
      * root inputs.
      */
-    switch(sourceIdx)
+    switch (sourceIdx)
     {
         case CLOCK_SRC_AUDIOPLL1_VCO:
             rc = FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
@@ -1360,8 +1360,8 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
     uint64_t rate = 0UL;
 
     if (CLOCK_SourcePdIsOn(sourceIdx))
-    {        
-        switch(sourceIdx)
+    {
+        switch (sourceIdx)
         {
             case CLOCK_SRC_EXT:
                 /* Refrain from calling CLOCK_GprSelGetRate to avoid
@@ -1380,7 +1380,7 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
             case CLOCK_SRC_FRO:
                 {
                     uint32_t froRate;
-                    
+
                     if (FRO_GetRate(&froRate))
                     {
                         rate = ((uint64_t) froRate) * CLOCK_M_HZ;
@@ -1508,7 +1508,7 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
                 rate = g_clockExt1Rate;
                 break;
 
-                /* EXT2 internally tied to GND, no case needed */
+            /* EXT2 internally tied to GND, no case needed */
 
             default:
                 ; /* Intentional empty default */
@@ -1530,7 +1530,7 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
     /* Clock sources in MIXes not always-on require power dependency check. */
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_SYSPLL1_VCO:
                 updateRate = FRACTPLL_SetRate(CLOCK_PLL_SYS1, true, rate);

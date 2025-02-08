@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -108,30 +108,30 @@
 
 #define PWR_MIX_FUNC_STAT_MASK                  \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT_MASK |      \
-     SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |    \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |        \
-     SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_RST_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
+    SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |     \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |         \
+    SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_RST_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
 
 #define PWR_MIX_FUNC_STAT_PUP                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(0U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
 
 #define PWR_MIX_FUNC_STAT_PDN                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(1U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
 
 #define PWR_MIX_FLAG_SWITCHABLE         (1U << 0U)  /* MIX can be switched OFF */
 #define PWR_MIX_FLAG_LPMSET             (1U << 1U)  /* MIX LPM can be set */
@@ -246,7 +246,7 @@ typedef struct
 /*!
  * Structure containing SM LP handshake details
  */
-typedef struct 
+typedef struct
 {
     uint32_t srcMixIdx;     /*!< SRX MIX identifier for the active LP request */
     uint32_t req;           /*!< Active LP request */

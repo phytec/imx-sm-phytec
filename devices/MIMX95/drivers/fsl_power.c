@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -45,11 +45,11 @@
 #define WHITELIST_ALL           (WHITELIST_MASK(CPU_IDX_M33P) | WHITELIST_MASK(CPU_IDX_M7P) | WHITELIST_MASK(CPU_IDX_A55P))
 
 #define AUTHENCTRL_SW           SRC_XSPR_AUTHEN_CTRL_WHITE_LIST(WHITELIST_ALL) | \
-                                SRC_XSPR_AUTHEN_CTRL_LPM_MODE(0U)
+    SRC_XSPR_AUTHEN_CTRL_LPM_MODE(0U)
 #define AUTHENCTRL_HW           SRC_XSPR_AUTHEN_CTRL_WHITE_LIST(WHITELIST_ALL) | \
-                                SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
+    SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
 #define AUTHENCTRL_CPU(cpuId)    SRC_XSPR_AUTHEN_CTRL_WHITE_LIST(WHITELIST_VAL(cpuId)) | \
-                                    SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
+    SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
 
 
 #define LPMSETTING(cpuId)       LPMSETTING_DOM(cpuId, CPU_PD_LPM_ON_RUN_WAIT_STOP)
@@ -215,7 +215,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET | PWR_MIX_FLAG_SSI_TIMEOUT,
         .memMask = (1U << PWR_MEM_SLICE_IDX_A55P) |
-                   (1U << PWR_MEM_SLICE_IDX_A55L3),
+            (1U << PWR_MEM_SLICE_IDX_A55L3),
         .retainMask = 0U,
         .cpuMask = (1U << CPU_IDX_A55P),
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK, /* ARM PLL */
@@ -233,9 +233,9 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .retainMask = (1U << PWR_MEM_SLICE_IDX_DDR),
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* DDR complex */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* DDR complex */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,           /* DDR complex */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_DDR) |
-                         (1U << PWR_GPC_HS_RST_DDRPHY),
+            (1U << PWR_GPC_HS_RST_DDRPHY),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_DDR),
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
@@ -274,10 +274,10 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_2_MASK | /* HSIO PLL */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_3_MASK | /* USB1 */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_4_MASK | /* USB1 */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_5_MASK | /* USB2 */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_6_MASK,  /* USB2 */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_3_MASK |          /* USB1 */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_4_MASK |          /* USB1 */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_5_MASK |          /* USB2 */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_6_MASK,           /* USB2 */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_HSIO),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_HSIO),
         .authenCtrl = AUTHENCTRL_SW,
@@ -317,7 +317,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* unused */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* GPIO */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,           /* GPIO */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_NETC),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_NETC),
         .authenCtrl = AUTHENCTRL_SW,
@@ -328,7 +328,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET,
         .memMask = (1U << PWR_MEM_SLICE_IDX_NOC1) |
-                   (1U << PWR_MEM_SLICE_IDX_NOC2),
+            (1U << PWR_MEM_SLICE_IDX_NOC2),
         .retainMask = (1U << PWR_MEM_SLICE_IDX_NOC1),
         .cpuMask = 0U,
         .ipIsoMask = 0U,
@@ -350,7 +350,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
     },
-        
+
     [PWR_MIX_SLICE_IDX_VPU] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE,
@@ -371,7 +371,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* EARC */
-                     SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,  /* GPIO */
+            SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK,           /* GPIO */
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_WAKEUP),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_WAKEUP),
         .authenCtrl = AUTHENCTRL_SW,
@@ -403,7 +403,7 @@ bool PWR_IsParentPowered(uint32_t srcMixIdx)
 {
     bool isParentPowered = true;
 
-    if ((srcMixIdx >= PWR_MIX_SLICE_IDX_A55C0) && 
+    if ((srcMixIdx >= PWR_MIX_SLICE_IDX_A55C0) &&
         (srcMixIdx <= PWR_MIX_SLICE_IDX_A55C_LAST))
     {
         isParentPowered = SRC_MixIsPwrSwitchOn(PWR_MIX_SLICE_IDX_A55P);
@@ -488,7 +488,7 @@ void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             {
                 hs &= (~gpcReqMaskRst);
             }
-            
+
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE_SM = hs;
         }
 
@@ -496,7 +496,7 @@ void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
         if (gpcReqMaskPwr != 0U)
         {
             uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM;
-        
+
             if (enableHandshake)
             {
                 hs |= gpcReqMaskPwr;
@@ -505,7 +505,7 @@ void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             {
                 hs &= (~gpcReqMaskPwr);
             }
-            
+
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_SM = hs;
         }
     }
@@ -532,7 +532,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             {
                 hs &= (~gpcReqMaskRst);
             }
-            
+
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE_ELE = hs;
         }
 
@@ -540,7 +540,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
         if (gpcReqMaskPwr != 0U)
         {
             uint32_t hs = BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE;
-        
+
             if (enableHandshake)
             {
                 hs |= gpcReqMaskPwr;
@@ -549,7 +549,7 @@ void PWR_EleLpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)
             {
                 hs &= (~gpcReqMaskPwr);
             }
-            
+
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = hs;
         }
     }
@@ -582,8 +582,8 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode)
     };
 
     uint32_t lpStat = BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS;
-    uint32_t lpIdx = (lpStat 
-        & BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_IDX_MASK) 
+    uint32_t lpIdx = (lpStat
+        & BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_IDX_MASK)
         >> BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_IDX_SHIFT;
 
     /* Translate LP handshake mix into SRC mix */
@@ -594,12 +594,12 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode)
     lpHsMode->req = lpIdx & 0x7U;
 
     /* Extract LP status */
-    lpHsMode->stat = (lpStat 
-        & BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_STAT_MASK) 
+    lpHsMode->stat = (lpStat
+        & BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_STAT_MASK)
         >> BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_STAT_SHIFT;
 
 #ifdef DEBUG_LP_HS
-    printf("SM_LP_HS:  PD = %u, REQ = %u, STAT = %u\n", 
+    printf("SM_LP_HS:  PD = %u, REQ = %u, STAT = %u\n",
         lpHsMode->srcMixIdx, lpHsMode->req, lpHsMode->stat);
 #endif
 }
@@ -621,16 +621,16 @@ void PWR_LpHandshakeAck(void)
     }
 #endif
 
-    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS = 
-                BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
-                BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(1U);
+    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS =
+        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
+        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(1U);
 
     /* Ack requires a pulse of 2-3 clocks @ 24MHz = 125ns */
     SystemTimeDelay(1U);
 
-    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS = 
-                 BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
-                 BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(0U);
+    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS =
+        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
+        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(0U);
 
 #if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
     /* Restore clock root divider for LP_HANDSHAKE module */

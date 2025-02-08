@@ -42,8 +42,8 @@
 /* Local Types */
 
 typedef struct {
-  uint32_t LPM0;
-  uint32_t LPM1;
+    uint32_t LPM0;
+    uint32_t LPM1;
 } cpu_per_lpi_lpgc_t;
 
 typedef struct {
@@ -430,10 +430,10 @@ bool CPU_Init(uint32_t cpuIdx, uint32_t cpuSemaAddr)
         /* CPUs supporting SLEEPHOLD should not enable A55 handshake */
         if ((cmcMisc & GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK) != 0U)
         {
-            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_SLEEP_A55_HDSK_CTRL |= 
+            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_SLEEP_A55_HDSK_CTRL |=
                 GPC_CPU_CTRL_CMC_SLEEP_A55_HDSK_CTRL_DISABLE_MASK;
 
-            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_WAKEUP_A55_HDSK_CTRL |= 
+            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_WAKEUP_A55_HDSK_CTRL |=
                 GPC_CPU_CTRL_CMC_WAKEUP_A55_HDSK_CTRL_DISABLE_MASK;
         }
 
@@ -590,20 +590,20 @@ static bool CPU_WdogReset(uint32_t cpuIdx)
             /* Assert WDOG module reset */
             uint32_t rstline = wdogInfo->rstLine;
             rc = SRC_MixSetResetLine(rstline, RST_LINE_CTRL_ASSERT);
-            
+
             /* Wait for reset assertion to complete */
             uint32_t resetType = RST_LINE_CTRL_UNKNOWN;
             while (rc && (resetType != RST_LINE_CTRL_ASSERT))
             {
                 rc = SRC_MixGetResetLine(rstline, &resetType);
             }
-            
+
             /* Deassert WDOG module reset */
             if (rc)
             {
                 rc = SRC_MixSetResetLine(rstline, RST_LINE_CTRL_DEASSERT);
             }
-            
+
             /* Wait for reset deassertion to complete */
             resetType = RST_LINE_CTRL_UNKNOWN;
             while (rc && (resetType != RST_LINE_CTRL_DEASSERT))
@@ -711,7 +711,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq)
                 NVIC_ClearPendingIRQ(lockupIrq);
             }
         }
-        
+
         IRQn_Type secWdogIrq = NotAvail_IRQn;
         IRQn_Type nonsecWdogIrq = NotAvail_IRQn;
         cpu_wdog_info_t const *wdogInfo = s_cpuMgmtInfo[cpuIdx].wdogInfo;
@@ -767,7 +767,7 @@ bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake)
 {
     bool rc = false;
 
-    switch(cpuIdx)
+    switch (cpuIdx)
     {
         case CPU_IDX_M7P_0:
             PWR_LpHandshakeMaskSet(PWR_MIX_SLICE_IDX_M7_0, enableHandshake);
@@ -812,7 +812,7 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
 {
     bool rc = false;
 
-    switch(cpuIdx)
+    switch (cpuIdx)
     {
         case CPU_IDX_M7P_0:
             rc = SRC_MixSetResetLine(RST_LINE_M70MIX, resetType);
@@ -875,13 +875,13 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
 
                 /* Apply reset to all A55 CPUs */
                 uint32_t lineIdx = RST_LINE_CORTEXAMIX_CORE0;
-                uint32_t lineIdxEnd = RST_LINE_CORTEXAMIX_CORE0 + 
-                                      CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
+                uint32_t lineIdxEnd = RST_LINE_CORTEXAMIX_CORE0 +
+                    CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                 uint32_t cpuIdxA55 = CPU_IDX_A55C0;
-                while(rc  && (lineIdx <= lineIdxEnd))
+                while (rc  && (lineIdx <= lineIdxEnd))
                 {
                     uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdxA55].srcMixIdx;
-                    /* Skip unpowered A55 CPUs */                    
+                    /* Skip unpowered A55 CPUs */
                     if (SRC_MixIsPwrSwitchOn(srcMixIdx))
                     {
                         rc = SRC_MixSetResetLine(lineIdx, resetType);
@@ -911,7 +911,7 @@ bool CPU_ResetGet(uint32_t cpuIdx, uint32_t *resetType)
 {
     bool rc = false;
 
-    switch(cpuIdx)
+    switch (cpuIdx)
     {
         case CPU_IDX_M7P_0:
             rc = SRC_MixGetResetLine(RST_LINE_M70MIX, resetType);
@@ -928,19 +928,19 @@ bool CPU_ResetGet(uint32_t cpuIdx, uint32_t *resetType)
         case CPU_IDX_A55P:
             {
                 /* Get reset status of A55 cluster */
-                rc = SRC_MixGetResetLine(RST_LINE_CORTEXAMIX_PLATFORM, 
-                                         resetType);
+                rc = SRC_MixGetResetLine(RST_LINE_CORTEXAMIX_PLATFORM,
+                    resetType);
 
                 /* Check if reset status of A55 CPUs matches cluster  */
                 uint32_t lineIdx = RST_LINE_CORTEXAMIX_CORE0;
-                uint32_t lineIdxEnd = RST_LINE_CORTEXAMIX_CORE0 + 
-                                      CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
+                uint32_t lineIdxEnd = RST_LINE_CORTEXAMIX_CORE0 +
+                    CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                 uint32_t cpuIdxA55 = CPU_IDX_A55C0;
-                while(rc  && (lineIdx <= lineIdxEnd) && 
-                      (*resetType != RST_LINE_CTRL_UNKNOWN))
+                while (rc  && (lineIdx <= lineIdxEnd) &&
+                    (*resetType != RST_LINE_CTRL_UNKNOWN))
                 {
                     uint32_t srcMixIdx = s_cpuMgmtInfo[cpuIdxA55].srcMixIdx;
-                    /* Skip unpowered A55 CPUs */                    
+                    /* Skip unpowered A55 CPUs */
                     if (SRC_MixIsPwrSwitchOn(srcMixIdx))
                     {
                         uint32_t resetTypeA55;
@@ -995,7 +995,7 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
     {
         if (CPU_RunModeGet(cpuIdx, &curRunMode))
         {
-            switch(runMode)
+            switch (runMode)
             {
                 case CPU_RUN_MODE_START:
                     /* if CPU stopped, power up respective mix and release */
@@ -1032,7 +1032,7 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                          *
                          * NOTE:  Current RUN mode for CPU started by ROM
                          *        will be HOLD.  Ensure LPM configuration
-                         *        is done here even though it may be 
+                         *        is done here even though it may be
                          *        redundant for OFF -> HOLD -> START
                          */
                         rc = CPU_LpmConfigInit(cpuIdx);
@@ -1094,7 +1094,7 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                             /* Perform SW wakeup */
                             rc = CPU_SwMultiWakeup(cpuIdx);
                         }
-                        
+
                         if (rc)
                         {
                             /* Process MIX handshakes until CPU MIX is ready */
@@ -1127,8 +1127,8 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         /* Reset WDOGs for this CPU
                          *
                          * NOTE:  WDOGs associated with this CPU will be
-                         *  reset to prevent NVIC of CPU being stopped from 
-                         *  latching a new occurrence of the WDOG IRQ after 
+                         *  reset to prevent NVIC of CPU being stopped from
+                         *  latching a new occurrence of the WDOG IRQ after
                          *  release of CPU reset.
                          */
                         if (rc)
@@ -1226,8 +1226,8 @@ bool CPU_RunModeGet(uint32_t cpuIdx, uint32_t *runMode)
                     }
                 }
                 ++cpuIdxCur;
-            } while (rc && (cpuIdxCur <= cpuIdxEnd) && 
-                    (*runMode == CPU_RUN_MODE_HOLD));
+            } while (rc && (cpuIdxCur <= cpuIdxEnd) &&
+                (*runMode == CPU_RUN_MODE_HOLD));
         }
         else
         {
@@ -1274,7 +1274,7 @@ bool CPU_SleepModeSet(uint32_t cpuIdx, uint32_t sleepMode)
             uint32_t cmcMisc = s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MISC;
             if (sleepMode == CPU_SLEEP_MODE_RUN)
             {
-                 cmcMisc &= ~GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK;
+                cmcMisc &= ~GPC_CPU_CTRL_CMC_MISC_SLEEP_HOLD_EN_MASK;
             }
             else
             {
@@ -1325,8 +1325,8 @@ bool CPU_SleepModeGet(uint32_t cpuIdx, uint32_t *sleepMode)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        *sleepMode = (s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL & 
-            GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_MASK) >> 
+        *sleepMode = (s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_CTRL &
+            GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_MASK) >>
             GPC_CPU_CTRL_CMC_MODE_CTRL_CPU_MODE_TARGET_SHIFT;
         rc = true;
     }
@@ -1452,7 +1452,7 @@ bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat)
                 {
                     /* Get GPC CPU mode status */
                     uint32_t cpuModeStat =
-                            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_STAT;
+                        s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_STAT;
 
                     /* Default CPU mode as RUN until SLEEPING_IDLE confirmed */
                     uint32_t cpuModeCur = CPU_SLEEP_MODE_RUN;
@@ -1562,7 +1562,7 @@ bool CPU_IrqWakeSet(uint32_t cpuIdx, uint32_t maskIdx, uint32_t maskVal)
 {
     bool rc = false;
 
-    if ((cpuIdx < CPU_NUM_IDX) && 
+    if ((cpuIdx < CPU_NUM_IDX) &&
         (maskIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT))
     {
         s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[maskIdx] = maskVal;
@@ -1579,7 +1579,7 @@ bool CPU_IrqWakeGet(uint32_t cpuIdx, uint32_t maskIdx, uint32_t *maskVal)
 {
     bool rc = false;
 
-    if ((cpuIdx < CPU_NUM_IDX) && 
+    if ((cpuIdx < CPU_NUM_IDX) &&
         (maskIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT))
     {
         *maskVal = s_gpcCpuCtrlPtrs[cpuIdx]->CMC_IRQ_WAKEUP_MASK[maskIdx];
@@ -1638,7 +1638,7 @@ static bool CPU_IrqMaskSet(uint32_t cpuIdx, bool maskIrqs)
         irqMaskVal = 0xFFFFFFFFU;
     }
 
-    switch(cpuIdx)
+    switch (cpuIdx)
     {
         case CPU_IDX_M7P_0:
             BLK_CTRL_S_AONMIX->CM7_0_IRQ_MASK0 = irqMaskVal;
@@ -1791,7 +1791,7 @@ bool CPU_LpmConfigSet(uint32_t cpuIdx, uint32_t srcMixIdx,
     {
         if (lpmSetting < CPU_NUM_PD_LPM)
         {
-             rc = SRC_MixCpuLpmSet(srcMixIdx, cpuIdx, lpmSetting);
+            rc = SRC_MixCpuLpmSet(srcMixIdx, cpuIdx, lpmSetting);
         }
 
         if (rc == true)
@@ -1807,7 +1807,7 @@ bool CPU_LpmConfigSet(uint32_t cpuIdx, uint32_t srcMixIdx,
 /* Set CPU MIX-level LPM dependencies                                       */
 /*--------------------------------------------------------------------------*/
 static bool CPU_LpmMixDependSet(uint32_t cpuIdx, uint32_t lpmSetting)
-{    
+{
     bool rc = false;
 
     if (cpuIdx < CPU_NUM_IDX)
@@ -1819,24 +1819,24 @@ static bool CPU_LpmMixDependSet(uint32_t cpuIdx, uint32_t lpmSetting)
         /* Initialize LPM response for dependent MIXes */
         if (rc)
         {
-            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_DDR, cpuIdx, 
+            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_DDR, cpuIdx,
                 lpmSetting);
         }
-        
+
         if (rc)
         {
-            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_NOC, cpuIdx, 
+            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_NOC, cpuIdx,
                 lpmSetting);
         }
-        
+
         if (rc)
         {
-            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx, 
+            rc = SRC_MixCpuLpmSet(PWR_MIX_SLICE_IDX_WAKEUP, cpuIdx,
                 lpmSetting);
         }
     }
 
-    return rc;   
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1969,13 +1969,13 @@ bool CPU_PerLpiConfigSet(uint32_t cpuIdx, uint32_t perLpiIdx,
                     accessList |= WHITELIST_MASK(cpuIdx);
 
                     rc = CCM_LpcgAccessSet(lpcgIdx, accessList);
-                }                
+                }
 
                 if (rc)
                 {
                     /* Move LPCG to hardware control (LPM_MODE = 1) */
                     rc = CCM_LpcgModeSet(lpcgIdx, LPCG_CPU_LPM_EN);
-                }                
+                }
             }
         }
     }
@@ -2067,7 +2067,7 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
                 if (accessList == WHITELIST_MASK(CPU_IDX_M33P))
                 {
                     /* Move LPCG to software control (LPM_MODE = 0) */
-                    rc = CCM_LpcgModeSet(lpcgIdx, 0U);                        
+                    rc = CCM_LpcgModeSet(lpcgIdx, 0U);
                 }
             }
 

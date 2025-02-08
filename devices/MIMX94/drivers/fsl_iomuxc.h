@@ -1626,11 +1626,11 @@ extern "C" {
  * @param inputOnfield   The software input on
  */
 static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
-                                    uint32_t muxMode,
-                                    uint32_t inputRegister,
-                                    uint32_t inputDaisy,
-                                    uint32_t configRegister,
-                                    uint32_t inputOnfield)
+    uint32_t muxMode,
+    uint32_t inputRegister,
+    uint32_t inputDaisy,
+    uint32_t configRegister,
+    uint32_t inputOnfield)
 {
     if (muxRegister)
     {
@@ -1655,11 +1655,11 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
  * @param configValue    The pin config value
  */
 static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
-                                       uint32_t muxMode,
-                                       uint32_t inputRegister,
-                                       uint32_t inputDaisy,
-                                       uint32_t configRegister,
-                                       uint32_t configValue)
+    uint32_t muxMode,
+    uint32_t inputRegister,
+    uint32_t inputDaisy,
+    uint32_t configRegister,
+    uint32_t configValue)
 {
     if (configRegister)
     {
@@ -1674,7 +1674,7 @@ static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
  * @param gprVal IOMUXC_GPR value
  */
 static inline void IOMUXC_SetGpr(uint32_t gprInstance,
-                                       uint32_t gprVal)
+    uint32_t gprVal)
 {
     if (gprInstance == 0)
     {

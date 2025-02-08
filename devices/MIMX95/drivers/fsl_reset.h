@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -123,7 +123,7 @@
 #define RST_LINE_ENETPHY_PCS_RESETN     27U
 #define RST_LINE_V2X_RESETB             28U
 
-/* Regional resets (RSTR) */      
+/* Regional resets (RSTR) */
 #define RST_LINE_ANAMIX                 29U
 #define RST_LINE_AONMIX_TOP             30U
 #define RST_LINE_AONMIX_M33             31U

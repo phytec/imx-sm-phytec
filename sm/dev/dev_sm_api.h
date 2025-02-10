@@ -330,6 +330,11 @@
 #define SM_CLOCKPARENTGET       DEV_SM_ClockParentGet
 #endif
 
+#ifndef SM_CLOCKEXTENDEDINFO
+/*! Redirector (device/board) to get extended clock info */
+#define SM_CLOCKEXTENDEDINFO    DEV_SM_ClockExtendedInfo
+#endif
+
 #ifndef SM_CLOCKEXTENDEDSET
 /*! Redirector (device/board) to set extended clock data */
 #define SM_CLOCKEXTENDEDSET     DEV_SM_ClockExtendedSet

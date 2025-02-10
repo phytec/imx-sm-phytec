@@ -783,6 +783,7 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     {
         uint32_t mux;
         uint32_t numMuxes;
+        bool extSupported;
 
         /* No notifications */
         out->attributes
@@ -803,6 +804,16 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             < SM_SCMI_PERM_EXCLUSIVE))
         {
             out->attributes |= CLOCK_ATTR_RESTRICTED(1UL);
+        }
+
+        /* Extended controls? */
+        if (LMM_ClockExtendedInfo(caller->lmId, in->clockId,
+            &extSupported) == SM_ERR_SUCCESS)
+        {
+            if (extSupported)
+            {
+                out->attributes |= CLOCK_ATTR_EXT_CONFIG(1UL);
+            }
         }
 
         /* Return enable status */

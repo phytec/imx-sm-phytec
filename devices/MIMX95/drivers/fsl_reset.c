@@ -646,7 +646,7 @@ void RST_SystemClearResetReason(uint32_t resetReason)
 /*--------------------------------------------------------------------------*/
 /* Request system reset                                                     */
 /*--------------------------------------------------------------------------*/
-void RST_SystemRequestReset(void)
+_Noreturn void RST_SystemRequestReset(void)
 {
     /* Assert CM33 SYSRESETREQ */
     NVIC_SystemReset();

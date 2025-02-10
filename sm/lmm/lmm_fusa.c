@@ -289,6 +289,7 @@ void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec)
 /*--------------------------------------------------------------------------*/
 /* Recover from global error                                                */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void LMM_FusaGlobalRecovery(uint32_t status)
 {
     dev_sm_rst_rec_t resetRec =

@@ -41,6 +41,7 @@
 #include "sm.h"
 // coverity[misra_c_2012_rule_21_5_violation:FALSE]
 #include <signal.h>
+// coverity[misra_c_2012_rule_21_10_violation:FALSE]
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>

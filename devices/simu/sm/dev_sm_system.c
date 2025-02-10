@@ -229,6 +229,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
     return SM_SYSTEMRSTCOMP(resetRec);
@@ -237,6 +238,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 /*--------------------------------------------------------------------------*/
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void DEV_SM_SystemError(int32_t status, uint32_t pc)
 {
     dev_sm_rst_rec_t resetRec =

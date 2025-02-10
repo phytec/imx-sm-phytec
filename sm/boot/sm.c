@@ -226,6 +226,7 @@ int main(int argc, const char * const argv[])
 /*--------------------------------------------------------------------------*/
 /* Report error                                                             */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void SM_Error(int32_t status)
 {
     if (s_lmmInited)

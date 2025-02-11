@@ -503,6 +503,23 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         }
                     }
                 }
+                /* Disable GPC wakeups for CPUs forced to sleep */
+                else
+                {
+                    /* IRQs enabled at NVIC level become GPC wake sources */
+                    for (uint32_t wakeIdx = 0;
+                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                        wakeIdx++)
+                    {
+                        uint32_t wakeVal;
+                        if (CPU_IrqWakeGet(cpuIdx, wakeIdx, &wakeVal))
+                        {
+                            cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
+                            (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                                0xFFFFFFFFU);
+                        }
+                    }
+                }
             }
         }
     }
@@ -850,27 +867,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             UINT64_L(sleepExitStart - sleepEntryStart);
     }
 
-    /* Restore GPC wake masks for sleeping CPUs */
+    /* Restore GPC wake sources modified during sleep flow */
     for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
     {
         if (cpuIdx != CPU_IDX_M33P)
         {
-            /* Check if sleep is forced for the CPU */
-            bool sleepForce;
-            if (CPU_SleepForceGet(cpuIdx, &sleepForce))
+            /* Restore saved GPC wake sources */
+            for (uint32_t wakeIdx = 0U;
+                wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                wakeIdx++)
             {
-                /* If sleep is not forced, manage GPC masks */
-                if (!sleepForce)
-                {
-                    /* IRQs enabled at NVIC level become GPC wake sources */
-                    for (uint32_t wakeIdx = 0U;
-                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
-                        wakeIdx++)
-                    {
-                        (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
-                            cpuWakeMask[cpuIdx][wakeIdx]);
-                    }
-                }
+                (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                    cpuWakeMask[cpuIdx][wakeIdx]);
             }
         }
     }

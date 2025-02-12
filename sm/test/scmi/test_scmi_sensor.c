@@ -226,6 +226,7 @@ void TEST_ScmiSensor(void)
     }
 
     /* Test running past end of descriptors */
+    if (numSensors > 0U)
     {
         uint32_t numSensorFlags = 0U;
         uint32_t descIndex = 0U;

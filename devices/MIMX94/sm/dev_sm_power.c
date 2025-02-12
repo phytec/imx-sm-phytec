@@ -178,8 +178,37 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_ON:
                 if (PWR_IsParentPowered(domainId))
                 {
+#if (defined(FSL_FEATURE_V2X_HAS_ERRATA_052682) && FSL_FEATURE_V2X_HAS_ERRATA_052682)
+                    uint32_t rootCtrl;
+                    /* Switch V2X clock to OSC_24M prior to WAKEUPMIX power up */
+                    if (domainId == DEV_SM_PD_WAKEUP)
+                    {
+                        rootCtrl = CCM_CTRL->CLOCK_ROOT[CLOCK_ROOT_V2XPK].CLOCK_ROOT_CONTROL.RW;
+
+                        /* Set MUX = 0 (OSC_24M) */
+                        CCM_CTRL->CLOCK_ROOT[CLOCK_ROOT_V2XPK].CLOCK_ROOT_CONTROL.CLR =
+                            CCM_CLOCK_ROOT_MUX_MASK;
+
+                        /* Set DIV = 0 (/1) */
+                        CCM_CTRL->CLOCK_ROOT[CLOCK_ROOT_V2XPK].CLOCK_ROOT_CONTROL.CLR =
+                            CCM_CLOCK_ROOT_DIV_MASK;
+                    }
+#endif
                     if (SRC_MixSoftPowerUp(domainId))
                     {
+#if (defined(FSL_FEATURE_V2X_HAS_ERRATA_052682) && FSL_FEATURE_V2X_HAS_ERRATA_052682)
+                        /* Restore V2X clock root after WAKEUPMIX power up */
+                        if (domainId == DEV_SM_PD_WAKEUP)
+                        {
+                            /* Restore DIV */
+                            CCM_CTRL->CLOCK_ROOT[CLOCK_ROOT_V2XPK].CLOCK_ROOT_CONTROL.SET =
+                                rootCtrl & CCM_CLOCK_ROOT_DIV_MASK;
+
+                            /* Restore MUX */
+                            CCM_CTRL->CLOCK_ROOT[CLOCK_ROOT_V2XPK].CLOCK_ROOT_CONTROL.SET =
+                                rootCtrl & CCM_CLOCK_ROOT_MUX_MASK;
+                        }
+#endif
                         status = DEV_SM_PowerUpPost(domainId);
                     }
                 }

@@ -7,7 +7,7 @@
 **         Chip specific module features.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2024 NXP
+**     Copyright 2024-2025 NXP
 **     SPDX-License-Identifier: BSD-3-Clause
 **
 **     http:                 www.nxp.com
@@ -826,6 +826,10 @@
 #define FSL_FEATURE_WDOG_HAS_WATCHDOG (1)
 /* @brief WDOG_CNT can be 32-bit written. */
 #define FSL_FEATURE_WDOG_HAS_32BIT_ACCESS (1)
+
+/* V2X module features */
+/* @brief Is affected by errata with ID 052682 (V2X clocking requirements during WAKEUPMIX power cycle) */
+#define FSL_FEATURE_V2X_HAS_ERRATA_052682 (1)
 
 #endif /* _MIMX9494_cm33_core0_FEATURES_H_ */
 

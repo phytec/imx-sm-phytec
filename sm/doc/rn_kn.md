@@ -16,6 +16,7 @@ Improvement {#RN_KN_IMP}
 | Key     | Summary                        | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
 |------------|-------------------------------|---|---|---|
 | [SM-192](https://jira.sw.nxp.com/projects/SM/issues/SM-192) | Remove support for i.MX95 A0/1 | Y | Y | |
+| [SM-222](https://jira.sw.nxp.com/projects/SM/issues/SM-222) | Give SM access to SEMA41 in the mx94alt config file | | | Y |
 
 Bug {#RN_KN_BUG}
 ============
@@ -25,4 +26,5 @@ Bug {#RN_KN_BUG}
 | [SM-212](https://jira.sw.nxp.com/projects/SM/issues/SM-212) | Insufficient argument checking for monitor pmic commands | Y | Y | Y |
 | [SM-213](https://jira.sw.nxp.com/projects/SM/issues/SM-213) | Insufficient argument checking for monitor trdc commands | Y | Y | Y |
 | [SM-214](https://jira.sw.nxp.com/projects/SM/issues/SM-214) | Insufficient argument checking for monitor fuse commands | Y | Y | Y |
+| [SM-221](https://jira.sw.nxp.com/projects/SM/issues/SM-221) | Extended config flag not set for spread spectrum clocks | Y | Y | Y |
 

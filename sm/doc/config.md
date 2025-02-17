@@ -715,6 +715,7 @@ The configtool supports the following commands and key=value pairs in the input 
 | MAKE        | soc      | Build includes ./devices/\<VAL\>/sm/Makefile |
 |             | board    | Build includes ./boards/\<VAL\>/sm/Makefile |
 |             | build    | Build includes ./sm/makefiles/\<VAL\>.mak |
+|             | var      | Define \<VAL\> ?= 1 in config.mak |
 | DOX         | name     | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
 |             | desc     | Group description, quoted |
 | BOARD       | \<DEF\>  | Define BOARD_\<DEF\> as \<VAL\> in config_board.h |

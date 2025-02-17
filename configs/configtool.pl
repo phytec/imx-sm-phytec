@@ -75,7 +75,7 @@ sub error_line;
 sub get_define;
 
 # Config version
-my $configVer = 1;
+my $configVer = 2;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
     'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
@@ -2296,19 +2296,30 @@ sub generate_make
     print $out $cr;
 
 	# Output config version
-    print $out 'GEN_CONFIG_VER ?= ' . $configVer . "U\n\n";
+    print $out 'GEN_CONFIG_VER ?= ' . $configVer . "U\n";
 
 	# Output board define
     if ((my $parm = &param($make[0], 'board')) ne '!')
     {
-	    print $out 'BOARD ?= ' . $parm . "\n\n";
+	    print $out 'BOARD ?= ' . $parm . "\n";
     }		
 
 	# Output FuSa define
     if ($seenvid != 0)
     {
-	    print $out 'USES_FUSA ?= 1' . "\n\n";
+	    print $out 'USES_FUSA ?= 1' . "\n";
     }		
+
+    # Output any other defines
+    my @words = split(/ /, $make[0]);    
+    foreach my $w (@words)
+    {
+        if ($w =~ /var=(\w+)/)
+        {
+    	    print $out uc $1 . ' ?= 1' . "\n";
+        }
+    }
+    print $out "\n";
 
 	# Output SoC/board includes
     if ((my $parm = &param($make[0], 'soc')) ne '!')

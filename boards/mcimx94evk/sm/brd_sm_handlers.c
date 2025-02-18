@@ -165,10 +165,28 @@ int32_t BRD_SM_SerialDevicesInit(void)
             }
         }
 
+        /* Change the LDO3 sequence */
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!PF09_PmicWrite(&g_pf09Dev, 0x4AU, 0x1EU, 0xFFU))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
         /* Set the LDO3 OV bypass */
         if (status == SM_ERR_SUCCESS)
         {
             if (!PF09_PmicWrite(&g_pf09Dev, 0x7FU, 0xFCU, 0xFFU))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
+        /* Enable the LDO3 in RUN mode */
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!PF09_PmicWrite(&g_pf09Dev, 0x7DU, 0x20U, 0xFFU))
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }

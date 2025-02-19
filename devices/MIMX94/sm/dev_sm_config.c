@@ -70,6 +70,9 @@ static mix_pdn_context s_mixPdnContext55 =
     .valid = false
 };
 
+static uint32_t wkupGpioCtrl0 = 0U;
+static uint32_t wkupGpioCtrl1 = 0U;
+
 /* Global constant data */
 
 const dev_config_t g_devConfig = SM_DEV_CONFIG_DATA;
@@ -457,6 +460,10 @@ int32_t DEV_SM_WkupConfigLoad(void)
             s_blkData);
     }
 
+    /* Load saved block control */
+    BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0 = wkupGpioCtrl0;
+    BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1 = wkupGpioCtrl1;
+
     /* Load device config */
     if (status == SM_ERR_SUCCESS)
     {
@@ -732,3 +739,16 @@ int32_t DEV_SM_HsioTopPowerDownPre(void)
     /* Return status */
     return status;
 }
+
+/*--------------------------------------------------------------------------*/
+/* Wakeup power domain power down configuration                             */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_WkupPowerDownPre(void)
+{
+    wkupGpioCtrl0 = BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
+    wkupGpioCtrl1 = BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
+}
+

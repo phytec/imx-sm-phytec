@@ -54,21 +54,23 @@
 /* Defines */
 
 /*! Number of device controls */
-#define DEV_SM_NUM_CTRL  9UL
+#define DEV_SM_NUM_CTRL  11UL
 
 /*!
  * @name Device control indexes
  */
 /** @{ */
-#define DEV_SM_CTRL_PDM_CLK_SEL    0U   /*!< AON PDM clock sel */
-#define DEV_SM_CTRL_MQS1_SETTINGS  1U   /*!< AON MQS settings */
-#define DEV_SM_CTRL_MQS2_SETTINGS  2U   /*!< WAKE MQS settings */
-#define DEV_SM_CTRL_SAI1_MCLK      3U   /*!< AON SAI1 MCLK */
-#define DEV_SM_CTRL_SAI2_MCLK      4U   /*!< WAKE SAI2 MCLK */
-#define DEV_SM_CTRL_SAI3_MCLK      5U   /*!< WAKE SAI3 MCLK */
-#define DEV_SM_CTRL_SAI4_MCLK      6U   /*!< WAKE SAI4 MCLK */
-#define DEV_SM_CTRL_ADC_TEST       7U   /*!< BBSM SNVS ADC enable */
-#define DEV_SM_CTRL_GPT_MUX        8U   /*!< GPT mux */
+#define DEV_SM_CTRL_PDM_CLK_SEL     0U   /*!< AON PDM clock sel */
+#define DEV_SM_CTRL_MQS1_SETTINGS   1U   /*!< AON MQS settings */
+#define DEV_SM_CTRL_MQS2_SETTINGS   2U   /*!< WAKE MQS settings */
+#define DEV_SM_CTRL_SAI1_MCLK       3U   /*!< AON SAI1 MCLK */
+#define DEV_SM_CTRL_SAI2_MCLK       4U   /*!< WAKE SAI2 MCLK */
+#define DEV_SM_CTRL_SAI3_MCLK       5U   /*!< WAKE SAI3 MCLK */
+#define DEV_SM_CTRL_SAI4_MCLK       6U   /*!< WAKE SAI4 MCLK */
+#define DEV_SM_CTRL_ADC_TEST        7U   /*!< BBSM SNVS ADC enable */
+#define DEV_SM_CTRL_GPT_MUX         8U   /*!< GPT mux */
+#define DEV_SM_CTRL_XBAR_DIR_CTRL   9U   /*!< XBAR IO direction */
+#define DEV_SM_CTRL_XBAR_TRIG_SYNC  10U  /*!< XBAR trigger sync control */
 /** @} */
 
 /* Types */

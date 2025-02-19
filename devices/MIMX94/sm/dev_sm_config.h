@@ -206,6 +206,13 @@ int32_t DEV_SM_DisplayPowerDownPre(void);
  */
 int32_t DEV_SM_HsioTopPowerDownPre(void);
 
+/*!
+ * Configure the wakeup domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_WkupPowerDownPre(void);
+
 #endif /* DEV_SM_CONFIG_H */
 
 /** @} */

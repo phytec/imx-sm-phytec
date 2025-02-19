@@ -112,6 +112,8 @@
 #define SCMI_PINCTRL_TYPE_DAISY_ID   194U
 /*! Daisy config type */
 #define SCMI_PINCTRL_TYPE_DAISY_CFG  195U
+/*! Extended config type */
+#define SCMI_PINCTRL_TYPE_EXT        196U
 /** @} */
 
 /*!

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -74,6 +74,7 @@
 #define PINCTRL_TYPE_CONFIG     193U
 #define PINCTRL_TYPE_DAISY_ID   194U
 #define PINCTRL_TYPE_DAISY_CFG  195U
+#define PINCTRL_TYPE_EXT        196U
 
 /* SCMI pin control selectors */
 #define PINCTRL_CONFIG_FLAG_TYPE  0U
@@ -724,11 +725,12 @@ static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
     uint32_t cfg = PINCTRL_GET_ATTR_CONFIG(in->attributes);
     uint32_t sel = PINCTRL_GET_ATTR_SELECTOR(in->attributes);
     uint32_t skipConfigs = PINCTRL_GET_ATTR_SKIP_CONFIGS(in->attributes);
-    uint32_t maxConfigs = 2U;
-    uint32_t configList[2] =
+    uint32_t maxConfigs = 3U;
+    uint32_t configList[3] =
     {
         PINCTRL_TYPE_MUX,
-        PINCTRL_TYPE_CONFIG
+        PINCTRL_TYPE_CONFIG,
+        PINCTRL_TYPE_EXT
     };
 
     /* Check request length */
@@ -792,6 +794,9 @@ static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
                     break;
                 case PINCTRL_TYPE_CONFIG:
                     type = DEV_SM_PIN_TYPE_CONFIG;
+                    break;
+                case PINCTRL_TYPE_EXT:
+                    type = DEV_SM_PIN_TYPE_EXT;
                     break;
                 default:
                     status = SM_ERR_NOT_SUPPORTED;
@@ -896,13 +901,18 @@ static int32_t PinctrlSettingsConfigure(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t numConfigs = PINCTRL_SET_ATTR_NUM_CONFIGS(in->attributes);
     uint32_t sel = PINCTRL_SET_ATTR_SELECTOR(in->attributes);
-    uint32_t daisyId = 0U;
 
     /* Check request length */
     if (caller->lenCopy < ((3U * sizeof(uint32_t))
         + (numConfigs * sizeof(pin_config_t))))
     {
         status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Check number of configs */
+    if ((status == SM_ERR_SUCCESS) && (numConfigs > PINCTRL_MAX_CONFIGS_T))
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check selector */
@@ -915,63 +925,71 @@ static int32_t PinctrlSettingsConfigure(const scmi_caller_t *caller,
         status = SM_ERR_NOT_SUPPORTED;
     }
 
-    /* Loop over configs */
-    for (uint32_t cf = 0U; cf < numConfigs; cf++)
+    if (status == SM_ERR_SUCCESS)
     {
-        uint32_t id = in->identifier;
-        uint32_t type = in->configs[cf].type;
-        uint32_t value = in->configs[cf].value;
-        uint32_t maxId = SM_NUM_PIN;
-        const uint8_t *perms = NULL;
+        uint32_t daisyId = 0U;
 
-        /* Daisy ID? */
-        if (type == PINCTRL_TYPE_DAISY_ID)
+        /* Loop over configs */
+        for (uint32_t cf = 0U; cf < numConfigs; cf++)
         {
-            daisyId = value;
-            continue;
-        }
+            uint32_t id = in->identifier;
+            uint32_t type = in->configs[cf].type;
+            uint32_t value = in->configs[cf].value;
+            uint32_t maxId = SM_NUM_PIN;
+            const uint8_t *perms = NULL;
 
-        /* Determine parameters */
-        switch (type)
-        {
-            case PINCTRL_TYPE_MUX:
-                type = DEV_SM_PIN_TYPE_MUX;
-                perms = g_scmiAgentConfig[caller->agentId].pinPerms;
-                break;
-            case PINCTRL_TYPE_CONFIG:
-                type = DEV_SM_PIN_TYPE_CONFIG;
-                perms = g_scmiAgentConfig[caller->agentId].pinPerms;
-                break;
-            case PINCTRL_TYPE_DAISY_CFG:
-                id = daisyId;
-                type = DEV_SM_PIN_TYPE_DAISY;
-                maxId = SM_NUM_DAISY;
-                perms = g_scmiAgentConfig[caller->agentId].daisyPerms;
-                break;
-            default:
-                status = SM_ERR_NOT_SUPPORTED;
-                break;
-        }
+            /* Daisy ID? */
+            if (type == PINCTRL_TYPE_DAISY_ID)
+            {
+                daisyId = value;
+                continue;
+            }
 
-        /* Check ID */
-        if ((status == SM_ERR_SUCCESS) && (id >= maxId))
-        {
-            status = SM_ERR_NOT_FOUND;
-        }
+            /* Determine parameters */
+            switch (type)
+            {
+                case PINCTRL_TYPE_MUX:
+                    type = DEV_SM_PIN_TYPE_MUX;
+                    perms = g_scmiAgentConfig[caller->agentId].pinPerms;
+                    break;
+                case PINCTRL_TYPE_CONFIG:
+                    type = DEV_SM_PIN_TYPE_CONFIG;
+                    perms = g_scmiAgentConfig[caller->agentId].pinPerms;
+                    break;
+                case PINCTRL_TYPE_DAISY_CFG:
+                    id = daisyId;
+                    type = DEV_SM_PIN_TYPE_DAISY;
+                    maxId = SM_NUM_DAISY;
+                    perms = g_scmiAgentConfig[caller->agentId].daisyPerms;
+                    break;
+                case PINCTRL_TYPE_EXT:
+                    type = DEV_SM_PIN_TYPE_EXT;
+                    perms = g_scmiAgentConfig[caller->agentId].pinPerms;
+                    break;
+                default:
+                    status = SM_ERR_NOT_SUPPORTED;
+                    break;
+            }
 
-        /* Check permissions */
-        if ((status == SM_ERR_SUCCESS)
-            && (perms[id] < SM_SCMI_PERM_EXCLUSIVE))
-        {
-            status = SM_ERR_DENIED;
-        }
+            /* Check ID */
+            if ((status == SM_ERR_SUCCESS) && (id >= maxId))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
 
-        /* Update pin config */
-        if (status == SM_ERR_SUCCESS)
-        {
-            SM_PINCONFIGSET(type, id, value);
-        }
+            /* Check permissions */
+            if ((status == SM_ERR_SUCCESS)
+                && (perms[id] < SM_SCMI_PERM_EXCLUSIVE))
+            {
+                status = SM_ERR_DENIED;
+            }
 
+            /* Update pin config */
+            if (status == SM_ERR_SUCCESS)
+            {
+                SM_PINCONFIGSET(type, id, value);
+            }
+        }
     }
 
     /* Return status */

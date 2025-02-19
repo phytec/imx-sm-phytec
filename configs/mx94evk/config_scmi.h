@@ -206,6 +206,8 @@
         .ctrlPerms[BRD_SM_CTRL_PCA2131] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_GPT_MUX] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_ENCODER2_CLK] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_ENCODER2_IN] = SM_SCMI_PERM_ALL, \

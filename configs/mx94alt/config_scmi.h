@@ -220,6 +220,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
@@ -878,6 +880,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
@@ -1527,6 +1531,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
@@ -2176,6 +2182,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
@@ -2825,6 +2833,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \
@@ -3474,6 +3484,8 @@
         .ctrlPerms[DEV_SM_CTRL_SAI2_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI3_MCLK] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_SAI4_MCLK] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN1_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN2_RX] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_CAN3_RX] = SM_SCMI_PERM_ALL, \

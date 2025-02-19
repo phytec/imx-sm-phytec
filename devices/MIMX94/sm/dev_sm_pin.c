@@ -44,9 +44,30 @@
 
 /* Local defines */
 
+#define GPIO_CTRL(CTRL, SEL)  (0x80U | ((SEL) << 4U) | (CTRL))
+#define MAP_CTRL(X)           ((X) & 0xFU)
+#define MAP_SEL(X)            (((X) & 0x70U) >> 4U)
+#define GPIO_SET(SEL, X)      ((X) << ((SEL) * 4U))
+#define GPIO_GET(SEL, X)      (((X) >> ((SEL) * 4U)) & 0xFU)
+
 /* Local types */
 
 /* Local variables */
+
+static uint8_t gpioCtrlMap[DEV_SM_NUM_PIN] =
+{
+    [DEV_SM_PIN_GPIO_IO17] = GPIO_CTRL(0U, 0U),
+    [DEV_SM_PIN_GPIO_IO18] = GPIO_CTRL(0U, 1U),
+    [DEV_SM_PIN_GPIO_IO19] = GPIO_CTRL(0U, 2U),
+    [DEV_SM_PIN_GPIO_IO37] = GPIO_CTRL(0U, 3U),
+    [DEV_SM_PIN_GPIO_IO55] = GPIO_CTRL(0U, 4U),
+    [DEV_SM_PIN_GPIO_IO57] = GPIO_CTRL(0U, 5U),
+    [DEV_SM_PIN_CCM_CLKO1] = GPIO_CTRL(0U, 6U),
+    [DEV_SM_PIN_ETH4_TXD2] = GPIO_CTRL(0U, 7U),
+    [DEV_SM_PIN_XSPI1_SS1_B] = GPIO_CTRL(1U, 0U),
+    [DEV_SM_PIN_ETH4_MDIO_GPIO2] = GPIO_CTRL(1U, 1U),
+    [DEV_SM_PIN_ETH4_RX_CTL] = GPIO_CTRL(1U, 2U),
+};
 
 /*--------------------------------------------------------------------------*/
 /* Return pin name                                                          */
@@ -310,6 +331,56 @@ void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
         IOMUXC_SetPinMux(0U, 0U, daisyRegister, value, 0U, 0U);
     }
 
+    /* Handle Extended */
+    else if (type == DEV_SM_PIN_TYPE_EXT)
+    {
+        uint32_t gpioCtrl = gpioCtrlMap[identifier];
+
+        /* Check if mux extended */
+        if (gpioCtrl != 0U)
+        {
+            uint32_t ctrl = MAP_CTRL(gpioCtrl);
+            uint32_t sel =  MAP_SEL(gpioCtrl);
+            volatile uint32_t *addr;
+            uint32_t tmp;
+
+            /* Determine address */
+            switch (ctrl)
+            {
+                case 0U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
+                    break;
+                case 1U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+                    break;
+                case 2U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_2;
+                    break;
+                case 3U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_3;
+                    break;
+                case 4U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_4;
+                    break;
+                default:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
+                    break;
+            }
+
+            /* Read register */
+            tmp = *addr;
+
+            /* Clear mux override and sel */
+            tmp &= ~(GPIO_SET(sel, 0xFUL));
+
+            /* Set mux override and sel */
+            tmp |= GPIO_SET(sel, value & 0xFUL);
+
+            /* Write register */
+            *addr = tmp;
+        }
+    }
+
     /* Else */
     else
     {
@@ -327,6 +398,7 @@ void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
     {
         uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
 
+        /* Get IOMUXC value */
         *value = *((volatile uint32_t*) muxRegister);
     }
 
@@ -346,6 +418,50 @@ void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
             + (identifier * 4U);
 
         *value = *((volatile uint32_t*) daisyRegister);
+    }
+
+    /* Handle Extended */
+    else if (type == DEV_SM_PIN_TYPE_EXT)
+    {
+        uint32_t gpioCtrl = gpioCtrlMap[identifier];
+
+        /* Check if mux extended */
+        if (gpioCtrl != 0U)
+        {
+            uint32_t ctrl = MAP_CTRL(gpioCtrl);
+            uint32_t sel =  MAP_SEL(gpioCtrl);
+            const volatile uint32_t *addr;
+
+            /* Determine address */
+            switch (ctrl)
+            {
+                case 0U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
+                    break;
+                case 1U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+                    break;
+                case 2U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_2;
+                    break;
+                case 3U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_3;
+                    break;
+                case 4U:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_4;
+                    break;
+                default:
+                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
+                    break;
+            }
+
+            /* Read register */
+            *value = GPIO_GET(sel, *addr);
+        }
+        else
+        {
+            *value = 0U;
+        }
     }
 
     /* Else */

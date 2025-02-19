@@ -48,8 +48,9 @@
 /* Device control map structure */
 typedef struct
 {
-    uint32_t addr;  /* Address of control */
-    uint32_t mask;  /* Mask of control */
+    uint32_t addr;   /* Address of control */
+    uint32_t mask;   /* Mask of control */
+    uint32_t words;  /* Number of full words */
 } dev_sm_ctrl_t;
 
 /* Local variables */
@@ -100,6 +101,16 @@ static const dev_sm_ctrl_t s_control[DEV_SM_NUM_CTRL] =
     {
         .addr = BLK_CTRL_NS_AONMIX_BASE + 0x2CU,
         .mask = 0x001FFFFFU,
+    },
+    [DEV_SM_CTRL_XBAR_DIR_CTRL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x270U,
+        .words = 2U,
+    },
+    [DEV_SM_CTRL_XBAR_TRIG_SYNC] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x254U,
+        .words = 4U,
     }
 };
 
@@ -114,22 +125,43 @@ int32_t DEV_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
     /* Check control */
     if (ctrlId < DEV_SM_NUM_CTRL)
     {
-        if (numVal == 1U)
+        uint32_t words = s_control[ctrlId].words;
+
+        if (words == 0U)
         {
-            uint32_t temp = Read32(s_control[ctrlId].addr);
+            if (numVal == 1U)
+            {
+                uint32_t temp = Read32(s_control[ctrlId].addr);
 
-            /* Clear fields */
-            temp &= ~s_control[ctrlId].mask;
+                /* Clear fields */
+                temp &= ~s_control[ctrlId].mask;
 
-            /* Update fields */
-            temp |= (val[0] & s_control[ctrlId].mask);
+                /* Update fields */
+                temp |= (val[0] & s_control[ctrlId].mask);
 
-            /* Write value */
-            Write32(s_control[ctrlId].addr, temp);
+                /* Write value */
+                Write32(s_control[ctrlId].addr, temp);
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
         }
         else
         {
-            status = SM_ERR_INVALID_PARAMETERS;
+            if (numVal == words)
+            {
+                /* Loop over all words */
+                for (uint32_t idx = 0U; idx < words; idx++)
+                {
+                    Write32(s_control[ctrlId].addr + (idx * 4U),
+                        val[idx]);
+                }
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
         }
     }
     else
@@ -151,9 +183,24 @@ int32_t DEV_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
     /* Check control */
     if (ctrlId < DEV_SM_NUM_CTRL)
     {
-        *numRtn = 1U;
-        rtn[0] = (Read32(s_control[ctrlId].addr)
-            & s_control[ctrlId].mask);
+        uint32_t words = s_control[ctrlId].words;
+
+        if (words == 0U)
+        {
+            *numRtn = 1U;
+            rtn[0] = (Read32(s_control[ctrlId].addr)
+                & s_control[ctrlId].mask);
+        }
+        else
+        {
+            *numRtn = words;
+
+            /* Loop over all words */
+            for (uint32_t idx = 0U; idx < words; idx++)
+            {
+                rtn[idx] = Read32(s_control[ctrlId].addr + (idx * 4U));
+            }
+        }
     }
     else
     {

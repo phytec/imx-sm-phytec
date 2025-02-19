@@ -476,6 +476,7 @@
 #define DEV_SM_PIN_TYPE_MUX     0U  /*!< Pin mux */
 #define DEV_SM_PIN_TYPE_CONFIG  1U  /*!< Pin config */
 #define DEV_SM_PIN_TYPE_DAISY   2U  /*!< Pin daisy */
+#define DEV_SM_PIN_TYPE_EXT     3U  /*!< Pin extended */
 /** @} */
 
 /* Types */

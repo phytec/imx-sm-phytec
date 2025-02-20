@@ -223,7 +223,7 @@
  *
  * @param[in]     channel  A2P channel for comms
  * @param[out]    version  Protocol version. For this revision of the
- *                         specification, this value must be 0x10000
+ *                         specification, this value must be 0x10001
  *
  * This function returns the version of this protocol. For this version of the
  * specification, the value that is returned must be 0x10000, which corresponds

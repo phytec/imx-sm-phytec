@@ -513,7 +513,7 @@ static uint8_t s_lmmNotify[SM_NUM_LM][SM_SCMI_NUM_AGNT];
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x10000                              */
+/*   specification, this value must be 0x10001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_LmmProtocolVersion().                                               */

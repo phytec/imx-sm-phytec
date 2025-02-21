@@ -30,8 +30,8 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2025q1
-SM_PREV_VER = imx_sm_2024q4
+SM_VERSION = imx_sm_2025q1_er1
+SM_PREV_VER = imx_sm_2025q1_er0
 SM_SNAP = 0
 
 SM_DEVICES = i.MX95 (A0), i.MX95 (A1), i.MX94 (A0)

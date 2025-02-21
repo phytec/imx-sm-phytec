@@ -1,6 +1,6 @@
 NXP Software Content Register
 
-Release Name:     rel_imx_sm_2025q1
+Release Name:     rel_imx_sm_2025q1_er1
 Version:          2025q1_er0
 Outgoing License: BSD-3-Clause
 License File:     LICENSE.txt

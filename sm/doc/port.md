@@ -678,3 +678,21 @@ The following lock guidelines apply:
   the associate lock implementation check the CPU state and not acquire a lock or disable any interrupts
   when called while in an interrupt context.
 
+The following apply when porting to a Cortex-M client:
+
+- The compiler "-mno-unaligned-access" option must be enabled. This option controls how the compiler handles
+  data alignment. When enabled, it instructs the compiler to generate code that assumes strict data
+  alignment and that is required when accessing the MU SRAM. It is okay to apply this option only to
+  the rules for compiling the SCMI client files so long as the core is configured to support unaligned
+  accessed for other memories.
+
+The following apply when porting to a Cortex-A (64-bit) client:
+
+- The MU memory region (MU registers address space and MU SRAM) must both be configured as device memory
+  in the MMU page tables. Otherwise, it may lead to a hang if MUA side and MUB side try to access the
+  same memory region.
+- The compiler "-mstrict-align" option must be enabled. This option controls how the compiler handles
+  data alignment. When enabled, it instructs the compiler to generate code that assumes strict data
+  alignment and that is required when accessing the MU SRAM. It is okay to apply this option only to
+  the rules for compiling the SCMI client files.
+

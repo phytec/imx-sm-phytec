@@ -48,6 +48,8 @@
     SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
 #define AUTHENCTRL_CPU(cpuId)    SRC_XSPR_AUTHEN_CTRL_WHITE_LIST(WHITELIST_VAL(cpuId)) | \
     SRC_XSPR_AUTHEN_CTRL_LPM_MODE(1U)
+#define AUTHENCTRL_VCPU(cpuId)   SRC_XSPR_AUTHEN_CTRL_WHITE_LIST(WHITELIST_VAL(cpuId)) | \
+    SRC_XSPR_AUTHEN_CTRL_LPM_MODE(0U)
 
 
 #define LPMSETTING(cpuId)       LPMSETTING_DOM(cpuId, CPU_PD_LPM_ON_RUN_WAIT_STOP)
@@ -310,8 +312,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqMaskRst = (1U << PWR_GPC_HS_RST_NETC) | (1U << PWR_GPC_HS_RST_M33S),
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_NETC),
         .gpcReqIdxPwr = 1U,
-        .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_M33P_S),
-        .lpmSetting = LPMSETTING_CPU(CPU_IDX_M33P_S),
+        .authenCtrl = AUTHENCTRL_VCPU(CPU_IDX_M33P_S),
+        .lpmSetting = LPMSETTING_DOM(CPU_IDX_M33P_S, CPU_PD_LPM_ON_RUN_WAIT),
         .lpcgIdxStart = CCM_LPCG_NETCMIX_START,
         .lpcgIdxEnd = CCM_LPCG_NETCMIX_END,
     },

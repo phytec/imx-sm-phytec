@@ -447,6 +447,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
@@ -1107,6 +1108,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
@@ -1758,6 +1760,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
@@ -2409,6 +2412,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
@@ -3060,6 +3064,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
@@ -3711,6 +3716,7 @@
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M70] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_M71] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \

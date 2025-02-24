@@ -358,6 +358,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
             case DEV_SM_PD_WAKEUP:
                 status = DEV_SM_WkupPowerDownPre();
                 break;
+            case DEV_SM_PD_NETC:
+                status = DEV_SM_NetcPowerDownPre();
+                break;
             default:
                 /* Only return error if domain out of range */
                 if (domainId >= DEV_SM_NUM_POWER)

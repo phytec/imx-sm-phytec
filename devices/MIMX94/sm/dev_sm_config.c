@@ -69,6 +69,8 @@ static mix_pdn_context s_mixPdnContext55 =
 {
     .valid = false
 };
+static bool s_cpuWaitContextValidM33S = false;
+static bool s_cpuWaitContextM33S;
 
 static uint32_t wkupGpioCtrl0 = 0U;
 static uint32_t wkupGpioCtrl1 = 0U;
@@ -351,6 +353,20 @@ int32_t DEV_SM_NetcConfigLoad(void)
         status = SM_NETC_CONFIG_FUNC();
     }
 #endif
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Check if M33S CPUWAIT context was saved during NETCMIX power down */
+        if (s_cpuWaitContextValidM33S)
+        {
+            /* Use SW wakeup to align M33S GPC with NETCMIX power state */
+            (void) CPU_SwWakeup(CPU_IDX_M33P_S);
+
+            /* Restore M33S CPUWAIT context */
+            (void) CPU_WaitSet(CPU_IDX_M33P_S, s_cpuWaitContextM33S);
+            s_cpuWaitContextValidM33S = false;
+        }
+    }
 
     /* Return status */
     return status;
@@ -747,6 +763,36 @@ int32_t DEV_SM_WkupPowerDownPre(void)
 {
     wkupGpioCtrl0 = BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
     wkupGpioCtrl1 = BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------*/
+/* NETC power domain power down configuration                               */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_NetcPowerDownPre(void)
+{
+    /* Query M33S sleep mode target */
+    uint32_t sleepMode = CPU_SLEEP_MODE_RUN;
+    (void) CPU_SleepModeGet(CPU_IDX_M33P_S, &sleepMode);
+
+    /* Save M33S CPUWAIT context based on sleep mode target */
+    switch (sleepMode)
+    {
+        case CPU_SLEEP_MODE_STOP:
+        case CPU_SLEEP_MODE_SUSPEND:
+            if (CPU_WaitGet(CPU_IDX_M33P_S, &s_cpuWaitContextM33S))
+            {
+                s_cpuWaitContextValidM33S = true;
+                (void) CPU_WaitSet(CPU_IDX_M33P_S, true);
+            }
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
 
     /* Return status */
     return SM_ERR_SUCCESS;

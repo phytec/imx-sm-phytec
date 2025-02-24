@@ -72,6 +72,9 @@
 #define PWR_MIX_SLICE_IDX_NPU           17U
 #define PWR_MIX_SLICE_IDX_WAKEUP        18U
 
+#define PWR_NUM_MIX_VSLICE              1UL
+#define PWR_MIX_VSLICE_IDX_M33S         (PWR_NUM_MIX_SLICE+0U)
+
 #define PWR_NUM_MEM_SLICE               17U
 
 #define PWR_MEM_SLICE_IDX_AON           0U

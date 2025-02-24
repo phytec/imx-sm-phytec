@@ -86,6 +86,7 @@
         .lmmPerms[2] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[3] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[4] = SM_SCMI_PERM_NOTIFY, \
+        .pdPerms[DEV_SM_PD_M33S] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_LPUART8] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_WDOG7] = SM_SCMI_PERM_ALL, \

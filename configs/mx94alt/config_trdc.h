@@ -1426,6 +1426,10 @@
         SM_CFG_Z1(0x0001a84cU), \
         SM_CFG_Z1(0x0001a854U), \
         SM_CFG_Z1(0x0001a85cU), \
+        SM_CFG_Z1(0x0001a944U), \
+        SM_CFG_Z1(0x0001a94cU), \
+        SM_CFG_Z1(0x0001a954U), \
+        SM_CFG_Z1(0x0001a95cU), \
         SM_CFG_Z1(0x0001aa44U), \
         SM_CFG_Z1(0x0001aa4cU), \
         SM_CFG_Z1(0x0001aa54U), \

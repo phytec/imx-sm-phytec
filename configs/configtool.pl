@@ -3469,6 +3469,25 @@ sub get_trdc
 	    }
 	}	
 
+	# Finalize last MRC
+	if ($curr_rgd ne '')
+	{
+		my $clr = 4;
+		if ($old_rgn < $clr)
+		{
+			$clr = $old_rgn;
+		}
+
+        while (($old_elm ne '') && ($rgd < $clr))
+        {
+            my $new_m = sprintf("%s%02d = 0x%08X, 0x%08X",
+                $old_elm, $rgd, 0, 0);
+
+            push @rdc, $new_m;
+            $rgd++;
+        }
+	}
+
 	# Save last MRC GLBAC
 	if ($curr_mrc ne '')
 	{
@@ -3624,6 +3643,7 @@ sub convert_trdc
 		}
 		else
 		{
+            print $t . "\n";
            	error_line('unknown TRDC register', $t);
 		}
 	}

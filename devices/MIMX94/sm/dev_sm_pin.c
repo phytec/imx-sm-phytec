@@ -393,6 +393,8 @@ void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
 {
+    *value = 0U;
+
     /* Handle Mux */
     if (type == DEV_SM_PIN_TYPE_MUX)
     {

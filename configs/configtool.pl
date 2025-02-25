@@ -257,6 +257,7 @@ sub load_config_files
 	}	    
 
     # Replace standard perms
+    s/perm=0\b/perm=0x0000/g for @cfg;
     s/perm=none\b/perm=0x0000/g for @cfg;
     s/perm=sec_r\b/perm=0x4400/g for @cfg;
     s/perm=secpriv_rx\b/perm=0x5000/g for @cfg;
@@ -2998,11 +2999,12 @@ sub get_trdc
         foreach my $m (@rdc)
         {
             if (($m =~ /\bM[BR]C_\w+=/)
-                && ($m =~ /\bdid=\d+ /)
-                && !($m =~ /nodbg=1/))
+                && ($m =~ /\bdid=[\d-]+/)
+                && !($m =~ /\bnodbg=1/)
+                && !($m =~ /\bperm=0x0000/))
             {
                 my $a = $m;
-                $a =~ s/\bdid=\d+/did=$debugDid/g;
+                $a =~ s/\bdid=[\d-]+/did=$debugDid/g;
                 $a =~ s/\bperm=\w+/perm=0x6666/g;
                 push @debugLines, $a;            
             }

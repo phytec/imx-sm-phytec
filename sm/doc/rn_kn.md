@@ -14,4 +14,5 @@ Bug {#RN_KN_BUG}
 | [SM-221](https://jira.sw.nxp.com/projects/SM/issues/SM-221) | Extended config flag not set for spread spectrum clocks | Y | Y | Y |
 | [SM-223](https://jira.sw.nxp.com/projects/SM/issues/SM-223) | Wakeups must be masked for CPUs that do not constrain system sleep entry | Y | Y | Y |
 | [SM-229](https://jira.sw.nxp.com/projects/SM/issues/SM-229) | Manage NETC M33S with a virtual power domain to avoid power dependencies | | | Y |
+| [SM-230](https://jira.sw.nxp.com/projects/SM/issues/SM-230) | Incorrect configtool output | Y | Y | Y |
 

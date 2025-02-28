@@ -49,4 +49,5 @@ Customers **must** make the following changes in their board port:
 
 - Convert to use of the device fuse API.
 - Move BOARD_PERF_VDROP definition from brd_sm.c to brd_sm.h.
+- Added code to enable the PF09 LDO3 in RUN mode.
 

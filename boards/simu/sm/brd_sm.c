@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -64,12 +64,29 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     /* Get the boot mode select */
     if (argc > 1)
     {
+        int32_t val = 0;
+
         // coverity[misra_c_2012_rule_21_7_violation:FALSE]
-        *mSel = (uint32_t) atoi(argv[1]);
+        val = atoi(argv[1]);
+
+        /* Check the val is positive */
+        if (CHECK_I32_POSITIVE(val))
+        {
+            // coverity[misra_c_2012_rule_21_7_violation:FALSE]
+            *mSel = (uint32_t)(val);
+        }
+        else
+        {
+            /* Set the status if val is negative */
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
-    /* Init the device */
-    status = DEV_SM_Init();
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Init the device */
+        status = DEV_SM_Init();
+    }
 
     /* Return status */
     return status;
@@ -117,6 +134,7 @@ int32_t BRD_SM_Custom(int32_t argc, const char * const argv[])
         }
     }
 
+    /* Return status */
     return status;
 }
 

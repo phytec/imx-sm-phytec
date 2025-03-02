@@ -576,7 +576,7 @@ static int32_t Reset(const scmi_caller_t *caller, const msg_rreset4_t *in,
         }
         else
         {
-            lmmState = ((uint8_t) (in->resetState & 0x7FFFFFFFU));
+            lmmState = U8(in->resetState);
         }
     }
 

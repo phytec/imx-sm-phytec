@@ -29,6 +29,7 @@
 
 /* Includes */
 
+#include "fsl_def.h"
 #include "fsl_clock.h"
 #include "fsl_fract_pll.h"
 #include "fsl_device_registers.h"
@@ -394,7 +395,7 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
                     if (g_pllAttrs[pllIdx].isFrac)
                     {
                         /* Calculate MFN */
-                        mfn = (uint32_t) ((rate - (mfi * CLOCK_PLL_FREF_HZ))
+                        mfn = U64_U32((rate - (mfi * CLOCK_PLL_FREF_HZ))
                             / ((uint64_t) CLOCK_PLL_CALC_ACCURACY_HZ));
                     }
 
@@ -649,14 +650,15 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             uint64_t newRate = rate + 1ULL;
 
             /* Calculate MFI */
-            uint32_t mfi = (uint32_t) ((uint64_t) (vcoRate / newRate));
+            uint32_t mfi = U64_U32((uint64_t) (vcoRate / newRate));
 
             /* Calculate MFN */
-            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate * 5UL);
+            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate
+                * 5UL);
             uint64_t quotient = num / newRate;
             uint64_t remain = num % newRate;
 
-            uint32_t mfn = ((uint32_t) quotient);
+            uint32_t mfn = U64_U32(quotient);
 
             /* Round up MFN to avoid overclocking */
             if  ((remain != 0U) && (quotient < 5U))

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -92,11 +92,11 @@ static void print_mismatch(string prnMsg, uint32_t clkIdx,
     }
 
     /* If rate print requires 64-bit, use hex */
-    if ((SM_UINT64_H(v1) != 0U) || (SM_UINT64_H(v2) != 0U))
+    if ((UINT64_H(v1) != 0U) || (UINT64_H(v2) != 0U))
     {
         printf("Expected = 0x%08X_0x%08X, Actual = 0x%08X_0x%08X\n",
-            SM_UINT64_H(v1), SM_UINT64_L(v1),
-            SM_UINT64_H(v2), SM_UINT64_L(v2));
+            UINT64_H(v1), UINT64_L(v1),
+            UINT64_H(v2), UINT64_L(v2));
     }
     else
     {

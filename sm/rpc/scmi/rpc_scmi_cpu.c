@@ -857,7 +857,7 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
             | (uint64_t) in->resetVectorLow;
 
         /* Mark owning agent */
-        s_cpuAgent[in->cpuId] = ((uint8_t) caller->agentId) + 1U;
+        s_cpuAgent[in->cpuId] = U8((caller->agentId) + 1U);
 
         /* Update vector */
         status = LMM_CpuResetVectorSet(caller->lmId, in->cpuId,
@@ -1288,8 +1288,8 @@ static int32_t CpuInfoGet(const scmi_caller_t *caller, const msg_rcpu12_t *in,
             &(out->runMode), &(out->sleepMode), &vector);
 
         /* Return results */
-        out->resetVectorHigh = SM_UINT64_H(vector);
-        out->resetVectorLow = SM_UINT64_L(vector);
+        out->resetVectorHigh = UINT64_H(vector);
+        out->resetVectorLow = UINT64_L(vector);
     }
 
     /* Return status */
@@ -1361,7 +1361,7 @@ static int32_t CpuResetAgentConfig(uint32_t lmId, uint32_t agentId,
     for (uint32_t cpuId = 0U; cpuId < SM_NUM_CPU; cpuId++)
     {
         /* Reset vector */
-        if (s_cpuAgent[cpuId] == (((uint8_t) agentId) + 1U))
+        if (s_cpuAgent[cpuId] == (U32_U8(agentId) + 1U))
         {
             (void) LMM_CpuResetVectorReset(lmId, cpuId, false);
             s_cpuAgent[cpuId] = 0U;

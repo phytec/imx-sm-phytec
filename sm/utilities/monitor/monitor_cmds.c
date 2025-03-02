@@ -1706,12 +1706,12 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                 "on"
                             };
 
-                            if (SM_UINT64_H(rate) == 0U)
+                            if (UINT64_H(rate) == 0U)
                             {
                                 printf("%03u: %*s = %3s, %10uHz\n", clockId,
                                     -wName, clockNameAddr,
                                     displayModes[enb],
-                                    SM_UINT64_L(rate));
+                                    UINT64_L(rate));
                             }
                             else
                             {
@@ -1765,9 +1765,9 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
 
                                         if (status == SM_ERR_SUCCESS)
                                         {
-                                            uint32_t maxKHz = SM_UINT64_L(
+                                            uint32_t maxKHz = UINT64_L(
                                                 range.highestRate/1000UL);
-                                            uint32_t minKHz = SM_UINT64_L(
+                                            uint32_t minKHz = UINT64_L(
                                                 range.lowestRate/1000UL);
                                             printf("%03u: %*s MAX = %7uKHz,"
                                                 " MIN = %7uKHz\n", clockId,
@@ -2429,7 +2429,7 @@ static int32_t MONITOR_CmdBbRtc(int32_t argc, const char * const argv[],
                 uint32_t state = 0U;
 
                 printf("%03u: %*s = %u seconds", rtcId, -wName,
-                    rtcName, SM_UINT64_L(sec));
+                    rtcName, UINT64_L(sec));
 
                 status = LMM_BbmRtcStateGet(s_lm, rtcId, &state);
 
@@ -2506,7 +2506,7 @@ static int32_t MONITOR_CmdBbTicks(int32_t argc, const char * const argv[],
             if (status == SM_ERR_SUCCESS)
             {
                 printf("%03u: %*s = %u ticks\n", rtcId, -wName,
-                    rtcName, SM_UINT64_L(ticks));
+                    rtcName, UINT64_L(ticks));
             }
             status = SM_ERR_SUCCESS;
         }
@@ -2654,7 +2654,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                         printf("%03u: %*s => run-mode = %5s, slp-mode = %4s, vector = 0x%08X_%08X\n",
                             cpuId, -wName, cpuNameAddr,
                             runModes[runMode], sleepModes[sleepMode],
-                            SM_UINT64_H(vector), SM_UINT64_L(vector));
+                            UINT64_H(vector), UINT64_L(vector));
                     }
                     else
                     {

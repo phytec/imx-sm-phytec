@@ -272,7 +272,9 @@ int32_t BRD_SM_BusExpMaskSet(uint16_t val, uint16_t mask)
 {
     int32_t status = SM_ERR_SUCCESS;
     static uint16_t cachedMask = PCAL6416A_INITIAL_MASK;
-    uint16_t newMask = (cachedMask & ~mask) | val;
+    uint16_t newMask = (cachedMask & ~mask);
+
+    newMask |= val;
 
     /* Mask changed? */
     if (cachedMask != newMask)

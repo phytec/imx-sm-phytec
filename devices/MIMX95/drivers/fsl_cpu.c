@@ -29,7 +29,7 @@
 
 /* Includes */
 
-#include "sm.h"
+#include "fsl_def.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
@@ -2098,10 +2098,9 @@ void CPU_MixPowerUpNotify(uint32_t srcMixIdx)
     while (cpuMixDependMask != 0U)
     {
         /* Convert mask into index */
-        uint8_t cpuIdx = 31U - __CLZ(cpuMixDependMask);
+        uint8_t cpuIdx = U8(31U - __CLZ(cpuMixDependMask));
 
         (void) CPU_WaitSet(cpuIdx, false);
-        printf("Release CPU%u from MIX%u PowerUpPost\n", cpuIdx, srcMixIdx);
 
         /* Clear CPU mask bit to mark done */
         cpuMixDependMask &= (~(1UL << (cpuIdx)));
@@ -2169,13 +2168,14 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
         if (vectorRegLow != NULL)
         {
             /* Set lower 32-bit vector */
-            *vectorRegLow = (uint32_t) ((vector & 0xFFFFFFFFULL) >> vectorShift);
+            *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
+                vectorShift);
 
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)
             {
                 /* Set upper 32-bit vector */
-                *vectorRegHigh = (uint32_t) (vector >> (32U + vectorShift));
+                *vectorRegHigh = U32(vector >> (32U + vectorShift));
             }
 
             rc = true;

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -847,6 +847,11 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /*
+     * Intentional: errId is a generic variable to return both signed and
+     * unsigned data depending on the reason.
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,

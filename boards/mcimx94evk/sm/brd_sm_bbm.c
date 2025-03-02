@@ -79,12 +79,12 @@ int32_t BRD_SM_BbmRtcWrite(uint32_t addr, uint32_t numVal,
         /* Copy buffer (convert to 8-bit) */
         for (uint32_t idx = 0U; idx < numVal; idx++)
         {
-            buf[idx] = SM_U32_U8(val[idx]);
+            buf[idx] = U32_U8(val[idx]);
         }
 
         /* Write data */
-        if (!PCA2131_RtcWrite(&g_pca2131Dev, SM_U32_U8(addr),
-            SM_U32_U8(numVal), buf))
+        if (!PCA2131_RtcWrite(&g_pca2131Dev, U32_U8(addr),
+            U32_U8(numVal), buf))
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
@@ -111,8 +111,8 @@ int32_t BRD_SM_BbmRtcRead(uint32_t addr, uint32_t numVal, uint32_t *val)
         uint8_t buf[24] = { 0 };
 
         /* Read data */
-        if (PCA2131_RtcRead(&g_pca2131Dev, SM_U32_U8(addr),
-            SM_U32_U8(numVal), buf))
+        if (PCA2131_RtcRead(&g_pca2131Dev, U32_U8(addr),
+            U32_U8(numVal), buf))
         {
             /* Copy buffer (convert to 32-bit) */
             for (uint32_t idx = 0U; idx < numVal; idx++)
@@ -210,13 +210,13 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
             sec64 = val / 100U;
             hun64 = val - (sec64 * 100U);
 
-            secs = SM_U64_U32(sec64);
-            hun = SM_U64_U32(hun64);
+            secs = U64_U32(sec64);
+            hun = U64_U32(hun64);
         }
         else
         {
             hun = 0U;
-            secs = SM_U64_U32(val);
+            secs = U64_U32(val);
         }
 
         /* Calculate totals */
@@ -383,7 +383,7 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             uint32_t days, hours, mins, secs;
 
             /* Convert to seconds */
-            secs = SM_U64_U32(val);
+            secs = U64_U32(val);
 
             /* Calculate totals */
             mins = secs / 60U;

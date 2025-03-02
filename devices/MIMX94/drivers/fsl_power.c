@@ -29,7 +29,7 @@
 
 /* Includes */
 
-#include "sm.h"
+#include "fsl_def.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
 #include "fsl_src.h"

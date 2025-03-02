@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -103,8 +103,8 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
     {
         printf("DEV_SM_SystemStageReset(%u, %u)\n", stage, container);
 
-        g_romPassover.bootStage = (uint8_t) stage;
-        g_romPassover.imgSetSel = (uint8_t) container;
+        g_romPassover.bootStage = U32_U8(stage);
+        g_romPassover.imgSetSel = U32_U8(container);
         g_romPassover.bootDevInst = 0U;
 
         if (stage == DEV_SM_ROM_BS_PRIMARY)
@@ -241,6 +241,11 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 // coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void DEV_SM_SystemError(int32_t status, uint32_t pc)
 {
+    /*
+     * Intentional: errId is a generic variable to return both signed and
+     * unsigned data depending on the reason.
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,

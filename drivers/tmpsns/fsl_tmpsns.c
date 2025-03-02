@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -155,6 +155,11 @@ int16_t TMPSNS_GetDataNonBlocking(const TMPSNS_Type *base)
 {
     uint16_t value = (uint16_t) (base->DATA0 & 0xFFFFU);
 
+    /*
+     * Intentional: The value in the DATA register is 16-bit
+     * signed value (in two's-complement form).
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     return (int16_t) value;
 }
 
@@ -164,6 +169,11 @@ int16_t TMPSNS_GetDataNonBlocking(const TMPSNS_Type *base)
 void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
     int16_t value, uint8_t mode)
 {
+    /*
+     * Intentional: The value store in  THR_CTRLm register is 16-bit
+     * signed value (in two's-complement form).
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     uint16_t uval = (uint16_t) value;
 
     if (thresholdIdx == 0U)

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -192,6 +192,11 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
 {
     int32_t status = SM_ERR_SUCCESS;
     int16_t raw0 = (int16_t) 0x0650;
+    /*
+     * Intentional: To validate negative temperatures,
+     * intentionally pass a negative temperature value.
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     int16_t raw1 = (int16_t) 0xF9B0;
 
     /* Check domain */

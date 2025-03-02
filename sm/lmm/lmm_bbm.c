@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -298,7 +298,7 @@ static int32_t LMM_BbmRtcAlarmUpdate(uint32_t rtcId)
     bool updateEnable = false;
 
     /* Find next nearest alarm */
-    s_rtcInfo[rtcId].updateTime = (uint64_t) -1;
+    s_rtcInfo[rtcId].updateTime = UINT64_MAX;
     for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
     {
         /* Is enabled? */

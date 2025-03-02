@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,8 +29,9 @@
 
 /* Includes */
 
-#include "fsl_pf53.h"
+#include "sm.h"
 #include "crc.h"
+#include "fsl_pf53.h"
 
 /* Local Defines */
 
@@ -156,7 +157,9 @@ bool PF53_PmicWrite(const PF53_Type *dev, uint8_t regAddr, uint8_t val,
                 rc = PF53_PmicRead(dev, regAddr, &rxBuf);
                 if (rc)
                 {
-                    data[0] = (val & mask) | (rxBuf & (~mask));
+                    uint8_t mask_b = ~mask;
+
+                    data[0] = (val & mask) | (rxBuf & mask_b);
                 }
             }
 
@@ -221,7 +224,7 @@ bool PF53_PmicRead(const PF53_Type *dev, uint8_t regAddr, uint8_t *val)
                     uint8_t crc;
 
                     /* Get CRC */
-                    crcBuf[0] = (dev->devAddr << 1U) | 0x1U;
+                    crcBuf[0] = U8((dev->devAddr << 1U) | 0x1U);
                     crcBuf[1] = regAddr;
                     crcBuf[2] = data[0];
                     crc = CRC_J1850(crcBuf, 3U);
@@ -312,8 +315,9 @@ bool PF53_SwModeSet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
         /* Check regulator index */
         if (regulator == PF53_REG_SW1)
         {
-            uint8_t modeVal = mode << ((state * 2U) + 2U);
-            uint8_t modeMask = 3U << ((state * 2U) + 2U);
+            uint8_t shft = (state * 2U) + 2U;
+            uint8_t modeVal = mode << shft;
+            uint8_t modeMask = U8(3U << shft);
 
             rc = PF53_PmicWrite(dev, PF53_REG_SW1_CTRL1,
                 modeVal, modeMask);
@@ -344,13 +348,24 @@ bool PF53_SwModeGet(const PF53_Type *dev, uint8_t regulator, uint8_t state,
         /* Check regulator index */
         if (regulator == PF53_REG_SW1)
         {
+            uint8_t shft = (state * 2U) + 2U;
+
             /* 0x3 or 0xC for mode bits depending on state */
-            uint8_t modeMask = 3U << ((state * 2U) + 2U);
+            uint8_t modeMask = U8(3U << shft);
 
             rc = PF53_PmicRead(dev, PF53_REG_SW1_CTRL1, mode);
 
             /* Mask and shift the mode bits */
-            *mode = ((*mode) & modeMask) >> (2U + (state * 2U));
+            uint8_t modeVal = U8(*mode & modeMask);
+
+            /*
+             * False positive: Marking the issue below as a false positive
+             * because the data type of modeVal is uint8_t, and right shifting
+             * a uint8_t type variable cannot be automatically converted to an
+             * int.
+             */
+            // coverity[cert_int31_c_violation:FALSE]
+            *mode = modeVal >> shft;
         }
     }
 

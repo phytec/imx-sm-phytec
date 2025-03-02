@@ -305,7 +305,7 @@ int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
                     while (cpuWakeListA55 != 0U)
                     {
                         /* Convert mask into index */
-                        uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
+                        uint8_t cpuIdx = U8(31U - __CLZ(cpuWakeListA55));
 
                         (void) CPU_SwWakeup(cpuIdx);
 

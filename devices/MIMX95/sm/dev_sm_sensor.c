@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -498,7 +498,6 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
 void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
 {
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[idx].idx];
-    uint8_t tripPoint = threshold - s_tmpsns[idx].firstThreshold;
 
     /* Workaround ERR052128 */
     SystemTimeDelay(1U);
@@ -507,8 +506,13 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
             << threshold);
 
-    /* Send sensor event */
-    LMM_SensorEvent(idx, tripPoint, s_tmpsnsDir[idx]);
+    /* Check trip point will not underflow */
+    if (threshold >= s_tmpsns[idx].firstThreshold)
+    {
+        /* Send sensor event */
+        LMM_SensorEvent(idx, threshold - s_tmpsns[idx].firstThreshold,
+            s_tmpsnsDir[idx]);
+    }
 }
 
 /*==========================================================================*/
@@ -521,57 +525,68 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 {
     int32_t status = SM_ERR_SUCCESS;
     int64_t raw64 = (value * 64) / 100;
-    int16_t raw16 = (int16_t) raw64;
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
 
-    if (eventControl == DEV_SM_SENSOR_TP_NONE)
+    /* Check raw64 fit in int16_t */
+    if (CHECK_I64_FIT_I16(raw64))
     {
-        /* Disable interrupt */
-        TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
-                << threshold);
-    }
-    else
-    {
-        uint8_t mode;
+        int16_t raw16 = (int16_t) raw64;
 
-        /* Convert event control to mode */
-        switch (eventControl)
-        {
-            case DEV_SM_SENSOR_TP_RISING:
-                mode = (uint8_t) kTMPSNS_ThrModeRisingEdge;
-                s_tmpsnsDir[sensorId] = 1U;
-                break;
-            case DEV_SM_SENSOR_TP_FALLING:
-                mode = (uint8_t) kTMPSNS_ThrModeFallingEdge;
-                s_tmpsnsDir[sensorId] = 0U;
-                break;
-            case DEV_SM_SENSOR_TP_HIGH:
-                mode = (uint8_t) kTMPSNS_ThrModeHigh;
-                s_tmpsnsDir[sensorId] = 1U;
-                break;
-            case DEV_SM_SENSOR_TP_LOW:
-                mode = (uint8_t) kTMPSNS_ThrModeLow;
-                s_tmpsnsDir[sensorId] = 0U;
-                break;
-            default:
-                status = SM_ERR_INVALID_PARAMETERS;
-                break;
-        }
 
-        /* Valid mode? */
-        if (status == SM_ERR_SUCCESS)
+        if (eventControl == DEV_SM_SENSOR_TP_NONE)
         {
             /* Disable interrupt */
             TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
                     << threshold);
-
-            /* Configure sensor threshold */
-            TMPSNS_SetThreshold(base, threshold, raw16, mode);
-
-            /* Enable interrupt */
-            TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
-                    << threshold);
         }
+        else
+        {
+            uint8_t mode;
+
+            /* Convert event control to mode */
+            switch (eventControl)
+            {
+                case DEV_SM_SENSOR_TP_RISING:
+                    mode = (uint8_t) kTMPSNS_ThrModeRisingEdge;
+                    s_tmpsnsDir[sensorId] = 1U;
+                    break;
+                case DEV_SM_SENSOR_TP_FALLING:
+                    mode = (uint8_t) kTMPSNS_ThrModeFallingEdge;
+                    s_tmpsnsDir[sensorId] = 0U;
+                    break;
+                case DEV_SM_SENSOR_TP_HIGH:
+                    mode = (uint8_t) kTMPSNS_ThrModeHigh;
+                    s_tmpsnsDir[sensorId] = 1U;
+                    break;
+                case DEV_SM_SENSOR_TP_LOW:
+                    mode = (uint8_t) kTMPSNS_ThrModeLow;
+                    s_tmpsnsDir[sensorId] = 0U;
+                    break;
+                default:
+                    status = SM_ERR_INVALID_PARAMETERS;
+                    break;
+            }
+
+            /* Valid mode? */
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Disable interrupt */
+                TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
+                        << threshold);
+
+                /* Configure sensor threshold */
+                TMPSNS_SetThreshold(base, threshold, raw16, mode);
+
+                /* Enable interrupt */
+                TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
+                        << threshold);
+            }
+        }
+    }
+    else
+    {
+        /* Set the status if value is greater than int16_t max range */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Return status */

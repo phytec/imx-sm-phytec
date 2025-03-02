@@ -1125,7 +1125,7 @@ static int32_t LmmNotify(const scmi_caller_t *caller, const msg_rlmm9_t *in,
             else
             {
                 s_lmmNotify[in->lmId][caller->agentId]
-                    = (uint8_t) in->flags;
+                    = U32_U8(in->flags);
             }
         }
         else
@@ -1137,7 +1137,7 @@ static int32_t LmmNotify(const scmi_caller_t *caller, const msg_rlmm9_t *in,
                     >= SM_SCMI_PERM_NOTIFY)
                 {
                     s_lmmNotify[lm][caller->agentId]
-                        = (uint8_t) in->flags;
+                        = U32_U8(in->flags);
                 }
             }
         }

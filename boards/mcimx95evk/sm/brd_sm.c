@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -626,9 +626,18 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
 {
-    /* Set voltage level */
-    return BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt)
-        + BOARD_PERF_VDROP);
+    int32_t status = SM_ERR_INVALID_PARAMETERS;
+
+    /* Check microVolt is within the int32_t range */
+    if (CHECK_U32_FIT_I32(microVolt))
+    {
+        /* Set voltage level */
+        status = BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt)
+            + BOARD_PERF_VDROP);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

@@ -29,7 +29,7 @@
 
 /* Includes */
 
-#include "sm.h"
+#include "fsl_def.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
@@ -2123,13 +2123,14 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
         if (vectorRegLow != NULL)
         {
             /* Set lower 32-bit vector */
-            *vectorRegLow = (uint32_t) ((vector & 0xFFFFFFFFULL) >> vectorShift);
+            *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
+                vectorShift);
 
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)
             {
                 /* Set upper 32-bit vector */
-                *vectorRegHigh = (uint32_t) (vector >> (32U + vectorShift));
+                *vectorRegHigh = U32(vector >> (32U + vectorShift));
             }
 
             rc = true;

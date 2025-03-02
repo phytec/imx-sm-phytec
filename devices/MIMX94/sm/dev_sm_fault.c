@@ -114,7 +114,7 @@ int32_t DEV_SM_FaultGet(uint32_t faultId, bool *state)
     {
         /* Get fault status */
         *state = (eMcem_FaultPending(&errorContainer,
-            (eMcem_FaultType) faultId) != 0U);
+            U32_U16(faultId)) != 0U);
     }
 #endif
 

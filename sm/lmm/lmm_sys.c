@@ -1093,7 +1093,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_PERF:
                     status = LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0], true);
+                        U64_U32(ptr->arg[0]), true);
                     break;
                 case LMM_SS_CLK:
                     status = LM_ClockStart(ptr->lmId, ptr->rsrc,
@@ -1107,7 +1107,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_VOLT:
                     status = LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
-                        (uint8_t) ptr->arg[0]);
+                        U64_U8(ptr->arg[0]));
                     break;
                 case LMM_SS_RST:
                     {
@@ -1115,7 +1115,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                         bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
 
                         status = LMM_ResetDomain(ptr->lmId, ptr->rsrc,
-                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                            UINT64_L(ptr->arg[1]), toggle, assertNegate);
                     }
                     break;
                 case LMM_SS_CTRL:
@@ -1125,7 +1125,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                         /* Copy array */
                         for (idx = 0U; idx < LMM_MAX_ARG; idx++)
                         {
-                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                            val[idx] = UINT64_L(ptr->arg[idx]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,
@@ -1208,7 +1208,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_PERF:
                     (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0], true);
+                        U64_U32(ptr->arg[0]), true);
                     break;
                 case LMM_SS_CLK:
                     (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);
@@ -1218,7 +1218,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_VOLT:
                     (void) LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
-                        (uint8_t) ptr->arg[0]);
+                        U64_U8(ptr->arg[0]));
                     break;
                 case LMM_SS_RST:
                     {
@@ -1226,7 +1226,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
 
                         (void) LMM_ResetDomain(ptr->lmId, ptr->rsrc,
-                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                            UINT64_L(ptr->arg[1]), toggle, assertNegate);
                     }
                     break;
                 case LMM_SS_CTRL:
@@ -1236,7 +1236,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         /* Copy array */
                         for (idx = 0U; idx < LMM_MAX_ARG; idx++)
                         {
-                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                            val[idx] = UINT64_L(ptr->arg[idx]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,

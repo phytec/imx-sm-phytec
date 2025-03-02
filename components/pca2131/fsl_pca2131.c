@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 NXP
+ * Copyright 2024-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,6 +29,7 @@
 
 /* Includes */
 
+#include "sm.h"
 #include "fsl_pca2131.h"
 
 /* Local Defines */
@@ -335,7 +336,7 @@ bool PCA2131_PowerModeSet(const PCA2131_Type *dev, uint32_t mode)
 
     /* Set mode */
     rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_3,
-        ((uint8_t) mode) << 5U, 0xE0U);
+        U32_U8(mode) << 5U, 0xE0U);
 
     /* Return status */
     return rc;

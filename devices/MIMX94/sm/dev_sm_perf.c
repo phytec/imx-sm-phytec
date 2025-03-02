@@ -2001,7 +2001,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             uint32_t numLevels = s_perfNumLevels[psIdx];
 
             /* Convert rate to KHz */
-            uint32_t rateKHz =  SM_UINT64_L(rate / 1000ULL);
+            uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
 
             /* Default to highest level to handle overclocking case */
             if (numLevels > 0U)

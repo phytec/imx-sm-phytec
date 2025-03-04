@@ -2314,7 +2314,11 @@ sub generate_make
     my @words = split(/ /, $make[0]);    
     foreach my $w (@words)
     {
-        if ($w =~ /var=(\w+)/)
+        if ($w =~ /var=(\w+)\|(\w+)/)
+        {
+    	    print $out uc $1 . ' ?= ' . $2 . "\n";
+        }
+        elsif ($w =~ /var=(\w+)/)
         {
     	    print $out uc $1 . ' ?= 1' . "\n";
         }

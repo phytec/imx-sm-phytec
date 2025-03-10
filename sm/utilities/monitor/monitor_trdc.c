@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -111,6 +111,18 @@ int32_t MONITOR_CmdTrdc(int32_t argc, const char * const argv[])
         if (SystemMemoryProbe((void*) a, &v, 32U) != 0U)
         {
             status = SM_ERR_POWER;
+        }
+    }
+
+    /* Check DID range */
+    if (status == SM_ERR_SUCCESS)
+    {
+        uint32_t ndid = ((mgr->TRDC_HWCFG0 & TRDC_TRDC_HWCFG0_NDID_MASK)
+            >> TRDC_TRDC_HWCFG0_NDID_SHIFT);
+
+        if ((hdid < ldid) || (ldid >= ndid) || (hdid >= ndid))
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
 
@@ -469,6 +481,18 @@ int32_t MONITOR_CmdTrdcRaw(int32_t argc, const char * const argv[])
         if (SystemMemoryProbe((void*) a, &v, 32U) != 0U)
         {
             status = SM_ERR_POWER;
+        }
+    }
+
+    /* Check DID range */
+    if (status == SM_ERR_SUCCESS)
+    {
+        uint32_t ndid = ((mgr->TRDC_HWCFG0 & TRDC_TRDC_HWCFG0_NDID_MASK)
+            >> TRDC_TRDC_HWCFG0_NDID_SHIFT);
+
+        if ((hdid < ldid) || (ldid >= ndid) || (hdid >= ndid))
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
 

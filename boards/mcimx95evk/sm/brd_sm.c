@@ -392,11 +392,14 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
 #endif
 
     /* PMIC reset? */
-    if ((g_pmicFaultFlags & ~PF09_XRESET_FLG) != 0U)
+    if ((g_pmicFaultFlags & (PF09_XFAIL_FLG | PF09_WD_FLG
+        | PF09_HFAULT_FLG)) != 0U)
     {
         shutdownRec->valid = true;
         shutdownRec->reset = true;
         shutdownRec->reason = DEV_SM_REASON_PMIC;
+        shutdownRec->validErr = false;
+        shutdownRec->validOrigin = false;
         shutdownRec->extLen = 1U;
         shutdownRec->extInfo[0] = g_pmicFaultFlags;
     }

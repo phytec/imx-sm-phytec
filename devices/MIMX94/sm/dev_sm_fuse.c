@@ -60,6 +60,10 @@ typedef struct
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
 static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
 {
+    [DEV_SM_FUSE_ECID3]              = {384U,   32U},
+    [DEV_SM_FUSE_ECID2]              = {416U,   32U},
+    [DEV_SM_FUSE_ECID1]              = {448U,   32U},
+    [DEV_SM_FUSE_ECID0]              = {480U,   32U},
     [DEV_SM_FUSE_SI_REV]             = {544U,   4U},
     [DEV_SM_FUSE_PART_NUM]           = {548U,   8U},
     [DEV_SM_FUSE_MARKET_SEGMENT]     = {556U,   2U},

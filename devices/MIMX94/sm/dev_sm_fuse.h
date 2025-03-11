@@ -53,8 +53,8 @@
 
 /* Defines */
 
-/*! Number of device faults */
-#define DEV_SM_NUM_FUSE  22U
+/*! Number of device fuse */
+#define DEV_SM_NUM_FUSE  26U
 
 /*!
  * @name Device fuse indexes
@@ -82,6 +82,10 @@
 #define DEV_SM_FUSE_TSENSOR1_TRIM2     19U  /*!< A55 sensor trim 2 */
 #define DEV_SM_FUSE_FRO_TRIM           20U  /*!< FRO trim */
 #define DEV_SM_FUSE_M33_ROM_PATCH_VER  21U  /*!< M33 ROM patch version */
+#define DEV_SM_FUSE_ECID3              22U  /*!< ECID 3 */
+#define DEV_SM_FUSE_ECID2              23U  /*!< ECID 2 */
+#define DEV_SM_FUSE_ECID1              24U  /*!< ECID 1 */
+#define DEV_SM_FUSE_ECID0              25U  /*!< ECID 0 */
 /** @} */
 
 /* Types */

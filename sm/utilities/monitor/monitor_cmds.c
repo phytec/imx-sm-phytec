@@ -82,7 +82,6 @@ static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
-static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 #endif
 #ifdef DEVICE_HAS_V2X
 static int32_t MONITOR_CmdV2x(int32_t argc, const char * const argv[]);
@@ -150,6 +149,8 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
+
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 
 /* Local Variables */
 
@@ -457,6 +458,7 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t partNum;
     string cfgName;
     uint32_t mSel = 0U;
+    uint32_t ecidFuseVal[4] = { 0 };
 
     printf("SM Version    = Build %u", buildNum);
     printf(", Commit %08x\n", buildCommit);
@@ -532,6 +534,17 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
         /* Display container */
         printf("Boot set      = %d\n", passover->imgSetSel + 1U);
     }
+
+#ifdef DEV_SM_FUSE_ECID3
+    /* Get ECID from fuses */
+    for (uint8_t i = 0U; i < 4U; i++)
+    {
+        ecidFuseVal[i] = DEV_SM_FuseGet(i + DEV_SM_FUSE_ECID3);
+    }
+#endif
+
+    /* Display ECID */
+    MONITOR_DumpLongHex("ECID          = 0x", &ecidFuseVal[0], 4U);
 
 #ifdef BOARD_HAS_PMIC
     uint8_t dev;
@@ -787,35 +800,6 @@ static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[])
     }
 
     return SM_ERR_SUCCESS;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Dump a long array of words as one big hex number                         */
-/*--------------------------------------------------------------------------*/
-static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt)
-{
-    printf("%s", str);
-
-    for (uint32_t idx = 0U; idx < cnt; idx++)
-    {
-        if ((idx != 0U) && ((idx % 8U) == 0U))
-        {
-            const char *p = str;
-
-            printf("\n");
-
-            /* Loop over string */
-            while (*p != EOL)
-            {
-                printf(" ");
-                p++;
-            }
-        }
-
-        printf("%08X", ptr[idx]);
-    }
-
-    printf("\n");
 }
 #endif
 
@@ -3595,5 +3579,34 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump a long array of words as one big hex number                         */
+/*--------------------------------------------------------------------------*/
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt)
+{
+    printf("%s", str);
+
+    for (uint32_t idx = 0U; idx < cnt; idx++)
+    {
+        if ((idx != 0U) && ((idx % 8U) == 0U))
+        {
+            const char *p = str;
+
+            printf("\n");
+
+            /* Loop over string */
+            while (*p != EOL)
+            {
+                printf(" ");
+                p++;
+            }
+        }
+
+        printf("%08X", ptr[idx]);
+    }
+
+    printf("\n");
 }
 

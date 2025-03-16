@@ -145,7 +145,10 @@
  *        and LPM voting logic.
  */
 #define CM33_TRDC_ID                2U
-#define CPU2GPC(cpuId)              ((cpuId) + CM33_TRDC_ID)
+
+#define CPU2GPC(cpuId)                         \
+    (((cpuId) < (UINT32_MAX - CM33_TRDC_ID)) ? \
+    (((cpuId) + CM33_TRDC_ID)) : (0U))
 
 #define WHITELIST_MASK(cpuId)           (1UL << (CPU2GPC(cpuId)))
 #define LPMSETTING_MASK(cpuId)          (0x7ULL << ((CPU2GPC(cpuId) << 2U)))

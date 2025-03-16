@@ -660,8 +660,17 @@ static int32_t BaseDiscoverListProtocols(const scmi_caller_t *caller,
             newLen = (((newLen - 1U) / 4U) + 1U) * 4U;
         }
 
-        /* Array plus size of header, status, and numProtocols */
-        *len = newLen + (3U * sizeof(uint32_t));
+        /* Check value doesn't wrap */
+        if (newLen <= (UINT32_MAX - (3U * sizeof(uint32_t))))
+        {
+            /* Array plus size of header, status, and numProtocols */
+            *len = newLen + (3U * sizeof(uint32_t));
+        }
+        else
+        {
+            /* Handling if value wraps */
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
     /* Return status */

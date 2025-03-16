@@ -54,7 +54,7 @@
 
 /* Local functions */
 
-static void days2date(uint32_t days, uint32_t *year, uint32_t *month,
+static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
     uint32_t *day, uint32_t *weekday);
 static void date2days(uint32_t year, uint32_t month, uint32_t day,
     uint32_t *days);
@@ -230,16 +230,22 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         hour = hours % 24U;
 
         /* Convert to date */
-        days2date(days, &year, &month, &day, &weekday);
-
-        /* Convert year */
-        year %= 100U;
-
-        /* Write RTC */
-        if (!PCA2131_RtcSet(&g_pca2131Dev, year, month, day, hour, min, sec,
-            hun, weekday))
+        if (days2date(days, &year, &month, &day, &weekday)
+            && (year <= 2069U))
         {
-            status = SM_ERR_HARDWARE_ERROR;
+            /* Convert year */
+            year %= 100U;
+
+            /* Write RTC */
+            if (!PCA2131_RtcSet(&g_pca2131Dev, year, month, day, hour,
+                min, sec, hun, weekday))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
 
@@ -396,29 +402,31 @@ int32_t BRD_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
             hour = hours % 24U;
 
             /* Convert to date */
-            days2date(days, &year, &month, &day, &weekday);
-
-            /* Convert year */
-            year %= 100U;
-
-            /* Write to RTC */
-            if (PCA2131_AlarmSet(&g_pca2131Dev, day, hour, min, sec,
-                weekday))
+            if (days2date(days, &year, &month, &day, &weekday)
+                && (year <= 2069U))
             {
-                /* Enable interrupt */
-                if (PCA2131_IntEnable(&g_pca2131Dev, true))
+                /* Convert year */
+                year %= 100U;
+
+                /* Write to RTC */
+                if (PCA2131_AlarmSet(&g_pca2131Dev, day, hour, min, sec,
+                    weekday))
                 {
-                    /* Enable bus expander interrupt */
-                    status = BRD_SM_BusExpMaskSet(0U, BIT8(6));
-                }
-                else
-                {
-                    status = SM_ERR_HARDWARE_ERROR;
+                    /* Enable interrupt */
+                    if (PCA2131_IntEnable(&g_pca2131Dev, true))
+                    {
+                        /* Enable bus expander interrupt */
+                        status = BRD_SM_BusExpMaskSet(0U, BIT8(6));
+                    }
+                    else
+                    {
+                        status = SM_ERR_HARDWARE_ERROR;
+                    }
                 }
             }
             else
             {
-                status = SM_ERR_HARDWARE_ERROR;
+                status = SM_ERR_INVALID_PARAMETERS;
             }
 
             /* Track if enabled for PCA2131 use */
@@ -463,48 +471,170 @@ void BRD_SM_BbmHandler(void)
 /*--------------------------------------------------------------------------*/
 /* Convert days since 1-1-1970 to date/time                                 */
 /*--------------------------------------------------------------------------*/
-static void days2date(uint32_t days, uint32_t *year, uint32_t *month,
+static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
     uint32_t *day, uint32_t *weekday)
 {
-    uint32_t newDays;
-    uint32_t era;
-    uint32_t doe;
-    uint32_t yoe;
-    uint32_t doy;
-    uint32_t moy;
+    bool rc = true;
+    uint32_t newDays = 0U;
+    uint32_t era = 0U;
+    uint32_t doe = 0U;
+    uint32_t yoe = 0U;
+    uint32_t doy = 0U;
+    uint32_t moy = 0U;
 
-    /* Adjust to 1-1-1970) */
-    newDays = days + 719468U;
+    /* Check days value doesn't wrap */
+    if (days <= (UINT32_MAX - 719468U))
+    {
+        /* Adjust to 1-1-1970) */
+        newDays = days + 719468U;
+    }
+    else
+    {
+        /* Set the return code incase value wraps */
+        rc = false;
+    }
 
-    /* Calculate the era */
-    era = newDays / 146097U;
+    if (rc)
+    {
+        /* Calculate the era */
+        era = newDays / 146097U;
 
-    /* Calculate the day in the era */
-    doe = newDays - (era * 146097U);
+        /* Check the expression doesn't wrap due to negative value */
+        if (newDays >= (era * 146097U))
+        {
+            /* Calculate the day in the era */
+            doe = newDays - (era * 146097U);
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
 
-    /* Calculate the year of era */
-    yoe = (doe - (doe / 1460U) + (doe / 36524U) - (doe / 146096U)) / 365U;
+    if (rc)
+    {
+        /* Check the expression doesn't wrap due to negative value */
+        if (doe >= (doe / 1460U))
+        {
+            /* Calculate the year of era */
+            yoe = (doe - (doe / 1460U) + (doe / 36524U));
 
-    /* Calculate year */
-    *year = yoe + (era * 400U);
+            /* Check the expression doesn't wrap due to negative value */
+            if (yoe >= (doe / 146096U))
+            {
+                yoe -= (doe / 146096U);
+                yoe /= 365U;
+            }
+            else
+            {
+                /* Set the return code if the expression value wraps */
+                rc = false;
+            }
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
 
-    /* Calculate day of the year */
-    doy = doe - ((365U * yoe) + (yoe / 4U) - (yoe / 100U));
+    if (rc)
+    {
+        /* Check the expression doesn't wrap due to negative value */
+        if (yoe <= (UINT32_MAX - (era * 400U)))
+        {
+            /* Calculate year */
+            *year = yoe + (era * 400U);
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
 
-    /* Calculate month of year */
-    moy = ((5U * doy) + 2U) / 153U;
+    if (rc)
+    {
+        /* Check the expression doesn't wrap due to negative value */
+        if (doe >= (365U * yoe))
+        {
+            /* Calculate day of the year */
+            doy = doe - (365U * yoe);
 
-    /* Calculate day */
-    *day = doy - (((153U * moy) + 2U) / 5U) + 1U;
+            /* Check the expression doesn't wrap due to negative  value */
+            if (doy >= (yoe / 4U))
+            {
+                doy -= (yoe / 4U);
+                doy += (yoe / 100U);
+            }
+            else
+            {
+                /* Set the return code if the expression value wraps */
+                rc = false;
+            }
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
 
-    /* Calculate month */
-    *month= (moy < 10U) ? (moy + 3U) : (moy - 9U);
+    if (rc)
+    {
+        /* Check the expression doesn't wrap due to negative value */
+        if (doy <= (UINT32_MAX / 5U))
+        {
+            /* Calculate month of year */
+            moy = ((5U * doy) + 2U) / 153U;
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
 
-    /* Calculate day of the week */
-    *weekday = (days + 4U) % 7U;
 
-    /* Adjust year */
-    *year += (*month <= 2U) ? 1U : 0U;
+    if (rc)
+    {
+        /* Check the expression doesn't wrap due to negative value */
+        if (moy <= ((UINT32_MAX - 2U) / 153U))
+        {
+            /* Calculate day */
+            *day = (((153U * moy) + 2U) / 5U) - 1U;
+            if (doy >= *day)
+            {
+                *day = doy - *day;
+            }
+            else
+            {
+                /* Set the return code if the expression value wraps */
+                rc = false;
+            }
+        }
+        else
+        {
+            /* Set the return code if the expression value wraps */
+            rc = false;
+        }
+    }
+
+    if (rc)
+    {
+        /* Calculate month */
+        *month= (moy < 10U) ? (moy + 3U) : (moy - 9U);
+
+        /* Calculate day of the week */
+        *weekday = (days + 4U) % 7U;
+
+        /* Adjust year */
+        *year += (*month <= 2U) ? 1U : 0U;
+    }
+
+    /* Return code */
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/

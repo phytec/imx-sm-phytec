@@ -30,6 +30,9 @@
 /*! Macro to define 32-bit 2-gigabyte unsigned */
 #define U32_2GB        2147483647UL
 
+/*! Macro to define MAX shift range of U64 */
+#define UINT64_MAX_SHIFT 63U
+
 /*! Macro to convert to a U8 */
 #define U8(X)          ((uint8_t)((X) & 0xFFU))
 

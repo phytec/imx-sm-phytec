@@ -568,7 +568,17 @@ static bool CPU_SwMultiWakeup(uint32_t cpuIdx)
     {
         /* Wake each CPU */
         rc = CPU_SwWakeup(cpuIdxCur);
-        --cpuIdxCur;
+
+        /* Check cpuIdxCur doesn't wrap */
+        if (cpuIdxCur > 0U)
+        {
+            --cpuIdxCur;
+        }
+        else
+        {
+            /* Handling for cpuIdxCur wrapping */
+            rc = false;
+        }
     } while (rc && (cpuIdxCur >= cpuIdxEnd));
 
     return rc;
@@ -2065,6 +2075,7 @@ static bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
             uint32_t lpcgIdx = s_cpuPerLpiInfo[perLpiIdx].lpcgIdx;
 
             /* Default LPCG access list to SM only */
+            // coverity[misra_c_2012_rule_14_3_violation:FALSE]
             uint32_t accessList = WHITELIST_MASK(CPU_IDX_M33P);
             rc = CCM_LpcgAccessSet(lpcgIdx, accessList);
 
@@ -2109,6 +2120,7 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
                 accessList &= (~(WHITELIST_MASK(cpuIdx)));
 
                 /* Check if only SM remains in the access list */
+                // coverity[misra_c_2012_rule_14_3_violation:FALSE]
                 if (accessList == WHITELIST_MASK(CPU_IDX_M33P))
                 {
                     /* Move LPCG to software control (LPM_MODE = 0) */
@@ -2167,6 +2179,8 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
         /* Check if CPU has vector */
         if (vectorRegLow != NULL)
         {
+            rc = true;
+
             /* Set lower 32-bit vector */
             *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
                 vectorShift);
@@ -2174,11 +2188,19 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)
             {
-                /* Set upper 32-bit vector */
-                *vectorRegHigh = U32(vector >> (32U + vectorShift));
+                /* Check cpuIdxCur doesn't wrap */
+                if (vectorShift <= (UINT64_MAX_SHIFT - 32U))
+                {
+                    /* Set upper 32-bit vector */
+                    *vectorRegHigh = U32(vector >> (32U + vectorShift));
+                    rc = true;
+                }
+                else
+                {
+                    /* Handling for expression wrapping */
+                    rc = false;
+                }
             }
-
-            rc = true;
         }
     }
 
@@ -2205,17 +2227,28 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)
             {
-                /* Get 64-bit vector */
-                *vector = (((uint64_t) *vectorRegHigh) << (32U + vectorShift))
-                    | (((uint64_t) *vectorRegLow) << vectorShift);
+                /* Check cpuIdxCur doesn't wrap */
+                if (vectorShift <= (UINT64_MAX_SHIFT - 32U))
+                {
+                    /* Get 64-bit vector */
+                    *vector = (((uint64_t) *vectorRegHigh) <<
+                        (32U + vectorShift)) | (((uint64_t) *vectorRegLow)
+                                << vectorShift);
+                    rc = true;
+                }
+                else
+                {
+                    /* Handling for expression wrapping */
+                    rc = false;
+                }
             }
             else
             {
+                rc = true;
+
                 /* Get 32-bit vector */
                 *vector = ((uint64_t) *vectorRegLow) << vectorShift;
             }
-
-            rc = true;
         }
     }
 

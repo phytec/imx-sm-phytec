@@ -1454,9 +1454,9 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     const uint8_t *nameAddr = (const uint8_t*) "";
-    uint32_t deviceId;
-    uint32_t siRev;
-    uint32_t partNum;
+    uint32_t deviceId = 0U;
+    uint32_t siRev = 0U;
+    uint32_t partNum = 0U;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))

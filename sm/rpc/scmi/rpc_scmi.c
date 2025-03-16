@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -283,7 +283,11 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
         }
         msg->header = *header;
 
-        /* Increment token */
+        /*
+         * Intentional: The token value will remain in
+         * sync with the agent, even if it wraps.
+         */
+        // coverity[cert_int30_c_violation:FALSE]
         s_token[scmiChannel]++;
         s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 
@@ -326,9 +330,13 @@ bool RPC_SCMI_P2aTxQFull(uint32_t agentId, uint32_t len, uint32_t queue)
 {
     bool rtn = false;
 
-    if ((len / 4U) > (SM_SCMI_MAX_NOTIFY - s_queue[agentId][queue].count))
+    /* Check value doesn't wrap */
+    if (SM_SCMI_MAX_NOTIFY >= s_queue[agentId][queue].count)
     {
-        rtn = true;
+        if ((len / 4U) > (SM_SCMI_MAX_NOTIFY - s_queue[agentId][queue].count))
+        {
+            rtn = true;
+        }
     }
 
     /* Return status */

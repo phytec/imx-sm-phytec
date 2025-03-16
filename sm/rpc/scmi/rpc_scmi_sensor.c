@@ -1382,12 +1382,11 @@ static int32_t SensorResetAgentConfig(uint32_t lmId, uint32_t agentId,
 static int32_t SensorConfigUpdate(uint32_t lmId, uint32_t agentId,
     uint32_t sensorId, bool enable, bool timeStamp)
 {
+    int32_t status;
     uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
     uint32_t firstAgent = g_scmiConfig[scmiInst].firstAgent;
     uint32_t numAgents = g_scmiConfig[scmiInst].numAgents;
     uint32_t mask;
-    uint32_t sensorState;
-    bool sensorEnable;
 
     /* Record state of sensor by agent */
     if (enable)
@@ -1401,12 +1400,24 @@ static int32_t SensorConfigUpdate(uint32_t lmId, uint32_t agentId,
         s_sensorState[sensorId] &= ~(1UL << agentId);
     }
 
-    /* Extract enable */
-    mask = ((1UL << numAgents) - 1UL) << firstAgent;
-    sensorState = s_sensorState[sensorId] & mask;
-    sensorEnable = (sensorState != 0U);
+    /* Check value doesn't wrap */
+    if ((1UL << numAgents) >= 1UL)
+    {
+        /* Extract enable */
+        mask = ((1UL << numAgents) - 1UL) << firstAgent;
+        uint32_t sensorState = s_sensorState[sensorId] & mask;
+        bool sensorEnable = (sensorState != 0U);
 
-    /* Inform LMM of sensor state, LMM will check if changed */
-    return LMM_SensorEnable(lmId, sensorId, sensorEnable, timeStamp);
+        /* Inform LMM of sensor state, LMM will check if changed */
+        status = LMM_SensorEnable(lmId, sensorId, sensorEnable, timeStamp);
+    }
+    else
+    {
+        /* Handling if value wraps */
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
 }
 

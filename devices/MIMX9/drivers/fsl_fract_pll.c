@@ -534,11 +534,20 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
 
             rate = FRACTPLL_GetRate(pllIdx, true);
 
-            rate = (rate * 5U) / ((mfi * 5U) + mfn);
-
-            if (div2)
+            /* Check the multiplication doesn't wrap */
+            if (rate <= (UINT64_MAX / 5U))
             {
-                rate = rate >> 1U;
+                rate = (rate * 5U) / ((mfi * 5U) + mfn);
+
+                if (div2)
+                {
+                    rate = rate >> 1U;
+                }
+            }
+            else
+            {
+                /* Handling if multiplication value wraps */
+                rate = 0UL;
             }
         }
     }
@@ -854,20 +863,30 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
          * STEP = (Modulation_freq * STOP) / (Fref / 2)
          *
          */
-        *step = (uint32_t)(((*stop) * pllSsc->modFreq) /
-            (uint32_t)(CLOCK_PLL_FREF_HZ / 2U));
 
-        /* Check for stop overflow */
-        if ((*stop & (PLL_SPREAD_SPECTRUM_STOP_MASK >>
-            PLL_SPREAD_SPECTRUM_STOP_SHIFT)) != *stop)
+        /* Check for the product of ((*stop) * pllSsc->modFreq) doesn't wrap */
+        if ((*stop) <= (UINT32_MAX / pllSsc->modFreq))
         {
-            updateSsc = false;
+            *step = (uint32_t)(((*stop) * pllSsc->modFreq) /
+                (uint32_t)(CLOCK_PLL_FREF_HZ / 2U));
+
+            /* Check for stop overflow */
+            if ((*stop & (PLL_SPREAD_SPECTRUM_STOP_MASK >>
+                PLL_SPREAD_SPECTRUM_STOP_SHIFT)) != *stop)
+            {
+                updateSsc = false;
+            }
+
+            /* Check for step overflow */
+            if (updateSsc && ((*step & (PLL_SPREAD_SPECTRUM_STEP_MASK >>
+                PLL_SPREAD_SPECTRUM_STEP_SHIFT)) != *step))
+            {
+                updateSsc = false;
+            }
         }
-
-        /* Check for step overflow */
-        if (updateSsc && ((*step & (PLL_SPREAD_SPECTRUM_STEP_MASK >>
-            PLL_SPREAD_SPECTRUM_STEP_SHIFT)) != *step))
+        else
         {
+            /* Handling of the wrap case */
             updateSsc = false;
         }
     }

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -84,8 +84,6 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     if (!s_updated)
     {
         uint32_t tmpMinor;
-        uint32_t fuseMinor;
-        uint32_t newVal;
 
         /* Get data */
         s_deviceId = OSC24M->DIGPROG_DEVICE_ID;
@@ -98,43 +96,55 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         /* Update minor version */
         tmpMinor = (s_deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
             >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
-        tmpMinor -= MINOR_BASE(1U);
-        fuseMinor = MINOR_BASE(REV_BASE(s_siRev))
-            | MINOR_METAL(REV_METAL(s_siRev));
-        tmpMinor = MAX(tmpMinor, fuseMinor);
 
-        /* Update name */
-        newVal = TMP_BASE(tmpMinor);
-        s_siName[7] = 'A' + ((uint8_t) newVal);
-        newVal = TMP_METAL(tmpMinor);
-        s_siName[8] = '0' + ((uint8_t) newVal);
+        /* Check for tmpMinor value doesn't become negative */
+        if (tmpMinor >= MINOR_BASE(1U))
+        {
+            tmpMinor -= MINOR_BASE(1U);
+            uint32_t fuseMinor = MINOR_BASE(REV_BASE(s_siRev))
+                | MINOR_METAL(REV_METAL(s_siRev));
+            tmpMinor = MAX(tmpMinor, fuseMinor);
 
-        /* Mark updated */
-        s_updated = true;
+            /* Update name */
+            uint32_t newVal = TMP_BASE(tmpMinor);
+            s_siName[7] = 'A' + ((uint8_t) newVal);
+            newVal = TMP_METAL(tmpMinor);
+            s_siName[8] = '0' + ((uint8_t) newVal);
+
+            /* Mark updated */
+            s_updated = true;
+        }
+        else
+        {
+            /* Handling the TempMinor wrap */
+            status = SM_ERR_GENERIC_ERROR;
+        }
     }
-
-    /* Return device ID */
-    if (deviceId != NULL)
+    if (status == SM_ERR_SUCCESS)
     {
-        *deviceId = s_deviceId;
-    }
+        /* Return device ID */
+        if (deviceId != NULL)
+        {
+            *deviceId = s_deviceId;
+        }
 
-    /* Return silicon rev */
-    if (siRev != NULL)
-    {
-        *siRev = s_siRev;
-    }
+        /* Return silicon rev */
+        if (siRev != NULL)
+        {
+            *siRev = s_siRev;
+        }
 
-    /* Return part number */
-    if (partNum != NULL)
-    {
-        *partNum = s_partNum;
-    }
+        /* Return part number */
+        if (partNum != NULL)
+        {
+            *partNum = s_partNum;
+        }
 
-    /* Return name */
-    if (siNameAddr != NULL)
-    {
-        *siNameAddr = s_siName;
+        /* Return name */
+        if (siNameAddr != NULL)
+        {
+            *siNameAddr = s_siName;
+        }
     }
 
     /* Return result */

@@ -128,7 +128,17 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 
     /* Calculate shift and mask */
     shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
-    mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U)) - 1U;
+
+    /* Check the mask value not exceeding the max shift value */
+    if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
+    {
+        mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U)) - 1U;
+    }
+    else
+    {
+        /* If exceeded, wrap to max range */
+        mask = 0U;
+    }
 
     /* Return result */
     return (fuse >> shift) & mask;

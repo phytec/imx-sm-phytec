@@ -90,7 +90,6 @@ void TEST_DevSmCpu(void)
             SM_ERR_NOT_FOUND);
     }
 
-#ifdef SIMU
     /* CPU InfoGet */
     {
         uint32_t runmode = 0U, sleepmode = 0U;
@@ -99,9 +98,8 @@ void TEST_DevSmCpu(void)
         /* Invalid cpuId */
         printf("DEV_SM_CpuInfoGet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuInfoGet(DEV_SM_NUM_CPU, &runmode, &sleepmode,
-            &vector), SM_ERR_NOT_FOUND);
+            &vector), SM_ERR_INVALID_PARAMETERS);
     }
-#endif
 
     /* CPU Stop */
     {
@@ -160,6 +158,12 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
+
+        maskIdx = 12U /*GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT*/;
+        /* Invalid maskId */
+        printf("DEV_SM_CpuIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
+            maxVal), SM_ERR_INVALID_PARAMETERS);
     }
 
     /* Non IRQ wake set */
@@ -171,6 +175,12 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuNonIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuNonIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
+
+        maskIdx = 1U;
+        /* Invalid maskIdx */
+        printf("DEV_SM_CpuNonIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuNonIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
+            maxVal), SM_ERR_INVALID_PARAMETERS);
     }
 
     /* Set CPU power domain LPM */
@@ -196,6 +206,30 @@ void TEST_DevSmCpu(void)
             lpmsetting), SM_ERR_NOT_FOUND);
     }
 
+    /* Get/Set wake list for a cpu */
+    {
+        uint32_t cpuWakeList = 0U;
+
+        /* CpuWakeListGet */
+        printf("DEV_SM_CpuWakeListGet(%u)\n", DEV_SM_CPU_A55P);
+        CHECK(DEV_SM_CpuWakeListGet(DEV_SM_CPU_A55P, &cpuWakeList));
+        printf("CPU wakelist : %x\n", cpuWakeList);
+
+        /* CpuWakeListGet Invalid CPUID*/
+        printf("DEV_SM_CpuWakeListGet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuWakeListGet(DEV_SM_NUM_CPU, &cpuWakeList),
+            SM_ERR_NOT_FOUND);
+
+        /* CpuWakeListSet */
+        printf("DEV_SM_CpuWakeListSet(%u)\n", DEV_SM_CPU_A55P);
+        CHECK(DEV_SM_CpuWakeListSet(DEV_SM_CPU_A55P, cpuWakeList));
+        printf("CPU wakelist : %x\n", cpuWakeList);
+
+        /* CpuWakeListSet Invalid CPUID*/
+        printf("DEV_SM_CpuWakeListSet(%u)\n", DEV_SM_NUM_CPU);
+        NECHECK(DEV_SM_CpuWakeListSet(DEV_SM_NUM_CPU, cpuWakeList),
+            SM_ERR_NOT_FOUND);
+    }
     printf("\n");
 }
 

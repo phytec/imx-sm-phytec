@@ -66,6 +66,7 @@
 #include "dev_sm_common.h"
 #include "dev_sm_rom.h"
 #include "dev_sm_fault.h"
+#include "dev_sm_fuse.h"
 #include "dev_sm_handlers.h"
 
 /* Defines */
@@ -75,7 +76,8 @@
  */
 /** @{ */
 #define DEVICE_HAS_ELE   /*!< Has ELE */
-#define DEVICE_HAS_FCCU  /*!< Has ELE */
+#define DEVICE_HAS_V2X   /*!< Has V2X */
+#define DEVICE_HAS_FCCU  /*!< Has FCCU */
 #define DEVICE_HAS_TRDC  /*!< Has TRDC */
 /** @} */
 

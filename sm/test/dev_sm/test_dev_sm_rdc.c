@@ -51,12 +51,9 @@ void TEST_DevSmRdc(void)
     /* RDC tests */
     printf("**** Device SM RDC API Tests ***\n\n");
 
-#ifdef SIMU
     printf("DEV_SM_RdcAccessSet(%u)\n", 0U);
-    CHECK(DEV_SM_RdcAccessSet(0U, false, 0U, false));
-#else
-    printf("Skipped.\n");
-#endif
+    NECHECK(DEV_SM_RdcAccessSet(0U, false, 0U, false),
+        SM_ERR_NOT_SUPPORTED);
 
     printf("\n");
 }

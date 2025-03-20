@@ -60,11 +60,11 @@ void TEST_DevSmClock(void)
     dev_sm_clock_range_t clockRange;
     uint64_t rate = 0U;
     bool enabled = false;
+    uint32_t mux = 0U;
+    uint32_t numMuxes = 0U;
 
 #ifdef SIMU
     uint32_t parent = 0U;
-    uint32_t mux = 0U;
-    uint32_t numMuxes = 0U;
     uint32_t extConfigVal = 0U;
 #endif
 
@@ -161,6 +161,15 @@ void TEST_DevSmClock(void)
 #endif
     }
 
+#ifndef SIMU
+    /* Pass invalid argument for idx*/
+    NECHECK(DEV_SM_ClockMuxGet(5U, 1U, &mux, &numMuxes),
+        SM_ERR_OUT_OF_RANGE);
+
+    NECHECK(DEV_SM_ClockMuxGet(CLOCK_NUM_ROOT, 4U, &mux, &numMuxes),
+        SM_ERR_OUT_OF_RANGE);
+#endif
+
     /* Test API bounds */
     NECHECK(DEV_SM_ClockNameGet(DEV_SM_NUM_CLOCK, &name, &len),
         SM_ERR_NOT_FOUND);
@@ -186,12 +195,57 @@ void TEST_DevSmClock(void)
         SM_ERR_NOT_FOUND);
 #endif
 
-#ifdef SIMU
     NECHECK(DEV_SM_ClockExtendedSet(DEV_SM_NUM_CLOCK,
-        DEV_SM_CLOCK_EXT_SSC, 0x0U), SM_ERR_NOT_FOUND);
+        DEV_SM_CLOCK_EXT_SSC, 0x0U), SM_ERR_INVALID_PARAMETERS);
+
+    /* To execute the default swtich case of DEV_SM_ClockExtendedSet &
+     * DEV_SM_ClockExtendedGet */
+    NECHECK(DEV_SM_ClockExtendedSet(DEV_SM_NUM_CLOCK,
+        DEV_SM_CLOCK_EXT_SSC + 1U, 0x0U), SM_ERR_NOT_FOUND);
+
+    uint32_t extConfigValue = 0U;
     NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
-        DEV_SM_CLOCK_EXT_SSC,
-        &extConfigVal), SM_ERR_NOT_FOUND);
+        DEV_SM_CLOCK_EXT_SSC + 1U, &extConfigValue), SM_ERR_NOT_FOUND);
+
+    NECHECK(DEV_SM_ClockExtendedGet(DEV_SM_NUM_CLOCK,
+        DEV_SM_CLOCK_EXT_SSC, &extConfigValue), SM_ERR_INVALID_PARAMETERS);
+
+#ifndef SIMU
+    CHECK(DEV_SM_ClockExtendedGet(CLOCK_SRC_SYSPLL1_VCO,
+        DEV_SM_CLOCK_EXT_SSC, &extConfigValue));
+
+    /*
+     * To cover the default case where clockId is CLOCK_SRC_EXT2 and
+     * round select doesn't belogs any of the following:
+     * DEV_SM_CLOCK_ROUND_DOWN, DEV_SM_CLOCK_ROUND_UP,
+     * DEV_SM_CLOCK_ROUND_AUTO
+     */
+    NECHECK(DEV_SM_ClockRateSet(CLOCK_SRC_EXT2,
+        0x0UL, 0x3U), SM_ERR_INVALID_PARAMETERS);
+
+    /*
+     * To cover the default case where clockId is CLOCK_SRC_EXT
+     * and round select doesn't belogs any of the following:
+     * DEV_SM_CLOCK_ROUND_DOWN, DEV_SM_CLOCK_ROUND_UP,
+     * DEV_SM_CLOCK_ROUND_AUTO
+     */
+    NECHECK(DEV_SM_ClockRateSet(CLOCK_NUM_SRC,
+        0x0UL, 0x3U), SM_ERR_INVALID_PARAMETERS);
+
+    /*
+     * To cover the condition, where clockId validated towards
+     * CLOCK_NUM_GPR_SEL
+     */
+    NECHECK(DEV_SM_ClockRateSet(CLOCK_NUM_ROOT + 1U,
+        0x0UL, 0x3U), SM_ERR_INVALID_PARAMETERS);
+
+    /*
+     * To cover the condition, where clockId validated towards
+     * CLOCK_NUM_CGC
+     */
+    NECHECK(DEV_SM_ClockRateSet((CLOCK_NUM_ROOT + CLOCK_NUM_GPR_SEL + 1U),
+        0x0UL, 0x3U), SM_ERR_INVALID_PARAMETERS);
+
 #endif
     printf("\n");
 }

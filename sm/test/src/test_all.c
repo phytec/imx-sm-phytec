@@ -67,9 +67,7 @@ void TEST_All(void)
     TEST_DevSmPower();
     TEST_DevSmClock();
     TEST_DevSmPerf();
-#ifdef SIMU
     TEST_DevSmSensor();
-#endif
     TEST_DevSmReset();
     TEST_DevSmVoltage();
     TEST_DevSmBbm();
@@ -80,6 +78,8 @@ void TEST_All(void)
     TEST_DevSmPin();
     TEST_DevSmFault();
     TEST_DevSm();
+    TEST_DevSmFuse();
+    TEST_DevSmHandler();
 
     /* Run board SM tests */
 #ifdef SIMU

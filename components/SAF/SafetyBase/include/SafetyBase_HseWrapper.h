@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : MIMX9X_SAF_0_4_0
 *
-*   Copyright 2020,2023 NXP
+*   Copyright 2020, 2023 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/

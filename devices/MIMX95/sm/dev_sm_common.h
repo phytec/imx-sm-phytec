@@ -72,6 +72,15 @@
 #define DEV_SM_BASE_AGENT_5  5U  /*!< Agent 5 */
 /** @} */
 
+/*!
+ * @name Silicon version IDs
+ */
+/** @{ */
+#define DEV_SM_SIVER_A0  0x00000000U  /*!< A0 */
+#define DEV_SM_SIVER_A1  0x00000001U  /*!< A1 */
+#define DEV_SM_SIVER_B0  0x00010000U  /*!< B0 */
+/** @} */
+
 /* Types */
 
 /*!
@@ -81,6 +90,11 @@ typedef struct
 {
     /*! System sleep record */
     dev_sm_sys_sleep_rec_t sysSleepRecord;
+
+#ifdef DEV_SM_MSG_PROF_CNT
+    /*! Message profiling record */
+    dev_sm_sys_msg_rec_t sysMsgRecord;
+#endif
 } dev_sm_syslog_t;
 
 /* Global variables */

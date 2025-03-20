@@ -113,7 +113,7 @@ void TEST_DrvDdrRetention(void)
         /* Enter retention */
         status = DEV_SM_SystemDramRetentionEnter();
 
-#ifdef DDRMIX_PWR_DOWN
+#if DDRMIX_PWR_DOWN
         if (status == SM_ERR_SUCCESS)
         {
             /* Power off DDRMIX */
@@ -124,7 +124,7 @@ void TEST_DrvDdrRetention(void)
 
         SYSCTR_TimeDelay(RETENTION_USEC);
 
-#ifdef DDRMIX_PWR_DOWN
+#if DDRMIX_PWR_DOWN
         if (status == SM_ERR_SUCCESS)
         {
             printf("Power up DDRMIX\n");

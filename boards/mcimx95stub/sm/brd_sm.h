@@ -61,6 +61,9 @@
 /*! Board attributes */
 #define BRD_SM_ATTR  0x0
 
+/*! Perf voltage drop */
+#define BOARD_PERF_VDROP  0
+
 /*!
  * @name Board redirection defines
  * @{

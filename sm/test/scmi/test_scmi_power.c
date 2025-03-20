@@ -182,9 +182,11 @@ void TEST_ScmiPower(void)
         TEST_ScmiPowerNone(channel, domainId);
 
         /* Test functions with SET perm required */
-        TEST_ScmiPowerSet(perm >= SM_SCMI_PERM_SET, channel, domainId,
-            lmId);
-
+        if (!DEV_SM_FusePdDisabled(domainId))
+        {
+            TEST_ScmiPowerSet(perm >= SM_SCMI_PERM_SET, channel, domainId,
+                lmId);
+        }
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_PD, &agentId,
             &channel, &domainId, &lmId);
@@ -242,8 +244,6 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
     /* Adequate Set Permissions */
     if (pass)
     {
-
-#ifdef SIMU
         /* Test Power Set OFF */
         printf("SCMI_PowerStateSet(%u, %u, 0x1, STATE_OFF)\n",
             channel, domainId);
@@ -288,10 +288,11 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
             BCHECK(powerState == SCMI_POWER_DOMAIN_STATE_ON);
         }
 
-
+#ifdef SIMU
         /* Reset */
         printf("LMM_SystemLmBoot(%u, %u)\n", 0U, lmId);
         CHECK(LMM_SystemLmBoot(0U, 0U, lmId, &g_swReason));
+#endif
 
         /* Run over Default Case */
         printf("SCMI_PowerStateSet(%u, %u, 0, 5U)\n",
@@ -299,6 +300,7 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
         NCHECK(SCMI_PowerStateSet(channel, domainId,
             0U, 6U));
 
+#ifdef SIMU
         /* Run over Default Case */
         printf("SCMI_PowerStateSet(%u, %u, 0, 5U)\n",
             channel, domainId);
@@ -320,7 +322,6 @@ static void TEST_ScmiPowerSet(bool pass, uint32_t channel,
         /* Reset */
         printf("LMM_SystemLmShutdown(%u, %u)\n", 0U, lmId);
         CHECK(LMM_SystemLmShutdown(0U, 0U, lmId, false, &g_swReason));
-
         /* Ensure correctness */
         {
             uint32_t powerState = 0U;

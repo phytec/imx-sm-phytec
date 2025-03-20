@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : MIMX9X_SAF_0_4_0
 *
-*   Copyright 2019-2024 NXP
+*   Copyright 2019-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -52,6 +52,7 @@ extern "C"{
 ==================================================================================================*/
 #include "MIMX_SAF_Version.h"
 #include "eMcem_FailurePointList_MIMX95XX.h"
+#include "eMcem_FailurePointList_MIMX94XX.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION

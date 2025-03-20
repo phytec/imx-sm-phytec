@@ -152,10 +152,18 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Set CPU run mode to START */
-    if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_START))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Set CPU run mode to START */
+        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_START))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -169,12 +177,19 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Set CPU run mode to HOLD */
-    if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_HOLD))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
-
+    else
+    {
+        /* Set CPU run mode to HOLD */
+        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_HOLD))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
+    }
     /* Return status */
     return status;
 }
@@ -186,10 +201,18 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Set CPU run mode to STOP */
-    if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_STOP))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Set CPU run mode to STOP */
+        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_STOP))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -203,9 +226,10 @@ int32_t DEV_SM_CpuResetVectorCheck(uint32_t cpuId, uint64_t resetVector,
     bool table)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -221,11 +245,18 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (!CPU_ResetVectorSet(cpuId, resetVector))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
-
+    else
+    {
+        if (!CPU_ResetVectorSet(cpuId, resetVector))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
+    }
     /* Return status */
     return status;
 }
@@ -238,29 +269,37 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Set CPU target sleep mode on next WFI entry */
-    if (!(CPU_SleepModeSet(cpuId, sleepMode)))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
-        bool irqMuxGic = (sleepFlags & DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX) != 0U;
-
-        /* Set wake mux to GPC/GIC */
-        if (!CPU_WakeMuxSet(cpuId, irqMuxGic))
+        /* Set CPU target sleep mode on next WFI entry */
+        if (!(CPU_SleepModeSet(cpuId, sleepMode)))
         {
             status = SM_ERR_NOT_FOUND;
         }
         else
         {
-            if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
+            bool irqMuxGic = (sleepFlags & DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX)
+                != 0U;
+
+            /* Set wake mux to GPC/GIC */
+            if (!CPU_WakeMuxSet(cpuId, irqMuxGic))
             {
-                s_cpuWakeListA55 |= (1UL << cpuId);
+                status = SM_ERR_NOT_FOUND;
+            }
+            else
+            {
+                if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
+                {
+                    s_cpuWakeListA55 |= (1UL << cpuId);
+                }
             }
         }
     }
-
     /* Return status */
     return status;
 }
@@ -279,9 +318,17 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     }
     else
     {
-        if (!CPU_IrqWakeSet(cpuId, maskIdx, maskVal))
+        /* Check fuse state */
+        if (DEV_SM_FuseCpuDisabled(cpuId))
         {
             status = SM_ERR_NOT_FOUND;
+        }
+        else
+        {
+            if (!CPU_IrqWakeSet(cpuId, maskIdx, maskVal))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
         }
     }
 
@@ -303,9 +350,17 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     }
     else
     {
-        if (!CPU_NonIrqWakeSet(cpuId, maskVal))
+        /* Check fuse state */
+        if (DEV_SM_FuseCpuDisabled(cpuId))
         {
             status = SM_ERR_NOT_FOUND;
+        }
+        else
+        {
+            if (!CPU_NonIrqWakeSet(cpuId, maskVal))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
         }
     }
 
@@ -320,11 +375,21 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     uint32_t lpmSetting, uint32_t retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
+    bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
 
-    /* Configure CPU LPM response for specified power domain */
-    if (!CPU_LpmConfigSet(cpuId, domainId, lpmSetting, retMask))
+    /* Check fuse state */
+    if (pdDisabled || cpuDisabled)
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Configure CPU LPM response for specified power domain */
+        if (!CPU_LpmConfigSet(cpuId, domainId, lpmSetting, retMask))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -339,10 +404,19 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Configure CPU LPM response for the peripheral low-power interface */
-    if (!CPU_PerLpiConfigSet(cpuId, perId, lpmSetting))
+    /* Check fuse state */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Configure CPU LPM response for the peripheral low-power
+           interface */
+        if (!CPU_PerLpiConfigSet(cpuId, perId, lpmSetting))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */

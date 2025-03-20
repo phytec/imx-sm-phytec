@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -761,7 +761,7 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
         bootOrder++)
     {
         /* Loop over LMs */
-        for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+        for (uint32_t lm = 1U; lm < SM_NUM_LM; lm++)
         {
             /* Boot if LM requested in this order */
             if ((g_lmmConfig[lm].group == group)
@@ -820,7 +820,7 @@ int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
     *noReturn = false;
 
     /* Loop over LMs */
-    for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
+    for (uint32_t lm = 1U; lm < SM_NUM_LM; lm++)
     {
         /* LM in group? */
         if (g_lmmConfig[lm].group == group)
@@ -1006,7 +1006,35 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
     int32_t status = SM_ERR_SUCCESS;
     uint32_t idx = start;
 
+    /* Loop over start list to load reset vectors */
+
+    while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
+    {
+        const lmm_startstop_t *ptr = &s_lmmStart[idx];
+
+        /* End for this LM? */
+        if (ptr->lmId != lmId)
+        {
+            break;
+        }
+
+        /* For this mode? */
+        if (ptr->mSel == s_modeSel)
+        {
+            /* Process start command */
+            if (ptr->ss == LMM_SS_CPU)
+            {
+                status = LMM_CpuResetVectorReset(ptr->lmId, ptr->rsrc,
+                    true);
+            }
+        }
+
+        /* Next entry */
+        idx++;
+    }
+
     /* Loop over start list */
+    idx = start;
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
     {
         const lmm_startstop_t *ptr = &s_lmmStart[idx];
@@ -1029,7 +1057,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_PERF:
                     status = LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0]);
+                        (uint32_t) ptr->arg[0], true);
                     break;
                 case LMM_SS_CLK:
                     status = LM_ClockStart(ptr->lmId, ptr->rsrc,
@@ -1038,12 +1066,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                 case LMM_SS_CPU:
                     if (cpu)
                     {
-                        status = LMM_CpuResetVectorReset(ptr->lmId,
-                            ptr->rsrc);
-                        if (status == SM_ERR_SUCCESS)
-                        {
-                            status = LMM_CpuStart(ptr->lmId, ptr->rsrc);
-                        }
+                        status = LMM_CpuStart(ptr->lmId, ptr->rsrc);
                     }
                     break;
                 case LMM_SS_VOLT:
@@ -1099,7 +1122,34 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
         SM_LM_STOP_DATA
     };
 
+    /* Loop over stop list to load reset vectors */
+    while (idx < SM_LM_NUM_STOP)
+    {
+        const lmm_startstop_t *ptr = &s_lmmStop[idx];
+
+        /* End for this LM? */
+        if (ptr->lmId != lmId)
+        {
+            break;
+        }
+
+        /* For this mode? */
+        if (ptr->mSel == s_modeSel)
+        {
+            /* Process stop command */
+            if (ptr->ss == LMM_SS_CPU)
+            {
+                (void) LMM_CpuResetVectorReset(ptr->lmId, ptr->rsrc,
+                    true);
+            }
+        }
+
+        /* Next entry */
+        idx++;
+    }
+
     /* Loop over stop list */
+    idx = stop;
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_STOP))
     {
         const lmm_startstop_t *ptr = &s_lmmStop[idx];
@@ -1122,7 +1172,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_PERF:
                     (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0]);
+                        (uint32_t) ptr->arg[0], true);
                     break;
                 case LMM_SS_CLK:
                     (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);

@@ -50,6 +50,7 @@ extern "C"{
 /* Include platform header file */
 #include "MIMX_SAF_Version.h"
 #include "SafetyBase_MIMX95XX_SAF.h"
+#include "SafetyBase_MIMX94XX_SAF.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION

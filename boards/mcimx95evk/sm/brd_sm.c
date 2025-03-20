@@ -105,7 +105,6 @@
 
 /* Performance parameters */
 #define BOARD_PERF_LEVEL  DEV_SM_PERF_LVL_ODV  /* Target perf level */
-#define BOARD_PERF_VDROP  20000                /* Perf voltage drop */
 #if BOARD_VOLT_SOC >= ES_ODV_UV_VDD_SOC
 #define BOARD_BOOT_LEVEL  DEV_SM_PERF_LVL_ODV  /* Boot perf overdrive */
 #elif BOARD_VOLT_SOC >= ES_NOM_UV_VDD_SOC
@@ -171,17 +170,14 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     /* Configure ISO controls based on feature fuses */
     uint32_t ipIsoMask = 0U;
 
-    /* Deassert PCIe ISO if corresponding module is enabled */
-    uint32_t fuseHwCfg2 = FSB->FUSE[FSB_FUSE_HW_CFG2];
-
     /* PCIe1 is tied to HSIO ISO[0] */
-    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE1_DISABLE_MASK) == 0U)
+    if (DEV_SM_FuseGet(DEV_SM_FUSE_PCIE1_DISABLE) == 0U)
     {
         ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK;
     }
 
     /* PCIe2 is tied to HSIO ISO[1] */
-    if ((fuseHwCfg2 & FSB_FUSE_HW_CFG2_PCIE2_DISABLE_MASK) == 0U)
+    if (DEV_SM_FuseGet(DEV_SM_FUSE_PCIE2_DISABLE) == 0U)
     {
         ipIsoMask |= SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_1_MASK;
     }

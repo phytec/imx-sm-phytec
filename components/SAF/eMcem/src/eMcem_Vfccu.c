@@ -15,7 +15,7 @@
 *   SW Version           : 0.4.0
 *   Build Version        : MIMX9X_SAF_0_4_0
 *
-*   Copyright 2022-2024 NXP
+*   Copyright 2022-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -85,6 +85,8 @@ extern "C"{
 #include "eMcem_ExtDiagApi.h"
 #include "eMcem_VfccuFaultList_MIMX95XX.h"
 #include "eMcem_Vfccu_MIMX95XX.h"
+#include "eMcem_VfccuFaultList_MIMX94XX.h"
+#include "eMcem_Vfccu_MIMX94XX.h"
 #include "SafetyBase.h"
 
 /*==================================================================================================

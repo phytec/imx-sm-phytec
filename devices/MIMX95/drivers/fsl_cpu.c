@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -74,8 +74,6 @@ static bool CPU_VirtLpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx,
 /* Local Variables */
 
 static GPC_CPU_CTRL_Type *const s_gpcCpuCtrlPtrs[] = GPC_CPU_CTRL_BASE_PTRS;
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
-static GICR_Type *const s_gicrPtrs[] = GICR_BASE_PTRS;
 
 static uint32_t s_cpuDdrMixDependMask;
 static uint32_t s_cpuNocMixDependMask;
@@ -839,7 +837,8 @@ bool CPU_ResetSet(uint32_t cpuIdx, uint32_t resetType)
                     uint32_t gicdIdxLast = CPU_IDX_A55C_LAST - CPU_IDX_A55C0;
                     for (uint32_t gicdIdx = 0U; gicdIdx <= gicdIdxLast; gicdIdx++)
                     {
-                        GICR_Type *GICR = s_gicrPtrs[gicdIdx];
+                        GICR_Type *const gicrPtrs[] = GICR_BASE_PTRS;
+                        GICR_Type *GICR = gicrPtrs[gicdIdx];
 
                         /* Set ProcessorSleep to quiesce GIC redistributor instance */
                         GICR->GICR_WAKER |= GICR_WAKER_PROCESSORSLEEP_MASK;
@@ -1449,15 +1448,27 @@ bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat)
                 /* If sleep is not forced, consider the CPU mode */
                 if (!sleepForce)
                 {
+                    /* Get GPC CPU mode status */
                     uint32_t cpuModeStat =
-                        (s_gpcCpuCtrlPtrs[cpuIdx]->CMC_PIN_STAT &
-                        GPC_CPU_CTRL_CMC_PIN_STAT_CPU_MODE_STAT_MASK) >>
-                        GPC_CPU_CTRL_CMC_PIN_STAT_CPU_MODE_STAT_SHIFT;
+                            s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_STAT;
+
+                    /* Default CPU mode as RUN until SLEEPING_IDLE confirmed */
+                    uint32_t cpuModeCur = CPU_SLEEP_MODE_RUN;
+
+                    /* Check if CPU in SLEEPING_IDLE state */
+                    if ((cpuModeStat &
+                        GPC_CPU_CTRL_CMC_MODE_STAT_SLEEPING_IDLE_MASK) != 0U)
+                    {
+                        /* CPU_MODE_CURRENT reflects active mode */
+                        cpuModeCur = (cpuModeStat &
+                            GPC_CPU_CTRL_CMC_MODE_STAT_CPU_MODE_CURRENT_MASK) >>
+                            GPC_CPU_CTRL_CMC_MODE_STAT_CPU_MODE_CURRENT_SHIFT;
+                    }
 
                     /* Keep track of lowest CPU mode (RUN is lowest) */
-                    if (cpuModeStat < *sysSleepStat)
+                    if (cpuModeCur < *sysSleepStat)
                     {
-                        *sysSleepStat = cpuModeStat;
+                        *sysSleepStat = cpuModeCur;
                     }
                 }
             }

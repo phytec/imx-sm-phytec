@@ -67,6 +67,8 @@ typedef enum
     ELE_GET_EVENTS_REQ          = 0xA2,
     ELE_START_RNG_REQ           = 0xA3,
     ELE_GET_TRNG_STATE_REQ      = 0xA4,
+    ELE_V2X_PING_REQ            = 0xB0,
+    ELE_V2X_GET_STATE_REQ       = 0xB2,
     ELE_ENABLE_PATCH_REQ        = 0xC3,
     ELE_RELEASE_RDC_REQ         = 0xC4,
     ELE_GET_FW_STATUS_REQ       = 0xC5,
@@ -192,6 +194,9 @@ void ELE_FwStatusGet(uint32_t *status)
 {
     static uint32_t s_statWord2Cache = 0xFFFFFFFFUL;
 
+    /* Clear status in case cached */
+    g_eleStatus = SM_ERR_SUCCESS;
+
     /* Check if status cached? */
     if (s_statWord2Cache == 0xFFFFFFFFUL)
     {
@@ -223,6 +228,7 @@ void ELE_RomIdGet(uint32_t *id, uint32_t *commit, bool *dirty)
     static uint32_t s_idWord2Cache = 0U;
     static uint32_t s_idWord3Cache = 0U;
 
+    /* Clear status in case cached */
     g_eleStatus = SM_ERR_SUCCESS;
 
     /* Check if version cached? */
@@ -260,6 +266,7 @@ void ELE_FwVersionGet(uint32_t *version, uint32_t *commit, bool *dirty,
     static uint32_t s_verWord2Cache = 0U;
     static uint32_t s_verWord3Cache = 0U;
 
+    /* Clear status in case cached */
     g_eleStatus = SM_ERR_SUCCESS;
 
     /* Check if version cached? */
@@ -403,6 +410,44 @@ void ELE_InfoGet(ele_info_t *info)
     {
         g_eleStatus = SM_ERR_NOT_SUPPORTED;
     }
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get V2X info                                                             */
+/*--------------------------------------------------------------------------*/
+void ELE_V2xInfoGet(uint32_t *info, uint32_t *v2x_error)
+{
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_V2X_GET_STATE_REQ, 1U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+    /* Extract data */
+    if (g_eleStatus == SM_ERR_SUCCESS)
+    {
+        *info = s_msgMax.word[2];
+        *v2x_error = s_msgMax.word[3];
+    }
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Ping V2X                                                                 */
+/*--------------------------------------------------------------------------*/
+void ELE_V2xPing(void)
+{
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_V2X_PING_REQ, 1U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
 
 #ifdef DEBUG_ELE
     ELE_DebugDump();

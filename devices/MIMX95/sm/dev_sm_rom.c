@@ -82,7 +82,7 @@ void DEV_SM_RomInit(void)
     if ((OSC24M->DIGPROG_DEVICE_ID & 0xF0U) == 0x10U)
     {
         /* No ROM patch? */
-        if (FSB->FUSE[FSB_FUSE_M33_ROM_PATCH_VER] == 0x0U)
+        if (DEV_SM_FuseGet(DEV_SM_FUSE_M33_ROM_PATCH_VER) == 0x0U)
         {
             /* Is M7 powered? */
             if (SRC_MixIsPwrSwitchOn(DEV_SM_PD_M7))
@@ -291,6 +291,17 @@ int32_t DEV_SM_RomStageSet(uint32_t stage)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get boot stage                                                           */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomStageGet(void)
+{
+    uint32_t stage = (SRC_GEN->GPR16 & ROM_STAGE_MASK) >> ROM_STAGE_SHIFT;
+
+    /* Return the current stage */
+    return stage;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set boot container                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_RomContainerSet(uint32_t container)
@@ -315,3 +326,14 @@ int32_t DEV_SM_RomContainerSet(uint32_t container)
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get boot container                                                       */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_RomContainerGet(void)
+{
+    /* get the current container value */
+    uint32_t container = SRC_GEN->GPR15;
+
+    /* return the current container value */
+    return container;
+}

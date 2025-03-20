@@ -71,6 +71,13 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr);
 
 /*!
+ * Get silicon version.
+ *
+ * @return Returns the silicon version.
+ */
+uint32_t DEV_SM_SiVerGet(void);
+
+/*!
  * Get the syslog.
  *
  * @param[in]     flags    Syslog flags
@@ -108,19 +115,6 @@ int32_t DEV_SM_SyslogDump(uint32_t flags);
  * @return Returns the time in uS.
  */
 uint64_t DEV_SM_Usec64Get(void);
-
-/*!
- * Get fuse info.
- *
- * @param[in]     fuseWord  Index of word
- * @param[out]    addr      Pointer to return address of fuse word
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_NOT_FOUND: if fuseWord is not valid.
- */
-int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr);
 
 /*!
  * Dump device error info.

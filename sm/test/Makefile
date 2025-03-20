@@ -77,6 +77,8 @@ ifeq ($(T), all)
 		$(OUT)/test_dev_sm_rdc.o        \
 		$(OUT)/test_dev_sm_pin.o        \
 		$(OUT)/test_dev_sm.o            \
+		$(OUT)/test_dev_sm_fuse.o       \
+		$(OUT)/test_dev_sm_handler.o    \
 		$(OUT)/test_scmi.o              \
 		$(OUT)/test_scmi_base.o         \
 		$(OUT)/test_scmi_power.o        \

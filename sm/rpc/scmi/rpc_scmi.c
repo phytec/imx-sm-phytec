@@ -760,6 +760,12 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 /* Dispatch subrequest */
                 status = RPC_SCMI_A2pSubDispatch(&caller, protocolId,
                     messageId);
+
+#ifdef DEV_SM_MSG_PROF_CNT
+                /* Provide description for message profiling */
+                DEV_SM_SystemMsgProfDescribe(scmiChannel, SM_SCMI_CHN_A2P,
+                    protocolId, messageId);
+#endif
             }
         }
 
@@ -891,6 +897,12 @@ static void RPC_SCMI_P2aDispatch(uint32_t scmiChannel)
         /* Send message */
         (void) RPC_SCMI_P2aTx(scmiChannel, SCMI_HEADER_PROTOCOL_EX(header),
             SCMI_HEADER_MSG_EX(header), len, &header, true);
+
+#ifdef DEV_SM_MSG_PROF_CNT
+        /* Provide description for message profiling */
+        DEV_SM_SystemMsgProfDescribe(scmiChannel, SM_SCMI_CHN_P2A,
+            SCMI_HEADER_PROTOCOL_EX(header), SCMI_HEADER_MSG_EX(header));
+#endif
     }
 }
 

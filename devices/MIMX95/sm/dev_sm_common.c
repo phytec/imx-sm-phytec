@@ -75,15 +75,11 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     uint32_t *partNum, string *siNameAddr)
 {
     int32_t status = SM_ERR_SUCCESS;
+    static uint32_t s_deviceId = 0U;
+    static uint32_t s_siRev = 0U;
+    static uint32_t s_partNum = 0U;
     static char s_siName[16];
     static bool s_updated = false;
-
-    /* Return initial data */
-    *deviceId = OSC24M->DIGPROG_DEVICE_ID;
-    *siRev = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_SI_REV_MASK)
-        >> FSB_FUSE_HW_CFG0_SI_REV_SHIFT;
-    *partNum = (FSB->FUSE[FSB_FUSE_HW_CFG0] & FSB_FUSE_HW_CFG0_PART_NUM_MASK)
-        >> FSB_FUSE_HW_CFG0_PART_NUM_SHIFT;
 
     if (!s_updated)
     {
@@ -91,15 +87,20 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         uint32_t fuseMinor;
         uint32_t newVal;
 
+        /* Get data */
+        s_deviceId = OSC24M->DIGPROG_DEVICE_ID;
+        s_siRev = DEV_SM_FuseGet(DEV_SM_FUSE_SI_REV);
+        s_partNum = DEV_SM_FuseGet(DEV_SM_FUSE_PART_NUM);
+
         /* Copy name */
         DEV_SM_StrCpy(s_siName, "i.MX95 A0", 15U);
 
         /* Update minor version */
-        tmpMinor = (*deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
+        tmpMinor = (s_deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
             >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
         tmpMinor -= MINOR_BASE(1U);
-        fuseMinor = MINOR_BASE(REV_BASE(*siRev))
-            | MINOR_METAL(REV_METAL(*siRev));
+        fuseMinor = MINOR_BASE(REV_BASE(s_siRev))
+            | MINOR_METAL(REV_METAL(s_siRev));
         tmpMinor = MAX(tmpMinor, fuseMinor);
 
         /* Update name */
@@ -112,11 +113,58 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         s_updated = true;
     }
 
+    /* Return device ID */
+    if (deviceId != NULL)
+    {
+        *deviceId = s_deviceId;
+    }
+
+    /* Return silicon rev */
+    if (siRev != NULL)
+    {
+        *siRev = s_siRev;
+    }
+
+    /* Return part number */
+    if (partNum != NULL)
+    {
+        *partNum = s_partNum;
+    }
+
     /* Return name */
-    *siNameAddr = s_siName;
+    if (siNameAddr != NULL)
+    {
+        *siNameAddr = s_siName;
+    }
 
     /* Return result */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get silicon version                                                      */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_SiVerGet(void)
+{
+    uint32_t deviceId = 0U;
+    uint32_t siRev = 0U;
+    uint32_t tmpMinor = 0U;
+
+    if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL) == SM_ERR_SUCCESS)
+    {
+        uint32_t fuseMinor;
+
+        /* Update minor version */
+        tmpMinor = (deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
+            >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
+        tmpMinor -= MINOR_BASE(1U);
+        fuseMinor = MINOR_BASE(REV_BASE(siRev))
+            | MINOR_METAL(REV_METAL(siRev));
+        tmpMinor = MAX(tmpMinor, fuseMinor);
+    }
+
+    /* Return version */
+    return (TMP_BASE(tmpMinor) << 16U) | TMP_METAL(tmpMinor);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -160,6 +208,21 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
         printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
         printf("Sleep count = %u\n", sysSleepRecord->sleepCnt);
+
+#ifdef DEV_SM_MSG_PROF_CNT
+        printf("\nMessage profile log:\n");
+        printf("LOG_ID    LATENCY[usec]    CHAN    TYPE    PROTOCOL"
+            "     MSG\n");
+        for (uint32_t idx = 0U; idx < DEV_SM_MSG_PROF_CNT; idx++)
+        {
+            dev_sm_sys_msg_prof_t *pMsgProf
+                = &g_syslog.sysMsgRecord.msgProf[idx];
+
+            printf("%6u    %13u    %4u    %4u        0x%02X    0x%02X\n",
+                idx, pMsgProf->msgLatUsec, pMsgProf->scmiChannel,
+                pMsgProf->chanType, pMsgProf->protocolId, pMsgProf->msgId);
+        }
+#endif
     }
 #endif
 
@@ -173,26 +236,6 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
 uint64_t DEV_SM_Usec64Get(void)
 {
     return SYSCTR_GetUsec64();
-}
-
-/*--------------------------------------------------------------------------*/
-/* Get address of a fuse word                                               */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
-{
-    int32_t status = SM_ERR_SUCCESS;
-
-    if (fuseWord < 610U)
-    {
-        *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
-    }
-    else
-    {
-        status = SM_ERR_NOT_FOUND;
-    }
-
-    /* Return result */
-    return status;
 }
 
 /*--------------------------------------------------------------------------*/

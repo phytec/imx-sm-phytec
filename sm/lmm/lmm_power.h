@@ -126,6 +126,18 @@ int32_t LMM_PowerStateSet(uint32_t lmId, uint32_t domainId,
     uint8_t powerState);
 
 /*!
+ * Reset an LM power domain state.
+ *
+ * @param[in]     lmId        LM requesting the operation
+ * @param[in]     domainId    Identifier for the power domain
+ *
+ * This function resets the power state in the LM to off without actually
+ * calling down to the device to power off. It is used **only** to clean
+ * up the LM state after testing.
+ */
+void LMM_PowerStateReset(uint32_t lmId, uint32_t domainId);
+
+/*!
  * Get an LM power state.
  *
  * @param[in]     lmId        LM requesting the operation

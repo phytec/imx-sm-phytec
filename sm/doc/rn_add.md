@@ -32,30 +32,10 @@ Configuration Changes {#RN_ADD_CONFIG}
 The following are cfg file changes that customers **must** make to their cfg files
 and rebuild their config headers.
 
-- Added BOARD command to define board parameters, replaces UART and PMIC commands
-- Added sema parameter for CPUs. **Must** be defined for the Cortex-A platform resource,
-  otherwise Linux will not boot.
-- Moved 256K of OCRAM to secure for ATF
-- Removed A55 ROM
-- Added new clock resources (CLOCK_EXT, CLOCK_DISP1PIX, etc.)
-- Reduced ELE DDR range
-- Move user manual config from config_dev.h to config_user.h.
-
-The following are changes made to NXP configurations that are customer optional:
-
-- Lots of cleanup (sort items, full 36-bit memory addresses, move some resources/APIs to
-  correct section)
-- Moved MSGINTR1 to the M7
-- Removed AP access to M7 TCM
-- Added missing clocks used by the SM (LM0)
-- Gave AP rights to set PCA2131 alarm
-- Fixed incorrect reference to msel=2 (should be 1)
-- Added configinfo to dump a cfg file in an md table format
-- Added permission defines to cfg files to better support configinfo
-- Updated all API sections to use permission defines
-- Updated ELE section of cfg files to use memory defines
-- Updated V2X section to use owner defines
-- Disabled CRC for M7 SMT channels in the mx95alt.cfg file
+- Move access to BLK_CTRL_GPUMIX from any clients to the SM (LM0).
+- Add nodbg to the ELE DDR region (if defined).
+- Define V2X DDR region to contain the V2X FW (if using V2X).
+- Add power domain start for any Cortex-M that might have FW loaded by another core.
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -67,13 +47,7 @@ Board Implementation Changes {#RN_ADD_BOARD_IMP}
 
 Customers **must** make the following changes in their board port:
 
-- PMIC configuration changes to workaround PMIC errata
-- Changes to save/restore the PF53 voltages across system sleep
-- Define BOARD_PMIC_RESUME_TICKS for optimal resume time
-
-The following are changes made to NXP ports that are customer optional but
-strongly recommended:
-
-- Update shutdown record from PMIC fault status
-- Coding standards fixes
+- Convert to use of the device fuse API.
+- Move BOARD_PERF_VDROP definition from brd_sm.c to brd_sm.h.
+- Added code to enable the PF09 LDO3 in RUN mode.
 

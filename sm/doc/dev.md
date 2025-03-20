@@ -95,6 +95,7 @@ There are several options that can be specified on the make command line:
 | M=0                | no debug monitor                           |
 | M=1                | include debug monitor (default)            |
 | M=2                | include debug monitor with optional entry  |
+| P=\<n\>            | Compile with profiling depth of n.         |
 | T=\<test\>         | run tests rather than boot next core       |
 | GCOV=1             | Compile with gcov info. Simulation only.   |
 
@@ -108,6 +109,8 @@ The CONFIG option specifies what configuration directory to use. See the
 |--------------------|-------------------------------------------------------|
 | mx95evk            | MX95 EVK, Linux and M7                                |
 | mx95alt            | MX95 EVK, AP or M7, for BSP testing and DDR test tool |
+| mx94evk            | MX94 EVK, Linux and M7                                |
+| mx94alt            | MX94 EVK, AP or M7, for BSP testing and DDR test tool |
 | simu               | Simulation build, uses a simulated device and board.  |
 
 Look in the configs directory to see the complete list of options. If a new configuration

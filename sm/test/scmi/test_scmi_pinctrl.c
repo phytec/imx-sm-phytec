@@ -229,7 +229,7 @@ void TEST_ScmiPinctrl(void)
         uint32_t attr_cfg = (uint32_t) SCMI_PINCTRL_CONFIG_FLAG_TYPE;
         uint32_t attributes = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = { 0 };
+        scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
         /* NOT FOUND */
         NECHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, SM_NUM_PIN,
@@ -277,7 +277,7 @@ void TEST_ScmiPinctrl(void)
         uint32_t attributes
             = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = { 0 };
+        scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
         CHECK(SCMI_PinctrlSettingsGet(SM_TEST_DEFAULT_CHN, 0U, attributes,
             NULL, &numConfigs, configs));
@@ -390,7 +390,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         /* WHILE : More configs to send            */
         do
         {
-            scmi_pin_config_t configs[10] = { 0 };
+            scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
             printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
@@ -426,7 +426,7 @@ static void TEST_ScmiPinctrlNone(uint32_t channel, uint32_t identifier)
         /* WHILE : More configs to send            */
         do
         {
-            scmi_pin_config_t configs[10] = { 0 };
+            scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
             printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
                 identifier, attributes);
@@ -487,7 +487,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         uint32_t attributes
             = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = { 0 };
+        scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
         printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
             identifier, attributes);
@@ -519,11 +519,11 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
 #ifdef SIMU
         num += 2;
 
-        configs[2].type = SCMI_PINCTRL_TYPE_DAISY_ID;
-        configs[2].value = 0;
+        configs[num - 2U].type = SCMI_PINCTRL_TYPE_DAISY_ID;
+        configs[num - 2U].value = 0U;
 
-        configs[3].type = SCMI_PINCTRL_TYPE_DAISY_CFG;
-        configs[3].value = 0;
+        configs[num - 1U].type = SCMI_PINCTRL_TYPE_DAISY_CFG;
+        configs[num - 1U].value = 0U;
 
         attributes = SCMI_PINCTRL_SET_ATTR_NUM_CONFIGS(num) |
             SCMI_PINCTRL_SET_ATTR_SELECTOR(0U);
@@ -543,7 +543,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
         uint32_t attributes
             = SCMI_PINCTRL_GET_ATTR_CONFIG(attr_cfg);
         uint32_t numConfigs = 0U;
-        scmi_pin_config_t configs[10] = { 0 };
+        scmi_pin_config_t configs[SCMI_PINCTRL_MAX_CONFIGS] = { 0 };
 
         printf("SCMI_PinctrlSettingsGet(%u, %u, %u)\n", channel,
             identifier, attributes);

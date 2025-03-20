@@ -48,6 +48,21 @@
 #include "monitor.h"
 #endif
 
+/* The version of generated configuration data. */
+#ifndef GEN_CONFIG_VER
+#error Missing generated configuration data version number. Re-generate the configuration.
+#endif
+
+/* The configuration data version number expected by this version of SM. */
+#ifndef SM_CONFIG_VER
+#error Missing expected configuration data version number.
+#endif
+
+/* The generated configuration data version shall match. */
+#if SM_CONFIG_VER != GEN_CONFIG_VER
+#error Unexpected configuration data version. Probably wrong configtool version used.
+#endif
+
 /* Local defines */
 
 /* Local types */

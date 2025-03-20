@@ -753,6 +753,47 @@ bool CCM_LpcgModeSet(uint32_t lpcgIdx, uint32_t lpcgMode)
     return rc;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Set CCM LPCG access control list                                         */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgAccessSet(uint32_t lpcgIdx, uint32_t accessList)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgAuth = CCM_CTRL->LPCG[lpcgIdx].AUTHEN;
+
+        lpcgAuth &= ~CCM_LPCG_AUTHEN_WHITE_LIST_MASK;
+        lpcgAuth |= CCM_LPCG_AUTHEN_WHITE_LIST(accessList);
+
+        CCM_CTRL->LPCG[lpcgIdx].AUTHEN = lpcgAuth;
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get CCM LPCG access control list                                         */
+/*--------------------------------------------------------------------------*/
+bool CCM_LpcgAccessGet(uint32_t lpcgIdx, uint32_t *accessList)
+{
+    bool rc = false;
+
+    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    {
+        uint32_t lpcgAuth = CCM_CTRL->LPCG[lpcgIdx].AUTHEN;
+
+        *accessList = (lpcgAuth & CCM_LPCG_AUTHEN_WHITE_LIST_MASK) >>
+            CCM_LPCG_AUTHEN_WHITE_LIST_SHIFT;
+
+        rc = true;
+    }
+
+    return rc;
+}
 
 /*--------------------------------------------------------------------------*/
 /* Set CCM LPCG clock off handshake timeout enable                          */

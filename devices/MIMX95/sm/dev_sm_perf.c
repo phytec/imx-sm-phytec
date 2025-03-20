@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -64,6 +64,16 @@
 #define VCO_MFD         ((uint32_t)(CLOCK_PLL_MFD & 0xFFFFFFFFU))
 
 #define DEV_SM_PERF_NUM_BUS_CLK     11U
+
+/* Worst-case transition latency reported by PERFORMANCE_DESCRIBE_LEVELS
+ *
+ * Considerations for reported latency value:
+ *  - Number of outstanding SCMI agent requests
+ *  - Latency of outstanding agent requests
+ *  - Latency of outstanding SM periodic servicing
+ *  - Latency of performance level transition
+ */
+#define DEV_SM_PERF_LATENCY_USEC    5000U   /* 5 msec */
 
 /* Local types */
 
@@ -220,25 +230,25 @@ static dev_sm_perf_desc_t const s_perfDescEle[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_ELE,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_ELE,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_ELE,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -274,25 +284,25 @@ static dev_sm_perf_desc_t const s_perfDescM33[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_M33,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_M33,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_M33,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -354,25 +364,25 @@ static dev_sm_perf_desc_t const s_perfDescWakeup[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_WAKEUP,                 /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_WAKEUP,                 /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_WAKEUP,                 /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -408,25 +418,25 @@ static dev_sm_perf_desc_t const s_perfDescM7[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_M7,                     /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_M7,                     /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_M7,                     /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -477,25 +487,25 @@ static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_DRAM_LP5,               /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_DRAM_LP5,               /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_DRAM_LP5,               /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -547,25 +557,25 @@ static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_DRAM_LP4X,              /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_DRAM_LP4X,              /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_DRAM_LP4X,              /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -601,25 +611,25 @@ static dev_sm_perf_desc_t const s_perfDescHsio[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_HSIO,                   /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_HSIO,                   /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_HSIO,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -655,25 +665,25 @@ static dev_sm_perf_desc_t const s_perfDescNpu[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_NPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_NPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_NPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -709,25 +719,25 @@ static dev_sm_perf_desc_t const s_perfDescNoc[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_NOC,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_NOC,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_NOC,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -763,25 +773,25 @@ static dev_sm_perf_desc_t const s_perfDescGpu[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_GPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_GPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_GPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -843,25 +853,25 @@ static dev_sm_perf_desc_t const s_perfDescVpu[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_VPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_VPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_VPU,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -949,25 +959,25 @@ static dev_sm_perf_desc_t const s_perfDescCam[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_CAM,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_CAM,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_CAM,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -1029,25 +1039,25 @@ static dev_sm_perf_desc_t const s_perfDescDisp[DEV_SM_NUM_PERF_LVL_SOC] =
     {
         .value = ES_24000KHZ,                       /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_DISP,                   /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_DISP,                   /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_DISP,                   /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -1060,7 +1070,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 
 /* Setpoint PLL configuration for A55 */
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
+static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
     {
@@ -1153,37 +1163,37 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint descriptions for A55 */
-static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
+static dev_sm_perf_desc_t s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
         .value = ES_500000KHZ,                      /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
         .value = ES_LOW_KHZ_A55,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         .value = ES_NOM_KHZ_A55,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         .value = ES_ODV_KHZ_A55,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_SOD] =
     {
         .value = ES_SOD_KHZ_A55,                    /* KHz */
         .powerCost = 0U,                            /* mW */
-        .latency = 0U,                              /* uS */
+        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
 };
 
@@ -1387,21 +1397,41 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
-    /* Number of perf levels for A55 depends on speed grade fuses */
-    uint32_t fuseHwCfg0 = FSB->FUSE[FSB_FUSE_HW_CFG0];
-    uint32_t speedGrade = (fuseHwCfg0 & FSB_FUSE_HW_CFG0_SPEEDGRADING_MASK)
-        >> FSB_FUSE_HW_CFG0_SPEEDGRADING_SHIFT;
-    switch (speedGrade)
-    {
-        case 0x1:   /* 2.2 GHz */
-        case 0x2:   /* 2.1 GHz */
-        case 0x3:   /* 2.0 GHz */
-            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
-            break;
+    /* Query A55 speed grade from fuses */
+    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
 
-        default:
-            s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
-            break;
+    if (speedGrade >= 2000000000U)
+    {
+        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
+    }
+    else if (speedGrade == 1000000000U)
+    {
+        /* 1GHz devices support PRK, LOW, NOM setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
+
+        /* 1GHz devices require updated PERF table entries for NOM setpoint */
+        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
+
+        /*
+         * PLL_VCO = 24MHz * 150 = 3600MHz
+         */
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
+
+        /*
+         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
+         */
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+    }
+    else
+    {
+        /* All other devices support PRK, LOW, NOM, ODV setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
     }
 
     if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
@@ -1710,6 +1740,14 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set frequency of performance domain                                      */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel)
+{
+    return DEV_SM_PerfFreqUpdate(domainId, perfLevel);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -2367,7 +2405,7 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (perfLevel >= DEV_SM_NUM_PERF_LVL_ARM)
+    if (perfLevel >= s_perfNumLevels[PS_VDD_ARM])
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
@@ -2622,3 +2660,4 @@ static uint32_t DEV_SM_PerfDramTypeGet(void)
 
     return s_perfDramType;
 }
+

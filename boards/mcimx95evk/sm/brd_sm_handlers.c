@@ -124,7 +124,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
         g_pf09Dev.devAddr = BOARD_PF09_DEV_ADDR;
         g_pf09Dev.crcEn = true;
 
-        /* Inialize PF09 PMIC */
+        /* Initialize PF09 PMIC */
         if (!PF09_Init(&g_pf09Dev))
         {
             status = SM_ERR_HARDWARE_ERROR;
@@ -180,6 +180,15 @@ int32_t BRD_SM_SerialDevicesInit(void)
             }
         }
 
+        /* Enable the LDO3 in RUN mode */
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (!PF09_PmicWrite(&g_pf09Dev, 0x7DU, 0x20U, 0xFFU))
+            {
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+        }
+
         /* Set the OV debounce to 50us due to errata ER011/12 */
         if (status == SM_ERR_SUCCESS)
         {
@@ -211,7 +220,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
         g_pf5301Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         g_pf5301Dev.devAddr = BOARD_PF5301_DEV_ADDR;
 
-        /* Inialize PF0901 PMIC */
+        /* Initialize PF5301 PMIC */
         if (!PF53_Init(&g_pf5301Dev))
         {
             status = SM_ERR_HARDWARE_ERROR;
@@ -225,7 +234,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
         g_pf5302Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         g_pf5302Dev.devAddr = BOARD_PF5302_DEV_ADDR;
 
-        /* Inialize PF0901 PMIC */
+        /* Initialize PF5302 PMIC */
         if (!PF53_Init(&g_pf5302Dev))
         {
             status = SM_ERR_HARDWARE_ERROR;
@@ -238,7 +247,7 @@ int32_t BRD_SM_SerialDevicesInit(void)
         g_pca2131Dev.i2cBase = s_i2cBases[BOARD_I2C_INSTANCE];
         g_pca2131Dev.devAddr = BOARD_PCA2131_DEV_ADDR;
 
-        /* Inialize PCA2131 RTC */
+        /* Initialize PCA2131 RTC */
         if (!PCA2131_Init(&g_pca2131Dev))
         {
             status = SM_ERR_HARDWARE_ERROR;

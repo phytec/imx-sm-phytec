@@ -167,6 +167,16 @@ int32_t DEV_SM_RomBootCpuGet(uint32_t cpuId, uint64_t *resetVector,
 int32_t DEV_SM_RomStageSet(uint32_t stage);
 
 /*!
+ * Get the ROM boot stage.
+ *
+ * This function read the current ROM boot stage and return to
+ * calling function.
+ *
+ * @return Returns current ROM boot stage.
+ */
+uint32_t DEV_SM_RomStageGet(void);
+
+/*!
  * Set the ROM boot container.
  *
  * @param[in]     container    Boot container (0, 1)
@@ -177,6 +187,16 @@ int32_t DEV_SM_RomStageSet(uint32_t stage);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_RomContainerSet(uint32_t container);
+
+/*!
+ * Get the ROM boot container.
+ *
+ * This function read the current ROM boot container and
+ * return to calling function.
+ *
+ * @return Return the current ROM boot container.
+ */
+uint32_t DEV_SM_RomContainerGet(void);
 
 #endif /* DEV_SM_ROM_API_H */
 

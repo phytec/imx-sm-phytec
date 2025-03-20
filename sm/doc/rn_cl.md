@@ -2,232 +2,267 @@ Change List {#RN_CL}
 ===========
 
 The tables below also indicate which patch version, if any, in the previous release (
-imx_sm_2024q3) includes the change. Note some of these patches may not have been released yet and
+imx_sm_2024q4) includes the change. Note some of these patches may not have been released yet and
 the data could change.
 
-SM 2024Q4 Change List {#RN_P0}
+SM 2025Q1 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2024q3) and this release (imx_sm_2024q4).
+Below is a list of changes between the previous release (imx_sm_2024q4) and this release (imx_sm_2025q1).
 
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
-|------------|-------------------------------|-------|---|---|
-| [SM-107](https://jira.sw.nxp.com/projects/SM/issues/SM-107) | Support dynamic rate adjust of audio and  video PLLs [[detail]](@ref RN_DETAIL_SM_107) |   | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-7](https://jira.sw.nxp.com/projects/SM/issues/SM-7) | Add support for i.MX94 [[detail]](@ref RN_DETAIL_SM_7) |   | | | Y |
+| [SM-9](https://jira.sw.nxp.com/projects/SM/issues/SM-9) | Add support for the i.MX94 EVK [[detail]](@ref RN_DETAIL_SM_9) |   | | | Y |
+| [SM-198](https://jira.sw.nxp.com/projects/SM/issues/SM-198) | Add support for message profiling [[detail]](@ref RN_DETAIL_SM_198) |   | Y | Y | |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
-|------------|-------------------------------|-------|---|---|
-| [SM-141](https://jira.sw.nxp.com/projects/SM/issues/SM-141) | Create configtool mechanism to define BOARD defines [[detail]](@ref RN_DETAIL_SM_141) |   | Y | Y |
-| [SM-145](https://jira.sw.nxp.com/projects/SM/issues/SM-145) | Improve unit test coverage [[detail]](@ref RN_DETAIL_SM_145) |   | Y | Y |
-| [SM-147](https://jira.sw.nxp.com/projects/SM/issues/SM-147) | Manage VDD_ARM supply during system sleep modes [[detail]](@ref RN_DETAIL_SM_147) |   | Y | Y |
-| [SM-152](https://jira.sw.nxp.com/projects/SM/issues/SM-152) | Misc. FuSa improvements [[detail]](@ref RN_DETAIL_SM_152) |   | Y | Y |
-| [SM-159](https://jira.sw.nxp.com/projects/SM/issues/SM-159) | Relocate where MUs are reset [[detail]](@ref RN_DETAIL_SM_159) |   | Y | Y |
-| [SM-161](https://jira.sw.nxp.com/projects/SM/issues/SM-161) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_161) |   | Y | Y |
-| [SM-165](https://jira.sw.nxp.com/projects/SM/issues/SM-165) | Support requesting LMM notifications for all LM [[detail]](@ref RN_DETAIL_SM_165) |   | Y | Y |
-| [SM-169](https://jira.sw.nxp.com/projects/SM/issues/SM-169) | Optimize system suspend/resume times [[detail]](@ref RN_DETAIL_SM_169) |   | Y | Y |
-| [SM-170](https://jira.sw.nxp.com/projects/SM/issues/SM-170) | Updates to allow the SCMI client to be used on 64-bit agents [[detail]](@ref RN_DETAIL_SM_170) |   | Y | Y |
-| [SM-173](https://jira.sw.nxp.com/projects/SM/issues/SM-173) | Return PMIC faults as reset reason [[detail]](@ref RN_DETAIL_SM_173) |   | Y | Y |
-| [SM-174](https://jira.sw.nxp.com/projects/SM/issues/SM-174) | Misc. coding standard fixes |   | Y | Y |
-| [SM-177](https://jira.sw.nxp.com/projects/SM/issues/SM-177) | Update ELE dump format [[detail]](@ref RN_DETAIL_SM_177) |   | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-75](https://jira.sw.nxp.com/projects/SM/issues/SM-75) | Do not start ANA TMPSNS if started by ELE [[detail]](@ref RN_DETAIL_SM_75) |   | Y | Y | |
+| [SM-178](https://jira.sw.nxp.com/projects/SM/issues/SM-178) | Add V2X command to debug monitor [[detail]](@ref RN_DETAIL_SM_178) |   | Y | Y | |
+| [SM-182](https://jira.sw.nxp.com/projects/SM/issues/SM-182) | Support device abstraction to fuses/features [[detail]](@ref RN_DETAIL_SM_182) |   | Y | Y | |
+| [SM-183](https://jira.sw.nxp.com/projects/SM/issues/SM-183) | Add versioning and additional checks to the configtool [[detail]](@ref RN_DETAIL_SM_183) |   | Y | Y | |
+| [SM-184](https://jira.sw.nxp.com/projects/SM/issues/SM-184) | Deassert the GPU reset when the GPUMIX is powered up [[detail]](@ref RN_DETAIL_SM_184) |   | Y | Y | |
+| [SM-187](https://jira.sw.nxp.com/projects/SM/issues/SM-187) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_187) |   | Y | Y | |
+| [SM-190](https://jira.sw.nxp.com/projects/SM/issues/SM-190) | Misc. coding standards fixes [[detail]](@ref RN_DETAIL_SM_190) |   | Y | Y | |
+| [SM-191](https://jira.sw.nxp.com/projects/SM/issues/SM-191) | Misc. unit test improvements [[detail]](@ref RN_DETAIL_SM_191) |   | Y | Y | |
+| [SM-211](https://jira.sw.nxp.com/projects/SM/issues/SM-211) | Add new ele ext monitor command to display additional info [[detail]](@ref RN_DETAIL_SM_211) |   | Y | Y | |
+| [SM-216](https://jira.sw.nxp.com/projects/SM/issues/SM-216) | Add gcc compiler version to info [[detail]](@ref RN_DETAIL_SM_216) |   | Y | Y | |
+| [SM-222](https://jira.sw.nxp.com/projects/SM/issues/SM-222) | Give SM access to SEMA41 in the mx94alt config file [[detail]](@ref RN_DETAIL_SM_222) |   | | | Y |
+| [SM-228](https://jira.sw.nxp.com/projects/SM/issues/SM-228) | Support MUX8/9/10 for pin mux configuration [[detail]](@ref RN_DETAIL_SM_228) |   | | | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
-|------------|-------------------------------|-------|---|---|
-| [SM-38](https://jira.sw.nxp.com/projects/SM/issues/SM-38) | Unimplemented rounding rules for clock sources should return error code [[detail]](@ref RN_DETAIL_SM_38) |   | Y | Y |
-| [SM-163](https://jira.sw.nxp.com/projects/SM/issues/SM-163) | Incorrect group reset/boot handling for skipped LM [[detail]](@ref RN_DETAIL_SM_163) |   | Y | Y |
-| [SM-164](https://jira.sw.nxp.com/projects/SM/issues/SM-164) | Avoid clock root setting hazards resulting from inactive parents [[detail]](@ref RN_DETAIL_SM_164) |   | Y | Y |
-| [SM-175](https://jira.sw.nxp.com/projects/SM/issues/SM-175) | Missing LPSPI4 daisy links in device config file [[detail]](@ref RN_DETAIL_SM_175) |   | Y | Y |
-| [SM-179](https://jira.sw.nxp.com/projects/SM/issues/SM-179) | Configtool incorrectly assigns non-agent resources to previous agent [[detail]](@ref RN_DETAIL_SM_179) |   | Y | Y |
-| [SM-180](https://jira.sw.nxp.com/projects/SM/issues/SM-180) | mx95evksof configuration has bad include path for device.cfg |   | Y | Y |
-| [SM-181](https://jira.sw.nxp.com/projects/SM/issues/SM-181) | ELE requires CPU reset handshake enabled for CPU stop/start [[detail]](@ref RN_DETAIL_SM_181) |   | Y | Y |
-| [SM-185](https://jira.sw.nxp.com/projects/SM/issues/SM-185) | Avoid implicit activation of PLL nodes during rate set operations [[detail]](@ref RN_DETAIL_SM_185) |   | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-196](https://jira.sw.nxp.com/projects/SM/issues/SM-196) | Provide transition latency as property of SCMI performance level [[detail]](@ref RN_DETAIL_SM_196) |   | Y | Y | |
+| [SM-199](https://jira.sw.nxp.com/projects/SM/issues/SM-199) | Incorrect configtool handling of overlapping block permissions [[detail]](@ref RN_DETAIL_SM_199) |   | Y | Y | |
+| [SM-202](https://jira.sw.nxp.com/projects/SM/issues/SM-202) | System sleep entry can miss SM hardware handshakes [[detail]](@ref RN_DETAIL_SM_202) |   | Y | Y | |
+| [SM-203](https://jira.sw.nxp.com/projects/SM/issues/SM-203) | GPIO 4/5 memory map incorrect [[detail]](@ref RN_DETAIL_SM_203) |   | Y | Y | |
+| [SM-205](https://jira.sw.nxp.com/projects/SM/issues/SM-205) | Group shutdown results in LM0 (SM) shown in off state [[detail]](@ref RN_DETAIL_SM_205) |   | Y | Y | |
+| [SM-206](https://jira.sw.nxp.com/projects/SM/issues/SM-206) | Cannot configure some reset permissions [[detail]](@ref RN_DETAIL_SM_206) |   | Y | Y | |
+| [SM-207](https://jira.sw.nxp.com/projects/SM/issues/SM-207) | Cortex-M address not configured prior to power on [[detail]](@ref RN_DETAIL_SM_207) |   | Y | Y | |
+| [SM-210](https://jira.sw.nxp.com/projects/SM/issues/SM-210) | Incorrect ELE error code caching [[detail]](@ref RN_DETAIL_SM_210) |   | Y | Y | |
+| [SM-218](https://jira.sw.nxp.com/projects/SM/issues/SM-218) | Dynamic rate update can fail with uninitialized PLL VCO [[detail]](@ref RN_DETAIL_SM_218) |   | Y | Y | |
+| [SM-219](https://jira.sw.nxp.com/projects/SM/issues/SM-219) | Save/restore A55 performance context during A55P power gating [[detail]](@ref RN_DETAIL_SM_219) |   | Y | Y | |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
 
 These are a mix of silicon errata workarounds and recommended usage changes.
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
-|------------|-------------------------------|-------|---|---|
-| [SM-155](https://jira.sw.nxp.com/projects/SM/issues/SM-155) | Add system-level mutex to ensure atomic access of GIC WAKER [[detail]](@ref RN_DETAIL_SM_155) |   | Y | Y |
-| [SM-176](https://jira.sw.nxp.com/projects/SM/issues/SM-176) | Implement workarounds for PF09 ER011/12 errata  [[detail]](@ref RN_DETAIL_SM_176) |   | Y | Y |
-| [SM-188](https://jira.sw.nxp.com/projects/SM/issues/SM-188) | Remove XRESET PMIC workaround on PF09 B0 [[detail]](@ref RN_DETAIL_SM_188) |   | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-225](https://jira.sw.nxp.com/projects/SM/issues/SM-225) | Implement SWA for ERR052682 (V2X clocking requirements during WAKEUPMIX power cycle) [[detail]](@ref RN_DETAIL_SM_225) |   | | | Y |
+| [SM-227](https://jira.sw.nxp.com/projects/SM/issues/SM-227) | Enable PF09 LDO3 in RUN mode to avoid leakage [[detail]](@ref RN_DETAIL_SM_227) |   | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) |
-|------------|-------------------------------|-------|---|---|
-| [SM-160](https://jira.sw.nxp.com/projects/SM/issues/SM-160) | SM 2024Q4 documentation updates |   | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|---|
+| [SM-193](https://jira.sw.nxp.com/projects/SM/issues/SM-193) | SM 2025Q1 documentation updates |   | Y | Y | Y |
 
 Details {#CL_DETAIL}
 =======
 
 This section provides details for select changes.
 
-SM-38: Unimplemented rounding rules for clock sources should return error code {#RN_DETAIL_SM_38}
+SM-7: Add support for i.MX94 {#RN_DETAIL_SM_7}
 ----------
 
-SM does not support overclocking of CCM clock sources (e.g. PLL clock nodes).  If an agent requests to set the rate of a CCM clock source with a round-auto rule, SM will treat this rule as round-down and will not return an error.  If an agent requests to set the rate of a CCM clock source with a round-up rule, SM will return an error if the calculated rate is not equal to the requested rate (i.e. the CCM clock node can be configured to the exact rate requested).
+Added device support for [i.MX94 family devices](@ref DEV_SM_MX94) inc. i.MX943. See the devices/MIMX94 directory.
 
-SM was also updated to round to the nearest Hz for PLL output (ODIV) and PFD clock nodes.  This prevents the agent from needing to add 1 Hz in cases where the rate ends in a fractional 1/3 or 2/3 thus causing SM to round down during integer rate calculations.
+Cfg files targeted at this device should include the following:
 
-SM-107: Support dynamic rate adjust of audio and  video PLLs {#RN_DETAIL_SM_107}
+    MAKE    soc=MIMX94, board=<board name>, build=gcc_cross
+
+    include ../devices/MIMX94/configtool/device.cfg
+
+Note the list of resources, memory areas, etc. are different from i.MX95. See the configs/mx94evk.cfg file for reference.
+
+SM-9: Add support for the i.MX94 EVK {#RN_DETAIL_SM_9}
 ----------
 
-Support for dynamic MFN update of fractional PLLs has been added.  An agent request to set the rate of a VCO clock node that is currently enabled will dynamically update the VCO rate if the rate change can be achieved with an MFN-only update. SM only restricts the dynamic MFN update based on the MFN/MFD ratio restrictions provided in the RM. 
+Added board support for the [i.MX94 EVK](@ref BRD_SM_MX94EVK). See the boards/mcimx94evk directory. Compile with the following:
 
-SM-141: Create configtool mechanism to define BOARD defines {#RN_DETAIL_SM_141}
+    make config=mx94evk
+
+Information about this port can be found in the [NXP i.MX94 EVK](@ref PORT_MX94_EVK) section of the RM.
+
+Cfg files targeted at this board should include the following:
+
+    MAKE    soc=MIMX94, board=mcimx94evk, build=gcc_cross
+
+Also added board support for the [i.MX94 stub](@ref BRD_SM_MX94STUB) (minimal board access). See the boards/mcimx94stub directory.
+
+Information about this port can be found in the [NXP i.MX94 Stub](@ref PORT_MX94_SB) section of the RM.
+
+Cfg files targeted at this board should include the following:
+
+    MAKE    soc=MIMX94, board=mcimx94stub, build=gcc_cross
+
+This port is used mostly for emulation, early bring-up, and the DDR stress test tool. It does not contain code that will access PMICs, I2C devices, or GPIO. 
+
+
+SM-75: Do not start ANA TMPSNS if started by ELE {#RN_DETAIL_SM_75}
 ----------
 
-New method to set board defines. New BOARD command. For example:
+Modified code to not start the ANA TMPSNS if ELE starts it. This is based mostly on silicon version.
 
-    DEBUG_UART_INSTANCE  2
-    PMIC_I2C_BAUDRATE    400000
-
-becomes:
-
-    BOARD               DEBUG_UART_INSTANCE=2
-    BOARD               I2C_BAUDRATE=400000
-
-This allows customers to set other BOARD defines used by their board port. 
-
-Customers must make similar changes to their existing UART/I2C configuration commands.
-
-SM-145: Improve unit test coverage {#RN_DETAIL_SM_145}
+SM-178: Add V2X command to debug monitor {#RN_DETAIL_SM_178}
 ----------
 
-Changes made to increase test coverage and add support for automated test code coverage metrics.
+Add two v2x monitor commands used for debug of V2X.
+- v2x info
+- v2x ping
 
-SM-147: Manage VDD_ARM supply during system sleep modes {#RN_DETAIL_SM_147}
+SM-182: Support device abstraction to fuses/features {#RN_DETAIL_SM_182}
 ----------
 
-i.MX95 EVK board port changed to track and disable VDD_ARM when entering active system sleep modes. This change reduces power consumption but at the expense of suspend and resume times.
+Support i.MX95 phantom part numbers. 
 
-SM-152: Misc. FuSa improvements {#RN_DETAIL_SM_152}
+SM-183: Add versioning and additional checks to the configtool {#RN_DETAIL_SM_183}
 ----------
 
-Misc. FuSa changes:
+This makes two changes:
 
-- Added configtool error checking to ensure LM0 is for SM and has DID=2
-- Added preemption check
-- Updated FuSa API permissions
-- Fixed test failure due to buffer free in wrong place
-- Removed unused fault functions, moved test, improved CPU check
+- A version is written to the config files when the configtool is run. This version is then checked when the SM is compiled and an error generated if they do not match. This ensures old config files are not used. The version will updated when the configtool is changed.
 
+- The configtool now checks to ensure the LM and SCMI_AGENT definitions are in numerical order. The tool will generate an error if not.
 
-SM-155: Add system-level mutex to ensure atomic access of GIC WAKER {#RN_DETAIL_SM_155}
+SM-184: Deassert the GPU reset when the GPUMIX is powered up {#RN_DETAIL_SM_184}
 ----------
 
-During non-cooperative reset of A55, SM uses the GIC WAKER interface to quiesce the GIC.  There is no hardware method to hold off the A55 from taking the GIC out of quiescence during the reset sequence.  A system-level software mutex in shared MU memory has been added to ensure SM has atomic access to the GIC WAKER.  This atomic access relies on the A55 agent to block on the same system-level mutex implemented in shared MU memory.
+SM was modified to take the GPU out of reset when the GPUMIX is powered on. This requires the SM own access to the BLK_CTRL_CPU module. Access to this module is removed from the AP. Customer need to make the same change to their SM cfg files.
 
-Location of the semaphore is defined in the cfg file using the sema option on the Cortex-A platform resource. Customer must make the same change.
+Note the STRIPING_GRANULE and TEXFMT  fields in the BLK_CTRL_GPU are left at their reset state and the AP cannot set these. Any need to change these would have to be done in the SM config_user.h file.
 
-SM-159: Relocate where MUs are reset {#RN_DETAIL_SM_159}
+SM-187: Misc. updates to SM configurations {#RN_DETAIL_SM_187}
 ----------
 
-Move the MU reset code from the CPU driver to the MU mailbox driver. This driver is called when logical machines are reset.
+Updated device cfg files to zero out TRDC info left over from ELE.  Added nodbg option for memory regions to not map to the DAP. Added DDR region for V2X to access DDR holding the V2X firmware. Marked the V2X and ELE DDR regions as nodbg. Customers will need to make similar changes and rerun the configtool on their cfg files .
 
-SM-161: Misc. updates to SM configurations {#RN_DETAIL_SM_161}
+Add an unsupported cfg file (mx95rte.cfg) for real-time edge.
+
+SM-190: Misc. coding standards fixes {#RN_DETAIL_SM_190}
 ----------
 
-Many misc. updates to the cfg files and generated header files:
+Misc. fixes of coding standards, style, MISRA, coverity, uncrustify, and cppcheck.
 
-- Lots of cleanup (sort items, full 36-bit memory addresses, move some resources/APIs to correct section)
-- Moved 256K of OCRAM to secure for ATF
-- Moved MSGINTR1 to the M7
-- Removed AP access to M7 TCM
-- Removed A55 ROM
-- Added missing clocks used by the SM (LM0)
-- Added new clock resources (CLOCK_EXT, CLOCK_DISP1PIX, etc.)
-- Gave AP rights to set PCA2131 alarm
-- Fixed incorrect reference to msel=2 (should be 1)
-- Reduced ELE DDR range
-- Added configinfo to dump a cfg file in an md table format
-- Added permission defines to cfg files to better support configinfo
-- Updated all API sections to use permission defines
-- Updated ELE section of cfg files to use memory defines
-- Updated V2X section to use owner defines
-- Disabled CRC for M7 SMT channels in the mx95alt.cfg file
-
-
-SM-163: Incorrect group reset/boot handling for skipped LM {#RN_DETAIL_SM_163}
+SM-191: Misc. unit test improvements {#RN_DETAIL_SM_191}
 ----------
 
-Do not return an error if a LM identified as skippable in the config is reset using the group reset function. Do not return an error if the caller is not one of the LM being reset.
+Added unit tests to increase test coverage of the device layer.
 
-SM-164: Avoid clock root setting hazards resulting from inactive parents {#RN_DETAIL_SM_164}
+SM-196: Provide transition latency as property of SCMI performance level {#RN_DETAIL_SM_196}
 ----------
 
-Some clock frameworks perform clock rate and reparenting operations with parent clocks inactive.  The CCM root design requires parent clocks to be active while updating the DIV field, regardless of the state of the CCM root enable.  The CCM root also requires parent clocks to be active while updating the MUX field when the CCM root is enabled.  Updating the DIV field of the CCM root with parent clocks inactive can interfere with subsequent attempts to update the MUX field, regardless of the state of the CCM root enable.
+Properties returned by the SCMI PERFORMANCE_DESCRIBE_LEVELS command include a worst-case transition latency in microseconds to move from any supported performance level to the level for which properties are being queried. 
 
-To avoid hazards associated with CCM root operations with inactive parents, SM has been updated to keep PLLs which are clock inputs to CCM roots in bypass mode when disabled.  PLLs configured by SM to be in bypass will be reported as disabled.  The bypassed PLLs will be fully disabled during system sleep/suspend modes.
+Previously SM returned zero for the latency property.  SM has been updated to reflect the worst-case latency expected during PERFORMANCE_LEVEL_SET commands.  Note that this worst-case latency includes delay associated with the performance level transition, latency from outstanding agent commands, and latency from SM periodic servicing.
 
- 
-
-SM-165: Support requesting LMM notifications for all LM {#RN_DETAIL_SM_165}
+SM-198: Add support for message profiling {#RN_DETAIL_SM_198}
 ----------
 
-Passing an lmId of 0 to SCMI_LmmNotify() will apply the setting to all LM the caller has NOTIFY permissions for. This is useful for Cortex-M test code to enable notifications for all LM it can manage.
+SM has added the ability to profile messages during SM execution.  A new SM build option is available to enable message profiling support and set the depth of the profile log as follows:
 
-SM-169: Optimize system suspend/resume times {#RN_DETAIL_SM_169}
+**P=\<n\>** adds message profiling support with a depth of **n**.
+
+Messages with the highest latency will be sorted and retained in the SM syslog.  The message log can be queried with SCMI_MiscSyslog() or displayed via the SM monitor **syslog** command.  
+
+SM-199: Incorrect configtool handling of overlapping block permissions {#RN_DETAIL_SM_199}
 ----------
 
-Added support for the board port to specify how long the PMIC resume should take. A new BOARD_PMIC_RESUME_TICKS parameter is used in board.h. This should be set based on how long it takes the PMIC(s) to exit standby and resume the voltages.
+Modified configtool to properly combine MBC permissions when multiple settings are found. The result will be the OR of the permissions. This was only observed for the fuse block (FSB) as it was explicitly granted to the debug DOM9 as RO (0x4444) and again to DOM9 generically with RW access (0x6600). Customers will need to rerun the configtool on their cfg files to pick up these changes.
 
-SM-170: Updates to allow the SCMI client to be used on 64-bit agents {#RN_DETAIL_SM_170}
+SM-202: System sleep entry can miss SM hardware handshakes {#RN_DETAIL_SM_202}
 ----------
 
-Changed some integers used for storing pointer to uintptr_t instead of uint32_t.
+SM queries the status of the GPC CMC (CPU Mode Controller) registers to determine if the current conditions allow system sleep mode entry.  Some CMC status registers report that a CPU has entered the SUSPEND sleep state before hardware state machines have fully completed the transition to SUSPEND.  SM usage of these CMC registers may result in wake sources being misconfigured during system sleep and missed wakeup events.
 
-SM-173: Return PMIC faults as reset reason {#RN_DETAIL_SM_173}
+The SM algorithm has been updated to ensure all hardware state machines have completed the transition to SUSPEND prior to entering system sleep.
+
+SM-203: GPIO 4/5 memory map incorrect {#RN_DETAIL_SM_203}
 ----------
 
-Added functions to the PF09 driver to read and clear the fault status registers. Modified the NXP EVK board ports to read and clear the fault status at boot and use the status to provide a PMIC reset reason.
+Update address for GPIO4 and add GPIO5 in i.MX95 SoC header files.
 
-SM-175: Missing LPSPI4 daisy links in device config file {#RN_DETAIL_SM_175}
+SM-205: Group shutdown results in LM0 (SM) shown in off state {#RN_DETAIL_SM_205}
 ----------
 
-The LPSPI4_PCS daisy references were missing for the LPSPI4 resource. Customers will need to rebuild their config.
+Change group command iterations to exclude LM0.
 
-SM-176: Implement workarounds for PF09 ER011/12 errata  {#RN_DETAIL_SM_176}
+SM-206: Cannot configure some reset permissions {#RN_DETAIL_SM_206}
 ----------
 
-- Change the sequence of the LDO3 to the last slot in the pier up sequence (slot 29 in BA1)
-- Set the LDO3 OV bypass, UV bypass to 1 and the PG_EN = 0 to make sure the LDO3 does not have any impact in terms of fault counting and asserting the PGOOD pin.
-- Set the OV_DBNC = 01 (50us debounce) to prevent the false OV detection described in the errata from generating flags and asserting the PGOOD pin each time an LDO is enabled or when transitioning from STBY to RUN.
+Updated reset protocol defines list to contain all of them for i.MX95.
 
-Customers may require the same changes depending on OTP and board design.
-
-SM-177: Update ELE dump format {#RN_DETAIL_SM_177}
+SM-207: Cortex-M address not configured prior to power on {#RN_DETAIL_SM_207}
 ----------
 
-Updated format to support ELE debug tools. Service WDOG during dump.
+Modified LM start/stop code to configure hardware boot addresses prior to any power on or off of the power domain containing the CPU. This solves issues with latching of the boot address by the hardware. Modified all cfg files to include a power up step in the start script. Customers will have to do the same if they wish to use SCMI_LmmPowerOn().
 
-SM-179: Configtool incorrectly assigns non-agent resources to previous agent {#RN_DETAIL_SM_179}
+SM-210: Incorrect ELE error code caching {#RN_DETAIL_SM_210}
 ----------
 
-The configtool did not correctly support resource assignments outside of the scope of an agent but within the scope of an LM. The resource API permissions would get assigned to the last agent of the previous LM. The hardware access rights did get correctly assigned. With this fix, the API permissions will go unassigned as expected.
+Calls to ELE_RomIdGet() return the error status from any previous ELE call. This could be seen using the monitor 'ele info' command after a failed fuse command. This change fixed how cached ELE info handles the error status.
 
-SM-181: ELE requires CPU reset handshake enabled for CPU stop/start {#RN_DETAIL_SM_181}
+SM-211: Add new ele ext monitor command to display additional info {#RN_DETAIL_SM_211}
 ----------
 
-The ELE requires CPU reset/power ELE handshakes to be enabled during a CPU stop operation to prevent a subsequent CPU start from failing (ELE will not release CPUWAIT).  The code supporting CPU stop/start operations has been updated to keep ELE handshakes for CPU reset/power events enabled during these operations.
+Add new 'ele ext' command. Displays ELE ROM patch SHA256, FW SHA256, and other ELE info.
 
-SM-185: Avoid implicit activation of PLL nodes during rate set operations {#RN_DETAIL_SM_185}
+SM-216: Add gcc compiler version to info {#RN_DETAIL_SM_216}
 ----------
 
-The SM device layer for the clock management protocol was implicitly activating PLL clock nodes during CLOCK_RATE_SET commands.  Implicitly activating these PLL nodes can cause issues during the reboot/reset of agents.  The clock management device layer has been updated to remove implicit activation of PLL clock nodes during CLOCK_RATE_SET commands.
+In the SM monitor info command, print the gcc version. If gcc was not used to compile the SM then nothing additional is printed.
 
-SM-188: Remove XRESET PMIC workaround on PF09 B0 {#RN_DETAIL_SM_188}
+SM-218: Dynamic rate update can fail with uninitialized PLL VCO {#RN_DETAIL_SM_218}
 ----------
 
-PF09 A0 requires the XRESET input be disabled else it will always reset when entering standby. This was fixed in PF09 B0. This SM change makes disabling the XRESET conditional on the PMIC version. Note the reset will still not work when in standby on PF09 A0. This change requires customers remove the call to PF09_XrstStbyEnable() in their board port.
+SM supports dynamic updates of PLLs without relock if the new rate meets hardware constraints defined by the fractional PLL module.  SM code supporting dynamic PLL updates previously calculated an invalid PLL VCO rate under the following circumstances:
+ - PLL has the reset register value (e.g. PLL VCO rate has not been set by an agent)
+ - PLL is powered on with reset register values
+ - PLL set rate is requested with a rate that falls within the hardware constraints to perform a dynamic PLL VCO update
+
+SM has been updated to avoid dynamic PLL updates until initialized with a VCO rate specified by the agent. 
+
+SM-219: Save/restore A55 performance context during A55P power gating {#RN_DETAIL_SM_219}
+----------
+
+A55 low-power modes that gate off power to the CORTEXMIX platform (A55P) require the clock source to be switched to the CCM-based clock root (ARM_A55_CLK_ROOT) since the ARM_PLL is physically located in CORTEXMIX.  SM previously achieved this by moving the A55 performance domain to DEV_SM_PERF_LVL_PRK during the CORTEXMIX low-power flow.  Upon resume, SM did not restore the A55 performance level which may result in disparities between the A55 performance level after resume and the level requested by the A55 agent prior to entering low-power mode.
+
+SM has been updated to restore the performance context using the following policies:
+ - If A55P is power gated with target sleep mode of WAIT, SM will save/restore the A55 clocking context associated with the A55 performance domain at sleep entry.  During A55 sleep, only the A55 clocking context will be lowered to DEV_SM_PERF_LVL_PRK.
+ - If A55P is power gated with target sleep mode of STOP/SUSPEND, SM will save/restore the A55 performance domain level at sleep entry.  During A55 sleep, the A55 performance domain level will be lowered to DEV_SM_PERF_LVL_PRK.
+
+SM-222: Give SM access to SEMA41 in the mx94alt config file {#RN_DETAIL_SM_222}
+----------
+
+In the mx94alt config file, gave SM access to the SEMA41 module. This is done only to allow KSDK testing on SEMA41. The SM does not need access to this module for normal operation. Customers should not make this change to their config files.
+
+SM-225: Implement SWA for ERR052682 (V2X clocking requirements during WAKEUPMIX power cycle) {#RN_DETAIL_SM_225}
+----------
+
+The software workaround for ERR052682 has been implemented to avoid V2X access issues after a power cycle of the WAKEUPMIX.  The workaround temporarily sources V2X_PK_CLK_ROOT from OSC_24M during the WAKEUMIX power up.
+
+SM-227: Enable PF09 LDO3 in RUN mode to avoid leakage {#RN_DETAIL_SM_227}
+----------
+
+Updated board port code to change the LDO3 configuration. Customers need to make a similar change to their board ports.
+
+SM-228: Support MUX8/9/10 for pin mux configuration {#RN_DETAIL_SM_228}
+----------
+
+On i.MX94, there is additional pin multiplexing outside of the standard IOMUXC module. Code was added to allow programming of this multiplexing. A new pin ctrl vendor type SCMI_PINCTRL_TYPE_EXT (196) has been added. This type takes a parameter with the lower 4-bits as the 4-bits (ovr+sel) to write in the appropriate WAKEUPMIX BLK CTRL register. When a client sends a message to configure a pin it can send two additional words (type & value). The standard mux parameter also needs to be sent to indicate the GPIO mux option for the pin as this external mux feeds into the GPIO mux input of the IOMUXC for that pin.
+
+Two new misc. controls have been added. One for the XBAR DIR (control 9) which takes two words and one for the XBAR sync (control 10) that takes 4 words.
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -201,6 +201,26 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel);
  * - ::SM_ERR_NOT_FOUND: if \a domainId is invalid.
  */
 int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel);
+
+/*!
+ * Set frequency of a performance domain.
+ *
+ * @param[in]  domainId   Identifier for the domain
+ * @param[in]  perfLevel  Performance level to set
+ *
+ * This function allows the caller to set the frequency setpoint of a
+ * performance domain to a setpoint associated with the specified
+ * performance level.  The voltage level required for the specified
+ * setpoint must be set before/after calling this function based
+ * on directionality.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the domain level was set successfully.
+ * - ::SM_ERR_NOT_FOUND if \a domainId out of range
+ */
+int32_t DEV_SM_PerfFreqSet(uint32_t domainId, uint32_t perfLevel);
 
 /*!
  * Configure performance level for system sleep.

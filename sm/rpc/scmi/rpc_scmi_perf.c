@@ -1063,7 +1063,7 @@ static int32_t PerformanceLevelSet(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = LMM_PerfLevelSet(caller->lmId, in->domainId,
-            in->performanceLevel);
+            in->performanceLevel, false);
     }
 
     /* Return status */

@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2024 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -30,15 +30,15 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2024q4
-SM_PREV_VER = imx_sm_2024q3
+SM_VERSION = imx_sm_2025q1
+SM_PREV_VER = imx_sm_2024q4
 SM_SNAP = 0
 
-SM_DEVICES = i.MX95 (A0), i.MX95 (A1)
-SM_ELE_VER = 1.3.0
+SM_DEVICES = i.MX95 (A0), i.MX95 (A1), i.MX94 (A0)
+SM_ELE_VER = 2.0.1
 
-MKIMAGE_BRANCH = lf-6.6.52_2.2.0
-MKIMAGE_BUILD = Linux_IMX_6.6.52_2.2.0_RC2
+MKIMAGE_BRANCH = lf-6.12.3_1.0.0
+MKIMAGE_BUILD = Linux_IMX_6.12.3_1.0.0_RC3
 MKIMAGE_N = latest
 
 GIT_EXISTS=$(shell (git rev-parse --show-cdup 2>/dev/null) && echo 1 || echo 0)
@@ -55,6 +55,8 @@ $(OUT)/build_info.h :
 	$(AT)/bin/echo '' >> $@
 	$(AT)/bin/echo '#define SM_DEVICES "$(SM_DEVICES)"' >> $@
 	$(AT)/bin/echo '#define SM_ELE_VER "$(SM_ELE_VER)"' >> $@
+	$(AT)/bin/echo -n '#define ' >> $@
+	$(AT)-grep -o "configVer = [0-9]*" ./configs/configtool.pl >> $@
 	$(AT)/bin/echo '' >> $@
 ifeq (0,$(GIT_EXISTS))
 	$(AT)/bin/echo '#define SM_BRANCH Unknown' >> $@
@@ -86,6 +88,7 @@ endif
 	$(AT)/bin/echo '#define SM_MKIMAGE_N "$(MKIMAGE_N)"' >> $@
 	$(AT)/bin/echo '' >> $@
 	$(AT)/bin/echo '#endif' >> $@
+	$(AT)-sed -i 's/configVer = \([0-9]*\)/SM_CONFIG_VER \1U/g' $@ 
 
 rn_info.sed :
 	$(AT)/bin/echo '' > $@
@@ -93,6 +96,7 @@ rn_info.sed :
 	$(AT)/bin/echo "sed -i 's/\#SM_PREV_VER/$(SM_PREV_VER)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#SM_DEVICES/$(SM_DEVICES)/g' rn.md" >> $@
 	$(AT)/bin/echo "sed -i 's/\#SM_ELE_VER/$(SM_ELE_VER)/g' rn.md" >> $@
+	$(AT)/bin/echo "sed -i 's/\#SM_CONFIG_VER/$(SM_CONFIG_VER)/g' rn.md" >> $@
 	$(AT)/bin/echo -n "sed -i 's/\#SM_BRANCH/" >> $@
 ifeq ($(origin BRANCH),undefined)
 	$(AT)-git rev-parse --abbrev-ref HEAD >> $@

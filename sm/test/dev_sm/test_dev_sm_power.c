@@ -78,8 +78,10 @@ void TEST_DevSmPower(void)
         CHECK(DEV_SM_PowerStateGet(domainId, &powerState));
         printf("  powerState=%u\n", powerState);
 
-        CHECK(DEV_SM_PowerStateSet(domainId, powerState));
-
+        if (!DEV_SM_FusePdDisabled(domainId))
+        {
+            CHECK(DEV_SM_PowerStateSet(domainId, powerState));
+        }
 #ifdef SIMU
         CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
 #endif
@@ -109,6 +111,20 @@ void TEST_DevSmPower(void)
         SM_ERR_NOT_FOUND);
     NECHECK(DEV_SM_PowerStateSet(DEV_SM_NUM_POWER, powerState),
         SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+    /* To imporve the coverage of the default case of set function */
+    NECHECK(DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP, 2U /*Invalid power state*/),
+        SM_ERR_INVALID_PARAMETERS);
+
+    /*
+     * To cover the failure case of DEV_SM_PowerRetModeSet:
+     * Invalid pwr domain ID
+     * */
+    NECHECK(DEV_SM_PowerRetModeSet(PWR_NUM_MIX_SLICE, 0x0U /*ret mask*/),
+        SM_ERR_NOT_FOUND);
+#endif
+
     NECHECK(DEV_SM_PowerStateNameGet(DEV_SM_NUM_POWER_STATE, &name,
         &len), SM_ERR_NOT_FOUND);
     NECHECK(DEV_SM_PowerRetMaskGet(DEV_SM_NUM_POWER, &retMask),

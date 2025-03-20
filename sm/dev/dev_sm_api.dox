@@ -91,6 +91,12 @@ implementations for each supported SoC.
 */
 
 /*!
+@defgroup DEV_SM_FUSE_API DEVICE_FUSE: SM Device Interface (FUSE)
+
+@brief Module for the device fuse functions.
+*/
+
+/*!
 @defgroup DEV_SM_RDC_API DEVICE_RDC: SM Device Interface (RDC)
 
 @brief Module for the device RDC functions.

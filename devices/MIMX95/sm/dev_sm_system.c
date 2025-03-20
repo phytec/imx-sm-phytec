@@ -53,12 +53,28 @@
 
 /* Local types */
 
+#ifdef DEV_SM_MSG_PROF_CNT
+/*!
+ * Message profile current buffer
+ */
+typedef struct
+{
+    uint64_t msgStartUsec;          /*!< Current message start timestamp */
+    uint64_t msgEndUsec;            /*!< Current message end timestamp */
+    dev_sm_sys_msg_prof_t msgProf;  /*!< Current message log entry */
+} dev_sm_sys_msg_cur_t;
+#endif
+
 /* Local variables */
 
 static uint32_t s_sysSleepMode = 0U;
 static uint32_t s_sysSleepFlags = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
 static BLK_CTRL_DDRMIX_Type ddr_blk_ctrl;
+
+#ifdef DEV_SM_MSG_PROF_CNT
+static dev_sm_sys_msg_cur_t curMsgRecord = { 0 };
+#endif
 
 /* Local functions */
 
@@ -128,8 +144,14 @@ int32_t DEV_SM_SystemReset(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Request warm reset */
-    RST_SystemRequestReset();
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request warm reset */
+        RST_SystemRequestReset();
+    }
 
     /* Return status */
     return status;
@@ -145,11 +167,13 @@ int32_t DEV_SM_SystemStageReset(uint32_t stage, uint32_t container)
     /* Configure stage */
     status = DEV_SM_RomStageSet(stage);
 
-    /* Configure container */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Configure container */
         status = DEV_SM_RomContainerSet(container);
     }
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     if (status == SM_ERR_SUCCESS)
     {
@@ -168,8 +192,14 @@ int32_t DEV_SM_SystemShutdown(void)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Request shutdown */
-    PWR_SystemPowerDown();
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request shutdown */
+        PWR_SystemPowerDown();
+    }
 
     /* Return status */
     return status;
@@ -180,8 +210,16 @@ int32_t DEV_SM_SystemShutdown(void)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 {
-    /* Store shutdown record */
-    BRD_SM_ShutdownRecordSave(shutdownRec);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Store shutdown record */
+        BRD_SM_ShutdownRecordSave(shutdownRec);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -291,18 +329,30 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
-    return SM_SYSTEMRSTCOMP(resetRec);
+    int32_t status = SM_ERR_SUCCESS;
+
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
+    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Request shutdown */
+        status = SM_SYSTEMRSTCOMP(resetRec);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
-void DEV_SM_SystemError(int32_t status, uint32_t pc)
+void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
 {
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
-        .errId = (uint32_t) status,
+        .errId = (uint32_t) errStatus,
         .validErr = true,
         .valid = true
     };
@@ -1102,4 +1152,126 @@ static void CLOCK_SourceBypass(bool bypass, bool preserve)
         (void) FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
     }
 }
+
+#ifdef DEV_SM_MSG_PROF_CNT
+/*--------------------------------------------------------------------------*/
+/* Message profile start notification                                       */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemMsgProfStart(uint32_t mu)
+{
+    /* Capture timestamp of message start */
+    curMsgRecord.msgStartUsec = DEV_SM_Usec64Get();
+}
+
+/*--------------------------------------------------------------------------*/
+/* Message profile describe notification                                    */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
+    uint32_t protocolId, uint32_t messageId)
+{
+    /* Capture message attributes */
+    curMsgRecord.msgProf.scmiChannel = scmiChannel;
+    curMsgRecord.msgProf.chanType = chanType;
+    curMsgRecord.msgProf.protocolId = protocolId;
+    curMsgRecord.msgProf.msgId = messageId;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Message profile end notification                                         */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemMsgProfEnd(uint32_t mu)
+{
+    /* Capture timestamp of message end */
+    curMsgRecord.msgEndUsec = DEV_SM_Usec64Get();
+    uint32_t curMsgLatUsec = (uint32_t) (curMsgRecord.msgEndUsec
+        - curMsgRecord.msgStartUsec);
+    curMsgRecord.msgProf.msgLatUsec = curMsgLatUsec;
+
+    /* Begin processing of message profile results */
+    bool bDone = false;
+    bool bExisting = false;
+    const dev_sm_sys_msg_prof_t *pCurMsgProf =
+        &curMsgRecord.msgProf;
+
+    /* Search profile log for an exiting entry of this message */
+    uint32_t idx = 0U;
+    do
+    {
+        const dev_sm_sys_msg_prof_t *pMsgProf =
+            &g_syslog.sysMsgRecord.msgProf[idx];
+
+        /* Attempt to match all attributes except timestamp */
+        if ((pMsgProf->scmiChannel == pCurMsgProf->scmiChannel) &&
+            (pMsgProf->chanType == pCurMsgProf->chanType) &&
+            (pMsgProf->protocolId == pCurMsgProf->protocolId) &&
+            (pMsgProf->msgId == pCurMsgProf->msgId))
+        {
+            bExisting = true;
+        }
+        else
+        {
+            idx++;
+        }
+    } while (!bExisting && (idx < DEV_SM_MSG_PROF_CNT));
+
+    /* Existing entry requires possible update of the profile log */
+    if (bExisting)
+    {
+        /* Check if existing entry has smaller latency */
+        if (curMsgLatUsec > g_syslog.sysMsgRecord.msgProf[idx].msgLatUsec)
+        {
+            /* Remove existing entry */
+            uint32_t j = idx;
+            uint32_t k = j + 1U;
+            while (k < DEV_SM_MSG_PROF_CNT)
+            {
+                g_syslog.sysMsgRecord.msgProf[j] =
+                    g_syslog.sysMsgRecord.msgProf[k];
+                j++;
+                k++;
+            }
+
+            /* Insert a blank entry */
+            g_syslog.sysMsgRecord.msgProf[j].scmiChannel = 0U;
+            g_syslog.sysMsgRecord.msgProf[j].chanType= 0U;
+            g_syslog.sysMsgRecord.msgProf[j].protocolId = 0U;
+            g_syslog.sysMsgRecord.msgProf[j].msgId = 0U;
+            g_syslog.sysMsgRecord.msgProf[j].msgLatUsec = 0U;
+        }
+        else
+        {
+            /* Existing entry has larger latency, we are done */
+            bDone = true;
+        }
+    }
+
+    /* Attempt to insert this message profile into the log */
+    idx = 0U;
+    while ((idx < DEV_SM_MSG_PROF_CNT) && (!bDone))
+    {
+        const dev_sm_sys_msg_prof_t *pMsgProf =
+            &g_syslog.sysMsgRecord.msgProf[idx];
+
+        if (curMsgLatUsec > pMsgProf->msgLatUsec)
+        {
+            /* Shift entries down */
+            uint32_t j = DEV_SM_MSG_PROF_CNT - 1U;
+            uint32_t k = j - 1U;
+            while (j > idx)
+            {
+                g_syslog.sysMsgRecord.msgProf[j] =
+                    g_syslog.sysMsgRecord.msgProf[k];
+                j--;
+                k--;
+            }
+
+            /* Insert log entry for this message*/
+            g_syslog.sysMsgRecord.msgProf[idx] = *pCurMsgProf;
+
+            bDone = true;
+        }
+        idx++;
+    }
+}
+#endif
 

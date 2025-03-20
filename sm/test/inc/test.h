@@ -290,6 +290,8 @@ void TEST_DevSmRdc(void);
 void TEST_DevSmPin(void);
 void TEST_DevSmFault(void);
 void TEST_DevSm(void);
+void TEST_DevSmFuse(void);
+void TEST_DevSmHandler(void);
 void TEST_LmmClock(void);
 void TEST_LmmPerf(void);
 void TEST_LmmPower(void);

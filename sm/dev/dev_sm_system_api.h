@@ -206,12 +206,12 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec);
 /*!
  * Report an SM system error.
  *
- * @param[in]     status  Status code
- * @param[in]     pc      PC of caller
+ * @param[in]     errStatus  Status code
+ * @param[in]     pc         PC of caller
  *
  * Error is logged as reset reason and then system reset.
  */
-void DEV_SM_SystemError(int32_t status, uint32_t pc);
+void DEV_SM_SystemError(int32_t errStatus, uint32_t pc);
 
 /*!
  * Transition the system to sleep mode.
@@ -250,6 +250,34 @@ int32_t DEV_SM_SystemDramRetentionEnter(void);
  * Return errors (see @ref STATUS "SM error codes"):
  */
 int32_t DEV_SM_SystemDramRetentionExit(void);
+
+#ifdef DEV_SM_MSG_PROF_CNT
+/*!
+ * Message profile start notification.
+ *
+ * @param[in]   mu              MU instance for the message
+ */
+void DEV_SM_SystemMsgProfStart(uint32_t mu);
+
+/*!
+ * Message profile describe notification.
+ *
+ * @param[in]   scmiChannel     SCMI channel
+ * @param[in]   chanType        SCMI channel type
+ * @param[in]   protocolId      SCMI protocol ID
+ * @param[in]   messageId       SCMI message ID
+ */
+void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
+    uint32_t protocolId,uint32_t messageId);
+
+/*!
+ * Message profile end notification.
+ *
+ * @param[in]   mu              MU instance for the message
+ *
+ */
+void DEV_SM_SystemMsgProfEnd(uint32_t mu);
+#endif
 
 #endif /* DEV_SM_SYSTEM_API_H */
 

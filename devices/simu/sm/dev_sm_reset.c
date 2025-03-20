@@ -91,6 +91,11 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    if (domainId > DEV_SM_NUM_RESET)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
     /* Return status */
     return status;
 }

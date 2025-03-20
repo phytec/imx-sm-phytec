@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ void TEST_LmmCpu(void)
         CHECK(LMM_CpuHold(LmId, CpuId));
 
         /* CPU Vector Reset */
-        CHECK(LMM_CpuResetVectorReset(LmId, CpuId));
+        CHECK(LMM_CpuResetVectorReset(LmId, CpuId, false));
 
         /* CPU Stop */
         CHECK(LMM_CpuStop(LmId, CpuId));
@@ -122,7 +122,7 @@ void TEST_LmmCpu(void)
     /* Reset Vector Reset: Invalid CPU NUM */
     {
         CpuId = 0U;
-        NECHECK(LMM_CpuResetVectorReset(LmId, DEV_SM_NUM_CPU),
+        NECHECK(LMM_CpuResetVectorReset(LmId, DEV_SM_NUM_CPU, false),
             SM_ERR_NOT_FOUND);
     }
 

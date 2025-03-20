@@ -391,6 +391,34 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting);
 bool CCM_LpcgModeSet(uint32_t lpcgIdx, uint32_t lpcgMode);
 
 /*!
+ * Set CCM LPCG access control list
+ *
+ * @param[in]       lpcgIdx         LPCG register index
+ * @param[in]       accessList      LPCG access control list
+ *
+ * This function allows the caller to set the access control list for the given
+ * LPCG.
+ *
+ * @return Returns true if LPCG access control list is set successfully,
+ *         otherwise false.
+ */
+bool CCM_LpcgAccessSet(uint32_t lpcgIdx, uint32_t accessList);
+
+/*!
+ * Get CCM LPCG access control list
+ *
+ * @param[in]       lpcgIdx         LPCG register index
+ * @param[out]      accessList      LPCG access control list
+ *
+ * This function allows the caller to get the access control list for the given
+ * LPCG.
+ *
+ * @return Returns true if LPCG access control list is read successfully,
+ *         otherwise false.
+ */
+bool CCM_LpcgAccessGet(uint32_t lpcgIdx, uint32_t *accessList);
+
+/*!
  * Set CCM LPCG clock off handshake timeout enable
  *
  * @param[in]       lpcgIdx         LPCG register index

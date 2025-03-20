@@ -16,7 +16,7 @@
 *   Build Version        : MIMX9X_SAF_0_4_0
 *
 *   Copyright 2012-2016 Freescale
-*   Copyright 2016, 2018-2024 NXP
+*   Copyright 2016, 2018-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -41,6 +41,7 @@ extern "C"{
 ==================================================================================================*/
 #include "MIMX_SAF_Version.h"
 #include "eMcem_Types_MIMX95XX.h"
+#include "eMcem_Types_MIMX94XX.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION

@@ -1,7 +1,7 @@
 /**
 *   @file           Compiler.h
 *   @implements     Compiler.h_Artifact
-*   @version 0.4.0
+*   @version 0.8.4
 *
 *   @brief   AUTOSAR Base - SWS Compiler abstraction
 *   @details The file Compiler.h provides macros for the encapsulation of definitions and
@@ -12,19 +12,19 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
-*   Peripheral           : MIMX9XXM33
+*   Peripheral           : IMX9XXXM33
 *   Dependencies         : none
 *
-*   Autosar Version      : 4.7.0
-*   Autosar Revision     : ASR_REL_4_7_REV_0000
+*   Autosar Version      : 4.6.0
+*   Autosar Revision     : ASR_REL_4_6_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2006-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2020, 2023 NXP
+*   Copyright 2017-2020, 2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -61,7 +61,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "CompilerDefinition.h"
+#include "SafetyBase_CompilerDefinition.h"
 
 /*==================================================================================================
 *                               SOURCE FILE VERSION INFORMATION
@@ -74,11 +74,11 @@ extern "C"{
 #define COMPILER_VENDOR_ID                      43
 
 #define COMPILER_AR_RELEASE_MAJOR_VERSION       4
-#define COMPILER_AR_RELEASE_MINOR_VERSION       7
+#define COMPILER_AR_RELEASE_MINOR_VERSION       6
 #define COMPILER_AR_RELEASE_REVISION_VERSION    0
 #define COMPILER_SW_MAJOR_VERSION               0
-#define COMPILER_SW_MINOR_VERSION               4
-#define COMPILER_SW_PATCH_VERSION               0
+#define COMPILER_SW_MINOR_VERSION               8
+#define COMPILER_SW_PATCH_VERSION               4
 /**@}*/
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
@@ -115,7 +115,7 @@ extern "C"{
 #define NULL_PTR ((void *)0)
 
 /**************************************** Green Hills *********************************************/
-#ifdef _GREENHILLS_C_MIMX95XX_
+#ifdef _GREENHILLS_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -133,10 +133,10 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC      __interrupt
-#endif /* #ifdef _GREENHILLS_C_MIMX95XX_ */
+#endif /* #ifdef _GREENHILLS_C_MIMX9_ */
 
 /**************************************** Wind River Diab *****************************************/
-#ifdef _DIABDATA_C_MIMX95XX_
+#ifdef _DIABDATA_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -158,10 +158,10 @@ extern "C"{
     #else
         #define INTERRUPT_FUNC      __attribute__((interrupt))
     #endif
-#endif /* #ifdef _DIABDATA_C_MIMX95XX_ */
+#endif /* #ifdef _DIABDATA_C_MIMX9_ */
 
 /*************************************** CodeWarrior **********************************************/
-#ifdef _CODEWARRIOR_C_MIMX95XX_
+#ifdef _CODEWARRIOR_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -179,10 +179,10 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC      __declspec(interrupt nowarn)
- #endif /* #ifdef _CODEWARRIOR_C_MIMX95XX_ */
+ #endif /* #ifdef _CODEWARRIOR_C_MIMX9_ */
 
 /*************************************** Cosmic ***************************************************/
-#ifdef _COSMIC_C_MIMX95XX_
+#ifdef _COSMIC_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -200,9 +200,9 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC @interrupt
-#endif /* #ifdef _COSMIC_C_MIMX95XX_ */
+#endif /* #ifdef _COSMIC_C_MIMX9_ */
 /*************************************** HighTec **********************************************/
-#ifdef _HITECH_C_MIMX95XX_
+#ifdef _HITECH_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -220,10 +220,10 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC      __attribute__((interrupt));
-#endif /* #ifdef _HITECH_C_MIMX95XX_ */
+#endif /* #ifdef _HITECH_C_MIMX9_ */
 
 /**************************************** Linaro *********************************************/
-#ifdef _LINARO_C_MIMX95XX_
+#ifdef _LINARO_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -241,9 +241,9 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC
-#endif /* #ifdef _LINARO_C_MIMX95XX_ */
+#endif /* #ifdef _LINARO_C_MIMX9_ */
 /**************************************** DS5 *************************************************/
-#ifdef _ARM_DS5_C_MIMX95XX_
+#ifdef _ARM_DS5_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -261,10 +261,10 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC
-#endif /* #ifdef _ARM_DS5_C_MIMX95XX_ */
+#endif /* #ifdef _ARM_DS5_C_MIMX9_ */
 
 /**************************************** IAR *************************************************/
-#ifdef _IAR_C_MIMX95XX_
+#ifdef _IAR_C_MIMX9_
     /* Prototypes for intrinsic functions */
     /**
     * @brief The compiler abstraction shall provide the INLINE define for abstraction of the keyword
@@ -282,7 +282,7 @@ extern "C"{
     * @brief Compiler abstraction for specifying an interrupt handler.
     */
     #define INTERRUPT_FUNC
-#endif /* #ifdef _IAR_C_MIMX95XX_ */
+#endif /* #ifdef _IAR_C_MIMX9_ */
 
 
 /**

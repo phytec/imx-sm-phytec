@@ -1,21 +1,21 @@
 /**
 *   @file    eMcem_VfccuFaultList_MIMX95XX.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Specific VFCCU fault list header.
+*   @brief   MIMX9XX_SAF eMcem - Specific VFCCU fault list header.
 *   @details Contains list of specific VFCCU fault lines for eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2018-2024 NXP
+*   Copyright 2018-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -50,7 +50,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "SafetyBase_Cfg.h"
 
 /*==================================================================================================
@@ -76,7 +76,7 @@ extern "C"{
 /*!
 * @brief    eMCEM VFCCU fault list for MIMX95XX - SW minor version
 */
-#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION             4
+#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION             8
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0501 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0502 */
 /* @violates @ref eMcem_VfccuFaultList_MIMX95XX_h_REF_0504 */
@@ -84,20 +84,20 @@ extern "C"{
 /*!
 * @brief    eMCEM VFCCU fault list for MIMX95XX - SW patch version
 */
-#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION             0
+#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION             4
 
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
 /* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX95XX.h and MIMX_SAF version are different"
+#if ((EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX95XX.h and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX95XX)
+#if SAFETY_BASE_MIMX95XX
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -256,7 +256,7 @@ extern "C"{
 */
 #define EMCEM_FCCU_FLT_M33_RST                           (35U)
 /*!
-* @brief   NCF[36] Unintended M33 Debug activation )
+* @brief   NCF[36] Unintended M33 Debug activation
 */
 #define EMCEM_FCCU_FLT_M33_DBG                           (36U)
 /*!
@@ -298,7 +298,7 @@ extern "C"{
 /*!
 * @brief   NCF[46] Frequency loss or too low fault from an AONMIX CMU
 */
-#define EMCEM_FCCU_FLT_CMU_AON_LOSS_LOW                  (46U)/*  */
+#define EMCEM_FCCU_FLT_CMU_AON_LOSS_LOW                  (46U)
 /*!
 * @brief   NCF[47] Frequency too high from an AONMIX CMU
 */
@@ -326,7 +326,7 @@ extern "C"{
 /*!
 * @brief   NCF[53] Frequency too high from a DDRMIX CMU
 */
-#define EMCEM_FCCU_FLT_CMU_DDR_HIGH                      (53U)/*  */
+#define EMCEM_FCCU_FLT_CMU_DDR_HIGH                      (53U)
 /*!
 * @brief   NCF[54] Frequency loss or too low fault from a NOCMIX CMU
 */
@@ -334,7 +334,7 @@ extern "C"{
 /*!
 * @brief   NCF[55] Frequency too high from a NOCMIX CMU
 */
-#define EMCEM_FCCU_FLT_CMU_NOC_HIGH                      (55U)/*  */
+#define EMCEM_FCCU_FLT_CMU_NOC_HIGH                      (55U)
 /*!
 * @brief   NCF[56] Reserved
 */
@@ -435,7 +435,7 @@ extern "C"{
 /*!
 * @brief   Total VFCCU fault lines count
 */
-#define EMCEM_CVFCCU_FAULT_LINES_COUNT                   (80U)
+#define EMCEM_VFCCU_FAULT_LINES_COUNT                   (80U)
 /** @} */
 
 /*==================================================================================================
@@ -457,7 +457,7 @@ extern "C"{
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 
-#endif /* defined(SAFETY_BASE_MIMX95XX) */
+#endif /* SAFETY_BASE_MIMX95XX */
 
 #ifdef __cplusplus
 }

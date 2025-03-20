@@ -1,21 +1,21 @@
 /**
 *   @file    eMcem_Types_MIMX95XX.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Types specific header.
+*   @brief   MIMX9XX_SAF eMcem - Types specific header.
 *   @details Contains declarations of the eMcem specific types.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2023-2024 NXP
+*   Copyright 2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -38,11 +38,15 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "SafetyBase_Cfg.h"
-#include "eMcem_Vfccu_Types.h"
+#include "eMcem_MemErr_Types_Ext.h"
+#include "eMcem_ErmChannels_Ext.h"
 #include "eMcem_VfccuFaultList_MIMX95XX.h"
-
+#include "eMcem_Vfccu_Types.h"
+#include "eMcem_DdrcChannels_MIMX9.h"
+#include "eMcem_EimChannels_MIMX95XX.h"
+#include "eMcem_SramcChannels_MIMX9.h"
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
@@ -58,24 +62,24 @@ extern "C"{
 /*!
 * @brief    eMCEM MIMX95XX-specific data type definitions - SW minor version
 */
-#define EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION             4
+#define EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION             8
 /*!
 * @brief    eMCEM MIMX95XX-specific data type definitions - SW patch version
 */
-#define EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION             0
+#define EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION             4
 /** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_TYPES_MIMX95XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Types_MIMX95XX.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_TYPES_MIMX95XX_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_TYPES_MIMX95XX_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_TYPES_MIMX95XX_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Types_MIMX95XX.h and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX95XX)
+#if SAFETY_BASE_MIMX95XX
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -114,7 +118,7 @@ extern "C"{
 /*!
 * @brief   SW fault line offsets per VFCCU instance.
 */
-#define EMCEM_VFCCU_ERROR_CONTAINER_SIZE        ( ( ( EMCEM_CVFCCU_FAULT_LINES_COUNT - 1U ) / 32U ) + 1U )
+#define EMCEM_VFCCU_ERROR_CONTAINER_SIZE        ( ( ( EMCEM_VFCCU_FAULT_LINES_COUNT - 1U ) / 32U ) + 1U )
 
 /*!
 * @brief   Width of FCCU registers (bits), and corresponding shift and mask.
@@ -167,7 +171,7 @@ extern "C"{
 #define EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT   (3U)
 
 /*!
-* @brief   Number of SW fault lines per MIX.
+* @brief   Number of SW fault lines per SW fault register.
 */
 #define EMCEM_VFCCU_SW_FAULT_COUNT              (6U)
 
@@ -175,21 +179,6 @@ extern "C"{
 * @brief   Number of fault status registers through all VFCCU instances.
 */
 #define EMCEM_VFCCU_FHFLTS_REG_COUNT            (3U)
-
-/*!
-* @brief   Number of fields in Fault Reaction Set Configuration (FHFLTRKC) register.
-*/
-#define EMCEM_VFCCU_FHFLTRKC_FIELDS_COUNT       (4U)
-
-/*!
-* @brief  FHFLTRKC bit offset between fields.
-*/
-#define EMCEM_VFCCU_FHFLTRKC_FIELDS_OFFSET      (8U)
-
-/*!
-* @brief  FHFLTRKC one field bit mask.
-*/
-#define EMCEM_VFCCU_FHFLTRKC_FIELD_MASK         (7U)
 
 /*!
 * @brief  1 bit in 32-bit wide register.
@@ -211,15 +200,31 @@ extern "C"{
 */
 #define EMCEM_EOUT_GEOUTMC_MASK                 (0x0000000FUL)
 
-/*!
-* @brief  Check whether fault ID is in the proper range (VFCCU).
-*/
-#define EMCEM_FAULT_IN_VFCCU_RANGE(nFaultId)    ( (nFaultId) < EMCEM_CVFCCU_MAX_FAULTS )
+/* SRAM end addresses */
+#define EMCEM_OCRAM_END_ADDR                    (OCRAM_BASE_ADDR + OCRAM_SIZE)
 
 /*!
-* @brief  Check whether fault ID is in the proper range (EIM or SRAMC).
+* @brief  Check whether fault ID is in the proper range (VFCCU, EIM, SRAMC or DDRC).
 */
-#define EMCEM_FAULT_IN_RANGE(nFaultId)          ( ( EMCEM_FAULT_IN_VFCCU_RANGE( (nFaultId) ) ) )
+#define EMCEM_FAULT_IN_VFCCU_RANGE(nFaultId)    ( (nFaultId) < EMCEM_EIM_CHANNELS_OFFSET )
+
+#define EMCEM_FAULT_IN_EIM_RANGE(nFaultId)      ( ( (nFaultId) >= EMCEM_EIM_CHANNELS_OFFSET ) && \
+                                                  ( (nFaultId) <  EMCEM_SRAMC_CHANNELS_OFFSET ) \
+                                                )
+
+#define EMCEM_FAULT_IN_SRAMC_RANGE(nFaultId)    ( ( (nFaultId) >= EMCEM_SRAMC_CHANNELS_OFFSET ) && \
+                                                  ( (nFaultId) <  EMCEM_DDRC_CHANNELS_OFFSET ) \
+                                                )
+
+#define EMCEM_FAULT_IN_DDRC_RANGE(nFaultId)      ( ( (nFaultId) >= EMCEM_DDRC_CHANNELS_OFFSET ) && \
+                                                  ( (nFaultId) <  (EMCEM_DDRC_CHANNELS_OFFSET + EMCEM_DDRC_CHANNEL_COUNT) ) \
+                                                )
+
+#define EMCEM_FAULT_IN_RANGE(nFaultId)          ( ( EMCEM_FAULT_IN_VFCCU_RANGE( (nFaultId) ) ) || \
+                                                  ( EMCEM_FAULT_IN_EIM_RANGE( (nFaultId) ) ) || \
+                                                  ( EMCEM_FAULT_IN_SRAMC_RANGE( (nFaultId) ) ) || \
+                                                  ( EMCEM_FAULT_IN_DDRC_RANGE( (nFaultId) ) ) \
+                                                )
 
 /*!
 * @brief  Check if faultID is within SW faults range.
@@ -227,6 +232,24 @@ extern "C"{
 #define EMCEM_FAULT_IN_SW_FAULT_RANGE(nFaultId) ( ( (nFaultId) >= (EMCEM_FCCU_FLT_SWNCF00) ) && \
                                                   ( (nFaultId) <= (EMCEM_FCCU_FLT_SWNCF11) ) \
                                                 )
+
+/* Range checks for memory channels. Used to detect which memory channel is being processed - ERM, SRAMC or DDRC */
+#define EMCEM_CHANNEL_IN_SRAMC_RANGE(nChannelId)            ( ( (nChannelId) >= EMCEM_SRAMC_CHANNELS_OFFSET ) && \
+                                                              ( (nChannelId) <  EMCEM_DDRC_CHANNELS_OFFSET ) \
+                                                            )
+
+#define EMCEM_CHANNEL_IN_DDRC_RANGE(nChannelId)              ( ( (nChannelId) >= EMCEM_DDRC_CHANNELS_OFFSET ) && \
+                                                              ( (nChannelId) <  EMCEM_ERM_CHANNELS_OFFSET ) \
+                                                            )
+
+#define EMCEM_CHANNEL_IN_ERM_RANGE(nChannelId)              ( ( (nChannelId) >= EMCEM_ERM_CHANNELS_OFFSET ) && \
+                                                              ( (nChannelId) <  ( EMCEM_ERM_CHANNELS_OFFSET + EMCEM_ERM_CHANNEL_COUNT ) ) \
+                                                            )
+
+#define EMCEM_CHANNEL_IN_RANGE(nChannelId)                  ( EMCEM_CHANNEL_IN_SRAMC_RANGE( (nChannelId) ) || \
+                                                              EMCEM_CHANNEL_IN_DDRC_RANGE( (nChannelId) ) || \
+                                                              EMCEM_CHANNEL_IN_ERM_RANGE( (nChannelId) ) \
+                                                            )
 
 /*!
 * @brief  Number of SW faults registers.
@@ -260,7 +283,7 @@ typedef uint32 eMcem_FaultArrayContainerType[EMCEM_VFCCU_ERROR_CONTAINER_SIZE];
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 
-#endif /* defined(SAFETY_BASE_MIMX95XX) */
+#endif /* SAFETY_BASE_MIMX95XX */
 
 #ifdef __cplusplus
 }

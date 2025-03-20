@@ -1,8 +1,8 @@
 /**
 *   @file    Rte_MemMap.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF Base - Memory mapping specification.
+*   @brief   MIMX9XX_SAF Base - Memory mapping specification.
 *   @details This document specifies mechanisms for the mapping of code and data to specific
 *            memory sections via memory mapping file. For many ECUs and microcontroller platforms
 *            it is of utmost necessity to be able to map code, variables and constants module
@@ -12,14 +12,14 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2020, 2023 NXP
+*   Copyright 2017-2020, 2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -64,8 +64,8 @@ extern "C"{
 /* @violates @ref Rte_MemMap_h_REF_3 #include statements in a file should
 * only be preceded by other preprocessor directives or comments.
 */
-#include "MIMX_SAF_Version.h"
-#include "CompilerDefinition.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "SafetyBase_CompilerDefinition.h"
 
 /*==================================================================================================
 *                               SOURCE FILE VERSION INFORMATION
@@ -76,17 +76,17 @@ extern "C"{
 *       module's description file
 */
 #define RTE_MEMMAP_SW_MAJOR_VERSION             0
-#define RTE_MEMMAP_SW_MINOR_VERSION             4
-#define RTE_MEMMAP_SW_PATCH_VERSION             0
+#define RTE_MEMMAP_SW_MINOR_VERSION             8
+#define RTE_MEMMAP_SW_PATCH_VERSION             4
 /**@}*/
 /*==================================================================================================
                                       FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((RTE_MEMMAP_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (RTE_MEMMAP_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (RTE_MEMMAP_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of Rte_MemMap.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((RTE_MEMMAP_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (RTE_MEMMAP_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (RTE_MEMMAP_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of Rte_MemMap.h and MIMX9XX_SAF version are different"
 #endif
 /*==================================================================================================
                                            CONSTANTS
@@ -108,7 +108,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* GREENHILLS *****************************************/
 /**************************************************************************************************/
-#ifdef _GREENHILLS_C_MIMX95XX_
+#ifdef _GREENHILLS_C_MIMX9_
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -121,7 +121,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -149,7 +149,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -177,7 +177,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -205,7 +205,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -233,7 +233,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -261,7 +261,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -289,7 +289,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -317,7 +317,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -345,7 +345,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -373,7 +373,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section text=".mimx_saf_text"
+    #pragma ghs section text=".mimx9xx_saf_text"
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -463,7 +463,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -491,7 +491,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -519,7 +519,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -547,7 +547,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -575,7 +575,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -603,7 +603,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -631,7 +631,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -659,7 +659,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -687,7 +687,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -715,7 +715,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -744,7 +744,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -772,7 +772,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -800,7 +800,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -828,7 +828,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -856,7 +856,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -884,7 +884,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -912,7 +912,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -940,7 +940,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -968,7 +968,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -996,7 +996,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -1024,7 +1024,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_monitor_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_monitor_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -1052,7 +1052,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_scheck_faults_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -1080,7 +1080,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_scheck_requests_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -1108,7 +1108,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_persist_reset"
+    #pragma ghs section bss=".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -1127,7 +1127,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* DIAB ***********************************************/
 /**************************************************************************************************/
-#elif defined(_DIABDATA_C_MIMX95XX_)
+#elif defined(_DIABDATA_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -1140,7 +1140,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -1168,7 +1168,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -1196,7 +1196,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -1224,7 +1224,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -1252,7 +1252,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -1280,7 +1280,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -1308,7 +1308,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -1336,7 +1336,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -1364,7 +1364,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -1392,7 +1392,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section text=".mimx_saf_text"
+    #pragma clang section text=".mimx9xx_saf_text"
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -1480,7 +1480,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -1508,7 +1508,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -1536,7 +1536,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -1564,7 +1564,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -1592,7 +1592,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -1620,7 +1620,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -1648,7 +1648,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -1677,7 +1677,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -1705,7 +1705,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -1733,7 +1733,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -1762,7 +1762,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -1790,7 +1790,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -1818,7 +1818,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -1846,7 +1846,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -1874,7 +1874,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -1902,7 +1902,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -1930,7 +1930,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -1959,7 +1959,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -1987,7 +1987,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -2015,7 +2015,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -2043,7 +2043,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_monitor_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_monitor_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -2071,7 +2071,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_scheck_faults_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -2099,7 +2099,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_scheck_requests_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -2127,7 +2127,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_persist_reset"
+    #pragma clang section bss=".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -2146,7 +2146,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* CODEWARRIOR ****************************************/
 /**************************************************************************************************/
-#elif defined(_CODEWARRIOR_C_MIMX95XX_)
+#elif defined(_CODEWARRIOR_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -2159,7 +2159,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -2187,7 +2187,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -2215,7 +2215,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -2243,7 +2243,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -2271,7 +2271,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -2299,7 +2299,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -2327,7 +2327,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -2355,7 +2355,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -2383,7 +2383,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -2411,7 +2411,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma CODE_SEG mimx_saf_text
+    #pragma CODE_SEG mimx9xx_saf_text
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -2495,7 +2495,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -2523,7 +2523,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -2551,7 +2551,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -2579,7 +2579,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -2607,7 +2607,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -2635,7 +2635,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -2663,7 +2663,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -2691,7 +2691,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -2719,7 +2719,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -2747,7 +2747,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -2776,7 +2776,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -2804,7 +2804,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -2832,7 +2832,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -2860,7 +2860,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -2888,7 +2888,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -2916,7 +2916,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -2944,7 +2944,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -2972,7 +2972,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -3000,7 +3000,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -3028,7 +3028,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -3056,7 +3056,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_monitor_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_monitor_no_cacheable
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -3084,7 +3084,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_scheck_faults_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_scheck_faults_no_cacheable
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -3112,7 +3112,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_scheck_requests_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_scheck_requests_no_cacheable
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -3140,7 +3140,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_persist_reset
+    #pragma DATA_SEG mimx9xx_saf_bss_persist_reset
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -3159,7 +3159,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* COSMIC *********************************************/
 /**************************************************************************************************/
-#elif defined(_COSMIC_C_MIMX95XX_)
+#elif defined(_COSMIC_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -3172,7 +3172,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_safconstcfg}
+    #pragma section const {mimx9xx_safconstcfg}
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -3200,7 +3200,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_safconstcfg}
+    #pragma section const {mimx9xx_safconstcfg}
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -3228,7 +3228,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_safconstcfg}
+    #pragma section const {mimx9xx_safconstcfg}
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -3256,7 +3256,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_safconstcfg}
+    #pragma section const {mimx9xx_safconstcfg}
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -3284,7 +3284,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -3312,7 +3312,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -3340,7 +3340,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -3368,7 +3368,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -3396,7 +3396,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -3424,7 +3424,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section (mimx_saf_text)
+    #pragma section (mimx9xx_saf_text)
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -3508,7 +3508,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -3536,7 +3536,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -3564,7 +3564,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -3592,7 +3592,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -3620,7 +3620,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -3648,7 +3648,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -3676,7 +3676,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -3704,7 +3704,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -3732,7 +3732,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -3760,7 +3760,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -3789,7 +3789,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -3817,7 +3817,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -3845,7 +3845,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -3873,7 +3873,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -3901,7 +3901,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -3929,7 +3929,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -3957,7 +3957,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -3985,7 +3985,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -4013,7 +4013,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -4041,7 +4041,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -4069,7 +4069,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_monitor_no_cacheable]
+    #pragma section [mimx9xx_saf_monitor_no_cacheable]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -4097,7 +4097,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_scheck_faults_no_cacheable]
+    #pragma section [mimx9xx_saf_scheck_faults_no_cacheable]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -4125,7 +4125,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_scheck_requests_no_cacheable]
+    #pragma section [mimx9xx_saf_scheck_requests_no_cacheable]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -4153,7 +4153,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_persist_reset]
+    #pragma section [mimx9xx_saf_bss_persist_reset]
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -4172,7 +4172,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* HighTec *********************************************/
 /**************************************************************************************************/
-#elif defined(_HITECH_C_MIMX95XX_)
+#elif defined(_HITECH_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -4185,7 +4185,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -4213,7 +4213,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -4241,7 +4241,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -4269,7 +4269,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -4297,7 +4297,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -4325,7 +4325,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -4353,7 +4353,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -4381,7 +4381,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -4409,7 +4409,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -4437,7 +4437,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_text" avx
+    #pragma section ".mimx9xx_saf_text" avx
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -4521,7 +4521,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -4549,7 +4549,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -4577,7 +4577,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -4605,7 +4605,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -4633,7 +4633,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -4661,7 +4661,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -4688,7 +4688,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -4716,7 +4716,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -4744,7 +4744,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -4772,7 +4772,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -4800,7 +4800,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -4828,7 +4828,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_monitor_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_monitor_no_cacheable" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -4856,7 +4856,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_scheck_faults_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_scheck_faults_no_cacheable" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -4884,7 +4884,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_scheck_requests_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_scheck_requests_no_cacheable" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -4912,7 +4912,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_persist_reset" awsB
+    #pragma section ".mimx9xx_saf_bss_persist_reset" awsB
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -4931,7 +4931,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* Linaro *********************************************/
 /**************************************************************************************************/
-#elif defined(_LINARO_C_MIMX95XX_)
+#elif defined(_LINARO_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -4944,7 +4944,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -4972,7 +4972,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -5000,7 +5000,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -5028,7 +5028,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -5056,7 +5056,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -5084,7 +5084,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -5112,7 +5112,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -5140,7 +5140,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -5168,7 +5168,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -5196,7 +5196,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section text ".mimx_saf_text"
+    #pragma GCC section text ".mimx9xx_saf_text"
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -5280,7 +5280,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -5308,7 +5308,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -5337,7 +5337,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -5365,7 +5365,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -5393,7 +5393,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -5421,7 +5421,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -5449,7 +5449,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -5477,7 +5477,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -5505,7 +5505,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -5533,7 +5533,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -5561,7 +5561,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -5589,7 +5589,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -5617,7 +5617,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -5645,7 +5645,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -5673,7 +5673,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -5701,7 +5701,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -5729,7 +5729,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -5757,7 +5757,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -5786,7 +5786,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -5814,7 +5814,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -5842,7 +5842,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -5870,7 +5870,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_monitor_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_monitor_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -5898,7 +5898,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_scheck_faults_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -5926,7 +5926,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_scheck_requests_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -5954,7 +5954,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_persist_reset"
+    #pragma GCC section bss ".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -5973,7 +5973,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* DS5 ************************************************/
 /**************************************************************************************************/
-#elif defined(_ARM_DS5_C_MIMX95XX_)
+#elif defined(_ARM_DS5_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -5986,7 +5986,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -6014,7 +6014,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -6042,7 +6042,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -6070,7 +6070,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -6098,7 +6098,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -6126,7 +6126,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -6154,7 +6154,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -6182,7 +6182,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -6210,7 +6210,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -6238,7 +6238,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section code=".mimx_saf_text"
+    #pragma arm section code=".mimx9xx_saf_text"
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -6322,7 +6322,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -6350,7 +6350,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -6379,7 +6379,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -6407,7 +6407,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -6435,7 +6435,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -6463,7 +6463,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -6491,7 +6491,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -6519,7 +6519,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -6547,7 +6547,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -6575,7 +6575,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -6603,7 +6603,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
      #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -7015,7 +7015,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* IAR ************************************************/
 /**************************************************************************************************/
-#elif defined(_IAR_C_MIMX95XX_)
+#elif defined(_IAR_C_MIMX9_)
 /**************************************** RTE *******************************/
 #ifdef RTE_START_SEC_CONFIG_DATA_8
     /**
@@ -7028,7 +7028,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_8
@@ -7056,7 +7056,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_16
@@ -7084,7 +7084,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_32
@@ -7112,7 +7112,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef RTE_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -7140,7 +7140,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_BOOLEAN
@@ -7168,7 +7168,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_8
@@ -7196,7 +7196,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_16
@@ -7224,7 +7224,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_32
@@ -7252,7 +7252,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef RTE_STOP_SEC_CONST_UNSPECIFIED
@@ -7280,7 +7280,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_function_attributes = @ ".mimx_saf_text"
+    #pragma default_function_attributes = @ ".mimx9xx_saf_text"
 #endif
 
 #ifdef RTE_STOP_SEC_CODE
@@ -7368,7 +7368,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -7396,7 +7396,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8
@@ -7424,7 +7424,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16
@@ -7452,7 +7452,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32
@@ -7480,7 +7480,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -7508,7 +7508,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN
@@ -7536,7 +7536,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8
@@ -7564,7 +7564,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16
@@ -7592,7 +7592,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32
@@ -7620,7 +7620,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -7649,7 +7649,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -7677,7 +7677,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -7705,7 +7705,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -7733,7 +7733,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -7761,7 +7761,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -7789,7 +7789,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -7817,7 +7817,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-   #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+   #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -7845,7 +7845,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-   #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+   #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -7873,7 +7873,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-   #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+   #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -7901,7 +7901,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-   #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+   #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -7929,7 +7929,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_monitor_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_monitor_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_MONITOR_NO_CACHEABLE
@@ -7957,7 +7957,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_scheck_faults_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -7985,7 +7985,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_scheck_requests_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -8013,7 +8013,7 @@ extern "C"{
     * @violates @ref Rte_MemMap_h_REF_1 MISRA 2012 Required Rule 19.6, use of '#undef' is discouraged
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_persist_reset"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef RTE_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET

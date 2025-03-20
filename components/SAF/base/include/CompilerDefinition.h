@@ -1,6 +1,6 @@
 /**
 *   @file           CompilerDefinition.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
 *   @brief   AUTOSAR Base - SWS Compiler abstraction
 *   @details The file Compiler.h provides macros for the encapsulation of definitions and
@@ -11,19 +11,19 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
-*   Peripheral           : MIMX9XXM33
+*   Peripheral           : IMX9XXXM33
 *   Dependencies         : none
 *
-*   Autosar Version      : 4.7.0
-*   Autosar Revision     : ASR_REL_4_7_REV_0000
+*   Autosar Version      : 4.6.0
+*   Autosar Revision     : ASR_REL_4_6_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2006-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2019, 2023 NXP
+*   Copyright 2017-2019, 2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -58,11 +58,11 @@ extern "C"{
 */
 #define COMPILERDEFINITION_VENDOR_ID                      43
 #define COMPILERDEFINITION_AR_RELEASE_MAJOR_VERSION       4
-#define COMPILERDEFINITION_AR_RELEASE_MINOR_VERSION       7
+#define COMPILERDEFINITION_AR_RELEASE_MINOR_VERSION       6
 #define COMPILERDEFINITION_AR_RELEASE_REVISION_VERSION    0
 #define COMPILERDEFINITION_SW_MAJOR_VERSION               0
-#define COMPILERDEFINITION_SW_MINOR_VERSION               4
-#define COMPILERDEFINITION_SW_PATCH_VERSION               0
+#define COMPILERDEFINITION_SW_MINOR_VERSION               8
+#define COMPILERDEFINITION_SW_PATCH_VERSION               4
 /**@}*/
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
@@ -80,43 +80,43 @@ extern "C"{
     /**
     * @brief Symbol required to be defined when GreenHills compiler is used.
     */
-    #define _GREENHILLS_C_MIMX95XX_
+    #define _GREENHILLS_C_MIMX9_
 #endif
 #ifdef __DCC__
     /**
     * @brief Symbol required to be defined when Diab compiler is used.
     */
-    #define _DIABDATA_C_MIMX95XX_
+    #define _DIABDATA_C_MIMX9_
 #endif
 #ifdef __MWERKS__
     /**
     * @brief Symbol required to be defined when Codewarrior compiler is used.
     */
-    #define _CODEWARRIOR_C_MIMX95XX_
+    #define _CODEWARRIOR_C_MIMX9_
 #endif
 #ifdef __CSMC__
     /**
     * @brief Symbol required to be defined when Cosmic compiler is used.
     */
-  #define _COSMIC_C_MIMX95XX_
+  #define _COSMIC_C_MIMX9_
 #endif
 #if (defined(__GNUC__) && !defined(__DCC__)) /* is GCC only when it does not have DIAB specific macro */
                   /**
             * @brief Symbol required to be defined when Linaro ARM compiler is used.
             */
-            #define _LINARO_C_MIMX95XX_
+            #define _LINARO_C_MIMX9_
       #endif
 #ifdef __CC_ARM
         /**
         * @brief Symbol required to be defined when DS5 ARM compiler is used.
         */
-        #define _ARM_DS5_C_MIMX95XX_
+        #define _ARM_DS5_C_MIMX9_
 #endif
 #ifdef __ICCARM__
         /**
         * @brief Symbol required to be defined when IAR compiler is used.
         */
-        #define _IAR_C_MIMX95XX_
+        #define _IAR_C_MIMX9_
 #endif
 
 #ifdef __cplusplus

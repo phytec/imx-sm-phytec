@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_Types_Ext.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Types header.
+*   @brief   MIMX9XX_SAF eMcem - Types header.
 *   @details Contains declarations of the eMcem types.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2012-2016 Freescale
 *   Copyright 2016, 2018-2025 NXP
@@ -39,9 +39,14 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "eMcem_MemErr_Types_Ext.h"
+#include "SafetyBase_Cfg.h"
+#if SAFETY_BASE_MIMX95XX
 #include "eMcem_Types_MIMX95XX.h"
-#include "eMcem_Types_MIMX94XX.h"
+#elif SAFETY_BASE_MIMX943X
+#include "eMcem_Types_MIMX943X.h"
+#endif /* SAFETY_BASE_MIMX9XXX */
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -58,22 +63,22 @@ extern "C"{
 /*!
 * @brief    eMCEM common type definition - SW minor version
 */
-#define EMCEM_TYPES_EXT_SW_MINOR_VERSION             4
+#define EMCEM_TYPES_EXT_SW_MINOR_VERSION             8
 /*!
 * @brief    eMCEM common type definition - SW patch version
 */
-#define EMCEM_TYPES_EXT_SW_PATCH_VERSION             0
+#define EMCEM_TYPES_EXT_SW_PATCH_VERSION             4
 
 /**@}*/
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_TYPES_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_TYPES_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_TYPES_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Types_Ext.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_TYPES_EXT_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_TYPES_EXT_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_TYPES_EXT_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Types_Ext.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================

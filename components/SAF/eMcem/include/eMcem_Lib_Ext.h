@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_Lib_Ext.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - IP wrapper header.
+*   @brief   MIMX9XX_SAF eMcem - IP wrapper header.
 *   @details Contains declarations of the eMcem IP wrapper functions.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2012, 2013, 2015 Freescale
 *   Copyright 2017-2025 NXP
@@ -49,9 +49,9 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
-#include "eMcem_Lib_MIMX95XX.h"
-#include "eMcem_Lib_MIMX94XX.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "eMcem_ExtDiagApi.h"
+#include "eMcem_Lib_MIMX9.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -67,21 +67,21 @@ extern "C"{
 /**
 * @brief    eMCEM LIB extended software minor version.
 */
-#define EMCEM_LIB_EXT_SW_MINOR_VERSION             4
+#define EMCEM_LIB_EXT_SW_MINOR_VERSION             8
 /**
 * @brief    eMCEM LIB extended software patch version.
 */
-#define EMCEM_LIB_EXT_SW_PATCH_VERSION             0
+#define EMCEM_LIB_EXT_SW_PATCH_VERSION             4
 /** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_LIB_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_LIB_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_LIB_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Lib_Ext.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_LIB_EXT_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_LIB_EXT_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_LIB_EXT_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Lib_Ext.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -144,6 +144,22 @@ void eMcem_Init_Int( const eMcem_ConfigType *pConfigPtr );
 *
 */
 Std_ReturnType eMcem_Vfccu_Init_Int( const eMcem_ConfigType *pConfigPtr );
+
+/**
+* @brief      Function to inject fake faults
+* @details    Function is used to inject fake faults in order to test the reaction for each fault.
+*
+* @param[in]  nFaultId     The ID of the fault to be injected
+*
+* @return     Std_ReturnType
+* @retval           EMCEM_E_OK      Fault has been injected.
+* @retval           EMCEM_E_NOT_OK  Fault has not been injected.
+*
+* @pre        nFaultId is valid
+*
+*/
+Std_ReturnType eMcem_InjectFault_Int( eMcem_FaultType nFaultId );
+
 /**
 * @brief      Check if fault ID is valid
 * @details    Function to check if fault ID is within range and if the fault is enabled
@@ -216,6 +232,126 @@ Std_ReturnType eMcem_AssertSWFault_Int( eMcem_FaultType nFaultId );
 */
 Std_ReturnType eMcem_DeassertSWFault_Int( eMcem_FaultType nFaultId );
 
+/**
+* @brief      Get memory error info
+* @details    Function retrieves the type, address and ECC syndrome of the last memory error. If available for any channel, provides
+*             validated address (in defined address range), otherwise provides only raw data read from error address register.
+*
+* @param[in]  nChannelId      Global ID of ERM channel
+* @param[out] pInfo           Structure with type, raw address data, validated address (if available), and syndrome of the last memory error
+*
+* @return     Std_ReturnType
+* @retval           EMCEM_E_OK      No error occurred
+* @retval           EMCEM_E_NOT_OK  An error occurred (correctable, non-correctable or both flags are set)
+*
+*/
+Std_ReturnType eMcem_GetMemErrInfo_Int( eMcem_ChannelType nChannelId, eMcem_MemErrInfoType *pInfo );
+
+/**
+* @brief      eMcem_ReadErrorOutput_Int
+* @details    A function to read one of the EOUT signals.
+*             For testing purposes.
+*
+* @param[in]  errorOutput    ID of EOUT signal to read.
+*
+* @return     EOUT signal value
+*
+*/
+static inline uint8 eMcem_ReadErrorOutput_Int( eMcem_ErrorOutputType errorOutput )
+{
+    uint8 u8ReturnValue = 0U;
+
+    /* Check whether EOUT is in range */
+    if( errorOutput <= EMCEM_FCCU_EOUT1 )
+    {
+        u8ReturnValue = eMcem_Vfccu_ReadErrorOutput( errorOutput );
+    }
+    else
+    {
+        /* Log extended diagnostic data */
+        EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_READ_ERROR_OUTPUT, 0U )
+
+        TODO_MESSAGE("nxf85804-20March2024: What should be the return value in case of out of range EOUT?")
+        u8ReturnValue = 0U;
+    }
+
+    return u8ReturnValue;
+}
+
+/**
+* @brief      eMcem_WriteErrorOutput_Int
+* @details    A function to write one of the EOUT signals.
+*             For testing purposes.
+*
+* @param[in]  errorOutput    ID of EOUT signal to write.
+* @param[in]  value          value to write.
+*
+* @return     void
+*
+*/
+static inline void eMcem_WriteErrorOutput_Int( eMcem_ErrorOutputType errorOutput, uint8 value )
+{
+    /* Check whether EOUT is in range */
+    if( errorOutput <= EMCEM_FCCU_EOUT1 )
+    {
+        eMcem_Vfccu_WriteErrorOutput( errorOutput, value );
+    }
+    else
+    {
+        /* Log extended diagnostic data */
+        EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_WRITE_ERROR_OUTPUT, 0U )
+    }
+}
+
+/**
+* @brief      Activate or deactivate EOUT signaling.
+* @details    A function to activate or deactivate the signaling of EOUT pins.
+*
+* @param[in]  errorOutput ID of EOUT pin to de/activate.
+* @param[in]  state       State to set. Activate or deactivate EOUT signals.
+*
+* @return     Std_ReturnType
+* @retval           E_OK      State has been changed
+* @retval           E_NOT_OK  State has not been changed.
+*
+*/
+static inline Std_ReturnType eMcem_SetEOUTSignaling_Int( eMcem_ErrorOutputType errorOutput, eMcem_EOUTStateType state )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* @violates @ref eMcem_Lib_Ext_h_REF_1403 */
+    if( ( errorOutput <= EMCEM_FCCU_EOUT1 ) && ( state <= EMCEM_FCCU_EOUT_ACTIVATE ) )
+    {
+        nReturnValue = eMcem_Vfccu_SetEOUTSignaling( errorOutput, state );
+    }
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Control EOUT signaling mode.
+* @details    A function to set the controlling mode of EOUT pins.
+*
+* @param[in]  errorOutput ID of EOUT pin to de/activate.
+* @param[in]  mode        Controlling mode to set. EOUT signals to be driven by FSM, LOW, or HIGH.
+*
+* @return     Std_ReturnType
+* @retval           E_OK      Controlling mode has been changed
+* @retval           E_NOT_OK  Controlling mode has not been changed.
+*
+*/
+static inline Std_ReturnType eMcem_SetEOUTControlMode_Int( eMcem_ErrorOutputType errorOutput, eMcem_EOUTModeType mode )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* @violates @ref eMcem_Lib_Ext_h_REF_1403 */
+    if( ( errorOutput <= EMCEM_FCCU_EOUT1 ) && ( mode <= EMCEM_FCCU_EOUT_HIGH ) )
+    {
+        nReturnValue = eMcem_Vfccu_SetEOUTControlMode( errorOutput, mode );
+    }
+
+    return nReturnValue;
+}
 
 /**
 * @brief    Macro marking the end of CODE section.

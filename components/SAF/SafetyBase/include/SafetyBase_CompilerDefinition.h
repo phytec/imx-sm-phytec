@@ -1,8 +1,8 @@
 /**
 *   @file    SafetyBase_CompilerDefinition.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - Compiler-specific defines
+*   @brief   MIMX9XX_SAF SafetyBase - Compiler-specific defines
 *   @details The file SafetyBase_CompilerDefinition.h provides macros for the encapsulation of definitions and
 *            declarations.
 *            This file contains sample code only. It is not part of the production code deliverables
@@ -11,14 +11,14 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2006-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2019, 2023 NXP
+*   Copyright 2017-2019, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -46,23 +46,23 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define SAFETYBASE_COMPILERDEFINITION_SW_MAJOR_VERSION             0
-#define SAFETYBASE_COMPILERDEFINITION_SW_MINOR_VERSION             4
-#define SAFETYBASE_COMPILERDEFINITION_SW_PATCH_VERSION             0
+#define SAFETYBASE_COMPILERDEFINITION_SW_MINOR_VERSION             8
+#define SAFETYBASE_COMPILERDEFINITION_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF configuration header file are of the same software version */
-#if ((SAFETYBASE_COMPILERDEFINITION_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (SAFETYBASE_COMPILERDEFINITION_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (SAFETYBASE_COMPILERDEFINITION_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of SafetyBase_CompilerDefinition.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF configuration header file are of the same software version */
+#if ((SAFETYBASE_COMPILERDEFINITION_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (SAFETYBASE_COMPILERDEFINITION_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (SAFETYBASE_COMPILERDEFINITION_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of SafetyBase_CompilerDefinition.h and MIMX9XX_SAF version are different"
 #endif
 
 
@@ -82,7 +82,7 @@ extern "C"{
     * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
     * macros, objects and functions shall not be reused.
     */
-    #define _GREENHILLS_C_MIMX95XX_
+    #define _GREENHILLS_C_MIMX9_
 #endif
 #ifdef __DCC__
     /**
@@ -92,7 +92,7 @@ extern "C"{
     * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
     * macros, objects and functions shall not be reused.
     */
-    #define _DIABDATA_C_MIMX95XX_
+    #define _DIABDATA_C_MIMX9_
 #endif
 #ifdef __MWERKS__
     /**
@@ -102,7 +102,7 @@ extern "C"{
     * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
     * macros, objects and functions shall not be reused.
     */
-    #define _CODEWARRIOR_C_MIMX95XX_
+    #define _CODEWARRIOR_C_MIMX9_
 #endif
 #ifdef __CSMC__
     /**
@@ -112,14 +112,14 @@ extern "C"{
     * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
     * macros, objects and functions shall not be reused.
     */
-  #define _COSMIC_C_MIMX95XX_
+  #define _COSMIC_C_MIMX9_
 #endif
 #if (defined(__GNUC__) && !defined(__DCC__)) /* is GCC only when it does not have DIAB specific macro */
                   /**
             * @brief Symbol required to be defined when Linaro ARM compiler is used.
             */
             /* @violates @ref SafetyBase_CompilerDefinition_h_REF_1 MISRA 2012 Required Rule 21.1, macro for compiler name.*/
-            #define _LINARO_C_MIMX95XX_
+            #define _LINARO_C_MIMX9_
       #endif
 #ifdef __CC_ARM
         /**
@@ -129,7 +129,7 @@ extern "C"{
         * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
         * macros, objects and functions shall not be reused.
         */
-        #define _ARM_DS5_C_MIMX95XX_
+        #define _ARM_DS5_C_MIMX9_
 #endif
 #ifdef __ICCARM__
         /**
@@ -139,7 +139,7 @@ extern "C"{
         * @violates @ref SafetyBase_CompilerDefinition_h_REF_1 The names of standard library
         * macros, objects and functions shall not be reused.
         */
-        #define _IAR_C_MIMX95XX_
+        #define _IAR_C_MIMX9_
 #endif
 
 #ifdef __cplusplus

@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_Vfccu.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - VFCCU IP header.
+*   @brief   MIMX9XX_SAF eMcem - VFCCU IP header.
 *   @details Contains declarations of VFCCU IP functions for eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -53,7 +53,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "eMcem_Vfccu_Types.h"
 #include "eMcem_Cfg.h"
 
@@ -72,21 +72,21 @@ extern "C"{
 /*!
 * @brief    eMCEM VFCCU internal function definitions - SW minor version
 */
-#define EMCEM_VFCCU_SW_MINOR_VERSION             4
+#define EMCEM_VFCCU_SW_MINOR_VERSION             8
 /*!
 * @brief    eMCEM VFCCU internal function definitions - SW patch version
 */
-#define EMCEM_VFCCU_SW_PATCH_VERSION             0
+#define EMCEM_VFCCU_SW_PATCH_VERSION             4
 /** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCU_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCU_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCU_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Vfccu.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_VFCCU_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -163,15 +163,27 @@ void eMcem_Vfccu_GetErrors( uint32 pFaultContainer[], uint32 *pFaultAccumulator 
 Std_ReturnType eMcem_Vfccu_ClearFaults( eMcem_FaultType nFaultId );
 
 /*!
-* @brief      Checks Access to CVFCCU
-* @details    Returns if this EENV has full access to CVFCCU global registers
+* @brief      Read EOUT signal
+* @details    A function to read one of the EOUT signals from EINOUT register. For testing.
 *
-* @return     boolean
-* @retval           EMCEM_E_TRUE    EENV has access to CVFCCU
-* @retval           EMCEM_E_FALSE   EENV doesn't have access to CVFCCU
+* @param[in]  errorOutput    ID of EOUT signal to read.
+*
+* @return     EOUT signal value
 *
 */
-boolean eMcem_Vfccu_AccessToCVfccu( void );
+uint8 eMcem_Vfccu_ReadErrorOutput( eMcem_ErrorOutputType errorOutput );
+
+/*!
+* @brief      Write EOUT signal
+* @details    A function to write one of the EOUT signals to GEOUTPNC register.
+*
+* @param[in]  errorOutput    ID of EOUT signal to write.
+* @param[in]  value          EOUT signal value to write.
+*
+* @return     void
+*
+*/
+void eMcem_Vfccu_WriteErrorOutput( eMcem_ErrorOutputType errorOutput, uint8 u8Value );
 
 /*!
 * @brief      Assert software VFCCU fault.
@@ -192,6 +204,31 @@ void eMcem_Vfccu_AssertSWFault( uint8 u8SwFaultId );
 void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId );
 
 /*!
+* @brief      Activate or deactivate EOUT signaling.
+* @details    A function to activate or deactivate the signaling of EOUT pins. Sets output buffer enable control
+*             to either valid state (cannot be overridden) or invalid state (can be overridden)
+*
+* @param[in]  errorOutput   ID of EOUT pin to de/activate.
+* @param[in]  state         State to set. Activate or deactivate EOUT signals.
+*
+* @return     EMCEM_E_OK    State has been changed
+*
+*/
+Std_ReturnType eMcem_Vfccu_SetEOUTSignaling( eMcem_ErrorOutputType errorOutput, eMcem_EOUTStateType state );
+
+/*!
+* @brief      Control EOUT signaling mode.
+* @details    A function to set the controlling mode of EOUT pins.
+*
+* @param[in]  errorOutput   ID of EOUT pin to de/activate.
+* @param[in]  mode          Controlling mode to set. EOUT signals to be driven by FSM, LOW, or HIGH.
+*
+* @return     EMCEM_E_OK    Controlling mode has been changed
+*
+*/
+Std_ReturnType eMcem_Vfccu_SetEOUTControlMode( eMcem_ErrorOutputType errorOutput, eMcem_EOUTModeType mode );
+
+/*!
 * @brief      VFCCU Alarm Interrupt routine.
 * @details    An ALARM Interrupt is generated when a properly configured fault generates a transition
 *             to the ALARM state. The status (fault triggering interrupt) can be obtained
@@ -203,6 +240,17 @@ void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId );
 *
 */
 void VFCCU_ALARM_ISR( void );
+
+/**
+* @brief      Obtain status of Svr1 fault reaction from VFCCU
+* @details    A function for filling given container of eMcem_ReactionStatusType type with values of VFCCU Global DID FSM Status,
+*             Global Reaction Timer and Status registers.
+*
+* @param[out] pReactionStatus    Pointer to the structure to be filled with current values of VFCCU Global Reaction Timer
+*                                Period, VFCCU Global Reaction Timer Status, and VFCCU Global DID FSM Status registers.
+*
+*/
+void eMcem_Vfccu_GetReactionStatus( eMcem_ReactionStatusType *pReactionStatus );
 
 /*!
 * @brief    Macro marking the end of CODE section.

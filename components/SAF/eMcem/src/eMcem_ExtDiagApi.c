@@ -1,21 +1,21 @@
 /**
 *   @file    eMcem_ExtDiagApi.c
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Extended diagnostics API source.
+*   @brief   MIMX9XX_SAF eMcem - Extended diagnostics API source.
 *   @details This file implements functions for eMcem extended diagnostics.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2019-2020, 2023 NXP
+*   Copyright 2019-2020, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -56,7 +56,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "Platform_Types.h"
 #include "eMcem_ExtDiagApi.h"
 #include "eMcem_Cfg.h"
@@ -73,21 +73,21 @@ extern "C"{
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0502 */
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0505 */
-#define EMCEM_EXTDIAGAPI_SW_MINOR_VERSION_C           4
+#define EMCEM_EXTDIAGAPI_SW_MINOR_VERSION_C           8
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0501 */
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0502 */
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0504 */
 /* @violates @ref eMcem_ExtDiagApi_c_REF_0505 */
-#define EMCEM_EXTDIAGAPI_SW_PATCH_VERSION_C           0
+#define EMCEM_EXTDIAGAPI_SW_PATCH_VERSION_C           4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_EXTDIAGAPI_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_EXTDIAGAPI_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_EXTDIAGAPI_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_ExtDiagApi.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_EXTDIAGAPI_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_EXTDIAGAPI_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_EXTDIAGAPI_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_ExtDiagApi.c and MIMX9XX_SAF version are different"
 #endif
 
 #if( STD_ON == EMCEM_EXT_DIAG_ENABLED )

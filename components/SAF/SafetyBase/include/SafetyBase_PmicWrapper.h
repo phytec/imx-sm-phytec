@@ -1,6 +1,6 @@
 /**
 *   @file    SafetyBase_PmicWrapper.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
 *   @brief   Safety SDK SafetyBase - PMIC wrapper.
 *   @details This file provides wrapper functions to access PMIC driver.
@@ -9,13 +9,13 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2017-2019, 2023 NXP
+*   Copyright 2017-2019,2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -42,7 +42,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "SafetyBase_Cfg.h"
 #include "Std_Types.h"
 
@@ -50,17 +50,17 @@ extern "C"{
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define SBASE_PMIC_SW_MAJOR_VERSION             0
-#define SBASE_PMIC_SW_MINOR_VERSION             4
-#define SBASE_PMIC_SW_PATCH_VERSION             0
+#define SBASE_PMIC_SW_MINOR_VERSION             8
+#define SBASE_PMIC_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((SBASE_PMIC_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (SBASE_PMIC_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (SBASE_PMIC_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of SafetyBase_PmicWrapper.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((SBASE_PMIC_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (SBASE_PMIC_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (SBASE_PMIC_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of SafetyBase_PmicWrapper.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -70,20 +70,11 @@ extern "C"{
 /*==================================================================================================
 *                                      DEFINES AND MACROS
 ==================================================================================================*/
+#define PMIC_DRIVER_PRESENT     (STD_ON)
 
 /*==================================================================================================
 *                                             ENUMS
 ==================================================================================================*/
-/**
- * @brief    Interface destination selection.
- * @details  The enum with interface destination possibilities.
- */
-typedef enum
-{
-    SBASE_PMIC_MAIN_UNIT       = 0x0U,   /**< @brief Interface with the Main Unit.      */
-    SBASE_PMIC_FAIL_SAFE_UNIT  = 0x1U    /**< @brief Interface with the Fail-Safe Unit. */
-
-} sBase_Pmic_InterfaceDstType;
 
 /*==================================================================================================
 *                                STRUCTURES AND OTHER TYPEDEFS
@@ -100,7 +91,7 @@ typedef enum
 /* @violates @ref safetybase_pmic_wrapper_h_REF0410 */
 #include "sBase_MemMap.h"
 
-Std_ReturnType sBase_Pmic_ReadRegister(const sBase_Pmic_InterfaceDstType eDestination, const uint32 u32RegAddr, uint16 * pu16ValueOut);
+Std_ReturnType sBase_Pmic_ReadRegister(const uint8 u8RegAddr, uint8 * pu8ValueOut);
 
 #define SBASE_STOP_SEC_CODE
 /* @violates @ref safetybase_pmic_wrapper_h_REF0410 */

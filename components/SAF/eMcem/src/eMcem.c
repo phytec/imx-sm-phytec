@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem.c
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - API source.
+*   @brief   MIMX9XX_SAF eMcem - API source.
 *   @details This file implements eMcem API.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2012-2016 Freescale
 *   Copyright 2016-2024 NXP
@@ -61,7 +61,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "Platform_Types.h"
 #include "eMcem.h"
 #include "eMcem_Lib_Ext.h"
@@ -72,17 +72,17 @@ extern "C"{
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define EMCEM_SW_MAJOR_VERSION_C           0
-#define EMCEM_SW_MINOR_VERSION_C           4
-#define EMCEM_SW_PATCH_VERSION_C           0
+#define EMCEM_SW_MINOR_VERSION_C           8
+#define EMCEM_SW_PATCH_VERSION_C           4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem.c and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -261,14 +261,14 @@ static Std_ReturnType eMcem_ValidateFaultId( eMcem_FaultType nFaultId )
         else
         {
             /* Log extended diagnostic data */
-            EMCEM_DIAG_STORE_FAILURE_POINT( (Std_ReturnType)E_NOT_OK, EMCEM_FP_VALIDATE_FAULT_ID_2, 0U )
+            EMCEM_DIAG_STORE_FAILURE_POINT( (Std_ReturnType)E_NOT_OK, EMCEM_FP_VALIDATE_FAULT_ID_RESERVE, 0U )
             EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( (Std_ReturnType)E_NOT_OK, (uint32)nFaultId )
         }
     }
     else
     {
         /* Log extended diagnostic data */
-        EMCEM_DIAG_STORE_FAILURE_POINT( (Std_ReturnType)E_NOT_OK, EMCEM_FP_VALIDATE_FAULT_ID_1, 0U )
+        EMCEM_DIAG_STORE_FAILURE_POINT( (Std_ReturnType)E_NOT_OK, EMCEM_FP_VALIDATE_FAULT_ID_RANGE, 0U )
     }
 
     return nReturnValue;
@@ -307,6 +307,28 @@ static Std_ReturnType eMcem_CheckState( uint8 u8FuncId )
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
+
+/**
+* @brief      Default CVFCCU alarm handler
+* @details    Function used for handling of CVFCCU faults where user have not specified own handler.
+*
+* @param[in]  nFaultId Fault to be handled. Not used in this handler.
+*
+* @return     eMcem_ErrRecoveryType
+* @retval           EMCEM_ERR_NOT_RECOVERED - FCCU error has not been recovered (default handler)
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_AlarmHandler
+*
+*/
+eMcem_ErrRecoveryType eMcemCVfccuDefaultAlarmHandler( eMcem_FaultType nFaultId )
+{
+    /* Solution to suppress the unused parameter warning */
+    (void)nFaultId;
+    return EMCEM_ERR_NOT_RECOVERED;
+}
+
 /**
 * @brief      Initialize the eMCEM driver.
 * @details    The function initializes the eMCEM driver according to the configuration passed
@@ -368,6 +390,46 @@ Std_ReturnType eMcem_Init( const eMcem_ConfigType *pConfigPtr )
 
     /* Fault injection testing point */
     SBASE_FAULT_INJECTION_POINT( EMCEM_FIP_RETURN_INIT_0 );
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Inject a fault.
+* @details    Implements mechanism of the eMCEM driver to inject faults into the hardware and test the reaction.
+*
+* @param[in]  nFaultId        ID of the fault that shall be injected.
+
+* @return     Std_ReturnType
+* @retval           E_OK      Fault has been injected.
+* @retval           E_NOT_OK  Fault has not been injected.
+*
+* @pre        Driver shall be initialized.
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_InjectFault
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+Std_ReturnType eMcem_InjectFault( eMcem_FaultType nFaultId )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    if( (Std_ReturnType)E_OK == eMcem_CheckState( EMCEM_INJECT_FAULT_ID ) )
+    {
+        if( (Std_ReturnType)E_OK == eMcem_ValidateFaultId( nFaultId ) )
+        {
+            nReturnValue = eMcem_InjectFault_Int( nFaultId );
+        }
+    }
+
+    /* Log extended diagnostic data */
+    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_INJECT_FAULT, 0U )
 
     return nReturnValue;
 }
@@ -437,12 +499,66 @@ Std_ReturnType eMcem_ClearFaults( eMcem_FaultType nFaultId )
     if( (Std_ReturnType)E_OK == eMcem_ValidateFaultId( nFaultId ) )
     {
         nReturnValue = eMcem_ClearFaults_Int( nFaultId );
+
+        /* Enable VFCCU IRQ */
+        sBase_EnableFccuIRQ();
     }
 
     /* Log extended diagnostic data */
     EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_CLEAR_FAULTS, 0U )
 
     return nReturnValue;
+}
+
+/**
+* @brief      Read EOUT signal
+* @details    A function to read one of the EOUT signals from EINOUT register. For testing.
+*
+* @param[in]  errorOutput     ID of EOUT signal to read.
+*
+* @return     EOUT signal value
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_ReadErrorOutput
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+uint8 eMcem_ReadErrorOutput( eMcem_ErrorOutputType errorOutput )
+{
+    uint8 value = 0U;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    value = eMcem_ReadErrorOutput_Int( errorOutput );
+
+    return value;
+}
+
+/**
+* @brief      Write EOUT signal
+* @details    A function to write one of the EOUT signals to EINOUT register. For testing.
+*
+* @param[in]  errorOutput     ID of EOUT signal to write.
+* @param[in]  value           value to write.
+*
+* @return     void
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_WriteErrorOutput
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+void eMcem_WriteErrorOutput( eMcem_ErrorOutputType errorOutput, uint8 value )
+{
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    eMcem_WriteErrorOutput_Int( errorOutput, value );
 }
 
 /**
@@ -509,6 +625,70 @@ Std_ReturnType eMcem_DeassertSWFault( eMcem_FaultType nFaultId )
     return nReturnValue;
 }
 
+/**
+* @brief      Correct correctable error
+* @details    Function corrects (reads and writes the value) the correctable error of ERM channel
+*
+* @param[in]  addr         The address at which the error should be corrected
+*
+* @return     void
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_CorrectCorrMemErr
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+void eMcem_CorrectCorrMemErr( uint32 addr )
+{
+    eMcem_CorrectCorrMemErr_Int( addr );
+}
+
+/**
+* @brief      Get memory error info
+* @details    Function retrieves the type, address and ECC syndrome of the last memory error. If available for any channel, provides
+*             validated address (in defined address range), otherwise provides only raw data read from error address register.
+*
+* @param[in]  nChannelId      Memory error source ID
+* @param[out] pInfo           Structure with type, raw address data, validated address (if available), and syndrome of the last memory error
+*
+* @return     Std_ReturnType
+* @retval           E_OK      No error occurred
+* @retval           E_NOT_OK  An error occurred (correctable, non-correctable or both flags are set) or the pInfo is not initialized.
+*
+* @pre        pInfo pointer shall not be null.
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_GetMemErrInfo
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+Std_ReturnType eMcem_GetMemErrInfo( eMcem_ChannelType nChannelId, eMcem_MemErrInfoType *pInfo )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_OK;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    if( NULL_PTR != pInfo )
+    {
+        nReturnValue = eMcem_GetMemErrInfo_Int( nChannelId, pInfo );
+    }
+    else
+    {
+        nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+        /* Log extended diagnostic data */
+        EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VALIDATE_INFO_PTR, 0U )
+        EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_GET_MEM_ERR_INFO, 0U )
+    }
+
+    return nReturnValue;
+}
+
 #if( STD_ON == EMCEM_EXT_DIAG_ENABLED )
 /**
 * @brief      Get extended diagnostic data.
@@ -542,6 +722,123 @@ void eMcem_GetExtDiagData( eMcem_ExtDiagDataType *pExtDiagData )
 }
 #endif
 
+/**
+* @brief      Activate or deactivate EOUT signaling.
+* @details    A function to activate or deactivate the signaling of EOUT pins.
+*
+* @param[in]  errorOutput ID of EOUT pin to de/activate.
+* @param[in]  state       State to set. Activate or deactivate EOUT signals.
+*
+* @return     Std_ReturnType
+* @retval           E_OK      State has been changed
+* @retval           E_NOT_OK  State has not been changed.
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_SetEOUTSignaling
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+Std_ReturnType eMcem_SetEOUTSignaling( eMcem_ErrorOutputType errorOutput, eMcem_EOUTStateType state )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    nReturnValue = eMcem_SetEOUTSignaling_Int( errorOutput, state );
+
+    /* Log extended diagnostic data */
+    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_SET_EOUT_SIGNALING, 0U )
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Control EOUT signaling mode.
+* @details    A function to set the controlling mode of EOUT pins.
+*
+* @param[in]  errorOutput ID of EOUT pin to de/activate.
+* @param[in]  mode        Controlling mode to set. EOUT signals to be driven by FSM, LOW, or HIGH.
+*
+* @return     Std_ReturnType
+* @retval           E_OK      Controlling mode has been changed
+* @retval           E_NOT_OK  Controlling mode has not been changed.
+*
+* @api        The object is an API and must be documented in the user manual.
+*
+* @implements DD_eMcem_SetEOUTControlMode
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+Std_ReturnType eMcem_SetEOUTControlMode( eMcem_ErrorOutputType errorOutput, eMcem_EOUTModeType mode )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    nReturnValue = eMcem_SetEOUTControlMode_Int( errorOutput, mode );
+
+    /* Log extended diagnostic data */
+    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_SET_EOUT_CONTROL_MODE, 0U )
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Configures channel's descriptor words
+* @details    Function configures descriptor words for given EIM channel. Up to two bits to inject
+*
+* @param[in]  nChannelId     ID of the EIM channel, where to set the error injection bit
+* @param[in]  u16BitPos1     First bit position within EIM channel to be set. To not inject, set this to EMCEM_EIM_BIT_NOT_VALID
+* @param[in]  u16BitPos2     Second bit position within EIM channel to be set. To not inject, set this to EMCEM_EIM_BIT_NOT_VALID
+*
+* @return     Std_ReturnType
+* @retval           E_OK      Descriptor has been successfully set.
+* @retval           E_NOT_OK  Descriptor has not been set.
+*
+* @implements DD_eMcem_SetupInjectionChannel
+*
+* @violates @ref eMcem_c_REF_0807
+*
+*/
+Std_ReturnType eMcem_SetupInjectionChannel( eMcem_FaultType nChannelId, uint16 u16BitPos1, uint16 u16BitPos2 )
+{
+    Std_ReturnType nReturnValue = (Std_ReturnType)E_NOT_OK;
+
+    /* Clear extended diagnostic data */
+    EMCEM_DIAG_CLEAR_DATA()
+
+    nReturnValue = eMcem_SetupInjectionChannel_Int( nChannelId, u16BitPos1, u16BitPos2 );
+
+    /* Log extended diagnostic data */
+    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_SETUP_INJECTION_CHANNEL, 0U )
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Obtain status of Svr1 fault reaction from VFCCU
+* @details    API for filling given container of eMcem_ReactionStatusType type with values of VFCCU Global DID FSM Status,
+*             Global Reaction Timer and Status registers.
+*
+* @param[out] pReactionStatus    Pointer to the structure to be filled with current values of VFCCU Global Reaction Timer
+*                                Period, VFCCU Global Reaction Timer Status, and VFCCU Global DID FSM Status registers.
+*
+* @implements DD_eMcem_GetReactionStatus
+*
+*/
+void eMcem_GetReactionStatus( eMcem_ReactionStatusType *pReactionStatus )
+{
+    /* Validate pReactionStatus pointer */
+    if( NULL_PTR != pReactionStatus )
+    {
+        eMcem_Vfccu_GetReactionStatus( pReactionStatus );
+    }
+}
 
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_c_REF_0410 */

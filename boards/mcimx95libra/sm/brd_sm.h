@@ -49,26 +49,27 @@
 
 /* Includes */
 
-#include "sm.h"
+#include "board.h"
+#include "brd_sm_api.h"
 #include "brd_sm_handlers.h"
 #include "brd_sm_sensor.h"
 #include "brd_sm_voltage.h"
-#include "board.h"
-#include "brd_sm_api.h"
+#include "sm.h"
 
 /* Defines */
 
 /*! Board name string */
-#define BRD_SM_NAME  "Libra i.MX95"
+#define BRD_SM_NAME "Libra i.MX95"
 
 /*! Board attributes */
-#define BRD_SM_ATTR  0x0
+#define BRD_SM_ATTR      0x0
+#define BOARD_PERF_VDROP 20000 /* Perf voltage drop */
 
 /*!
  * @name Board redirection defines
  * @{
  */
-#define SM_SYSTEMRESET  BRD_SM_SystemReset       /*!< Reset */
+#define SM_SYSTEMRESET BRD_SM_SystemReset /*!< Reset */
 /** @} */
 
 /* Types */
@@ -92,4 +93,3 @@ int32_t BRD_SM_SystemReset(void);
 /** @} */
 
 #endif /* BRD_SM_H */
-

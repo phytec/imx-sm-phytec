@@ -440,10 +440,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
@@ -1101,10 +1097,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
@@ -1753,10 +1745,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
@@ -2405,10 +2393,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
@@ -3057,10 +3041,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
@@ -3709,10 +3689,6 @@
         .gprPerms[DEV_SM_GPR_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_6] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_7] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \

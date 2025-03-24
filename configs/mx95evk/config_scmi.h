@@ -185,12 +185,6 @@
         .faultPerms[DEV_SM_FAULT_SW2] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG3] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_WDOG4] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C0] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C1] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C2] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C3] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C4] = SM_SCMI_PERM_ALL, \
-        .pdPerms[DEV_SM_PD_A55C5] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_A55] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \

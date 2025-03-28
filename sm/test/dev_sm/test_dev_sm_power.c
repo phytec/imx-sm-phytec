@@ -67,7 +67,7 @@ void TEST_DevSmPower(void)
     printf("**** Device SM Power API Tests ***\n\n");
 
     /* Test API correct calls per domain */
-    for (uint32_t domainId = 0U; domainId < DEV_SM_NUM_POWER; domainId++)
+    for (uint32_t domainId = 0U; domainId < PWR_NUM_MIX_SLICE; domainId++)
     {
         printf("DEV_SM_PowerDomainNameGet(%u)\n", domainId);
         CHECK(DEV_SM_PowerDomainNameGet(domainId, &name, &len));

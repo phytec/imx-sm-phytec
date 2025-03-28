@@ -41,6 +41,7 @@ SOC_DEVICE_DIR = $(DEVICE_DIR)/$(SOC)
 DRIVER_DIR = $(ROOT_DIR)/drivers
 COMPONENTS_DIR = $(ROOT_DIR)/components
 cpu = m33
+NO_RX_REPLICA ?= 0
 
 INCLUDE += \
     -I$(DEV_SM_API_DIR)  \
@@ -168,6 +169,11 @@ TEST_OBJS += \
 	$(OUT)/scmi_reset.o  \
 	$(OUT)/scmi_voltage.o  \
 	$(OUT)/smt.o
+
+ifneq ($(NO_RX_REPLICA),1)
+	FLAGS += -DUSES_RX_REPLICA
+	SDK_OBJS += $(OUT)/fsl_ddr_rx_replica.o
+endif
 
 OBJS += $(SDK_OBJS) $(SM_OBJS)
 

@@ -88,6 +88,7 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_TSENSOR1_TRIM1]     = {1280U,  32U},
     [DEV_SM_FUSE_TSENSOR1_TRIM2]     = {1312U,  32U},
     [DEV_SM_FUSE_FRO_TRIM]           = {1344U,  18U},
+    [DEV_SM_FUSE_PMRO]               = {10240U, 32U},
     [DEV_SM_FUSE_M33_ROM_PATCH_VER]  = {10496U, 32U}
 };
 

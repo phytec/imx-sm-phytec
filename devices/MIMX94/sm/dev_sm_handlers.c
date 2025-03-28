@@ -409,10 +409,13 @@ void UsageFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 void SysTick_Handler(void)
 {
+    s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
+
+    /* Call system tick */
+    DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
+
     /* Call board tick */
     BRD_SM_TimerTick(BOARD_TICK_PERIOD_MSEC);
-
-    s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 }
 
 /*--------------------------------------------------------------------------*/

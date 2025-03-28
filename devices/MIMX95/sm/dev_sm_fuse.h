@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device fuse */
-#define DEV_SM_NUM_FUSE  29U
+#define DEV_SM_NUM_FUSE  30U
 
 /*!
  * @name Device fuse indexes
@@ -89,6 +89,7 @@
 #define DEV_SM_FUSE_ECID2              26U  /*!< ECID 2 */
 #define DEV_SM_FUSE_ECID1              27U  /*!< ECID 1 */
 #define DEV_SM_FUSE_ECID0              28U  /*!< ECID 0 */
+#define DEV_SM_FUSE_PMRO               29U  /*!< PMRO */
 /** @} */
 
 /* Types */

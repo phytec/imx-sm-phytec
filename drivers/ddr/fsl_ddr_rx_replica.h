@@ -1,7 +1,7 @@
 /*
  ** ###################################################################
  **
- **     Copyright 2024-2025 NXP
+ **     Copyright 2025 NXP
  **
  **     Redistribution and use in source and binary forms, with or without modification,
  **     are permitted provided that the following conditions are met:
@@ -32,8 +32,8 @@
  ** ###################################################################
  */
 
-#ifndef DEV_SM_DDR_H
-#define DEV_SM_DDR_H
+#ifndef DEV_SM_DDR_RX_REPLICA_H
+#define DEV_SM_DDR_RX_REPLICA_H
 
 /*==========================================================================*/
 /*!
@@ -43,7 +43,7 @@
  * @file
  * @brief
  *
- * Header file containing the DDR retention functions.
+ * Header file containing the DDR RX Replica workaround functions.
  */
 /*==========================================================================*/
 
@@ -51,61 +51,45 @@
 
 #include "sm.h"
 
-/*! DDR controller info. */
-struct ddrc {
-    /*! drc register offset */
-    uint32_t reg;
-    /*! value of the drc reg */
-    uint32_t val;
-};
-
-/*! DDR phy info. */
-struct ddrphy {
-    /*! ddr phy register offset */
-    uint32_t reg;
-    /*! value of the drc phy reg */
-    uint16_t val;
-};
-
-/*! DDR controller pstate info. */
-struct ddrc_pstate {
-    /*! drc pstate config */
-    struct ddrc *cfg;
-    /*! number of pstate specific drc config */
-    uint32_t cfg_num;
-};
-
-/*! DDR config info. */
-struct ddr_info {
-    /*! ddrc config */
-    struct ddrc *ddrc_cfg;
-    /*! ddrc number of regs */
-    uint32_t ddrc_cfg_num;
-    /*! ddrc pstate config */
-    struct ddrc_pstate *pstate;
-    /*! number of pstates */
-    uint32_t pstate_num;
-    /*! ddr phy trained CSR */
-    struct ddrphy *trained_csr;
-    /*! ddr phy number of trained regs */
-    uint32_t ddrphy_trained_csr_num;
-    /*! pstate freq table */
-    uint32_t pstate_freq[4];
-    /*! ZQ calibration PU */
-    uint32_t ZQCalCodePU;
-    /*! ZQ calibration PD */
-    uint32_t ZQCalCodePD;
-};
-
 /* Defines */
 
-/*! Macro to write a DDR phy register. */
-#define DWC_DDRPHY_APB_WR(addr, data) \
-    (*(uint32_t *)(DDR_PHY_BASE + DDR_PhyAddrRemap(addr)) = (data))
+/*! Number of maximum samples for RXCLK delay averaging */
+#define DDR_RXCLK_DELAY_CNT  128U
 
-/*! Macro to read a DDR phy register. */
-#define DWC_DDRPHY_APB_RD(addr) \
-    *(uint32_t *)(DDR_PHY_BASE + DDR_PhyAddrRemap(addr))
+/* Types */
+
+/*! Initial DDR training information which will be used later */
+typedef struct
+{
+    /*! Init complete status */
+    bool initComplete;
+    /*! Number of byte lanes */
+    uint8_t dbytes;
+    /*! Number of cycles for RXCLK delay */
+    uint16_t count;
+    /*! Rxclk delay initial training values */
+    uint32_t rxclkinitv[4U][9U][4U];
+    /*! RxReplicaRatio initial trained value */
+    uint16_t init[4U];
+    /*! PathPhase select */
+    uint16_t pathsel[4U];
+    /*! Per dbyte previous applied offset */
+    int16_t rxclkoffset[4U];
+    /*! Per dbyte delta saved group */
+    uint16_t aPathphase[4U][DDR_RXCLK_DELAY_CNT];
+    /*! Index for the latest update of a_delta */
+    uint32_t aIndex;
+    /*! Delta saved group status */
+    bool aEmpty;
+    /*! Scale factor for Process variation */
+    uint32_t processScaleFactor;
+    /*! Frequency Ratio */
+    uint32_t freqRatio;
+    /*! Process corner of sample */
+    uint32_t pmro;
+    /*! Frequency in MHz of DDRC */
+    uint32_t dramFreqMhz;
+} ddr_rxclkdelay_wa_data_t;
 
 /*******************************************************************************
  * Variables
@@ -116,35 +100,27 @@ extern "C" {
 #endif
 
 /*!
- * Set the DRAM into retention for low power mode
+ * DDR RX Clk Delay workaround Init
  *
- * @param[in]     ddrp    DDR config info.
- *
- * @return True if successful.
- */
-bool DDR_EnterRetention(const struct ddr_info *ddrp);
-
-/*!
- * Exit DRAM retention
- *
- * @param[in]     ddrp    DDR config info.
+ * @param[in,out] ddrRxcWa    DDR RX CLK delay workaround data.
+ * @param[in]     count       Number of cycles for RXCLK delay.
  *
  * @return True if successful.
  */
-bool DDR_ExitRetention(const struct ddr_info *ddrp);
+bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count);
 
 /*!
- * DDR PHY address mapper
+ * DDR RX Clk Delay periodic workaround
  *
- * @param[in]     paddr    DDR PHY 16-bit address.
+ * @param[in,out] ddrRxcWa    DDR RX CLK delay workaround data.
+ * @param[in]     newSamples  Number of new samples to acquire.
  *
- * @return Returns the 32-bit address.
  */
-uint32_t DDR_PhyAddrRemap(uint32_t paddr);
+void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples);
 
 #if defined(__cplusplus)
 }
 #endif /*_cplusplus*/
 /** @} */
-#endif /* DEV_SM_DDR_H */
+#endif /* DEV_SM_DDR_RX_REPLICA_H */
 

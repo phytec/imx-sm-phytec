@@ -112,7 +112,7 @@ typedef struct
     uint32_t psIdx;
     uint32_t idStart;
     uint32_t idEnd;
-    uint32_t const *dvsTable;
+    int32_t const *dvsTable;
 } dev_sm_perf_ps_cfg_t;
 
 /* Overall performance setpoint configuration */
@@ -157,7 +157,7 @@ static uint32_t const s_perfSleepDomain[DEV_SM_NUM_PERF_SLEEP] =
 };
 
 /* Voltage setpoints for VDD_SOC */
-static uint32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
+static int32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] = ES_LOW_UV_VDD_SOC,
     [DEV_SM_PERF_LVL_LOW] = ES_LOW_UV_VDD_SOC,

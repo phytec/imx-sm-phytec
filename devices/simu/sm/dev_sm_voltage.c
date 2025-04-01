@@ -195,15 +195,8 @@ int32_t DEV_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
     /* Check domain */
     if (domainId < DEV_SM_NUM_VOLT)
     {
-        if (CHECK_I32_POSITIVE(voltageLevel))
-        {
-            /* Set level */
-            status = BRD_SM_SupplyLevelSet(domainId, (uint32_t) voltageLevel);
-        }
-        else
-        {
-            status = SM_ERR_INVALID_PARAMETERS;
-        }
+        /* Set level */
+        status = BRD_SM_SupplyLevelSet(domainId, voltageLevel);
     }
     else
     {
@@ -220,7 +213,7 @@ int32_t DEV_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
 int32_t DEV_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t microVolt = 0U;
+    int32_t microVolt = 0;
 
     /* Check domain */
     if (domainId < DEV_SM_NUM_VOLT)
@@ -236,16 +229,7 @@ int32_t DEV_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
     /* Return voltage */
     if (status == SM_ERR_SUCCESS)
     {
-        /* Check microVolt U32 value fit in I32 */
-        if (CHECK_U32_FIT_I32(microVolt))
-        {
-            *voltageLevel = (int32_t) microVolt;
-        }
-        else
-        {
-            /* Set the status if microVolt U32 value doesn't fit in I32 */
-            status = SM_ERR_HARDWARE_ERROR;
-        }
+        *voltageLevel = microVolt;
     }
 
     /* Return status */

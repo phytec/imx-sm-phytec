@@ -50,8 +50,8 @@
 
 /* Local variables */
 
+static int32_t s_voltLevel[DEV_SM_NUM_VOLT];
 static uint8_t s_voltMode[DEV_SM_NUM_VOLT];
-static uint32_t s_voltLevel[DEV_SM_NUM_VOLT];
 
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
@@ -286,7 +286,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 /* Set voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -307,7 +307,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
 /*--------------------------------------------------------------------------*/
 /* Get voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 {
     int32_t status = SM_ERR_SUCCESS;
 

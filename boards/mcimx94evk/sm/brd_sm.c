@@ -579,15 +579,15 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 /* Set voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 {
     int32_t status = SM_ERR_INVALID_PARAMETERS;
 
-    /* Check microVolt is within the int32_t range */
-    if (CHECK_U32_FIT_I32(microVolt))
+    /* Check for wrap */
+    if (microVolt <= (INT32_MAX - BOARD_PERF_VDROP))
     {
         /* Set voltage level */
-        status = BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt)
+        status = BRD_SM_VoltageLevelSet(domain, microVolt
             + BOARD_PERF_VDROP);
     }
 
@@ -598,10 +598,10 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
 /*--------------------------------------------------------------------------*/
 /* Get voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 {
     /* Get voltage level */
-    return BRD_SM_VoltageLevelGet(domain, (int32_t*) microVolt);
+    return BRD_SM_VoltageLevelGet(domain, microVolt);
 }
 
 /*==========================================================================*/

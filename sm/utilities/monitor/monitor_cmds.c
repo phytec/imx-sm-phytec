@@ -3287,11 +3287,15 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 
                 if (argc < 2)
                 {
-                    while (BRD_SM_PmicRead(dev, reg, &val)
-                        == SM_ERR_SUCCESS)
+                    status = BRD_SM_PmicRead(dev, reg, &val);
+                    while (status == SM_ERR_SUCCESS)
                     {
                         printf("   REG[0x%02x] = 0x%02x\n", reg, val);
                         reg++;
+                        if (BRD_SM_PmicRead(dev, reg, &val) != SM_ERR_SUCCESS)
+                        {
+                            break;
+                        }
                     }
                 }
                 else
@@ -3318,14 +3322,26 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
             }
             else
             {
-                uint8_t addr = strtoul(argv[0], NULL, 0);
-                uint8_t reg  = strtoul(argv[1], NULL, 0);
-                uint8_t data = strtoul(argv[2], NULL, 0);
-                status = BRD_SM_PmicWrite(addr, reg, data, 0xFFU);
-                if (status == SM_ERR_SUCCESS)
+                uint32_t addr = strtoul(argv[0], NULL, 0);
+                uint32_t reg  = strtoul(argv[1], NULL, 0);
+                uint32_t data = strtoul(argv[2], NULL, 0);
+                /* Check variables fit within uint8_t range */
+                if (CHECK_U32_FIT_U8(addr) &&
+                    CHECK_U32_FIT_U8(reg) &&
+                    CHECK_U32_FIT_U8(data))
                 {
-                    printf("PMIC 0x%02x write register 0x%02x: 0x%02x\n",
-                        addr, reg, data);
+                    status = BRD_SM_PmicWrite(U32_U8(addr),
+                        U32_U8(reg), U32_U8(data), 0xFFU);
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        printf("PMIC 0x%02x write register 0x%02x: 0x%02x\n",
+                            addr, reg, data);
+                    }
+                }
+                else
+                {
+                    /* Set the status if variables are out of range */
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             break;

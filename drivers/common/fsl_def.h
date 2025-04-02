@@ -84,6 +84,9 @@
 /*! Macro to check the uint variable in int range */
 #define CHECK_U32_FIT_I32(X)   ((uint32_t)(X) <= U32_2GB)
 
+/*! Macro to check the uint variable in uint8_t range */
+#define CHECK_U32_FIT_U8(X)   ((uint32_t)(X) <= U8_MAX)
+
 /*! Macro to check the long long int variable in int range */
 #define CHECK_I64_FIT_I32(X)   ((int64_t)(X) <= I64_2GB)
 

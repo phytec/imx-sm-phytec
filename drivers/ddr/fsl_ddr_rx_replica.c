@@ -1,36 +1,36 @@
 /*
- ** ###################################################################
- **
- **     Copyright 2025 NXP
- **
- **     Redistribution and use in source and binary forms, with or without modification,
- **     are permitted provided that the following conditions are met:
- **
- **     o Redistributions of source code must retain the above copyright notice, this list
- **       of conditions and the following disclaimer.
- **
- **     o Redistributions in binary form must reproduce the above copyright notice, this
- **       list of conditions and the following disclaimer in the documentation and/or
- **       other materials provided with the distribution.
- **
- **     o Neither the name of the copyright holder nor the names of its
- **       contributors may be used to endorse or promote products derived from this
- **       software without specific prior written permission.
- **
- **     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- **     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- **     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- **     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- **     ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- **     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- **     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- **     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- **     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- **     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **
- **
- ** ###################################################################
- */
+** ###################################################################
+**
+**     Copyright 2025 NXP
+**
+**     Redistribution and use in source and binary forms, with or without modification,
+**     are permitted provided that the following conditions are met:
+**
+**     o Redistributions of source code must retain the above copyright notice, this list
+**       of conditions and the following disclaimer.
+**
+**     o Redistributions in binary form must reproduce the above copyright notice, this
+**       list of conditions and the following disclaimer in the documentation and/or
+**       other materials provided with the distribution.
+**
+**     o Neither the name of the copyright holder nor the names of its
+**       contributors may be used to endorse or promote products derived from this
+**       software without specific prior written permission.
+**
+**     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**     ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**     (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**
+**
+** ###################################################################
+*/
 
 /*==========================================================================*/
 /* File containing the implementation of the DDR RX Replica workaround.     */
@@ -76,8 +76,6 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
 {
     bool rc = true;
     uint32_t idx;
-    uint32_t pmroScaleFactor = 0U;
-    uint32_t pmroToTtRatio = 0U;
 #if defined(INC_LIBC) && defined(DEBUG_PRINT_INIT_RUNTIME)
     uint64_t start;
 #endif
@@ -237,8 +235,8 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
 
             /* Get path select */
             /* RxReplicaCtl01: Specify which of the five
-             * RxReplicaPathPhase[0..4]
-             * to use for computing RxReplicaRatioNow. */
+            * RxReplicaPathPhase[0..4]
+            * to use for computing RxReplicaRatioNow. */
             ddrRxcWa->pathsel[idx] =
                 U32_U16(DWC_DDRPHY_APB_RD(0x10000U + (idx << 12U) + 0xadU));
 
@@ -265,8 +263,8 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
 
         /* For pmro fused parts, if PMRO fuse is programmed, proceed to use
            the fuse information */
-        pmroScaleFactor = (ddrRxcWa->pmro / 4U) - PMRO_SCALE_OFFSET;
-        pmroToTtRatio = ((PMRO_FUSE_TT- PMRO_SCALE_OFFSET)
+        uint32_t pmroScaleFactor = (ddrRxcWa->pmro / 4U) - PMRO_SCALE_OFFSET;
+        uint32_t pmroToTtRatio = ((PMRO_FUSE_TT- PMRO_SCALE_OFFSET)
             * DDR_FLOAT_WA_FACTOR) / (pmroScaleFactor);
         ddrRxcWa->processScaleFactor = (pmroToTtRatio
             * TT_SCALE_FACTOR) / (DDR_FLOAT_WA_FACTOR);
@@ -300,17 +298,6 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
 void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
 {
     bool rc = true;
-    uint8_t bit;
-    uint16_t count;
-    uint32_t idx;
-    int32_t delta[4] = { 0 };
-    int32_t scaled_delta[4] = { 0 };
-    uint16_t avePathphase[4] = { 0 };
-    uint16_t sumPathphase[4] = { 0 };
-    int32_t offset;
-#if defined(INC_LIBC) && defined(DEBUG_PRINT_WA_RUNTIME)
-    uint64_t start;
-#endif
 
     /* Check if NULL */
     if (ddrRxcWa == NULL)
@@ -336,9 +323,10 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
 
     if (rc)
     {
+        int32_t scaled_delta[4] = { 0 };
         uint32_t processScaleFactor = ddrRxcWa->processScaleFactor;
 #if defined(INC_LIBC) && defined(DEBUG_PRINT_WA_RUNTIME)
-        start = SYSCTR_GetUsec64();
+        uint64_t start = SYSCTR_GetUsec64();
 #endif
 
         /* CSR bus: MCU--,PIE/DMA/TDR/APB++ */
@@ -353,6 +341,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
         /* Reset PMIenable to ensure PPT1 not overriding PMIenable again */
         DWC_DDRPHY_APB_WR(0x20054U, 0U);
 
+        uint16_t count = 0U;
         /* Check saved data status */
         if (ddrRxcWa->aEmpty)
         {
@@ -365,7 +354,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
 
         while (count-- != 0U)
         {
-            for (idx = 0U; idx < ddrRxcWa->dbytes; idx++)
+            for (uint32_t idx = 0U; idx < ddrRxcWa->dbytes; idx++)
             {
                 uint16_t pathphase;
 
@@ -397,9 +386,12 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
         }
 
         /* Average it */
-        for (idx = 0U; idx < ddrRxcWa->dbytes; idx++)
+        for (uint32_t idx = 0U; idx < ddrRxcWa->dbytes; idx++)
         {
             uint8_t cnt;
+            int32_t delta[4] = { 0 };
+            uint16_t avePathphase[4] = { 0 };
+            uint16_t sumPathphase[4] = { 0 };
 
             for (cnt = 0; cnt < ddrRxcWa->count; cnt++)
             {
@@ -424,7 +416,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
             {
                 scaled_delta[idx] = (int32_t)DDR_SimpleDivRound(((
                     (uint32_t) delta[idx] * (processScaleFactor
-                    * DDR_FLOAT_WA_FACTOR)) / ddrRxcWa->freqRatio),
+                        * DDR_FLOAT_WA_FACTOR)) / ddrRxcWa->freqRatio),
                     DDR_FLOAT_WA_FACTOR);
             }
 
@@ -445,13 +437,13 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
         /* Per above, when we calculated the delta or change needed to apply to
          * the initially trained RxClkT2UIDlyTg0, RxClkT2UIDlyTg1, RxClkC2UIDlyTg0,
          * RxClkC2UIDlyTg1 */
-        for (idx = 0U; idx < ddrRxcWa->dbytes; idx++)
+        for (uint32_t idx = 0U; idx < ddrRxcWa->dbytes; idx++)
         {
-            offset = scaled_delta[idx];
+            int32_t offset = scaled_delta[idx];
 
             if (offset != ddrRxcWa->rxclkoffset[idx])
             {
-                for (bit = 0U; bit <= 8U; bit++)
+                for (uint8_t bit = 0U; bit <= 8U; bit++)
                 {
                     /* Apply offset to RxClkT2UIDlyTg0, RxClkT2UIDlyTg1,
                      * RxClkC2UIDlyTg0, RxClkC2UIDlyTg1 */
@@ -470,7 +462,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
                     DWC_DDRPHY_APB_WR(0x10000U + (idx << 12U) + 0x13U
                         + (bit * 0x100U), ddrRxcWa->rxclkinitv[idx][bit][3U]
                         + (uint32_t)offset);
-                 }
+                }
             }
 
             ddrRxcWa->rxclkoffset[idx] = (int16_t) offset;

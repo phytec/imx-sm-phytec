@@ -79,7 +79,7 @@
 /* Local macros */
 
 /* SCMI LMM protocol attributes */
-#define LMM_PROTO_ATTR_NUM_LM(x)  (((x) & 0xFFU) << 0U)
+#define LMM_PROTO_ATTR_NUM_LM(x)  (((x) & 0x1FU) << 0U)
 
 /* SCMI LM attributes */
 #define LMM_ATTR_AGENTS(x)  (((x) & 0xFFU) << 0U)
@@ -550,7 +550,7 @@ static int32_t LmmProtocolVersion(const scmi_caller_t *caller,
 /* - caller: Caller info                                                    */
 /* - out->attributes: Protocol attributes:                                  */
 /*   Bits[31:8] Reserved, must be zero.                                     */
-/*   Bits[7:0] Number of logical machines                                   */
+/*   Bits[4:0] Number of logical machines                                   */
 /*                                                                          */
 /* Process the PROTOCOL_ATTRIBUTES message. Platform handler for            */
 /* SCMI_LmmProtocolAttributes().                                            */

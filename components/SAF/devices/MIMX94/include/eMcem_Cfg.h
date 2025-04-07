@@ -127,7 +127,7 @@ extern "C" {
 /*!
  * @brief    Array size for static fault masks.
  */
-#define EMCEM_FAULT_MASK_ARRAY_SIZE     (4U)
+#define EMCEM_FAULT_MASK_ARRAY_SIZE     (7U)
 /** @} */
 
 /*=================================================================================================

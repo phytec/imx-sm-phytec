@@ -155,7 +155,7 @@ static uint32 eMcem_Ddrc_GetErrAddr( eMcem_ChannelType nChannelId )
     uint8 u8InstanceId = eMcem_Ddrc_GetInstance( nChannelId );
 
     /* Get DDRC instance base address */
-    volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
+    const volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
 
     u32SysAddr = (uint32)( pDdrc->CAPTURE_ADDRESS.R );
 
@@ -177,7 +177,7 @@ static uint8 eMcem_Ddrc_GetErrSyndrome( eMcem_ChannelType nChannelId )
     uint8 u8InstanceId = eMcem_Ddrc_GetInstance( nChannelId );
 
     /* Get DDRC instance base address */
-    volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
+    const volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
 
     /* @violates @ref eMcem_Ddr_c_REF_1104 */
     /* @violates @ref eMcem_Ddr_c_REF_1106 */
@@ -349,7 +349,7 @@ uint16 eMcem_Ddrc_GetCorrErrCnt( eMcem_ChannelType nChannelId )
     uint8 u8InstanceId = eMcem_Ddrc_GetInstance( nChannelId );
 
     /* Get DDRC instance base address */
-    volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
+    const volatile struct DDR_DDRC_tag * const pDdrc = eMcem_DdrcBaseAddress[u8InstanceId];
 
     /* Check if Instance is controlled by this EENV */
     if( 0UL != ( ( eMcem_pConfigPtr->u32ControlledDdrcInstances ) & ( 1UL << u8InstanceId ) ) )

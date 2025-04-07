@@ -69,7 +69,6 @@ extern "C"{
 #include "eMcem_ExtDiagApi.h"
 #include "eMcem_Sramc.h"
 #include "eMcem_SramcChannels_MIMX9.h"
-#include "eMcem_SramcAddrCalc_MIMX9.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -453,7 +452,7 @@ uint8 eMcem_Sramc_GetCorrErrCnt( eMcem_ChannelType nChannelId )
     uint8 u8ErrorCount = 0U;
 
     /* Get SRAMC instance from given channel */
-    volatile struct SRAMCTL_tag *pSramc = eMcem_SramcBaseAddress[nChannelId];
+    const volatile struct SRAMCTL_tag *pSramc = eMcem_SramcBaseAddress[nChannelId];
 
     /* Get SRAMC instace for given channel */
     uint8 u8InstanceId = eMcem_Sramc_GetInstance( nChannelId );

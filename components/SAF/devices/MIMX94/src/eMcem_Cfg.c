@@ -104,10 +104,13 @@ extern "C"{
 
 const uint32 eMcem_au32StaticFaultMasks[EMCEM_FAULT_MASK_ARRAY_SIZE] =
 {
+    0xFFFFDBFFU,
+    0xF7FFFFDFU,
+    0xFFF3FFFFU,
+    0x0001FFF9U,
     0xFFFFFFFFU,
-    0xFFFFFFFFU,
-    0xFFFFFFFFU,
-    0xFFFFFFFFU
+    0xFFFFFF9FU,
+    0x00000001U
 };
 
 #define EMCEM_STOP_SEC_CONST_32

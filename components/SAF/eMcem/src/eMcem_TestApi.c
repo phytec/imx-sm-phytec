@@ -78,7 +78,6 @@ extern "C"{
 #include "MIMX9XX_SAF_Version.h"
 #include "Platform_Types.h"
 #include "eMcem_TestApi.h"
-#include "eMcem_Vfccu.h"
 #include "Reg_eSys_Vfccu_MIMX9.h"
 
 /*==================================================================================================

@@ -1536,6 +1536,30 @@ static int32_t LmmEvent(scmi_msg_id_t msgId,
                 RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
                     sizeof(out), SCMI_NOTIFY_Q);
             }
+            if ((event == LMM_TRIGGER_PARM_LM_SUSPEND)
+                && (LMM_NOTIFY_SUSPEND(s_lmmNotify[eventLm][dstAgent]) != 0U))
+            {
+                /* Fill in data */
+                out.lmId = lmId;
+                out.eventLm = eventLm;
+                out.flags = LMM_EVENT_SUSPEND(1U);
+
+                /* Queue notification */
+                RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
+                    sizeof(out), SCMI_NOTIFY_Q);
+            }
+            if ((event == LMM_TRIGGER_PARM_LM_WAKE)
+                && (LMM_NOTIFY_WAKE(s_lmmNotify[eventLm][dstAgent]) != 0U))
+            {
+                /* Fill in data */
+                out.lmId = lmId;
+                out.eventLm = eventLm;
+                out.flags = LMM_EVENT_WAKE(1U);
+
+                /* Queue notification */
+                RPC_SCMI_P2aTxQ(dstAgent, msgId, (uint32_t*) &out,
+                    sizeof(out), SCMI_NOTIFY_Q);
+            }
         }
     }
 

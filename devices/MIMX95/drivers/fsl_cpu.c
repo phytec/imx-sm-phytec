@@ -1428,6 +1428,50 @@ bool CPU_SystemSleepGet(uint32_t cpuIdx, uint32_t *sysSleep)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Query if CPU is active                                                   */
+/*--------------------------------------------------------------------------*/
+bool CPU_IsActive(uint32_t cpuIdx)
+{
+    bool isActive = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        /* Check if sleep is forced for the CPU */
+        bool sleepForce;
+        if (CPU_SleepForceGet(cpuIdx, &sleepForce))
+        {
+            /* If sleep is not forced, consider the CPU mode */
+            if (!sleepForce)
+            {
+                /* Assume CPU is active */
+                isActive = true;
+
+                /* Get GPC CPU mode status */
+                uint32_t cpuModeStat =
+                    s_gpcCpuCtrlPtrs[cpuIdx]->CMC_MODE_STAT;
+
+                /* Check if CPU in SLEEPING_IDLE state */
+                if ((cpuModeStat &
+                    GPC_CPU_CTRL_CMC_MODE_STAT_SLEEPING_IDLE_MASK) != 0U)
+                {
+                    /* CPU_MODE_CURRENT reflects active mode */
+                    uint32_t cpuModeCur = (cpuModeStat &
+                        GPC_CPU_CTRL_CMC_MODE_STAT_CPU_MODE_CURRENT_MASK) >>
+                        GPC_CPU_CTRL_CMC_MODE_STAT_CPU_MODE_CURRENT_SHIFT;
+
+                    if (cpuModeCur == CPU_SLEEP_MODE_SUSPEND)
+                    {
+                        isActive = false;
+                    }
+                }
+            }
+        }
+    }
+
+    return isActive;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Get system-level sleep status                                            */
 /*--------------------------------------------------------------------------*/
 bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat)

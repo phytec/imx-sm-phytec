@@ -1404,7 +1404,7 @@ static int32_t MONITOR_CmdLmInfo(int32_t argc, const char * const argv[])
             {
                 "off",
                 "on",
-                "suspend",
+                "suspended",
                 "powered"
             };
 
@@ -2638,7 +2638,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                         string const runModes[] =
                         {
                             "RUN",
-                            "WAIT",
+                            "HOLD",
                             "STOP",
                             "SLEEP"
                         };

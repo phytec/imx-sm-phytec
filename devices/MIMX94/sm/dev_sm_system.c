@@ -1130,6 +1130,20 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* System timer tick                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemTick(uint32_t msec)
+{
+    /* Poll for CPU state changes */
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P0);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P1);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M33S);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
 /* Configure bypass for clock sources                                       */
 /*--------------------------------------------------------------------------*/
 static void CLOCK_SourceBypass(bool bypass, bool preserve)

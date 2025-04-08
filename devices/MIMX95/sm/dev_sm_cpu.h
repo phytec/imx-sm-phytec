@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -76,6 +76,20 @@
 #define DEV_SM_CPU_A55C4    CPU_IDX_A55C4  /*!< 6: CA55 core 4 */
 #define DEV_SM_CPU_A55C5    CPU_IDX_A55C5  /*!< 7: CA55 core 5 */
 #define DEV_SM_CPU_A55P     CPU_IDX_A55P   /*!< 8: CA55 platform */
+/** @} */
+
+/*!
+ * @name CPU run modes
+ */
+/** @{ */
+/*! On */
+#define DEV_SM_CPU_RUN_MODE_RUN        CPU_RUN_MODE_START
+/*! Wait mode */
+#define DEV_SM_CPU_RUN_MODE_HOLD       CPU_RUN_MODE_HOLD
+/*! Stop mode */
+#define DEV_SM_CPU_RUN_MODE_STOP       CPU_RUN_MODE_STOP
+/*! Suspend mode */
+#define DEV_SM_CPU_RUN_MODE_SLEEP      CPU_RUN_MODE_SLEEP
 /** @} */
 
 /*!

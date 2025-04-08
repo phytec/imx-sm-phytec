@@ -514,6 +514,15 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm);
 int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
     lmm_rst_rec_t *bootRec, lmm_rst_rec_t *shutdownRec);
 
+/*!
+ * Report a run mode change for a CPU.
+ *
+ * @param[in]     cpuId        CPU that changed mode
+ *
+ * Sends notifications on suspend/wake changes.
+ */
+void LMM_SystemCpuModeChanged(uint32_t cpuId);
+
 /** @} */
 
 #endif /* LMM_SYS_H */

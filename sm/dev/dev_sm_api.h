@@ -505,6 +505,11 @@
 #define SM_CPUINFOGET           DEV_SM_CpuInfoGet
 #endif
 
+#ifndef SM_CPUISACTIVE
+/*! Redirector (device/board) to get CPU state */
+#define SM_CPUISACTIVE          DEV_SM_CpuIsActive
+#endif
+
 #ifndef SM_CPUSTART
 /*! Redirector (device/board) to start a CPU */
 #define SM_CPUSTART             DEV_SM_CpuStart

@@ -40,6 +40,7 @@
 
 #include "sm.h"
 #include "dev_sm.h"
+#include "lmm.h"
 
 /* Local defines */
 
@@ -143,6 +144,15 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if a CPU is active or suspended                                    */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_CpuIsActive(uint32_t cpuId)
+{
+    /* Return CPU state */
+    return CPU_IsActive(cpuId);
 }
 
 /*--------------------------------------------------------------------------*/

@@ -3191,61 +3191,72 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
         /* Parse parameters */
         errno = 0;
         word = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
+        if (errno == 0)
         {
-            word = 0U;
-        }
 
-        /* Get fuse word address */
-        status = DEV_SM_FuseInfoGet(word, &addr);
+            /* Get fuse word address */
+            status = DEV_SM_FuseInfoGet(word, &addr);
 
-        if (status == SM_ERR_SUCCESS)
-        {
-            switch (rw)
+            if (status == SM_ERR_SUCCESS)
             {
-                default:  /* read */
-                    {
-                        /* Read fuse word directly */
-                        if (SystemMemoryProbe((const void *) addr, &data, 32U) != 0U)
+                switch (rw)
+                {
+                    default:  /* read */
+                        {
+                            /* Read fuse word directly */
+                            if (SystemMemoryProbe((const void *) addr, &data, 32U) != 0U)
+                            {
+#ifdef DEVICE_HAS_ELE
+                                /* Read fuse word via ELE */
+                                ELE_FuseRead(word, &data);
+                                status = g_eleStatus;
+#else
+                                status = SM_ERR_INVALID_PARAMETERS;
+#endif
+                            }
+
+                            if (status == SM_ERR_SUCCESS)
+                            {
+                                printf("Fuse[%u] = 0x%08x\n", word, data);
+                            }
+                        }
+                        break;
+                    case WRITE:  /* write */
                         {
 #ifdef DEVICE_HAS_ELE
-                            /* Read fuse word via ELE */
-                            ELE_FuseRead(word, &data);
-                            status = g_eleStatus;
+                            /* Check arguments */
+                            if (argc >= 2)
+                            {
+                                errno = 0;
+                                /* Parse data */
+                                data = strtoul(argv[1], NULL, 0);
+
+                                if (errno == 0)
+                                {
+                                    /* Write fuse */
+                                    ELE_FuseWrite(word, data, false);
+                                    status = g_eleStatus;
+                                }
+                                else
+                                {
+                                    status = SM_ERR_INVALID_PARAMETERS;
+                                }
+                            }
+                            else
+                            {
+                                status = SM_ERR_MISSING_PARAMETERS;
+                            }
 #else
-                            status = SM_ERR_INVALID_PARAMETERS;
+                            status = SM_ERR_NOT_SUPPORTED;
 #endif
                         }
-
-                        if (status == SM_ERR_SUCCESS)
-                        {
-                            printf("Fuse[%u] = 0x%08x\n", word, data);
-                        }
-                    }
-                    break;
-                case WRITE:  /* write */
-                    {
-#ifdef DEVICE_HAS_ELE
-                        /* Check arguments */
-                        if (argc >= 2)
-                        {
-                            /* Parse data */
-                            data = strtoul(argv[1], NULL, 0);
-
-                            /* Write fuse */
-                            ELE_FuseWrite(word, data, false);
-                            status = g_eleStatus;
-                        }
-                        else
-                        {
-                            status = SM_ERR_MISSING_PARAMETERS;
-                        }
-#else
-                        status = SM_ERR_NOT_SUPPORTED;
-#endif
-                    }
-                    break;
+                        break;
+                }
             }
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else

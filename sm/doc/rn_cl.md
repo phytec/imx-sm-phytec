@@ -17,6 +17,7 @@ New Feature {#RN_CL_NEW}
 |------------|-------------------------------|-------|---|---|---|---|
 | [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode |   | Y | Y | Y | Y |
 | [SM-197](https://jira.sw.nxp.com/projects/SM/issues/SM-197) | Support i.MX95 B0 |   | | | Y | |
+| [SM-240](https://jira.sw.nxp.com/projects/SM/issues/SM-240) | Add support for sending frequency/voltage change messages to ELE |   | Y | Y | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -34,20 +35,24 @@ Improvement {#RN_CL_IMP}
 | [SM-232](https://jira.sw.nxp.com/projects/SM/issues/SM-232) | Enable Neutron NPU with SMMU |   | Y | Y | Y | |
 | [SM-233](https://jira.sw.nxp.com/projects/SM/issues/SM-233) | Support negative voltages to board functions |   | Y | Y | Y | Y |
 | [SM-235](https://jira.sw.nxp.com/projects/SM/issues/SM-235) | Add ECID in SM info output [[detail]](@ref RN_DETAIL_SM_235) |   | Y | Y | Y | Y |
+| [SM-239](https://jira.sw.nxp.com/projects/SM/issues/SM-239) | Add new rpmsg cfg file for i.MX94 |   | | | | Y |
+| [SM-242](https://jira.sw.nxp.com/projects/SM/issues/SM-242) | Send LM suspend/wake notifications |   | Y | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
-| [SM-212](https://jira.sw.nxp.com/projects/SM/issues/SM-212) | Insufficient argument checking for monitor pmic commands |   | Y | Y | Y | Y |
+| [SM-212](https://jira.sw.nxp.com/projects/SM/issues/SM-212) | Insufficient argument checking for monitor pmic commands [[detail]](@ref RN_DETAIL_SM_212) |   | Y | Y | Y | Y |
 | [SM-213](https://jira.sw.nxp.com/projects/SM/issues/SM-213) | Insufficient argument checking for monitor trdc commands [[detail]](@ref RN_DETAIL_SM_213) |   | Y | Y | Y | Y |
 | [SM-214](https://jira.sw.nxp.com/projects/SM/issues/SM-214) | Insufficient argument checking for monitor fuse commands |   | Y | Y | Y | Y |
 | [SM-221](https://jira.sw.nxp.com/projects/SM/issues/SM-221) | Extended config flag not set for spread spectrum clocks [[detail]](@ref RN_DETAIL_SM_221) |   | Y | Y | Y | Y |
 | [SM-223](https://jira.sw.nxp.com/projects/SM/issues/SM-223) | Wakeups must be masked for CPUs that do not constrain system sleep entry [[detail]](@ref RN_DETAIL_SM_223) |   | Y | Y | Y | Y |
-| [SM-229](https://jira.sw.nxp.com/projects/SM/issues/SM-229) | Manage NETC M33S with a virtual power domain to avoid power dependencies |   | | | | Y |
+| [SM-229](https://jira.sw.nxp.com/projects/SM/issues/SM-229) | Manage NETC M33S with a virtual power domain to avoid power dependencies [[detail]](@ref RN_DETAIL_SM_229) |   | | | | Y |
 | [SM-230](https://jira.sw.nxp.com/projects/SM/issues/SM-230) | Incorrect configtool output for debug/DAP domain [[detail]](@ref RN_DETAIL_SM_230) |   | Y | Y | Y | Y |
 | [SM-236](https://jira.sw.nxp.com/projects/SM/issues/SM-236) | PMIC soft errors incorrectly reported as boot reason [[detail]](@ref RN_DETAIL_SM_236) |   | Y | Y | Y | Y |
+| [SM-238](https://jira.sw.nxp.com/projects/SM/issues/SM-238) | SCMI reset protocol does not manage regional resets correctly |   | Y | Y | Y | Y |
+| [SM-241](https://jira.sw.nxp.com/projects/SM/issues/SM-241) | Bit width of LM number not consistent in the LMM protocol [[detail]](@ref RN_DETAIL_SM_241) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -70,6 +75,13 @@ Details {#CL_DETAIL}
 
 This section provides details for select changes.
 
+SM-212: Insufficient argument checking for monitor pmic commands {#RN_DETAIL_SM_212}
+----------
+
+For the pmic.r debug monitor command, the error message was not being logged on the M33 console when an invalid argument was provided. Support has now been added to log the error on the console in such cases.
+
+For the pmic.w debug monitor command, the validation check for the parameter values was missing. Therefore, a validation check has been added to ensure the parameters passed to the pmic.w command are correct.
+
 SM-213: Insufficient argument checking for monitor trdc commands {#RN_DETAIL_SM_213}
 ----------
 
@@ -81,7 +93,7 @@ SM-217: Add monitor rst command to allow assert/negate of resets {#RN_DETAIL_SM_
 Added the following commands to the monitor:
 
 - rst.r - will display all reset domains and their current state
-- rst.w <domain> <action> - will perform reset action on domain
+- rst.w \<domain> \<action> - will perform reset action on domain
 
 Actions include assert, negate, and auto. Auto (autonomous) will usually assert+negate to do a complete reset.
 
@@ -101,6 +113,13 @@ SM-226: Support misc. makefile variables from the configtool {#RN_DETAIL_SM_226}
 ----------
 
 Added option to generate makefile variable definitions from the configtool. The MAKE line can now contain one or more var=A|B options where the A is the name of the variable and B is the optional value. If |B is not present, then the variable is set to 1.
+
+SM-229: Manage NETC M33S with a virtual power domain to avoid power dependencies {#RN_DETAIL_SM_229}
+----------
+
+SM previously enabled hardware-control of NETCMIX to manage the MIX power state based on the sleep mode of NETC M33S.  Agents owning the NETCMIX power domain are also allowed to forcibly power up/down the NETCMIX.  This results in potential conflicts between the power state requested by the NETC M33S logical machine and agents with permission to directly control the NETCMIX power state.
+
+A new virtual power domain for NETC M33S was created to allow the appropriate arbitration of the NETCMIX power state between the NETC M33S logical machine and agents with permission to control the NETCMIX power sate.
 
 SM-230: Incorrect configtool output for debug/DAP domain {#RN_DETAIL_SM_230}
 ----------
@@ -149,4 +168,9 @@ SM-236: PMIC soft errors incorrectly reported as boot reason {#RN_DETAIL_SM_236}
 Modified reference board port code to mask PMIC soft fault bits when determining if a reset was cause by the PMIC. Soft faults do not result in a reset unless elevated to hard faults.
 
 Customers have to make similar changes to their board ports.
+
+SM-241: Bit width of LM number not consistent in the LMM protocol {#RN_DETAIL_SM_241}
+----------
+
+Reduced the field for num LM in the attributes from 8 bits to 5 bits to better align with the HW and reset reason limitations. Noted the current range for num LM is 1-16. The SCMI_LMM_PROTO_ATTR_NUM_LM macro is updated.
 

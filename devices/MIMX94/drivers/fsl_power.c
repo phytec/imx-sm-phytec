@@ -354,7 +354,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
     [PWR_MIX_SLICE_IDX_WAKEUP] =
     {
         .flags = PWR_MIX_FLAG_SWITCHABLE | PWR_MIX_FLAG_LPMSET | PWR_MIX_FLAG_QCH_TIMEOUT,
-        .memMask = (1U << PWR_MIX_SLICE_IDX_WAKEUP),
+        .memMask = (1U << PWR_MEM_SLICE_IDX_WAKEUP),
         .retainMask = 0U,
         .cpuMask = 0U,
         .ipIsoMask = SRC_XSPR_SLICE_SW_CTRL_ISO_CTRL_0_MASK | /* EARC */

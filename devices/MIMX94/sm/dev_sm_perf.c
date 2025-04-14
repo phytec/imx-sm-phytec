@@ -431,11 +431,11 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+2/3) = 4264MHz
+         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*2U/3U,                   /* VCO MFN */
-        .odiv = 8U,                             /* ODIV */
+        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
+        .odiv = 16U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
@@ -444,16 +444,16 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD/3U,                      /* VCO MFN */
-        .odiv = 4U                              /* ODIV */
+        .odiv = 8U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+2/3) = 4264MHz
+         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*2U/3U,                   /* VCO MFN */
-        .odiv = 4U,                             /* ODIV */
+        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
+        .odiv = 8U,                             /* ODIV */
     }
 };
 

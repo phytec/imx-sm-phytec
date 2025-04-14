@@ -40,7 +40,6 @@
 
 #include "sm.h"
 #include "dev_sm.h"
-#include "lmm.h"
 
 /* Local defines */
 

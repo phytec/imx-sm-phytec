@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2024 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -175,7 +175,7 @@ ifeq ($(BUILD_EMU), 1)
 	FLAGS += -DBUILD_EMU
 endif
 
-img : cfg.exists $(TARGETS)
+img : tc.check cfg.exists $(TARGETS)
 
 all: clean img
 
@@ -184,6 +184,11 @@ all: clean img
 DEPS := $(OBJS:.o=.d)
 
 -include $(DEPS)
+
+tc.check:
+ifneq ($(TC_VER_CHECK),)
+	$(warning $(TC_VER_CHECK))
+endif
 
 cfg.exists:
 	@if [ ! -d "$(ROOT_DIR)/configs/$(CONFIG)" ]; then (echo "Incorrect/missing $(CONFIG) config"; exit 1); fi

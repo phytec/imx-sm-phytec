@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023, 2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -44,22 +44,39 @@ ifeq ($(BUILD_ROM),1)
 	ROM_TARGET = $(ROM_IMG).hex
 endif
 
+ifneq ($(GCOV),0)
+	LFLAGS = -lgcov --coverage
+else
+	LFLAGS =
+endif
+
 ifeq ($(INC_LIBC),1)
-LFLAGS = -lc
+LFLAGS += -lc
 # Include libs
 include $(ROOT_DIR)/utilities/newlib/Makefile
 else
-LFLAGS =
 FLAGS += -DNDEBUG
 OBJS += \
 	$(OUT)/aeabi_memset-thumb2.o \
 	$(OUT)/memcpy-armv7m.o
 endif
 
+include $(ROOT_DIR)/sm/makefiles/common.mak
+
 # Configure toolchain
-SM_CROSS_COMPILE ?= $(TOOLS)/arm-gnu-toolchain-*-none-eabi/bin/arm-none-eabi-
+SM_CROSS_COMPILE ?= $(TOOLS)/arm-gnu-toolchain-$(TC_VERSION)-x86_64-arm-none-eabi/bin/arm-none-eabi-
 ARCHFLAGS = -mcpu=cortex-$(cpu) -mthumb -mfloat-abi=softfp
 cc = gcc
+
+ifeq ($(shell ! test -e "$(SM_CROSS_COMPILE)$(cc)"; echo $$?),0)
+	SM_CROSS_COMPILE = $(TOOLS)/arm-gnu-toolchain-*-x86_64-arm-none-eabi/bin/arm-none-eabi-
+endif
+
+# Check Toolchain Version
+ifeq ($(shell `realpath $(SM_CROSS_COMPILE)$(cc) 2>/dev/null | grep $(TC_VERSION) > /dev/null`; echo $$?),1)
+	TC_VER_CHECK := "WARNING: Toolchain version $(TC_VERSION) not found."
+endif
+
 CC = $(SM_CROSS_COMPILE)$(cc)
 LD = $(SM_CROSS_COMPILE)$(cc)
 OBJCOPY = $(SM_CROSS_COMPILE)objcopy
@@ -136,8 +153,5 @@ CFLAGS += -O3
 # 
 #################################
 LFLAGS 	+= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(IMG).map -specs=nano.specs -lgcc $(LIB) -nodefaultlibs -Wl,--no-warn-rwx-segments -T$(SOC_DEVICE_DIR)/gcc/$(LCF).ld
-ifneq ($(GCOV),0)
-	LFLAGS += -lgcov --coverage
-endif
 ROM_LFLAGS 	= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(ROM_IMG).map -specs=nosys.specs -nostdlib -T$(SOC_DEVICE_DIR)/gcc/$(ROM_LCF).ld
 

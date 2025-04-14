@@ -52,7 +52,7 @@ Set the TOOLS shell variable to the directory the toolchain is installed in. For
 
     export TOOLS=~/tools
 
-When the toolchain is in a directory like arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-eabi in this
+When the toolchain is in a directory like arm-gnu-toolchain-$TC_VER-x86_64-arm-none-eabi in this
 *tools* directory.
 
 Also ensure the Linux installation is up-to-date and then install:

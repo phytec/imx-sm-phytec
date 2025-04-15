@@ -133,12 +133,12 @@ uint64_t DEV_SM_Usec64Get(void)
     tm = (tv.tv_sec * 1000000LL) + tv.tv_usec;
 
     /* Check for signed bit of the tm */
-    if (CHECK_I64_POSITIVE(tm))
+    if (!CHECK_I64_POSITIVE(tm))
     {
         tm = 0LL;
     }
 
-    return (uint64_t)tm;
+    return (uint64_t) tm;
 }
 
 /*--------------------------------------------------------------------------*/

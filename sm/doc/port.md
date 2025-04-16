@@ -189,9 +189,22 @@ It is also important to note which MIX and power domain specific IP modules are 
 is the only GPIO module in the AON MIX (all others are in the WAKEUPMIX) and therefore the only GPIO
 module that can be used to wake from power modes where the WAKEUPMIX is turned off.
 
+When using bus expanders, all the signals on a specific bus expander need to be associated with an LM
+and the I2C it is connected to owned by that LM. The interrupt signal from a bus expander needs to also
+be connected to a GPIO owned by that LM.
+
 In summary, it is important in the board design that IP modules be assigned to cores first and then
 pads be connected based on which LM (and associated CPU) has each module. The power domain of such
 modules will also determine which can wakeup from various power modes.
+
+As a specific note on the SM (LM0). It needs to own an I2C for communication to the PMIC(s). Those
+PMIC(s) have interrupts that need to somehow make it to the SM. This should be done via an I2C and
+GPIO module in the AON domain. If other wakeups are required, in order to be able to turn of the
+WAKEUP MIX, those need to also come in via GPIO1. That usually means a bus expander **on the same
+AON I2C as the PMIC(s)**. The PMIC interrupts (and other wakeups) are then usually run to the bus
+expander and the interrupt from the bus expander run to GPIO1. See the design of the NXP EVK below.
+Customers should follow this design to minimize board porting work and to ensure the the SM can
+get interrupts for PMIC temp and safety events.
 
 NXP Reference Board Ports  {#PORT_NXP}
 =========================

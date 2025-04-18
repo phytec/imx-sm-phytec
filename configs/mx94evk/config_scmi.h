@@ -732,7 +732,6 @@
         .lmmPerms[1] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[2] = SM_SCMI_PERM_NOTIFY, \
         .lmmPerms[3] = SM_SCMI_PERM_NOTIFY, \
-        .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_DISPLAY] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_HSIO_TOP] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_NETC] = SM_SCMI_PERM_ALL, \

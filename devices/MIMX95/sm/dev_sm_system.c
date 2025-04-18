@@ -134,6 +134,12 @@ int32_t DEV_SM_SystemInit(void)
     /* Enable bypass for clock sources */
     DEV_SM_ClockSourceBypass(true, false);
 
+    /* Power down DDRMIX if uninitialized by OEI */
+    if (!CLOCK_SourceGetEnable(CLOCK_SRC_DRAMPLL_VCO))
+    {
+        SRC_MixSoftPowerDown(PWR_MIX_SLICE_IDX_DDR);
+    }
+
 #ifdef USES_RX_REPLICA
     /* Init RX Replica workaround */
     DEV_SM_RxReplicaInit();

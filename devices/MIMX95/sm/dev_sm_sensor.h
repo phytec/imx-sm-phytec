@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -79,6 +79,15 @@
 /* Types */
 
 /* Functions */
+
+/*!
+ * Sensor timer tick.
+ *
+ * @param[in]     msec          Period in milliseconds
+ *
+ * This function is called periodically by a timer.
+ */
+void DEV_SM_SensorTick(uint32_t msec);
 
 /** @} */
 

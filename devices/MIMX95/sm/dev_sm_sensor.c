@@ -45,6 +45,8 @@
 
 /* Local defines */
 
+#define SM_NUM_THRESHOLDS  3U
+
 /* Local types */
 
 /* Device sensor map structure */
@@ -91,6 +93,7 @@ static TMPSNS_Type *const s_tmpsnsBases[] = TMPSNS_BASE_PTRS;
 static bool s_tmpsnsOwn[DEV_SM_NUM_SENSOR];
 static bool s_tmpsnsEnb[DEV_SM_NUM_SENSOR];
 static uint8_t s_tmpsnsDir[DEV_SM_NUM_SENSOR];
+static uint32_t s_thresholdEnb[DEV_SM_NUM_SENSOR];
 
 /* Local functions */
 
@@ -104,12 +107,8 @@ int32_t DEV_SM_SensorInit(void)
 {
     int32_t status;
 
-    /* Check silicon version */
-    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
-    {
-        /* Power on ANA sensor */
-        status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
-    }
+    /* Power on ANA sensor */
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -154,6 +153,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         config.measMode = 2U;
         config.measFreq = 100000U;
         config.pud = 236U;
+        config.nFilt= 5U;
 
         /* Apply trim */
         uint32_t trim1 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim1);
@@ -515,6 +515,40 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     }
 }
 
+/*--------------------------------------------------------------------------*/
+/* Sensor timer tick                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SensorTick(uint32_t msec)
+{
+    /* Loop over sensors */
+    for (uint32_t sensorId = 0U; sensorId < DEV_SM_NUM_SENSOR; sensorId++)
+    {
+        /* Check if PD is on */
+        if (SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
+        {
+            TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
+            uint32_t filt = TMPSNS_GetFilterBusy(base);
+            uint32_t mask = s_thresholdEnb[sensorId] & ~filt;
+
+            /* Loop over thresholds */
+            for (uint8_t threshold = 0U; threshold < SM_NUM_THRESHOLDS;
+                threshold++)
+            {
+                /* Threshold enabled and filter clear? */
+                if ((mask & BIT32(threshold)) != 0U)
+                {
+                    /* Clear interrupt */
+                    TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
+                            << threshold);
+
+                    TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
+                            << threshold);
+                }
+            }
+        }
+    }
+}
+
 /*==========================================================================*/
 
 /*--------------------------------------------------------------------------*/
@@ -531,10 +565,12 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
     if (CHECK_I64_FIT_I16(raw64))
     {
         int16_t raw16 = (int16_t) raw64;
-
+        uint32_t mask = BIT32(threshold);
 
         if (eventControl == DEV_SM_SENSOR_TP_NONE)
         {
+            s_thresholdEnb[sensorId] &= ~mask;
+
             /* Disable interrupt */
             TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
                     << threshold);
@@ -577,9 +613,8 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
                 /* Configure sensor threshold */
                 TMPSNS_SetThreshold(base, threshold, raw16, mode);
 
-                /* Enable interrupt */
-                TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
-                        << threshold);
+                /* Enable interrupt (delayed) */
+                s_thresholdEnb[sensorId] |= mask;
             }
         }
     }

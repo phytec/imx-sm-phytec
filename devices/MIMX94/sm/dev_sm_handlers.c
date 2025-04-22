@@ -414,6 +414,9 @@ void SysTick_Handler(void)
     /* Call system tick */
     DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
 
+    /* Call sensor tick */
+    DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
+
     /* Call board tick */
     BRD_SM_TimerTick(BOARD_TICK_PERIOD_MSEC);
 }

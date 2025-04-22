@@ -133,6 +133,16 @@ void TMPSNS_ClearStatusFlags(TMPSNS_Type *base, uint32_t flags)
 }
 
 /*
+ * Get busy state of all filters.
+ */
+uint32_t TMPSNS_GetFilterBusy(const TMPSNS_Type *base)
+{
+    uint32_t rtn = base->CTRL0;
+
+    return (rtn >> TMPSNS_CTRL0_FILT0_CNT_CLR_SHIFT) & 0x7U;
+}
+
+/*
  * Enabled interrupts.
  */
 void TMPSNS_EnableInterrupts(TMPSNS_Type *base, uint32_t interrupts)

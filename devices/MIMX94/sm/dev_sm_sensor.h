@@ -80,6 +80,15 @@
 
 /* Functions */
 
+/*!
+ * Sensor timer tick.
+ *
+ * @param[in]     msec          Period in milliseconds
+ *
+ * This function is called periodically by a timer.
+ */
+void DEV_SM_SensorTick(uint32_t msec);
+
 /** @} */
 
 /* Include SM device API */

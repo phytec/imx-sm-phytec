@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2025 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -169,6 +169,17 @@ uint32_t TMPSNS_GetStatusFlags(const TMPSNS_Type *base);
  * - #kTMPSNS_Thr2If
  */
 void TMPSNS_ClearStatusFlags(TMPSNS_Type *base, uint32_t flags);
+
+/*!
+ * @brief Gets the filter clear flags.
+ *
+ * This function returns a bit mask of the TMPSNS filter flags.
+ *
+ * @param base    TMPSNS peripheral base address.
+ *
+ * @return Bit mask of the TMPSNS filter flags.
+ */
+uint32_t TMPSNS_GetFilterBusy(const TMPSNS_Type *base);
 
 /*!
  * @brief Enables the specific TMPSNS interrupts.

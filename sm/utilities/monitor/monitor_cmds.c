@@ -2961,130 +2961,132 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
     {
         errno = 0;
         uintptr_t addr = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
+        if (errno == 0)
         {
-            addr = 0x80000000UL;
-        }
-
-        /* Parse second argument */
-        if (argc > 1)
-        {
-            errno = 0;
-            count = strtoul(argv[1], NULL, 0);
-            if (errno != 0)
+            /* Parse second argument */
+            if (argc > 1)
             {
-                count = 64U / (uint32_t) len;
+                errno = 0;
+                count = strtoul(argv[1], NULL, 0);
+                if (errno != 0)
+                {
+                    count = 64U / (uint32_t) len;
+                }
+            }
+
+            switch (len)
+            {
+                case BYTE:
+                    {
+                        uint8_t *x = (uint8_t*) addr;
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 16U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint8_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 8U) == 0U)
+                            {
+                                printf("%02x ", v);
+                            }
+                            else
+                            {
+                                printf("?? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 16U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+                case WORD:
+                    {
+                        uint16_t *x = (uint16_t*) (addr & ~0x1U);
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 8U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint16_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 16U) == 0U)
+                            {
+                                printf("%04x ", v);
+                            }
+                            else
+                            {
+                                printf("???? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 8U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+                default:  /* LONG */
+                    {
+                        uint32_t *x = (uint32_t*) (addr & ~0x3U);
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 4U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint32_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 32U) == 0U)
+                            {
+                                printf("%08x ", v);
+                            }
+                            else
+                            {
+                                printf("???????? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 4U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+            }
+            if ((count % (16U / ((uint32_t) len))) != 0U)
+            {
+                printf("\n");
             }
         }
-
-        switch (len)
+        else
         {
-            case BYTE:
-                {
-                    uint8_t *x = (uint8_t*) addr;
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 16U) == 0U)
-                        {
-                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
-                        }
-
-                        uint8_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 8U) == 0U)
-                        {
-                            printf("%02x ", v);
-                        }
-                        else
-                        {
-                            printf("?? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 16U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-            case WORD:
-                {
-                    uint16_t *x = (uint16_t*) (addr & ~0x1U);
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 8U) == 0U)
-                        {
-                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
-                        }
-
-                        uint16_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 16U) == 0U)
-                        {
-                            printf("%04x ", v);
-                        }
-                        else
-                        {
-                            printf("???? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 8U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-            default:  /* LONG */
-                {
-                    uint32_t *x = (uint32_t*) (addr & ~0x3U);
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 4U) == 0U)
-                        {
-                            printf("%08" PRIxPTR ": ", (uintptr_t) x);
-                        }
-
-                        uint32_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 32U) == 0U)
-                        {
-                            printf("%08x ", v);
-                        }
-                        else
-                        {
-                            printf("???????? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 4U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-        }
-        if ((count % (16U / ((uint32_t) len))) != 0U)
-        {
-            printf("\n");
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else
@@ -3109,59 +3111,66 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
     {
         errno = 0;
         uint32_t addr = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
-        {
-            addr = 0x80000000UL;
-        }
 
-        errno = 0;
-        uint32_t data = strtoul(argv[1], NULL, 0);
-        if (errno != 0)
+        if (errno == 0)
         {
-            data = 0UL;
+            uint32_t data = strtoul(argv[1], NULL, 0);
+            if (errno == 0)
+            {
+                switch (len)
+                {
+                    case BYTE:
+                        {
+                            uint8_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 8U)
+                                == 0U)
+                            {
+                                *((uint8_t*) addr) = (uint8_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                    case WORD:
+                        {
+                            uint16_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 16U)
+                                == 0U)
+                            {
+                                *((uint16_t*) addr) = (uint16_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                    default:  /* LONG */
+                        {
+                            uint32_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 32U)
+                                == 0U)
+                            {
+                                *((uint32_t*) addr) = (uint32_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
         }
-
-        switch (len)
+        else
         {
-            case BYTE:
-                {
-                    uint8_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 8U) == 0U)
-                    {
-                        *((uint8_t*) addr) = (uint8_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
-            case WORD:
-                {
-                    uint16_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 16U) == 0U)
-                    {
-                        *((uint16_t*) addr) = (uint16_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
-            default:  /* LONG */
-                {
-                    uint32_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 32U) == 0U)
-                    {
-                        *((uint32_t*) addr) = (uint32_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else
@@ -3204,7 +3213,8 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
                     default:  /* read */
                         {
                             /* Read fuse word directly */
-                            if (SystemMemoryProbe((const void *) addr, &data, 32U) != 0U)
+                            if (SystemMemoryProbe((const void *) addr, &data,
+                                32U) != 0U)
                             {
 #ifdef DEVICE_HAS_ELE
                                 /* Read fuse word via ELE */

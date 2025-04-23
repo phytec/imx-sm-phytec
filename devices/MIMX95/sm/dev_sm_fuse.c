@@ -140,7 +140,7 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 uint32_t DEV_SM_FuseSpeedGet(void)
 {
     uint32_t speed;
-    uint32_t freq = 1800000000UL;
+    uint32_t freq = ES_SPEED_GRADE_HZ_DEFAULT;
 
     /* Get speed */
     speed = DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING) & 0xFU;
@@ -148,7 +148,7 @@ uint32_t DEV_SM_FuseSpeedGet(void)
     if (speed != 0U)
     {
         /* Calculate freq */
-        freq = 2300000000UL - (speed * 100000000UL);
+        freq = ES_SPEED_GRADE_HZ_MAX - (speed * ES_SPEED_GRADE_HZ_STEP);
     }
 
     /* Return frequency */

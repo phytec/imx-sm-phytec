@@ -102,7 +102,7 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SensorInit(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);

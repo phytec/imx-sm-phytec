@@ -15,9 +15,7 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
-| [SM-131](https://jira.sw.nxp.com/projects/SM/issues/SM-131) | Support system run mode |   | Y | Y | Y | Y |
 | [SM-197](https://jira.sw.nxp.com/projects/SM/issues/SM-197) | Support i.MX95 B0 |   | | | Y | |
-| [SM-240](https://jira.sw.nxp.com/projects/SM/issues/SM-240) | Add support for sending frequency/voltage change messages to ELE |   | Y | Y | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
@@ -25,8 +23,7 @@ Improvement {#RN_CL_IMP}
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
 | [SM-200](https://jira.sw.nxp.com/projects/SM/issues/SM-200) | Improve BBNSM RTC access timing |   | Y | Y | Y | Y |
-| [SM-204](https://jira.sw.nxp.com/projects/SM/issues/SM-204) | Move to new SDK3 headers |   | Y | Y | Y | Y |
-| [SM-208](https://jira.sw.nxp.com/projects/SM/issues/SM-208) | Misc. updates to SM configurations |   | Y | Y | Y | Y |
+| [SM-208](https://jira.sw.nxp.com/projects/SM/issues/SM-208) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_208) |   | Y | Y | Y | Y |
 | [SM-215](https://jira.sw.nxp.com/projects/SM/issues/SM-215) | Add SCMI LMM protocol function to set boot address of a CPU |   | Y | Y | Y | Y |
 | [SM-217](https://jira.sw.nxp.com/projects/SM/issues/SM-217) | Add monitor rst command to allow assert/negate of resets [[detail]](@ref RN_DETAIL_SM_217) |   | Y | Y | Y | Y |
 | [SM-220](https://jira.sw.nxp.com/projects/SM/issues/SM-220) | Coding standard fixes |   | Y | Y | Y | Y |
@@ -36,7 +33,8 @@ Improvement {#RN_CL_IMP}
 | [SM-233](https://jira.sw.nxp.com/projects/SM/issues/SM-233) | Support negative voltages to board functions |   | Y | Y | Y | Y |
 | [SM-235](https://jira.sw.nxp.com/projects/SM/issues/SM-235) | Add ECID in SM info output [[detail]](@ref RN_DETAIL_SM_235) |   | Y | Y | Y | Y |
 | [SM-239](https://jira.sw.nxp.com/projects/SM/issues/SM-239) | Add new rpmsg cfg file for i.MX94 |   | | | | Y |
-| [SM-242](https://jira.sw.nxp.com/projects/SM/issues/SM-242) | Send LM suspend/wake notifications |   | Y | Y | Y | Y |
+| [SM-242](https://jira.sw.nxp.com/projects/SM/issues/SM-242) | Send LM suspend/wake notifications [[detail]](@ref RN_DETAIL_SM_242) |   | Y | Y | Y | Y |
+| [SM-245](https://jira.sw.nxp.com/projects/SM/issues/SM-245) | Remove BLK_CTRL_CORTEX from A55 NS domain [[detail]](@ref RN_DETAIL_SM_245) |   | | | | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -45,7 +43,7 @@ Bug {#RN_CL_BUG}
 |------------|-------------------------------|-------|---|---|---|---|
 | [SM-212](https://jira.sw.nxp.com/projects/SM/issues/SM-212) | Insufficient argument checking for monitor pmic commands [[detail]](@ref RN_DETAIL_SM_212) |   | Y | Y | Y | Y |
 | [SM-213](https://jira.sw.nxp.com/projects/SM/issues/SM-213) | Insufficient argument checking for monitor trdc commands [[detail]](@ref RN_DETAIL_SM_213) |   | Y | Y | Y | Y |
-| [SM-214](https://jira.sw.nxp.com/projects/SM/issues/SM-214) | Insufficient argument checking for monitor fuse commands |   | Y | Y | Y | Y |
+| [SM-214](https://jira.sw.nxp.com/projects/SM/issues/SM-214) | Insufficient argument checking for monitor fuse commands [[detail]](@ref RN_DETAIL_SM_214) |   | Y | Y | Y | Y |
 | [SM-221](https://jira.sw.nxp.com/projects/SM/issues/SM-221) | Extended config flag not set for spread spectrum clocks [[detail]](@ref RN_DETAIL_SM_221) |   | Y | Y | Y | Y |
 | [SM-223](https://jira.sw.nxp.com/projects/SM/issues/SM-223) | Wakeups must be masked for CPUs that do not constrain system sleep entry [[detail]](@ref RN_DETAIL_SM_223) |   | Y | Y | Y | Y |
 | [SM-229](https://jira.sw.nxp.com/projects/SM/issues/SM-229) | Manage NETC M33S with a virtual power domain to avoid power dependencies [[detail]](@ref RN_DETAIL_SM_229) |   | | | | Y |
@@ -53,6 +51,9 @@ Bug {#RN_CL_BUG}
 | [SM-236](https://jira.sw.nxp.com/projects/SM/issues/SM-236) | PMIC soft errors incorrectly reported as boot reason [[detail]](@ref RN_DETAIL_SM_236) |   | Y | Y | Y | Y |
 | [SM-238](https://jira.sw.nxp.com/projects/SM/issues/SM-238) | SCMI reset protocol does not manage regional resets correctly |   | Y | Y | Y | Y |
 | [SM-241](https://jira.sw.nxp.com/projects/SM/issues/SM-241) | Bit width of LM number not consistent in the LMM protocol [[detail]](@ref RN_DETAIL_SM_241) |   | Y | Y | Y | Y |
+| [SM-243](https://jira.sw.nxp.com/projects/SM/issues/SM-243) | Incorrect reference to WAKEUPMIX memory slice instance [[detail]](@ref RN_DETAIL_SM_243) |   | | | | Y |
+| [SM-246](https://jira.sw.nxp.com/projects/SM/issues/SM-246) | ELE enabled temp sensor may cause SM to reset [[detail]](@ref RN_DETAIL_SM_246) |   | Y | Y | Y | Y |
+| [SM-247](https://jira.sw.nxp.com/projects/SM/issues/SM-247) | Insufficient argument checking for monitor memory (mm/md) commands [[detail]](@ref RN_DETAIL_SM_247) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -61,7 +62,8 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
-| [SM-186](https://jira.sw.nxp.com/projects/SM/issues/SM-186) | Implement DDR RX replica workaround |   | Y | Y | Y | Y |
+| [SM-186](https://jira.sw.nxp.com/projects/SM/issues/SM-186) | Implement DDR RX replica workaround [[detail]](@ref RN_DETAIL_SM_186) |   | Y | Y | Y | Y |
+| [SM-244](https://jira.sw.nxp.com/projects/SM/issues/SM-244) | Align DRAM rates to datasheet [[detail]](@ref RN_DETAIL_SM_244) |   | | | | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -75,17 +77,56 @@ Details {#CL_DETAIL}
 
 This section provides details for select changes.
 
+SM-186: Implement DDR RX replica workaround {#RN_DETAIL_SM_186}
+----------
+
+Integrated DDR RX Replica workaround for iMX943 and iMX95.
+
+SM-208: Misc. updates to SM configurations {#RN_DETAIL_SM_208}
+----------
+
+Made the following changes to various cfg files:
+
+- remove CPU power domain access
+
+- remove DDRC access (alt cfg)
+
+- add new i.MX94 jailhouse cfg
+
+- remove extra notify buffer config
+
+- update Android cfg files
+
+- give ELE access to the DAP ISP port
+
+- support split assignment for DACs on last to eDMA2 channels
+
+- enable A55 TCU
+
+- add new RPMSG cfg files
+
+- remove unused V2X resource assignments
+
+Customers may require similar changes in their cfg files.
+
 SM-212: Insufficient argument checking for monitor pmic commands {#RN_DETAIL_SM_212}
 ----------
 
-For the pmic.r debug monitor command, the error message was not being logged on the M33 console when an invalid argument was provided. Support has now been added to log the error on the console in such cases.
+For the *pmic.r* debug monitor command, the error message was not being logged on the M33 console when an invalid argument was provided. Support has now been added to log the error on the console in such cases.
 
-For the pmic.w debug monitor command, the validation check for the parameter values was missing. Therefore, a validation check has been added to ensure the parameters passed to the pmic.w command are correct.
+For the *pmic.w* debug monitor command, the validation check for the parameter values was missing. Therefore, a validation check has been added to ensure the parameters passed to the *pmic.w* command is correct.
 
 SM-213: Insufficient argument checking for monitor trdc commands {#RN_DETAIL_SM_213}
 ----------
 
 Check DID parameter against number of DIDs reported by a TRDC.
+
+SM-214: Insufficient argument checking for monitor fuse commands {#RN_DETAIL_SM_214}
+----------
+
+For the *fuse* debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the Parmeter is reassign to zero and passed it to the underlying function. However, it should log an error for the invalid parameter.
+
+Therefore, support has been added to log the error on the console when an invalid parameter is passed to the *fuse* command.
 
 SM-217: Add monitor rst command to allow assert/negate of resets {#RN_DETAIL_SM_217}
 ----------
@@ -173,4 +214,38 @@ SM-241: Bit width of LM number not consistent in the LMM protocol {#RN_DETAIL_SM
 ----------
 
 Reduced the field for num LM in the attributes from 8 bits to 5 bits to better align with the HW and reset reason limitations. Noted the current range for num LM is 1-16. The SCMI_LMM_PROTO_ATTR_NUM_LM macro is updated.
+
+SM-242: Send LM suspend/wake notifications {#RN_DETAIL_SM_242}
+----------
+
+The NXP SCMI LMM protocol supports sending notifications when an LM suspends or resumes (aka wakes). See SCMI_LmmEvent(). Agents must request notifications via SCMI_LmmNotify() for events of type SCMI_LMM_NOTIFY_SUSPEND and/or SCMI_LMM_NOTIFY_WAKE. This is documented as conditional on hardware support as this feature requires the underlying device layer and hardware to report CPU suspend/resume events.
+
+On i.MX9 devices, the GPC/SRC cannot report all these events and even those events it does report may be in the middle of the transition. The only solution to detect all events once completed is to poll periodically for the status of the CPUs. This change adds such polling in the SM periodic tick (currently 10ms). The result has a few implications: the notifications may occur with a delay up to the tick interval plus servicing time for other agents, and if a suspend/resume happen together within this total period then the transitions may not be detected and no notifications sent.
+
+SM-243: Incorrect reference to WAKEUPMIX memory slice instance {#RN_DETAIL_SM_243}
+----------
+
+The MX94 MIX management info structure for WAKEUPMIX has incorrect reference to memory slice instance.  Depending on the compiler and associated optimization level, this incorrect reference may result in an invalid access to the memory slice instance during calls to configure MIX memory retention.
+
+SM-244: Align DRAM rates to datasheet {#RN_DETAIL_SM_244}
+----------
+
+MX94 DRAM rates (MT/s) were aligned to the latest datasheet and corresponding rates programmed by OEI.
+
+SM-245: Remove BLK_CTRL_CORTEX from A55 NS domain {#RN_DETAIL_SM_245}
+----------
+
+If the BLK_CTRL_CORTEX is assigned to A55 NS domain, the DEV_SM_PD_A55P will be assigned to A55 NS domain and Linux will then manage this power domain incorrectly. Nothing in BLK_CTRL_CORTEX needs to be controlled by Linux, so this resource assignment is removed from the A55 NS agent.
+
+SM-246: ELE enabled temp sensor may cause SM to reset {#RN_DETAIL_SM_246}
+----------
+
+Reworked code that sets temp sensor thresholds to support the case where ELE (ROM or FW) enables the sensor and locks out SM access to the secure page on the sensor. This required configuring a threshold, clearing the filter, and then later in a timer interrupt enable the threshold interrupt. Otherwise, most of the time the interrupt would fire immediately. As this includes configuring the panic temp, often a system with the ELE change will reboot with a panic alarm when the SM starts and tries to configure the panic threshold.
+
+SM-247: Insufficient argument checking for monitor memory (mm/md) commands {#RN_DETAIL_SM_247}
+----------
+
+For the mm/md debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the Parmeter is reassign to 0x8000_0000 and passed it to the underlying function. However, it should log an error for the invalid parameter.
+
+Therefore, support has been added to log the error on the console when an invalid parameter is passed to the mm/md command.
 

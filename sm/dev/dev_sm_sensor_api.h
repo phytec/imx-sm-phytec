@@ -85,13 +85,14 @@ int32_t DEV_SM_SensorInit(void);
  * Configure and start a sensor.
  *
  * @param[in]     sensorId        Sensor to power on
+ * @param[in]     secAccess       Config sec section
  *
  * This function initializes the sensor. It is used after the power
  * domain containing the sensor is turned on.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-int32_t DEV_SM_SensorConfigStart(uint32_t sensorId);
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess);
 
 /*!
  * Enable and start a sensor.

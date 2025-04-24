@@ -106,9 +106,16 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 int32_t DEV_SM_SensorInit(void)
 {
     int32_t status;
+    bool secAccess = false;
+
+    /* Check if A0/1 which allows SM to start */
+    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+    {
+        secAccess = true;
+    }
 
     /* Power on ANA sensor */
-    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, secAccess);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -123,7 +130,7 @@ int32_t DEV_SM_SensorInit(void)
 /*--------------------------------------------------------------------------*/
 /* Configure and start a sensor                                             */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -162,8 +169,9 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
             config.trim1 = trim1;
             config.trim2 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim2);
         }
+
         /* Check if ELE enabled */
-        if (!TMPSNS_Enabled(base))
+        if (secAccess && !TMPSNS_Enabled(base))
         {
             /* Note we enabled */
             s_tmpsnsOwn[sensorId] = true;
@@ -318,14 +326,9 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             static int64_t s_tmpsnsValue[DEV_SM_NUM_SENSOR];
             static bool s_tmpsnsValid[DEV_SM_NUM_SENSOR];
@@ -389,14 +392,9 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             /* Check trip point */
             if (tripPoint >= (uint32_t) s_tmpsns[sensorId].numThresholds)
@@ -477,14 +475,9 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
         /* Return sensor enable */
-        *enabled = s_tmpsnsEnb[sensorId];
+        *enabled = s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd);
         *timestampReporting = false;
     }
 

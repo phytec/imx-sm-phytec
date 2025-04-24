@@ -108,7 +108,7 @@ int32_t DEV_SM_SensorInit(void)
     int32_t status;
 
     /* Power on ANA sensor */
-    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA);
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, false);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -123,7 +123,7 @@ int32_t DEV_SM_SensorInit(void)
 /*--------------------------------------------------------------------------*/
 /* Configure and start a sensor                                             */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -162,8 +162,9 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
             config.trim1 = trim1;
             config.trim2 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim2);
         }
+
         /* Check if ELE enabled */
-        if (!TMPSNS_Enabled(base))
+        if (secAccess && !TMPSNS_Enabled(base))
         {
             /* Note we enabled */
             s_tmpsnsOwn[sensorId] = true;
@@ -318,14 +319,9 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             static int64_t s_tmpsnsValue[DEV_SM_NUM_SENSOR];
             static bool s_tmpsnsValid[DEV_SM_NUM_SENSOR];
@@ -389,14 +385,9 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             /* Check trip point */
             if (tripPoint >= (uint32_t) s_tmpsns[sensorId].numThresholds)
@@ -477,14 +468,9 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
         /* Return sensor enable */
-        *enabled = s_tmpsnsEnb[sensorId];
+        *enabled = s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd);
         *timestampReporting = false;
     }
 
@@ -524,7 +510,7 @@ void DEV_SM_SensorTick(uint32_t msec)
     for (uint32_t sensorId = 0U; sensorId < DEV_SM_NUM_SENSOR; sensorId++)
     {
         /* Check if PD is on */
-        if (SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
+        if (SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
             uint32_t filt = TMPSNS_GetFilterBusy(base);

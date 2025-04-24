@@ -137,7 +137,7 @@ int32_t DEV_SM_A55pConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_WAKEUP)))
     {
         /* Power on temp sensor */
-        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55)
+        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55, true)
             == SM_ERR_SUCCESS)
         {
             s_tempSensorA55Enabled = true;
@@ -437,7 +437,7 @@ int32_t DEV_SM_NocConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_WAKEUP)))
     {
         /* Power on temp sensor */
-        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55)
+        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55, true)
             == SM_ERR_SUCCESS)
         {
             s_tempSensorA55Enabled = true;
@@ -545,7 +545,7 @@ int32_t DEV_SM_WkupConfigLoad(void)
         (SRC_MixIsPwrReady(PWR_MIX_SLICE_IDX_NOC)))
     {
         /* Power on temp sensor */
-        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55)
+        if (DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_A55, true)
             == SM_ERR_SUCCESS)
         {
             s_tempSensorA55Enabled = true;

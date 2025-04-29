@@ -325,6 +325,9 @@ void BOARD_InitHandlers(void) {
     /* Configure SWI handler */
     NVIC_EnableIRQ(BOARD_SWI_IRQn);
 
+    /* Enable BBNSM handler */
+    NVIC_EnableIRQ(BBNSM_IRQn);
+
     /* Enable GPC SM handler */
     NVIC_SetPriority(GPC_SM_REQ_IRQn, IRQ_PRIO_NOPREEMPT_VERY_HIGH);
     NVIC_EnableIRQ(GPC_SM_REQ_IRQn);

@@ -2231,8 +2231,9 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
                 if (vectorShift <= (UINT64_MAX_SHIFT - 32U))
                 {
                     /* Get 64-bit vector */
-                    *vector = (((uint64_t) *vectorRegHigh) <<
-                        (32U + vectorShift)) | (((uint64_t) *vectorRegLow)
+                    *vector = (((uint64_t) *vectorRegHigh)
+                            << (32U + vectorShift))
+                        | (((uint64_t) *vectorRegLow)
                                 << vectorShift);
                     rc = true;
                 }

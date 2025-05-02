@@ -409,6 +409,10 @@ void UsageFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 void SysTick_Handler(void)
 {
+    /*
+     * Intentional: Upon overflow value will rollback to zero.
+     */
+    // coverity[cert_int30_c_violation:FALSE]
     s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 
     /* Call system tick */

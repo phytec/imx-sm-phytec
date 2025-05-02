@@ -984,10 +984,19 @@ static int32_t CpuIrqWakeSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+    /* Check expression values doesn't wrap */
+    if (in->numMask <= CPU_MAX_MASK_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status in case values gets wrap */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1049,10 +1058,19 @@ static int32_t CpuNonIrqWakeSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+    /* Check expression values doesn't wrap */
+    if (in->numMask <= CPU_MAX_MASK_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status in case values gets wrap */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1115,11 +1133,20 @@ static int32_t CpuPdLpmConfigSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t numConfigs = in->numConfigs;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U * sizeof(uint32_t))
-        + (numConfigs * sizeof(pd_lpm_config_t))))
+    /* Check numConfigs*/
+    if (numConfigs <=CPU_MAX_PDCONFIGS_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U * sizeof(uint32_t))
+            + (numConfigs * sizeof(pd_lpm_config_t))))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set status if numConfigs value is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1184,11 +1211,20 @@ static int32_t CpuPerLpmConfigSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t numConfigs = in->numConfigs;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U * sizeof(uint32_t))
-        + (numConfigs * sizeof(per_lpm_config_t))))
+    /* Check numConfigs */
+    if (numConfigs <= CPU_MAX_PDCONFIGS_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U * sizeof(uint32_t))
+            + (numConfigs * sizeof(per_lpm_config_t))))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set status if numConfigs val is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */

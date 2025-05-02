@@ -1561,7 +1561,14 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
          * level value is same as max sustained frequency.
          */
         uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
+        uint32_t levelIdx = 0U;
+
+        /* Check the value doesn't wrap */
+        if (s_perfNumLevels[psIdx] >= 1U)
+        {
+            levelIdx = s_perfNumLevels[psIdx] - 1U;
+        }
+
         if (domainId == DEV_SM_PERF_DRAM)
         {
             if (DEV_SM_PerfDramTypeGet() == 4U)

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -116,15 +116,24 @@ int32_t DEV_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
     /* Check control */
     if (ctrlId == DEV_SM_CTRL_TEST_E)
     {
-        if ((addr + numVal) <= MAX_EXTCTRL_WORDS)
+        /* Check the expression value doesn't wrap */
+        if (addr <= (UINT32_MAX - numVal))
         {
-            for (uint32_t idx = 0U; idx < numVal; idx++)
+            if ((addr + numVal) <= MAX_EXTCTRL_WORDS)
             {
-                s_extCtrl[ctrlId][addr + idx] = val[idx];
+                for (uint32_t idx = 0U; idx < numVal; idx++)
+                {
+                    s_extCtrl[ctrlId][addr + idx] = val[idx];
+                }
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
             }
         }
         else
         {
+            /* Set the status if value gets wrap */
             status = SM_ERR_INVALID_PARAMETERS;
         }
     }
@@ -148,15 +157,24 @@ int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
     /* Check control */
     if (ctrlId == DEV_SM_CTRL_TEST_E)
     {
-        if ((addr + numRtn) <= MAX_EXTCTRL_WORDS)
+        /* Check the expression value doesn't wrap */
+        if (addr <= (UINT32_MAX - numRtn))
         {
-            for (uint32_t idx = 0U; idx < numRtn; idx++)
+            if ((addr + numRtn) <= MAX_EXTCTRL_WORDS)
             {
-                rtn[idx] = s_extCtrl[ctrlId][addr + idx];
+                for (uint32_t idx = 0U; idx < numRtn; idx++)
+                {
+                    rtn[idx] = s_extCtrl[ctrlId][addr + idx];
+                }
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
             }
         }
         else
         {
+            /* Set the status if value gets wrap */
             status = SM_ERR_INVALID_PARAMETERS;
         }
     }

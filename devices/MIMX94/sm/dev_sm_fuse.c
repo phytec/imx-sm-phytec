@@ -191,10 +191,12 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
     else
     {
         /* Check fuse state */
-        if ((s_fuseId[domainId] > 0U)
-            && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+        if (s_fuseId[domainId] > 0U)
         {
-            pdDisabled = true;
+            if (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U)
+            {
+                pdDisabled = true;
+            }
         }
     }
 

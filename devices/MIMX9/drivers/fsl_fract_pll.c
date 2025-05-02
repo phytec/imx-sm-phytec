@@ -394,7 +394,13 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
                     uint32_t mfn = 0U;
                     if (g_pllAttrs[pllIdx].isFrac)
                     {
-                        /* Calculate MFN */
+                        /*
+                         * Calculate MFN
+                         *
+                         * False Positive: (mfi * CLOCK_PLL_FREF_HZ) can not be
+                         * greater than rate.
+                         */
+                        // coverity[cert_int30_c_violation:FALSE]
                         mfn = U64_U32((rate - (mfi * CLOCK_PLL_FREF_HZ))
                             / ((uint64_t) CLOCK_PLL_CALC_ACCURACY_HZ));
                     }
@@ -661,7 +667,14 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             /* Calculate MFI */
             uint32_t mfi = U64_U32((uint64_t) (vcoRate / newRate));
 
-            /* Calculate MFN */
+            /*
+             * Calculate MFN
+             *
+             * False positive: The mfi value is the quotient of
+             * vcoRate divided by newRate hence, the below expression
+             * can not wrap.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate
                 * 5UL);
             uint64_t quotient = num / newRate;
@@ -672,6 +685,10 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             /* Round up MFN to avoid overclocking */
             if  ((remain != 0U) && (quotient < 5U))
             {
+                /*
+                 * False positive: As per RM MFN length is 3-bit.
+                 */
+                // coverity[cert_int30_c_violation:FALSE]
                 mfn++;
             }
 
@@ -679,7 +696,12 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             if (mfn == 5U)
             {
                 mfn = 0U;
-                mfi++;
+
+                /* Check the mfi value doesn't wrap */
+                if (mfi <= (UINT32_MAX - 1U))
+                {
+                    mfi++;
+                }
             }
 
             /* Clamp MFI and MFN */

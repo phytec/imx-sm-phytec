@@ -595,8 +595,17 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Disable sensor */
             (void) DEV_SM_SensorPowerDown(DEV_SM_SENSOR_TEMP_ANA);
 
-            /*! Increment system sleep counter */
-            g_syslog.sysSleepRecord.sleepCnt++;
+            /* Check the value doesn't wrap */
+            if (g_syslog.sysSleepRecord.sleepCnt <= (UINT32_MAX - 1U))
+            {
+                /*! Increment system sleep counter */
+                g_syslog.sysSleepRecord.sleepCnt++;
+            }
+            else
+            {
+                /* Initialize to zero in case of wrap */
+                g_syslog.sysSleepRecord.sleepCnt = 0U;
+            }
 
             bool dramInRetention = false;
             /* Attempt to place DRAM into retention */
@@ -772,9 +781,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Process SM LPIs for sleep entry */
             (void) CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
-            /* Capture sleep entry latency */
-            g_syslog.sysSleepRecord.sleepEntryUsec =
-                UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+            /* Check the expression values doesn't wrap */
+            if (DEV_SM_Usec64Get() >= sleepEntryStart)
+            {
+                /* Capture sleep entry latency */
+                g_syslog.sysSleepRecord.sleepEntryUsec =
+                    UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+            }
+            else
+            {
+                /* Initialize to zero in case of wrap */
+                g_syslog.sysSleepRecord.sleepEntryUsec = 0U;
+            }
 
             /* Check SYSCTR system sleep mode flag */
             if ((s_sysSleepFlags & DEV_SM_SSF_SYSCTR_ACTIVE_MASK) != 0U)
@@ -923,8 +941,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     if (g_syslog.sysSleepRecord.wakeSource == 0U)
     {
         sleepExitStart = DEV_SM_Usec64Get();
-        g_syslog.sysSleepRecord.sleepEntryUsec =
-            UINT64_L(sleepExitStart - sleepEntryStart);
+
+        /* Check the expression doesn't wrap */
+        if (sleepExitStart >= sleepEntryStart)
+        {
+            g_syslog.sysSleepRecord.sleepEntryUsec =
+                UINT64_L(sleepExitStart - sleepEntryStart);
+        }
+        else
+        {
+            /* Initialize to zero in case of wrap */
+            g_syslog.sysSleepRecord.sleepEntryUsec = 0U;
+        }
     }
 
     /* Restore GPC wake sources modified during sleep flow */
@@ -943,8 +971,17 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         }
     }
 
-    g_syslog.sysSleepRecord.sleepExitUsec =
-        UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+    /* Check the expression value doesn't wrap */
+    if (DEV_SM_Usec64Get() >= sleepExitStart)
+    {
+        g_syslog.sysSleepRecord.sleepExitUsec =
+            UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+    }
+    else
+    {
+        /* Initialize to zero in case of wrap */
+        g_syslog.sysSleepRecord.sleepExitUsec = 0U;
+    }
 
     return status;
 }
@@ -1198,6 +1235,10 @@ void DEV_SM_SystemTick(uint32_t msec)
     LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
 
 #ifdef USES_RX_REPLICA
+    /*
+     * False Positive: The msec value is 10.
+     */
+    // coverity[cert_int30_c_violation:FALSE]
     /* Tick DDR */
     s_ddrMseconds += msec;
 

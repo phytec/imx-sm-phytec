@@ -270,12 +270,12 @@ void TEST_DevSmHandler(void)
 #endif
 
     uint32_t basePrio = 0U;
-    DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);
+    (void) DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);
 
     uint32_t irqCntr = 0U;
-    DEV_SM_IrqPrioCntrGet(MU6_B_IRQ_HANDLER, &irqCntr);
+    (void) DEV_SM_IrqPrioCntrGet(MU6_B_IRQ_HANDLER, &irqCntr);
 
-    DEV_SM_IrqPrioCntrSet(MU6_B_IRQ_HANDLER, irqCntr);
+    (void) DEV_SM_IrqPrioCntrSet(MU6_B_IRQ_HANDLER, irqCntr);
 
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif

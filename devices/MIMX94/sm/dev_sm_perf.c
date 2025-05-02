@@ -1112,6 +1112,10 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
          * level value is same as max sustained frequency.
          */
         uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
+        /*
+         * False positive:Max s_perfNumLevels would be 4.
+         */
+        // coverity[cert_int30_c_violation:FALSE]
         uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
 
         info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;

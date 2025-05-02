@@ -162,15 +162,23 @@ uint32_t DEV_SM_SiVerGet(void)
 
     if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL) == SM_ERR_SUCCESS)
     {
-        uint32_t fuseMinor;
-
         /* Update minor version */
         tmpMinor = (deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
             >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
-        tmpMinor -= MINOR_BASE(1U);
-        fuseMinor = MINOR_BASE(REV_BASE(siRev))
-            | MINOR_METAL(REV_METAL(siRev));
-        tmpMinor = MAX(tmpMinor, fuseMinor);
+
+        /* Check for tmpMinor value doesn't become negative */
+        if (tmpMinor >= MINOR_BASE(1U))
+        {
+            tmpMinor -= MINOR_BASE(1U);
+            uint32_t fuseMinor = MINOR_BASE(REV_BASE(siRev))
+                | MINOR_METAL(REV_METAL(siRev));
+            tmpMinor = MAX(tmpMinor, fuseMinor);
+        }
+        else
+        {
+            /* Handling in case value gets wraps */
+            tmpMinor = DEV_SM_SIVER_A0;
+        }
     }
 
     /* Return version */

@@ -563,24 +563,28 @@ void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal)
 /*--------------------------------------------------------------------------*/
 void ELE_FuseWrite(uint32_t fuseId, uint32_t fuseVal, bool lock)
 {
-    /* Fill in parameters */
-    s_msgMax.word[1] = (fuseId * 32UL) & 0xFFFFU;
-    s_msgMax.word[1] |= (32UL << 16);
-    if (lock)
+    /* Check the expression values doesn't wrap */
+    if (fuseId <= (UINT32_MAX / 32UL))
     {
-        s_msgMax.word[1] |= BIT32(31U);
-    }
-    s_msgMax.word[2] = fuseVal;
+        /* Fill in parameters */
+        s_msgMax.word[1] = (fuseId * 32UL) & 0xFFFFU;
+        s_msgMax.word[1] |= (32UL << 16);
+        if (lock)
+        {
+            s_msgMax.word[1] |= BIT32(31U);
+        }
+        s_msgMax.word[2] = fuseVal;
 
-    /* Call ELE */
-    ELE_Call(&s_msgMax, ELE_WRITE_FUSE_REQ, 3U);
+        /* Call ELE */
+        ELE_Call(&s_msgMax, ELE_WRITE_FUSE_REQ, 3U);
 
-    /* Translate error */
-    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+        /* Translate error */
+        ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
 
 #ifdef DEBUG_ELE
-    ELE_DebugDump();
+        ELE_DebugDump();
 #endif
+    }
 }
 
 /*--------------------------------------------------------------------------*/

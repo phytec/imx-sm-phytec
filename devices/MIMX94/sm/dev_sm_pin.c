@@ -50,6 +50,9 @@
 #define GPIO_SET(SEL, X)      ((X) << ((SEL) * 4U))
 #define GPIO_GET(SEL, X)      (((X) >> ((SEL) * 4U)) & 0xFU)
 
+/* Macro to check the iomux offset overflow */
+#define IOMUX_OFFSET_OVERFLOW_CHECK    0xF000U
+
 /* Local types */
 
 /* Local variables */
@@ -298,81 +301,89 @@ int32_t DEV_SM_PinNameGet(uint32_t identifier, string *pinNameAddr,
 /*--------------------------------------------------------------------------*/
 void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
 {
-    /* Handle Mux */
-    if (type == DEV_SM_PIN_TYPE_MUX)
+    /* Check for invalid variable identifier's value */
+    if ((identifier & IOMUX_OFFSET_OVERFLOW_CHECK) == 0U)
     {
-        uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
-        uint32_t inputOnfield = 0U;
-
-        /* Extract SION */
-        if ((value & ((uint32_t) IOMUXC_PAD_SION_MASK)) != 0U)
+        /* Handle Mux */
+        if (type == DEV_SM_PIN_TYPE_MUX)
         {
-            inputOnfield = 1U;
-        }
+            uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
+            uint32_t inputOnfield = 0U;
 
-        IOMUXC_SetPinMux(muxRegister, value, 0U, 0U, 0U, inputOnfield);
-    }
-
-    /* Handle Config */
-    else if (type == DEV_SM_PIN_TYPE_CONFIG)
-    {
-        uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
-            + (identifier * 4U);
-
-        IOMUXC_SetPinConfig(0U, 0U, 0U, 0U, configRegister, value);
-    }
-
-    /* Handle Daisy */
-    else if (type == DEV_SM_PIN_TYPE_DAISY)
-    {
-        uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
-            + (identifier * 4U);
-
-        IOMUXC_SetPinMux(0U, 0U, daisyRegister, value, 0U, 0U);
-    }
-
-    /* Handle Extended */
-    else if (type == DEV_SM_PIN_TYPE_EXT)
-    {
-        uint32_t gpioCtrl = gpioCtrlMap[identifier];
-
-        /* Check if mux extended */
-        if (gpioCtrl != 0U)
-        {
-            uint32_t ctrl = MAP_CTRL(gpioCtrl);
-            uint32_t sel =  MAP_SEL(gpioCtrl);
-            volatile uint32_t *addr;
-            uint32_t tmp;
-
-            /* Determine address */
-            switch (ctrl)
+            /* Extract SION */
+            if ((value & ((uint32_t) IOMUXC_PAD_SION_MASK)) != 0U)
             {
-                case 0U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
-                    break;
-                case 1U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
-                    break;
-                default:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
-                    break;
+                inputOnfield = 1U;
             }
 
-            /* Read register */
-            tmp = *addr;
+            IOMUXC_SetPinMux(muxRegister, value, 0U, 0U, 0U, inputOnfield);
+        }
 
-            /* Clear mux override and sel */
-            tmp &= ~(GPIO_SET(sel, 0xFUL));
+        /* Handle Config */
+        else if (type == DEV_SM_PIN_TYPE_CONFIG)
+        {
+            uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
+                + (identifier * 4U);
 
-            /* Set mux override and sel */
-            tmp |= GPIO_SET(sel, value & 0xFUL);
+            IOMUXC_SetPinConfig(0U, 0U, 0U, 0U, configRegister, value);
+        }
 
-            /* Write register */
-            *addr = tmp;
+        /* Handle Daisy */
+        else if (type == DEV_SM_PIN_TYPE_DAISY)
+        {
+            uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
+                + (identifier * 4U);
+
+            IOMUXC_SetPinMux(0U, 0U, daisyRegister, value, 0U, 0U);
+        }
+
+        /* Handle Extended */
+        else if (type == DEV_SM_PIN_TYPE_EXT)
+        {
+            uint32_t gpioCtrl = gpioCtrlMap[identifier];
+
+            /* Check if mux extended */
+            if (gpioCtrl != 0U)
+            {
+                uint32_t ctrl = MAP_CTRL(gpioCtrl);
+                uint32_t sel =  MAP_SEL(gpioCtrl);
+                volatile uint32_t *addr;
+                uint32_t tmp;
+
+                /* Determine address */
+                switch (ctrl)
+                {
+                    case 0U:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
+                        break;
+                    case 1U:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+                        break;
+                    default:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
+                        break;
+                }
+
+                /* Read register */
+                tmp = *addr;
+
+                /* Clear mux override and sel */
+                tmp &= ~(GPIO_SET(sel, 0xFUL));
+
+                /* Set mux override and sel */
+                tmp |= GPIO_SET(sel, value & 0xFUL);
+
+                /* Write register */
+                *addr = tmp;
+            }
+        }
+
+        /* Else */
+        else
+        {
+            ; /* Intentional empty else */
         }
     }
-
-    /* Else */
     else
     {
         ; /* Intentional empty else */
@@ -384,71 +395,79 @@ void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
 {
-    *value = 0U;
-
-    /* Handle Mux */
-    if (type == DEV_SM_PIN_TYPE_MUX)
+    /* Check for invalid variable identifier's value */
+    if ((identifier & IOMUX_OFFSET_OVERFLOW_CHECK) == 0U)
     {
-        uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
+        *value = 0U;
 
-        /* Get IOMUXC value */
-        *value = *((volatile uint32_t*) muxRegister);
-    }
-
-    /* Handle Config */
-    else if (type == DEV_SM_PIN_TYPE_CONFIG)
-    {
-        uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
-            + (identifier * 4U);
-
-        *value =  *((volatile uint32_t*) configRegister);
-    }
-
-    /* Handle Daisy */
-    else if (type == DEV_SM_PIN_TYPE_DAISY)
-    {
-        uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
-            + (identifier * 4U);
-
-        *value = *((volatile uint32_t*) daisyRegister);
-    }
-
-    /* Handle Extended */
-    else if (type == DEV_SM_PIN_TYPE_EXT)
-    {
-        uint32_t gpioCtrl = gpioCtrlMap[identifier];
-
-        /* Check if mux extended */
-        if (gpioCtrl != 0U)
+        /* Handle Mux */
+        if (type == DEV_SM_PIN_TYPE_MUX)
         {
-            uint32_t ctrl = MAP_CTRL(gpioCtrl);
-            uint32_t sel =  MAP_SEL(gpioCtrl);
-            const volatile uint32_t *addr;
+            uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
 
-            /* Determine address */
-            switch (ctrl)
-            {
-                case 0U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
-                    break;
-                case 1U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
-                    break;
-                default:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
-                    break;
-            }
-
-            /* Read register */
-            *value = GPIO_GET(sel, *addr);
+            /* Get IOMUXC value */
+            *value = *((volatile uint32_t*) muxRegister);
         }
+
+        /* Handle Config */
+        else if (type == DEV_SM_PIN_TYPE_CONFIG)
+        {
+            uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
+                + (identifier * 4U);
+
+            *value =  *((volatile uint32_t*) configRegister);
+        }
+
+        /* Handle Daisy */
+        else if (type == DEV_SM_PIN_TYPE_DAISY)
+        {
+            uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
+                + (identifier * 4U);
+
+            *value = *((volatile uint32_t*) daisyRegister);
+        }
+
+        /* Handle Extended */
+        else if (type == DEV_SM_PIN_TYPE_EXT)
+        {
+            uint32_t gpioCtrl = gpioCtrlMap[identifier];
+
+            /* Check if mux extended */
+            if (gpioCtrl != 0U)
+            {
+                uint32_t ctrl = MAP_CTRL(gpioCtrl);
+                uint32_t sel =  MAP_SEL(gpioCtrl);
+                const volatile uint32_t *addr;
+
+                /* Determine address */
+                switch (ctrl)
+                {
+                    case 0U:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_0;
+                        break;
+                    case 1U:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
+                        break;
+                    default:
+                        addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
+                        break;
+                }
+
+                /* Read register */
+                *value = GPIO_GET(sel, *addr);
+            }
+            else
+            {
+                *value = 0U;
+            }
+        }
+
+        /* Else */
         else
         {
-            *value = 0U;
+            ; /* Intentional empty else */
         }
     }
-
-    /* Else */
     else
     {
         ; /* Intentional empty else */

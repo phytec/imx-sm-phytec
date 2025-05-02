@@ -192,19 +192,20 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
 int32_t DEV_SM_CpuHold(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Set CPU run mode to HOLD */
-        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_HOLD))
+        if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_HOLD))
         {
             status = SM_ERR_NOT_FOUND;
         }

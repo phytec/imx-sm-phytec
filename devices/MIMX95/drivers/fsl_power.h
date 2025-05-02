@@ -352,6 +352,26 @@ void PWR_LpHandshakeAck(void);
 void PWR_LpHandshakeAckRevA(void);
 #endif
 
+/*!
+ * Configure MIX-level transaction blocking.
+ *
+ * @param[in]       srcMixIdx           SRC MIX identifier
+ * @param[in]       blockAccess         MIX-level access setting
+ *
+ * This function configures MIX-level transaction blocking.
+ */
+void PWR_MixSsiBlockingSet(uint32_t srcMixIdx, bool blockAccess);
+
+/*!
+ * Update MIX-level conditions for transaction blocking.
+ *
+ * @param[in]       srcMixIdx           SRC MIX identifier
+ *
+ * This function evaluates MIX-level conditions that require transaction
+ * blocking and configures the blocking accordingly.
+ */
+void PWR_MixSsiBlockingUpdate(uint32_t srcMixIdx);
+
 /** @} */
 
 /* Externs */

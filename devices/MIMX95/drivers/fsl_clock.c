@@ -840,8 +840,9 @@ const ccm_cgc_attr_t g_clockCgcAttr[CLOCK_NUM_CGC] =
 {
     [CLOCK_CGC_GPU]
     {
-        .lpcgIdx = 24U,
+        .lpcgIdx = CLOCK_LPCG_GPU,
         .rootIdx = CLOCK_ROOT_GPU,
+        .srcMixIdx = PWR_MIX_SLICE_IDX_GPU,
     }
 };
 
@@ -1746,5 +1747,38 @@ bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     }
 
     return getSscConfig;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CGC enable status                                                    */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_CgcSetEnable(uint32_t cgcIdx, bool enable)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        uint32_t srcMixIdx = g_clockCgcAttr[cgcIdx].srcMixIdx;
+
+        if (!enable)
+        {
+            /* Request MIX-level transaction blocking to protect access
+             * to modules with gated clocks.
+             */
+            PWR_MixSsiBlockingSet(srcMixIdx, true);
+        }
+
+        rc = CCM_CgcSetEnable(cgcIdx, enable);
+
+        if (enable)
+        {
+            /* Release MIX-level transaction blocking to modules with
+             * ungated clocks.
+             */
+            PWR_MixSsiBlockingSet(srcMixIdx, false);
+        }
+    }
+
+    return rc;
 }
 

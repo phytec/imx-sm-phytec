@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -957,9 +957,20 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    if (!CCM_CgcSetEnable(clockIndex, enable))
+                    /* Skip MIX-level transaction blocking on Rev A  */
+                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
                     {
-                        status = SM_ERR_INVALID_PARAMETERS;
+                        if (!CCM_CgcSetEnable(clockIndex, enable))
+                        {
+                            status = SM_ERR_INVALID_PARAMETERS;
+                        }
+                    }
+                    else
+                    {
+                        if (!CLOCK_CgcSetEnable(clockIndex, enable))
+                        {
+                            status = SM_ERR_INVALID_PARAMETERS;
+                        }
                     }
                 }
                 else

@@ -14,7 +14,7 @@
 **         CMSIS Peripheral Access Layer for MIMX95_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2022 NXP
+**     Copyright 2016-2025 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -1650,11 +1650,19 @@ typedef struct {
  */
 #define CCM_LPCG_AUTHEN_CPULPM_MODE(x)           (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_AUTHEN_CPULPM_MODE_SHIFT)) & CCM_LPCG_AUTHEN_CPULPM_MODE_MASK)
 
+#define CCM_LPCG_AUTHEN_ACK_MODE_MASK            (0x10U)
+#define CCM_LPCG_AUTHEN_ACK_MODE_SHIFT           (4U)
+/*! ACK_MODE - ACK mode enable
+ *  0b0..Disable ACK mode. If this LPCG is in Direct Control mode, SSI Q-channel cannot be controlled by SW
+ *  0b1..Enable ACK mode. If this LPCG is in Direct Control mode, SSI Q-channel can also be controlled by SW
+ */
+#define CCM_LPCG_AUTHEN_ACK_MODE(x)              (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_AUTHEN_ACK_MODE_SHIFT)) & CCM_LPCG_AUTHEN_ACK_MODE_MASK)
+
 #define CCM_LPCG_AUTHEN_LOCK_MODE_MASK           (0x80U)
 #define CCM_LPCG_AUTHEN_LOCK_MODE_SHIFT          (7U)
 /*! LOCK_MODE
- *  0b0..CPULPM_MODE is not locked.
- *  0b1..CPULPM_MODE is locked.
+ *  0b0..CPULPM_MODE and ACK_MODE is not locked.
+ *  0b1..CPULPM_MODE and ACK_MODE is locked.
  */
 #define CCM_LPCG_AUTHEN_LOCK_MODE(x)             (((uint32_t)(((uint32_t)(x)) << CCM_LPCG_AUTHEN_LOCK_MODE_SHIFT)) & CCM_LPCG_AUTHEN_LOCK_MODE_MASK)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -265,6 +265,10 @@
 #define CLOCK_ROUND_RULE_FLOOR              1U
 #define CLOCK_ROUND_RULE_CLOSEST            2U
 
+#define CLOCK_LPCG_CORTEXAMIX_SSI0          1U
+#define CLOCK_LPCG_GPUMIX_SSI0              4U
+#define CLOCK_LPCG_GPU                      24U
+
 #endif
 
 /* Types */
@@ -314,8 +318,8 @@ typedef struct
 {
     uint32_t lpcgIdx;                       /*!< LPCG index controlling the CGC */
     uint32_t rootIdx;                       /*!< CCM root sourcing the CGC */
+    uint32_t srcMixIdx;                     /*!< SRC MIX instance for this CGC */
 } ccm_cgc_attr_t;
-
 
 /* Functions */
 
@@ -459,6 +463,19 @@ bool CLOCK_SourceSetSsc(uint32_t sourceIdx, uint32_t spreadPercent,
  */
 bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     uint32_t *modFreq, uint32_t *enable);
+
+/*!
+ * Set CGC enable
+ *
+ * @param[in]       cgcIdx     CGC index
+ * @param[in]       enable     Enable flag (1=enabled, 0=disabled)
+ *
+ * This function sets the CGC clock enable status.
+ *
+ * @return Returns true if clock enable status was updated, otherwise returns
+ *         false.
+ */
+bool CLOCK_CgcSetEnable(uint32_t cgcIdx, bool enable);
 
 /** @} */
 

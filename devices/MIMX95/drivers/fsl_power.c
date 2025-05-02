@@ -223,7 +223,7 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqMaskPwr = (1U << PWR_GPC_HS_PWR_A55P),
         .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_A55P),
         .lpmSetting = LPMSETTING_CPU(CPU_IDX_A55P),
-        .ssiLpcgIdx = 1U,
+        .ssiLpcgIdx = CLOCK_LPCG_CORTEXAMIX_SSI0,
     },
 
     [PWR_MIX_SLICE_IDX_DDR] =
@@ -655,4 +655,80 @@ void PWR_LpHandshakeAckRevA(void)
     }
 }
 #endif
+
+/*--------------------------------------------------------------------------*/
+/* Configure MIX-level transaction blocking                                 */
+/*--------------------------------------------------------------------------*/
+void PWR_MixSsiBlockingSet(uint32_t srcMixIdx, bool blockAccess)
+{
+    bool hasBlocking = false;
+    uint32_t ssiLpcgIdx;
+
+    switch (srcMixIdx)
+    {
+        case PWR_MIX_SLICE_IDX_GPU:
+            hasBlocking = true;
+            ssiLpcgIdx = CLOCK_LPCG_GPUMIX_SSI0;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (hasBlocking)
+    {
+        if (blockAccess)
+        {
+            /* Enable ACK mode (SW control) for associated SSI */
+            CCM_CTRL->LPCG[ssiLpcgIdx].AUTHEN |=
+                CCM_LPCG_AUTHEN_ACK_MODE_MASK;
+
+            /* Enable black hole mode on associated SSI */
+            CCM_CTRL->LPCG[ssiLpcgIdx].DIRECT &=
+                ~CCM_LPCG_DIRECT_ON_MASK;
+        }
+        else
+        {
+            /* Disable black hole mode on associated SSI */
+            CCM_CTRL->LPCG[ssiLpcgIdx].DIRECT |=
+                CCM_LPCG_DIRECT_ON_MASK;
+
+            /* Disable ACK mode (HW control) for associated SSI */
+            CCM_CTRL->LPCG[ssiLpcgIdx].AUTHEN &=
+                ~CCM_LPCG_AUTHEN_ACK_MODE_MASK;
+        }
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update MIX-level transaction blocking                                    */
+/*--------------------------------------------------------------------------*/
+void PWR_MixSsiBlockingUpdate(uint32_t srcMixIdx)
+{
+    bool hasBlocking = false;
+    uint32_t cgcLpcgIdx;
+
+    switch (srcMixIdx)
+    {
+        case PWR_MIX_SLICE_IDX_GPU:
+            hasBlocking = true;
+            cgcLpcgIdx = CLOCK_LPCG_GPU;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (hasBlocking)
+    {
+        /* Check if CGC status needs MIX blocking to be applied */
+        if ((CCM_CTRL->LPCG[cgcLpcgIdx].DIRECT &
+            CCM_LPCG_DIRECT_ON_MASK) == 0U)
+        {
+            PWR_MixSsiBlockingSet(srcMixIdx, true);
+        }
+    }
+}
 

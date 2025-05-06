@@ -141,7 +141,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
         const int64_t panicTemp[4] =
         {
             9700,   /* 00 - Consumer 0C to 95C */
-            10700,  /* 01 - Ext. Consumer -20C to 105C */
+            12700,  /* 01 - Ext. Industrial -40C to 125C */
             10700,  /* 10 - Industrial -40C to 105C */
             12700   /* 11 - Automotive -40C to 125C */
         };

@@ -164,6 +164,9 @@
 #define AUTHEN_CTRL_WHITELIST_SHIFT     SRC_XSPR_AUTHEN_CTRL_WHITE_LIST_SHIFT
 #define SLICE_SW_CTRL_PDN_SOFT_MASK     SRC_XSPR_SLICE_SW_CTRL_PDN_SOFT_MASK
 
+/* Reset line flags */
+#define RST_LINE_FLAG_RESTRICTED        (1U << 0U)  /* Reset line usage is restricted */
+
 #endif
 
 /* Types */
@@ -180,6 +183,7 @@ typedef SRC_GEN_Type src_generic_t;
 /*! Structure for reset line details */
 typedef struct
 {
+    uint32_t flags;         /*!< Reset line flags */
     uint32_t lineMask;      /*!< Reset line control mask register */
     __IO uint32_t *lineReg; /*!< Reset line control register */
     uint32_t statMask;      /*!< Reset line status mask */
@@ -211,6 +215,18 @@ uint32_t RST_SystemGetResetReason(void);
  * recent event status register).
  */
 void RST_SystemClearResetReason(uint32_t resetReason);
+
+/*!
+ * Query if reset line management is restricted.
+ *
+ * @param[in]   lineIdx     Reset line identifier
+ *
+ * This function queries if the management of the specified reset line is
+ * restricted to protect the operation of the system manager.
+ *
+ * @return Returns true if the management of the reset line is restricted.
+ */
+bool RST_ResetLineRestricted(uint32_t lineIdx);
 
 /*!
  * Request system reset

@@ -368,6 +368,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_ANAMIX].assertLow = false,
     [RST_LINE_ANAMIX].toggleUsec = 10U,
 
+    [RST_LINE_AONMIX_TOP].flags = RST_LINE_FLAG_RESTRICTED,
     [RST_LINE_AONMIX_TOP].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
     [RST_LINE_AONMIX_TOP].lineReg = &SRC_XSPR_AONMIX->SLICE_SW_CTRL,
@@ -377,6 +378,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_AONMIX_TOP].assertLow = false,
     [RST_LINE_AONMIX_TOP].toggleUsec = 10U,
 
+    [RST_LINE_AONMIX_M33].flags = RST_LINE_FLAG_RESTRICTED,
     [RST_LINE_AONMIX_M33].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_1_MASK,
     [RST_LINE_AONMIX_M33].lineReg = &SRC_XSPR_AONMIX->SLICE_SW_CTRL,
@@ -512,6 +514,15 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_DISPLAYMIX].assertLow = false,
     [RST_LINE_DISPLAYMIX].toggleUsec = 10U,
 
+    [RST_LINE_GPUMIX].lineMask =
+        SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
+    [RST_LINE_GPUMIX].lineReg = &SRC_XSPR_GPUMIX->SLICE_SW_CTRL,
+    [RST_LINE_GPUMIX].statMask =
+        SRC_XSPR_RSTR_STAT_RSTR_0_RST_STAT_MASK,
+    [RST_LINE_GPUMIX].statReg = &SRC_XSPR_GPUMIX->RSTR_STAT,
+    [RST_LINE_GPUMIX].assertLow = false,
+    [RST_LINE_GPUMIX].toggleUsec = 10U,
+
     [RST_LINE_HSIOMIX_TOP].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
     [RST_LINE_HSIOMIX_TOP].lineReg = &SRC_XSPR_HSIOMIX_TOP->SLICE_SW_CTRL,
@@ -641,6 +652,21 @@ void RST_SystemClearResetReason(uint32_t resetReason)
     {
         SRC_GEN->SRESR |= (1UL << resetReason);
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Query if reset line management is restricted.                            */
+/*--------------------------------------------------------------------------*/
+bool RST_ResetLineRestricted(uint32_t lineIdx)
+{
+    bool rc = false;
+
+    if (lineIdx < RST_NUM_LINE)
+    {
+        rc = (g_rstLineInfo[lineIdx].flags & RST_LINE_FLAG_RESTRICTED) != 0U;
+    }
+
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/

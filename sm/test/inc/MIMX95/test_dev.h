@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -43,6 +43,7 @@
 
 #define ROM_CONTAINER_1  0x55CCU
 #define ROM_CONTAINER_2  0xAA33U
+#define NUM_FUSES  610U
 
 #define NMI_INT_TRIGGER             NonMaskableInt_IRQn
 #define HARD_FAULT_INT_TRIGGER      HardFault_IRQn

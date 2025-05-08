@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -69,6 +69,27 @@ void TEST_LmmSys(void)
         printf("LMM_SystemModeSelSet(SM_LM_NUM_MSEL)\n");
         NECHECK(LMM_SystemModeSelSet(SM_LM_NUM_MSEL),
             SM_ERR_INVALID_PARAMETERS);
+    }
+
+    /* Check the LM CPU state */
+    {
+#ifdef MIMX94
+        uint32_t lmId = 4U, cpuId = 2U;
+#else
+        uint32_t lmId = 1U, cpuId = 1U;
+#endif
+        printf("LM_CpuCheck(%u %u)\n", lmId, cpuId);
+        bool rc = LM_CpuCheck(lmId, cpuId);
+        if (rc != true)
+        {
+            SM_Error(SM_ERR_INVALID_PARAMETERS);
+        }
+    }
+
+    /* Change the cpu run state */
+    {
+        LMM_SystemCpuModeChanged(1U);
+        LMM_SystemCpuModeChanged(1U);
     }
 
 #ifdef SIMU

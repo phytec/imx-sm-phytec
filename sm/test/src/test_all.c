@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -129,7 +129,14 @@ void TEST_All(void)
     GCOV_InfoDump();
 #endif
 
+#ifdef SIMU
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+    SM_Error(SM_ERR_SUCCESS);
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL2);
+    SM_Error(SM_ERR_SUCCESS);
+#else
     /* Exit */
     BRD_SM_Exit(SM_ERR_SUCCESS, 0U);
+#endif
 }
 

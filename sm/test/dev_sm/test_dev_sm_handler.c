@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -260,6 +260,18 @@ void TEST_DevSmHandler(void)
     NVIC_EnableIRQ(MU9_B_IRQ_HANDLER);
     NVIC_SetPendingIRQ(MU9_B_IRQ_HANDLER);
 #endif
+
+    uint64_t timeMsec = DEV_SM_GetTimerMsec();
+    printf("TimeMsec_H: %u TimeMsec_L: %u\n",
+        UINT64_H(timeMsec), UINT64_L(timeMsec));
+
+    uint32_t basePrio = 0U;
+    DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);
+
+    uint32_t irqCntr = 0U;
+    DEV_SM_IrqPrioCntrGet(MU6_B_IRQ_HANDLER, &irqCntr);
+
+    DEV_SM_IrqPrioCntrSet(MU6_B_IRQ_HANDLER, irqCntr);
 
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif

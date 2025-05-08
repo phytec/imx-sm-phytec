@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -73,6 +73,8 @@
 #define SM_TEST_MODE_RPC_LVL1   400U  /*!< RPC first level error response */
 #define SM_TEST_MODE_RPC_LVL2   401U  /*!< RPC second level error response */
 #define SM_TEST_MODE_RPC_ALT1   420U  /*!< RPC alt response 1 */
+#define SM_TEST_MODE_EXEC_LVL1  500U  /*!< EXEC text mode */
+#define SM_TEST_MODE_EXEC_LVL2  520U  /*!< EXEC text mode */
 /** @} */
 
 /*! Set status on mode */

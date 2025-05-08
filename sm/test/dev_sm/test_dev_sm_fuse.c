@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -62,6 +62,26 @@ void TEST_DevSmFuse(void)
 
 #ifdef HAS_FUSE_GET_SPEED
     printf("DEV_SM_FuseSpeedGet() freq: %u\n", DEV_SM_FuseSpeedGet());
+    uint32_t freq = 0U;
+
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+    freq = DEV_SM_FuseSpeedGet();
+    SM_TestModeSet(SM_TEST_MODE_OFF);
+
+    printf("freq: %u\n", freq);
+#endif
+
+#ifndef SIMU
+    /* Max number of fuses */
+    NECHECK(DEV_SM_FuseInfoGet(NUM_FUSES, NULL), SM_ERR_NOT_FOUND);
+
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+    uint32_t fuseVal = DEV_SM_FuseGet(DEV_SM_FUSE_ECID0);
+    SM_TestModeSet(SM_TEST_MODE_OFF);
+    printf("fuse val:%x\n", fuseVal);
+
+    DEV_SM_FusePdDisabled(DEV_SM_PD_A55C0);
+    DEV_SM_FuseCpuDisabled(DEV_SM_FUSE_A55_CORE0_DISABLE);
 #endif
 
     printf("\n");

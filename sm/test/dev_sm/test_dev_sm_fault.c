@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -136,7 +136,18 @@ void TEST_DevSmFault(void)
         printf("DEV_SM_FaultGet fault(%u) state: %s\n", 18U /*DEV_SM_FAULT_WDOG2*/,
             state ? "true" : "false");
     }
+#if 0
+    /*Set: Invalid fault state */
+    {
+        uint32_t lmId = 0U;
+        uint32_t faultId = 102U;
+        bool state = true;
 
+        printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);
+        NECHECK(DEV_SM_FaultSet(lmId, faultId, state),
+            SM_ERR_INVALID_PARAMETERS);
+    }
+#endif
     printf("\n");
 }
 

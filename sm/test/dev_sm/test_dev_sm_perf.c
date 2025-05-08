@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -71,6 +71,15 @@ void TEST_DevSmPerf(void)
         CHECK(DEV_SM_PerfNameGet(domainId, &name, &len));
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
+
+        uint32_t perfLevel = 0U;
+        CHECK(DEV_SM_PerfLevelGet(domainId, &perfLevel));
+        printf("DEV_SM_PerfLevelGet(dom: %u: level: %u\n",
+            domainId, perfLevel);
+
+#ifndef SIMU
+        CHECK(DEV_SM_PerfFreqSet(domainId, perfLevel));
+#endif
     }
 
     /* Test API correct level set calls */
@@ -127,6 +136,12 @@ void TEST_DevSmPerf(void)
         printf("DEV_SM_PerfDescribe(%u)\n", 0U);
         NECHECK(DEV_SM_PerfDescribe(0U, numLevels, &desc),
             SM_ERR_OUT_OF_RANGE);
+
+#ifndef SIMU
+        uint32_t perfLevel = 4U;
+        NECHECK(DEV_SM_PerfFreqSet(0U, perfLevel),
+            SM_ERR_OUT_OF_RANGE);
+#endif
     }
 
     printf("\n");

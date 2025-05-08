@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -272,6 +272,12 @@ void TEST_DevSmSystem(void)
 
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+
+    {
+        /* Get the Silicon version */
+        uint32_t siRev = DEV_SM_SiVerGet();
+        printf("silicon rev: %u\n", siRev);
     }
 #endif
 

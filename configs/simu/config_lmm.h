@@ -110,6 +110,7 @@
         .rpcInst = 2U, \
         .boot[0] = 4U, \
         .safeType = LMM_SAFE_TYPE_SEENV, \
+        .autoBoot = LMM_AUTO_BOTH, \
     }
 
 /*--------------------------------------------------------------------------*/

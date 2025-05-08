@@ -129,6 +129,10 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
     /* Calculate shift and mask */
     shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
 
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        s_fuseMap[fuseId].bitWidth = 33U);
+
     /* Check the mask value not exceeding the max shift value */
     if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
     {
@@ -154,6 +158,9 @@ uint32_t DEV_SM_FuseSpeedGet(void)
 
     /* Get speed */
     speed = DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING) & 0xFU;
+
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, speed = 1U);
 
     if (speed != 0U)
     {

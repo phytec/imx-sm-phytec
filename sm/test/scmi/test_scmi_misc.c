@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -491,6 +491,12 @@ static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlGet(channel, ctrlId, &numVal, &val));
 
+#ifndef SIMU
+        printf("SCMI_MiscControlExtGet(%u, %u)\n", channel, ctrlId);
+        NECHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, 0U, &numVal, &val),
+            SM_ERR_NOT_SUPPORTED);
+#endif
+
         /* Branch -- Nullpointer */
         CHECK(SCMI_MiscControlGet(channel, ctrlId, NULL, NULL));
     }
@@ -581,6 +587,12 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlGet(channel, ctrlId, &numVal, rtnVal));
 
+#ifndef SIMU
+        printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+        NECHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal,
+            &val), SM_ERR_NOT_SUPPORTED);
+#endif
+
 #ifdef SIMU
         if ((numVal != 1U) || (rtnVal[0] != 0x1234ABCDU))
         {
@@ -631,6 +643,11 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         /* Control Action */
         NECHECK(SCMI_MiscControlAction(channel, ctrlId, 23U, 3, arg,
             &numVal, rtnVal), SCMI_ERR_DENIED);
+
+#ifndef SIMU
+        printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+        CHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal, &val));
+#endif
     }
 }
 

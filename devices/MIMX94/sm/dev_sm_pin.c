@@ -353,15 +353,6 @@ void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
                 case 1U:
                     addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
                     break;
-                case 2U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_2;
-                    break;
-                case 3U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_3;
-                    break;
-                case 4U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_4;
-                    break;
                 default:
                     addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;
                     break;
@@ -442,15 +433,6 @@ void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
                     break;
                 case 1U:
                     addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_1;
-                    break;
-                case 2U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_2;
-                    break;
-                case 3U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_3;
-                    break;
-                case 4U:
-                    addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_4;
                     break;
                 default:
                     addr = &BLK_CTRL_WAKEUPMIX->IOMUX_GPIO_CTRL_5;

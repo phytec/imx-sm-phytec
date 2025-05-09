@@ -17,5 +17,5 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 
 | Key     | Summary                        | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|---|---|---|---|
-| [SM-254](https://jira.sw.nxp.com/projects/SM/issues/SM-254) | Implement ONOFF button workaround as an option | Y | Y | Y | Y |
+| [SM-254](https://jira.sw.nxp.com/projects/SM/issues/SM-254) | Implement ON/OFF button workaround as an option | Y | Y | Y | Y |
 

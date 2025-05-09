@@ -2,13 +2,13 @@ Change List {#RN_CL}
 ===========
 
 The tables below also indicate which patch version, if any, in the previous release (
-imx_sm_2024q1) includes the change. Note some of these patches may not have been released yet and
+imx_sm_2025q1) includes the change. Note some of these patches may not have been released yet and
 the data could change.
 
 SM 2025Q2 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2024q1) and this release (imx_sm_2025q2).
+Below is a list of changes between the previous release (imx_sm_2025q1) and this release (imx_sm_2025q2).
 
 New Feature {#RN_CL_NEW}
 ------------
@@ -229,12 +229,12 @@ SM-235: Add ECID in SM info output {#RN_DETAIL_SM_235}
 
 The ECID value can be read from the fuse registers. The ECID register bit offsets in the fusemap is as below:
  
-|Word|Packed Bit Names|Word Usage|
+| Word | Packed Bit Names | Word Usage |
 |---|---|---|
-|12|ECID[127:96]|ECID3|
-|13|ECID[95:64]|ECID2|
-|14|ECID[63:32]|ECID1|
-|15|ECID[31:0]|ECID0|
+| 12 | ECID[127:96] | ECID3 |
+| 13 | ECID[95:64] | ECID2 |
+| 14 | ECID[63:32] | ECID1 |
+| 15 | ECID[31:0] | ECID0 |
 
 Added support to read and print the above ECID register in the "Info" command of debug monitor. The output of the info command will look as below:
 
@@ -251,7 +251,7 @@ Added support to read and print the above ECID register in the "Info" command of
     PMIC 0 (0x08) = 0x20, 0x09, 0x10, 0x00, 0x01
     PMIC 1 (0x2A) = 0x54, 0x22, 0x00, 0x0B
     PMIC 2 (0x29) = 0x55, 0x22, 0x00, 0x0A
-    Compiler      = gcc 12.3.1 20230626
+    Compiler      = gcc 14.2.1 20241119
 
 
 SM-236: PMIC soft errors incorrectly reported as boot reason {#RN_DETAIL_SM_236}

@@ -320,12 +320,12 @@ Updated the market segment fuse setting 1 to mean ext. industrial rather than ex
 SM-256: Changes to move SHE1 to A55 core for i.MX94 {#RN_DETAIL_SM_256}
 ----------
 
-On i.MX943, the V2X-SHE0-MU is configured in SM for application domain.
- * It is enabled for V2X-SHE0 features on ER releases.
- * From *LF Q2 release,* this MU will be enabled for FCE features.
- * Hence, there will be no V2X-SHE features on LF Q2 in linux if we do not enable V2X-SHE1-MU.
+On i.MX94, V2X_SHE0 MU is configured in most cfgs for use by AP-NS.
+ * It was enabled for V2X-SHE0 features on previous i.MX94 ER releases.
+ * Starting with the Q2 release, V2X_SHE0 MU will be switched to FCE features.
+ * Hence, there will be no V2X-SHE function on Q2 in Linux if the V2X_SHE1 MU is not moved from the M7 to AP-NS.
 
-V2X-SHE1-MU, which is configured to be part of M7, is now given to A55 core.
+V2X_SHE1 MU, which was configured to be owned by the M7, is now given to AP core.
 
-FW team is planning to implement a scheme to share the MU between SHE and FCE, once these changes are provided by FW team we can revert this patch.
+The ELE FW team is planning to implement a scheme to share the MU between SHE and FCE and when these changes are delivered in a future release then this change will be reverted.
 

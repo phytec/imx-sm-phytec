@@ -1,8 +1,4 @@
-NOTE:  This file is a template only.  Please copy it to your project, 
-remove this note, fill in the copyright information and 
-check it into your project.
-
-Copyright xxxx
+Copyright 2023-2025 NXP
 
 The BSD 3 Clause License
 

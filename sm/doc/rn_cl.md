@@ -15,26 +15,28 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
-| [SM-197](https://jira.sw.nxp.com/projects/SM/issues/SM-197) | Support i.MX95 B0 |   | | | Y | |
+| [SM-197](https://jira.sw.nxp.com/projects/SM/issues/SM-197) | Support i.MX95 B0 [[detail]](@ref RN_DETAIL_SM_197) |   | | | Y | |
 
 Improvement {#RN_CL_IMP}
 ------------
 
 | Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|---|---|
-| [SM-200](https://jira.sw.nxp.com/projects/SM/issues/SM-200) | Improve BBNSM RTC access timing |   | Y | Y | Y | Y |
+| [SM-200](https://jira.sw.nxp.com/projects/SM/issues/SM-200) | Improve BBNSM RTC access timing [[detail]](@ref RN_DETAIL_SM_200) |   | Y | Y | Y | Y |
 | [SM-208](https://jira.sw.nxp.com/projects/SM/issues/SM-208) | Misc. updates to SM configurations [[detail]](@ref RN_DETAIL_SM_208) |   | Y | Y | Y | Y |
-| [SM-215](https://jira.sw.nxp.com/projects/SM/issues/SM-215) | Add SCMI LMM protocol function to set boot address of a CPU |   | Y | Y | Y | Y |
+| [SM-215](https://jira.sw.nxp.com/projects/SM/issues/SM-215) | Add SCMI LMM protocol function to set boot address of a CPU [[detail]](@ref RN_DETAIL_SM_215) |   | Y | Y | Y | Y |
 | [SM-217](https://jira.sw.nxp.com/projects/SM/issues/SM-217) | Add monitor rst command to allow assert/negate of resets [[detail]](@ref RN_DETAIL_SM_217) |   | Y | Y | Y | Y |
-| [SM-220](https://jira.sw.nxp.com/projects/SM/issues/SM-220) | Coding standard fixes |   | Y | Y | Y | Y |
-| [SM-224](https://jira.sw.nxp.com/projects/SM/issues/SM-224) | Upgrade eMcem component to EAR 0.8.4 |   | Y | Y | Y | Y |
+| [SM-220](https://jira.sw.nxp.com/projects/SM/issues/SM-220) | Coding standard fixes and test improvements [[detail]](@ref RN_DETAIL_SM_220) |   | Y | Y | Y | Y |
+| [SM-224](https://jira.sw.nxp.com/projects/SM/issues/SM-224) | Upgrade eMcem component to EAR 0.8.4 [[detail]](@ref RN_DETAIL_SM_224) |   | Y | Y | Y | Y |
 | [SM-226](https://jira.sw.nxp.com/projects/SM/issues/SM-226) | Support misc. makefile variables from the configtool [[detail]](@ref RN_DETAIL_SM_226) |   | Y | Y | Y | Y |
-| [SM-232](https://jira.sw.nxp.com/projects/SM/issues/SM-232) | Enable Neutron NPU with SMMU |   | Y | Y | Y | |
+| [SM-232](https://jira.sw.nxp.com/projects/SM/issues/SM-232) | Enable Neutron NPU with SMMU [[detail]](@ref RN_DETAIL_SM_232) |   | Y | Y | Y | |
 | [SM-233](https://jira.sw.nxp.com/projects/SM/issues/SM-233) | Support negative voltages to board functions |   | Y | Y | Y | Y |
+| [SM-234](https://jira.sw.nxp.com/projects/SM/issues/SM-234) | Upgrade GCC toolchain to Q4 2024 [[detail]](@ref RN_DETAIL_SM_234) |   | Y | Y | Y | Y |
 | [SM-235](https://jira.sw.nxp.com/projects/SM/issues/SM-235) | Add ECID in SM info output [[detail]](@ref RN_DETAIL_SM_235) |   | Y | Y | Y | Y |
 | [SM-239](https://jira.sw.nxp.com/projects/SM/issues/SM-239) | Add new rpmsg cfg file for i.MX94 |   | | | | Y |
 | [SM-242](https://jira.sw.nxp.com/projects/SM/issues/SM-242) | Send LM suspend/wake notifications [[detail]](@ref RN_DETAIL_SM_242) |   | Y | Y | Y | Y |
 | [SM-245](https://jira.sw.nxp.com/projects/SM/issues/SM-245) | Remove BLK_CTRL_CORTEX from A55 NS domain [[detail]](@ref RN_DETAIL_SM_245) |   | | | | Y |
+| [SM-256](https://jira.sw.nxp.com/projects/SM/issues/SM-256) | Changes to move SHE1 to A55 core for i.MX94 [[detail]](@ref RN_DETAIL_SM_256) |   | | | | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -49,10 +51,10 @@ Bug {#RN_CL_BUG}
 | [SM-229](https://jira.sw.nxp.com/projects/SM/issues/SM-229) | Manage NETC M33S with a virtual power domain to avoid power dependencies [[detail]](@ref RN_DETAIL_SM_229) |   | | | | Y |
 | [SM-230](https://jira.sw.nxp.com/projects/SM/issues/SM-230) | Incorrect configtool output for debug/DAP domain [[detail]](@ref RN_DETAIL_SM_230) |   | Y | Y | Y | Y |
 | [SM-236](https://jira.sw.nxp.com/projects/SM/issues/SM-236) | PMIC soft errors incorrectly reported as boot reason [[detail]](@ref RN_DETAIL_SM_236) |   | Y | Y | Y | Y |
-| [SM-238](https://jira.sw.nxp.com/projects/SM/issues/SM-238) | SCMI reset protocol does not manage regional resets correctly |   | Y | Y | Y | Y |
+| [SM-238](https://jira.sw.nxp.com/projects/SM/issues/SM-238) | Add device-level restrictions for SCMI reset protocol [[detail]](@ref RN_DETAIL_SM_238) |   | Y | Y | Y | Y |
 | [SM-241](https://jira.sw.nxp.com/projects/SM/issues/SM-241) | Bit width of LM number not consistent in the LMM protocol [[detail]](@ref RN_DETAIL_SM_241) |   | Y | Y | Y | Y |
 | [SM-243](https://jira.sw.nxp.com/projects/SM/issues/SM-243) | Incorrect reference to WAKEUPMIX memory slice instance [[detail]](@ref RN_DETAIL_SM_243) |   | | | | Y |
-| [SM-246](https://jira.sw.nxp.com/projects/SM/issues/SM-246) | ELE enabled temp sensor may cause SM to reset [[detail]](@ref RN_DETAIL_SM_246) |   | Y | Y | Y | Y |
+| [SM-246](https://jira.sw.nxp.com/projects/SM/issues/SM-246) | ELE enabled temp sensor may cause SM to reset [[detail]](@ref RN_DETAIL_SM_246) |   | | | Y | Y |
 | [SM-247](https://jira.sw.nxp.com/projects/SM/issues/SM-247) | Insufficient argument checking for monitor memory (mm/md) commands [[detail]](@ref RN_DETAIL_SM_247) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
@@ -64,6 +66,8 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 |------------|-------------------------------|-------|---|---|---|---|
 | [SM-186](https://jira.sw.nxp.com/projects/SM/issues/SM-186) | Implement DDR RX replica workaround [[detail]](@ref RN_DETAIL_SM_186) |   | Y | Y | Y | Y |
 | [SM-244](https://jira.sw.nxp.com/projects/SM/issues/SM-244) | Align DRAM rates to datasheet [[detail]](@ref RN_DETAIL_SM_244) |   | | | | Y |
+| [SM-253](https://jira.sw.nxp.com/projects/SM/issues/SM-253) | Enable GPUMIX SSI transaction blocking for clock-gated GPU module [[detail]](@ref RN_DETAIL_SM_253) |   | | | Y | |
+| [SM-255](https://jira.sw.nxp.com/projects/SM/issues/SM-255) | Support extended industrial temp range [[detail]](@ref RN_DETAIL_SM_255) |   | Y | Y | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -80,39 +84,55 @@ This section provides details for select changes.
 SM-186: Implement DDR RX replica workaround {#RN_DETAIL_SM_186}
 ----------
 
-Integrated DDR RX Replica workaround for iMX943 and iMX95.
+Integrated DDR RX Replica workaround for iMX943 and iMX95. To disable, add var=no_rx_replica to the configuration MAKE line.
+
+SM-197: Support i.MX95 B0 {#RN_DETAIL_SM_197}
+----------
+
+Documentation updates for the addition of i.MX95 B0. other changes include:
+ - Dynamic skip of LP handshake SWA
+
+ - Some config changes for SMMU use by Linux
+
+In addition, some other changes are required for i.MX95 B0:
+ - SM-246: ELE enabled temp sensor may cause SM to reset
+ - SM-253: Enable SSI transaction blocking for clock-gated modules
+
+SM-200: Improve BBNSM RTC access timing {#RN_DETAIL_SM_200}
+----------
+
+Optimized some accesses to the BBNSM. Eliminated unnecessary reads. Defered some accesses during boot until after other cores are started. Worst-case function call latency went from ~3ms to ~2ms.
 
 SM-208: Misc. updates to SM configurations {#RN_DETAIL_SM_208}
 ----------
 
 Made the following changes to various cfg files:
+ - Remove CPU power domain access
 
-- remove CPU power domain access
+ - Remove DDRC access (alt cfg)
 
-- remove DDRC access (alt cfg)
+ - Add new i.MX94 jailhouse cfg
 
-- add new i.MX94 jailhouse cfg
+ - Remove extra notify buffer config
 
-- remove extra notify buffer config
+ - Update Android cfg files
 
-- update Android cfg files
+ - Give ELE access to the DAP ISP port
 
-- give ELE access to the DAP ISP port
+ - Support split assignment for DACs on last to eDMA2 channels
 
-- support split assignment for DACs on last to eDMA2 channels
+ - Enable A55 TCU
 
-- enable A55 TCU
+ - Add new RPMSG cfg files
 
-- add new RPMSG cfg files
-
-- remove unused V2X resource assignments
+ - Remove unused V2X resource assignments
 
 Customers may require similar changes in their cfg files.
 
 SM-212: Insufficient argument checking for monitor pmic commands {#RN_DETAIL_SM_212}
 ----------
 
-For the *pmic.r* debug monitor command, the error message was not being logged on the M33 console when an invalid argument was provided. Support has now been added to log the error on the console in such cases.
+For the *pmic.r* debug monitor command, the error message was not being reported on the M33 console when an invalid argument was provided. Support has now been added to report the error on the console in such cases.
 
 For the *pmic.w* debug monitor command, the validation check for the parameter values was missing. Therefore, a validation check has been added to ensure the parameters passed to the *pmic.w* command is correct.
 
@@ -124,9 +144,18 @@ Check DID parameter against number of DIDs reported by a TRDC.
 SM-214: Insufficient argument checking for monitor fuse commands {#RN_DETAIL_SM_214}
 ----------
 
-For the *fuse* debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the Parmeter is reassign to zero and passed it to the underlying function. However, it should log an error for the invalid parameter.
+For the *fuse* debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the parameter is reassign to zero and passed it to the underlying function. However, it should report an error for the invalid parameter.
 
-Therefore, support has been added to log the error on the console when an invalid parameter is passed to the *fuse* command.
+Therefore, support has been added to report the error on the console when an invalid parameter is passed to the *fuse* command.
+
+SM-215: Add SCMI LMM protocol function to set boot address of a CPU {#RN_DETAIL_SM_215}
+----------
+
+Added a new SCMI API call, SCMI_LmmResetVectorSet(), to allow a caller with PRIV permissions for an LM to set the boot address of CPUs contained in the SM config start list. This allows an agent that is managing an LM to power it on via SCMI_LmmPowerOn(), load code, set the boot address via SCMI_LmmResetVectorSet(), and then boot the LM via SCMI_LmmBoot(). The LM is still responsible for configuring its resume address or the boot address of any CPUs not in the start list.
+
+Also added the number of agents to the attributes field returned by SCMI_LmmAttributes().
+
+The LMM protocol version was increased from 1.0 to 1.1. New features but backwards compatible.
 
 SM-217: Add monitor rst command to allow assert/negate of resets {#RN_DETAIL_SM_217}
 ----------
@@ -140,6 +169,11 @@ Actions include assert, negate, and auto. Auto (autonomous) will usually assert+
 
 
 
+SM-220: Coding standard fixes and test improvements {#RN_DETAIL_SM_220}
+----------
+
+Fixed some ISO21434 compliance issues (Cert-Int31C and Cert-Int30C) in the SM code base.
+
 SM-221: Extended config flag not set for spread spectrum clocks {#RN_DETAIL_SM_221}
 ----------
 
@@ -149,6 +183,11 @@ SM-223: Wakeups must be masked for CPUs that do not constrain system sleep entry
 ----------
 
 GPC wakeups for A55Cx may remain enabled during low-power flows that impact the A55P power state.  SM system sleep code only saves/masks/restores A55P GPC wakeups during system sleep.  This can cause the system to hang upon resume since an A55Cx with GPC wakeups enabled may start to resume before the system is ready.  The solution is to mask GPC wakeups for all CPUs during system sleep, even if those CPUs are being "forced" into system sleep (i.e., CPU is not being considered by GPC for system sleep entry). 
+
+SM-224: Upgrade eMcem component to EAR 0.8.4 {#RN_DETAIL_SM_224}
+----------
+
+Upgraded the eMcem component (FCCU driver) to EAR 0.8.4.
 
 SM-226: Support misc. makefile variables from the configtool {#RN_DETAIL_SM_226}
 ----------
@@ -172,6 +211,18 @@ Modified the configool to:
 - Do not map MBC/MRC entries with perm = 0/none to the debug DID.
 
 Customers should regenerate their config headers.
+
+SM-232: Enable Neutron NPU with SMMU {#RN_DETAIL_SM_232}
+----------
+
+Updated the i.MX95 cfg files to map NPU to a streamID of 0xD and clear KPA. Customers will need the same change if their AP code will use the SMMU for NPU.
+
+SM-234: Upgrade GCC toolchain to Q4 2024 {#RN_DETAIL_SM_234}
+----------
+
+Support for Arm GNU Toolchain version 14.2.rel1 is added for SM. Download and extract [arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz](https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz) for AArch32 bare-metal target (arm-none-eabi) to a directory and export it's path to 'TOOLS' shell variable.
+
+For Example: if the toolchain (arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz) is installed in /tools directory then export TOOLS shell variable as "export TOOLS=/tools"
 
 SM-235: Add ECID in SM info output {#RN_DETAIL_SM_235}
 ----------
@@ -210,6 +261,13 @@ Modified reference board port code to mask PMIC soft fault bits when determining
 
 Customers have to make similar changes to their board ports.
 
+SM-238: Add device-level restrictions for SCMI reset protocol {#RN_DETAIL_SM_238}
+----------
+
+Managment of some reset domains exposed via the SCMI reset protocol may result in a non-recoverable SoC state.  An additional layer of protection was added to the SM device layer to reject management of reset domains that may lead to said state.
+
+In addition, the definition of the GPUMIX reset domain was missing from the SM global reset line table and has been properly populated.
+
 SM-241: Bit width of LM number not consistent in the LMM protocol {#RN_DETAIL_SM_241}
 ----------
 
@@ -245,7 +303,29 @@ Reworked code that sets temp sensor thresholds to support the case where ELE (RO
 SM-247: Insufficient argument checking for monitor memory (mm/md) commands {#RN_DETAIL_SM_247}
 ----------
 
-For the mm/md debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the Parmeter is reassign to 0x8000_0000 and passed it to the underlying function. However, it should log an error for the invalid parameter.
+For the mm/md debug monitor command, if an out-of-bound value is passed as an argument, then as per the earlier implementation, the parameter is reassign to 0x80000000 and passed to the underlying function. However, it should report an error for the invalid parameter.
 
-Therefore, support has been added to log the error on the console when an invalid parameter is passed to the mm/md command.
+Therefore, support has been added to report the error on the console when an invalid parameter is passed to the mm/md command.
+
+SM-253: Enable GPUMIX SSI transaction blocking for clock-gated GPU module {#RN_DETAIL_SM_253}
+----------
+
+Transactions to modules with clocks gated can result in CPU hangs that are not recoverable by the SM.  For GPU module clock gating, GPUMIX SSI black hole mode is engaged by SM to ensure such accesses are terminated with a proper bus fault.
+
+SM-255: Support extended industrial temp range {#RN_DETAIL_SM_255}
+----------
+
+Updated the market segment fuse setting 1 to mean ext. industrial rather than ext. consumer in order to match the latest data sheet. This means that fuse setting will now have a panic temp of 125C (+2C margin).
+
+SM-256: Changes to move SHE1 to A55 core for i.MX94 {#RN_DETAIL_SM_256}
+----------
+
+On i.MX943, the V2X-SHE0-MU is configured in SM for application domain.
+ * It is enabled for V2X-SHE0 features on ER releases.
+ * From *LF Q2 release,* this MU will be enabled for FCE features.
+ * Hence, there will be no V2X-SHE features on LF Q2 in linux if we do not enable V2X-SHE1-MU.
+
+V2X-SHE1-MU, which is configured to be part of M7, is now given to A55 core.
+
+FW team is planning to implement a scheme to share the MU between SHE and FCE, once these changes are provided by FW team we can revert this patch.
 

@@ -276,8 +276,12 @@ void TEST_DevSmSystem(void)
 
     {
         /* Get the Silicon version */
+#ifdef INC_LIBC
         uint32_t siRev = DEV_SM_SiVerGet();
         printf("silicon rev: %u\n", siRev);
+#else
+        (void) DEV_SM_SiVerGet();
+#endif
     }
 #endif
 

@@ -261,9 +261,13 @@ void TEST_DevSmHandler(void)
     NVIC_SetPendingIRQ(MU9_B_IRQ_HANDLER);
 #endif
 
+#ifdef INC_LIBC
     uint64_t timeMsec = DEV_SM_GetTimerMsec();
     printf("TimeMsec_H: %u TimeMsec_L: %u\n",
         UINT64_H(timeMsec), UINT64_L(timeMsec));
+#else
+    (void) DEV_SM_GetTimerMsec();
+#endif
 
     uint32_t basePrio = 0U;
     DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);

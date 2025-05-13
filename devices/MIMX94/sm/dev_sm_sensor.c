@@ -166,6 +166,8 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
         /* Check if ELE enabled */
         if (secAccess && !TMPSNS_Enabled(base))
         {
+            printf("init S section\n");
+
             /* Note we enabled */
             s_tmpsnsOwn[sensorId] = true;
 
@@ -173,11 +175,21 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
             TMPSNS_Init(base, &config);
         }
 
+        printf("init NS section\n");
+
         /* Init NS section of sensor */
         TMPSNS_InitNs(base, &config);
 
+        printf("config panic\n");
+
         /* Configure panic */
         uint32_t mktSeg = DEV_SM_FuseGet(DEV_SM_FUSE_MARKET_SEGMENT);
+
+        printf("mktSeg=%u\n", mktSeg);
+
+        printf("id=%u, th=%u, t=%d\n", sensorId,
+            s_tmpsns[sensorId].panicThreshold, (int32_t) panicTemp[mktSeg]);
+
         status = TMPSNS_ThresholdSet(sensorId,
             s_tmpsns[sensorId].panicThreshold, panicTemp[mktSeg],
             DEV_SM_SENSOR_TP_HIGH);

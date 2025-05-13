@@ -62,13 +62,16 @@ void TEST_DevSmFuse(void)
 
 #ifdef HAS_FUSE_GET_SPEED
     printf("DEV_SM_FuseSpeedGet() freq: %u\n", DEV_SM_FuseSpeedGet());
-    uint32_t freq = 0U;
 
     SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
-    freq = DEV_SM_FuseSpeedGet();
+#ifdef INC_LIBC
+    uint32_t freq = DEV_SM_FuseSpeedGet();
     SM_TestModeSet(SM_TEST_MODE_OFF);
-
     printf("freq: %u\n", freq);
+#else
+    (void) DEV_SM_FuseSpeedGet();
+    SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
 #endif
 
 #ifndef SIMU
@@ -76,9 +79,14 @@ void TEST_DevSmFuse(void)
     NECHECK(DEV_SM_FuseInfoGet(NUM_FUSES, NULL), SM_ERR_NOT_FOUND);
 
     SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+#ifdef INC_LIBC
     uint32_t fuseVal = DEV_SM_FuseGet(DEV_SM_FUSE_ECID0);
     SM_TestModeSet(SM_TEST_MODE_OFF);
     printf("fuse val:%x\n", fuseVal);
+#else
+    (void) DEV_SM_FuseGet(DEV_SM_FUSE_ECID0);
+    SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
 
     DEV_SM_FusePdDisabled(DEV_SM_PD_A55C0);
     DEV_SM_FuseCpuDisabled(DEV_SM_FUSE_A55_CORE0_DISABLE);

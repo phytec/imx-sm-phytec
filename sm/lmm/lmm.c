@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -325,8 +325,6 @@ void LMM_ErrorDump(void)
         /* Dump RPC errors */
         switch (g_lmmConfig[lmId].rpcType)
         {
-            case SM_RPC_NONE:
-                break;
             case SM_RPC_SCMI:
                 RPC_SCMI_ErrorDump(g_lmmConfig[lmId].rpcInst);
                 break;

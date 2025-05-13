@@ -16,7 +16,7 @@
 **         the oscillator (PLL) that is part of the microcontroller device.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2024 NXP
+**     Copyright 2016-2025 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -177,12 +177,8 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
             *((uint16_t *) val) = *((const uint16_t *) addr);
             break;
 
-        case 32:
+        default:
             *((uint32_t *) val) = *((const uint32_t *) addr);
-            break;
-
-        default :
-            ; /* Intentional empty default */
             break;
     }
 

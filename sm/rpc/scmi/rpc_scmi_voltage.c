@@ -835,14 +835,11 @@ static int32_t VoltageConfigGet(const scmi_caller_t *caller,
     {
         switch (voltMode)
         {
-            case DEV_SM_VOLT_MODE_OFF:
-                voltMode = VOLTAGE_DOMAIN_MODES_OFF;
-                break;
             case DEV_SM_VOLT_MODE_ON:
                 voltMode = VOLTAGE_DOMAIN_MODES_ON;
                 break;
-            default:
-                ; /* Intentional empty default */
+            default: /* DEV_SM_VOLT_MODE_OFF */
+                voltMode = VOLTAGE_DOMAIN_MODES_OFF;
                 break;
         }
 

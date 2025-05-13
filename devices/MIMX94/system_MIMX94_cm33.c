@@ -187,12 +187,8 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
             *((uint16_t *) val) = *((const uint16_t *) addr);
             break;
 
-        case 32:
+        default:
             *((uint32_t *) val) = *((const uint32_t *) addr);
-            break;
-
-        default :
-            ; /* Intentional empty default */
             break;
     }
 

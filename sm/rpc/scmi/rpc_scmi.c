@@ -244,16 +244,13 @@ void RPC_SCMI_Dispatch(uint32_t scmiChannel)
     /* Check channel type */
     switch (g_scmiChannelConfig[scmiChannel].type)
     {
-        case SM_SCMI_CHN_A2P:
-            RPC_SCMI_A2pDispatch(scmiChannel);
-            break;
         case SM_SCMI_CHN_P2A:
         case SM_SCMI_CHN_P2A_NOTIFY:
         case SM_SCMI_CHN_P2A_PRIORITY:
             RPC_SCMI_P2aDispatch(scmiChannel);
             break;
-        default:
-            ; /* Intentional empty default */
+        default: /* SM_SCMI_CHN_A2P */
+            RPC_SCMI_A2pDispatch(scmiChannel);
             break;
     }
 }
@@ -585,14 +582,14 @@ static void *RPC_SCMI_HdrAddrGet(uint32_t scmiChannel)
     void *addr = NULL;
 
     /* Get message buffer address */
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             addr = RPC_SMT_HdrAddrGet(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            ; /* Intentional empty default */
             break;
     }
 
@@ -606,14 +603,14 @@ static bool RPC_SCMI_ChannelFree(uint32_t scmiChannel)
 {
     bool channelFree = false;
 
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             channelFree = RPC_SMT_ChannelFree(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            ; /* Intentional empty default */
             break;
     }
 
@@ -639,14 +636,14 @@ static int32_t RPC_SCMI_IsAborted(uint32_t scmiChannel)
     int32_t status;
 
     /* Get abort status */
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             status = RPC_SMT_IsAborted(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            status = SM_ERR_NOT_SUPPORTED;
             break;
     }
 

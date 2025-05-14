@@ -267,6 +267,9 @@
 
 #define CLOCK_LPCG_CORTEXAMIX_SSI0          1U
 #define CLOCK_LPCG_GPUMIX_SSI0              4U
+#define CLOCK_LPCG_WAKEUPMIX_TBU            21U
+#define CLOCK_LPCG_NOCMIX_TBU               22U
+#define CLOCK_LPCG_NOCMIX_TCU               23U
 #define CLOCK_LPCG_GPU                      24U
 
 #endif

@@ -352,6 +352,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
             case DEV_SM_PD_M7:
                 status = DEV_SM_M7PowerDownPre();
                 break;
+            case DEV_SM_PD_NOC:
+                status = DEV_SM_NocPowerDownPre();
+                break;
             default:
                 /* Only return error if domain out of range */
                 if (domainId >= DEV_SM_NUM_POWER)

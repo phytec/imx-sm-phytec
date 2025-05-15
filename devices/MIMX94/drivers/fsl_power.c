@@ -31,6 +31,7 @@
 
 #include "fsl_def.h"
 #include "fsl_cpu.h"
+#include "sm_test_mode.h"
 #include "fsl_power.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
@@ -421,6 +422,10 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
             idx++;
         }
     }
+
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        anyChildPowered = 1U);
 
     return anyChildPowered;
 }

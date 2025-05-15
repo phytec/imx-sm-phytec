@@ -163,19 +163,20 @@ bool DEV_SM_CpuIsActive(uint32_t cpuId)
 int32_t DEV_SM_CpuStart(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Set CPU run mode to START */
-        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_START))
+        if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_START))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -215,29 +216,30 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
 int32_t DEV_SM_CpuStop(uint32_t cpuId)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
-        if (cpuId == DEV_SM_CPU_A55P)
+        if (modCpuId == DEV_SM_CPU_A55P)
         {
             (void) DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
         }
 
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Set CPU run mode to STOP */
-        if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_STOP))
+        if (!CPU_RunModeSet(modCpuId, CPU_RUN_MODE_STOP))
         {
             status = SM_ERR_NOT_FOUND;
         }
         /* TODO: Reload TRDC_S as MBC_S0 lost */
-        if ((cpuId == DEV_SM_CPU_M33S) && (status == SM_ERR_SUCCESS))
+        if ((modCpuId == DEV_SM_CPU_M33S) && (status == SM_ERR_SUCCESS))
         {
             status = DEV_SM_RdcLoad(DEV_SM_TRDC_S);
         }
@@ -272,18 +274,19 @@ int32_t DEV_SM_CpuResetVectorCheck(uint32_t cpuId, uint64_t resetVector,
 int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
-        if (!CPU_ResetVectorSet(cpuId, resetVector))
+        if (!CPU_ResetVectorSet(modCpuId, resetVector))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -300,9 +303,10 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
     uint32_t sleepFlags)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -319,17 +323,17 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
         else
         {
             /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
             /* Set CPU target sleep mode on next WFI entry */
-            if (!(CPU_SleepModeSet(cpuId, sleepMode)))
+            if (!(CPU_SleepModeSet(modCpuId, sleepMode)))
             {
                 status = SM_ERR_NOT_FOUND;
             }
             else
             {
                 /* Set wake mux to GPC/GIC */
-                if (!CPU_WakeMuxSet(cpuId, irqMuxGic))
+                if (!CPU_WakeMuxSet(modCpuId, irqMuxGic))
                 {
                     status = SM_ERR_NOT_FOUND;
                 }
@@ -337,7 +341,7 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
                 {
                     if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
                     {
-                        s_cpuWakeListA55 |= (1UL << cpuId);
+                        s_cpuWakeListA55 |= (1UL << modCpuId);
                     }
                 }
             }
@@ -355,6 +359,7 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     uint32_t maskVal)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     if (maskIdx >= GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT)
     {
@@ -363,16 +368,16 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     else
     {
         /* Check fuse state */
-        if (DEV_SM_FuseCpuDisabled(cpuId))
+        if (DEV_SM_FuseCpuDisabled(modCpuId))
         {
             status = SM_ERR_NOT_FOUND;
         }
         else
         {
             /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
-            if (!CPU_IrqWakeSet(cpuId, maskIdx, maskVal))
+            if (!CPU_IrqWakeSet(modCpuId, maskIdx, maskVal))
             {
                 status = SM_ERR_NOT_FOUND;
             }
@@ -390,6 +395,7 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     uint32_t maskVal)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     if (maskIdx >= 1U)
     {
@@ -398,16 +404,16 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     else
     {
         /* Check fuse state */
-        if (DEV_SM_FuseCpuDisabled(cpuId))
+        if (DEV_SM_FuseCpuDisabled(modCpuId))
         {
             status = SM_ERR_NOT_FOUND;
         }
         else
         {
             /* Added to improve the test coverage */
-            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
-            if (!CPU_NonIrqWakeSet(cpuId, maskVal))
+            if (!CPU_NonIrqWakeSet(modCpuId, maskVal))
             {
                 status = SM_ERR_NOT_FOUND;
             }
@@ -425,7 +431,8 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     uint32_t lpmSetting, uint32_t retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
-    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
+    uint32_t modCpuId = cpuId;
+    bool cpuDisabled = DEV_SM_FuseCpuDisabled(modCpuId);
     bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
 
     /* Check fuse state */
@@ -436,10 +443,10 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
     else
     {
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Configure CPU LPM response for specified power domain */
-        if (!CPU_LpmConfigSet(cpuId, domainId, lpmSetting, retMask))
+        if (!CPU_LpmConfigSet(modCpuId, domainId, lpmSetting, retMask))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -456,20 +463,21 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     uint32_t lpmSetting)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(cpuId))
+    if (DEV_SM_FuseCpuDisabled(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
         /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, cpuId = DEV_SM_NUM_CPU);
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
 
         /* Configure CPU LPM response for the peripheral low-power
            interface */
-        if (!CPU_PerLpiConfigSet(cpuId, perId, lpmSetting))
+        if (!CPU_PerLpiConfigSet(modCpuId, perId, lpmSetting))
         {
             status = SM_ERR_NOT_FOUND;
         }

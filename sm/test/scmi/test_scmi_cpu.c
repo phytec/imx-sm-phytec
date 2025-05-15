@@ -233,7 +233,7 @@ void TEST_ScmiCpu(void)
     /* CpuPdLpmConfigsSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
-        scmi_pd_lpm_config_t lpm_config = {0U};
+        scmi_pd_lpm_config_t lpm_config = { 0U };
         lpm_config.domainId = 0U;
         lpm_config.lpmSetting = 0U;
         lpm_config.retMask = 0x0U;
@@ -253,7 +253,7 @@ void TEST_ScmiCpu(void)
     /* CpuPerLpmConfigSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
-        scmi_per_lpm_config_t per_lpm_config = {0U};
+        scmi_per_lpm_config_t per_lpm_config = { 0U };
         per_lpm_config.perId= 0U;
         per_lpm_config.lpmSetting = 0U;
 
@@ -451,7 +451,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* RPC_00330 RPC_00340 - CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
-            scmi_pd_lpm_config_t lpm_config = {0U};
+            scmi_pd_lpm_config_t lpm_config = { 0U };
             lpm_config.domainId = domainId;
             lpm_config.lpmSetting = SCMI_CPU_LPM_SETTING_ON_NEVER;
             lpm_config.retMask = 0x0U;
@@ -465,7 +465,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* RPC_00330 RPC_00340 - CpuPerLpmConfigSet */
         {
             uint32_t numConfig = 1U;
-            scmi_per_lpm_config_t per_lpm_config = {0U};
+            scmi_per_lpm_config_t per_lpm_config = { 0U };
             per_lpm_config.perId= 0U;
             per_lpm_config.lpmSetting = 0U;
             printf("SCMI_CpuPerLpmConfigSet (%u, %u)\n",
@@ -515,7 +515,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
-            scmi_pd_lpm_config_t lpm_config = {0U};
+            scmi_pd_lpm_config_t lpm_config = { 0U };
             lpm_config.domainId = domainId;
             lpm_config.lpmSetting = SCMI_CPU_LPM_SETTING_ON_NEVER;
             lpm_config.retMask = 0x0U;
@@ -529,7 +529,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* CpuPerLpmConfigSet */
         {
             uint32_t numConfig = 1U;
-            scmi_per_lpm_config_t per_lpm_config = {0U};
+            scmi_per_lpm_config_t per_lpm_config = { 0U };
             per_lpm_config.perId= 0U;
             per_lpm_config.lpmSetting = 0U;
 

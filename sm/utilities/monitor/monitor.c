@@ -363,7 +363,7 @@ void MONITOR_Yield(void)
 static char MONITOR_RawCharGet(bool echo)
 {
     char buf = 0;
-    struct termios old = {0};
+    struct termios old = { 0 };
     ssize_t res;
 
     fflush(stdout);

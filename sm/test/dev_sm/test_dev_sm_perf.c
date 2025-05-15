@@ -141,6 +141,33 @@ void TEST_DevSmPerf(void)
         uint32_t perfLevel = 4U;
         NECHECK(DEV_SM_PerfFreqSet(0U, perfLevel),
             SM_ERR_OUT_OF_RANGE);
+
+        printf("DEV_SM_PerfSystemSleep(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfSystemSleep(DEV_SM_NUM_PERF),
+            SM_ERR_OUT_OF_RANGE);
+
+        dev_sm_perf_info_t info = { 0 };
+        printf("DEV_SM_PerfInfoGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfInfoGet(DEV_SM_NUM_PERF, &info),
+            SM_ERR_NOT_FOUND);
+
+        numLevels = 0U;
+        printf("DEV_SM_PerfNumLevelsGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_NUM_PERF, &numLevels),
+            SM_ERR_NOT_FOUND);
+
+        uint32_t levelIndex = 0U;
+        printf("DEV_SM_PerfDescribe(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfDescribe(DEV_SM_NUM_PERF, levelIndex, &desc),
+            SM_ERR_NOT_FOUND);
+
+        printf("DEV_SM_PerfNameGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfNameGet(DEV_SM_NUM_PERF, &name, &len),
+            SM_ERR_NOT_FOUND);
+
+        printf("DEV_SM_PerfLevelSet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfLevelSet(0U /*DEV_SM_PERF_M33*/, DEV_SM_NUM_PERF),
+            SM_ERR_OUT_OF_RANGE);
 #endif
     }
 

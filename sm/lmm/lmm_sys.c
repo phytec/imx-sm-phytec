@@ -363,6 +363,10 @@ void LM_SystemReason(uint32_t lmId, lmm_rst_rec_t *bootRec,
     /* Update boot record */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Added to improve the test coverage */
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+            flags = DEV_SM_BBM_BOOT_BUTTON);
+
         if ((flags & (DEV_SM_BBM_BOOT_BUTTON | DEV_SM_BBM_BOOT_ALARM
             | DEV_SM_BBM_BOOT_ROLLOVER)) != 0U)
         {

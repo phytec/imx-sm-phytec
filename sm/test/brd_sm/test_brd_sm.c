@@ -54,7 +54,7 @@ void TEST_BrdSm(void)
         int32_t argc = 1;
         const char status[5] = "0";
         const char * const argv[1] = {status};
-        dev_sm_rst_rec_t resetRec = {0};
+        dev_sm_rst_rec_t resetRec = { 0 };
         uint32_t reaction = LMM_REACT_NONE + 1U;
         uint32_t LmId = 0U;
         uint8_t voltMode;

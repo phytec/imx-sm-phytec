@@ -478,7 +478,7 @@ void BOARD_InitSerialBus(void)
 {
     static LPI2C_Type *const s_i2cBases[] = LPI2C_BASE_PTRS;
     LPI2C_Type *base = s_i2cBases[BOARD_I2C_INSTANCE];
-    lpi2c_master_config_t lpi2cConfig = {0};
+    lpi2c_master_config_t lpi2cConfig = { 0 };
     static uint32_t const s_i2cClks[] =
     {
         0U,

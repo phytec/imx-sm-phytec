@@ -138,6 +138,7 @@
         .clkPerms[DEV_SM_CLK_1] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_2] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[DEV_SM_CTRL_TEST_E] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_4] = SM_SCMI_PERM_ALL, \
         .faultPerms[DEV_SM_FAULT_5] = SM_SCMI_PERM_ALL, \
         .gprPerms[DEV_SM_GPR_1] = SM_SCMI_PERM_ALL, \

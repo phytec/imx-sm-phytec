@@ -32,6 +32,7 @@
 #include "fsl_def.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
+#include "sm_test_mode.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
 #if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
@@ -431,6 +432,10 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
             idx++;
         }
     }
+
+    /* To Impove the test coverage for the negative case */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        anyChildPowered = true);
 
     return anyChildPowered;
 }

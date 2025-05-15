@@ -108,7 +108,7 @@ void TEST_DevSmSystem(void)
 
     /* SystemShutdownRecSet Coverage */
     {
-        dev_sm_rst_rec_t shutdownRec = {0};
+        dev_sm_rst_rec_t shutdownRec = { 0 };
 
         printf("DEV_SM_SystemShutdownRecSet()\n");
         DEV_SM_SystemShutdownRecSet(shutdownRec);
@@ -116,7 +116,7 @@ void TEST_DevSmSystem(void)
 
     /* Complete System Reset Processing Coverage */
     {
-        dev_sm_rst_rec_t rst = {0};
+        dev_sm_rst_rec_t rst = { 0 };
 
         printf("DEV_SM_SystemRstComp()\n");
         CHECK(DEV_SM_SystemRstComp(&rst));
@@ -260,7 +260,7 @@ void TEST_DevSmSystem(void)
         /* DEV_SM_SystemShutdown coverage */
         NECHECK(DEV_SM_SystemShutdown(), SM_ERR_TEST);
 
-        dev_sm_rst_rec_t shutdownRec = {0};
+        dev_sm_rst_rec_t shutdownRec = { 0 };
         /* DEV_SM_SystemShutdownRecSet coverage */
         DEV_SM_SystemShutdownRecSet(shutdownRec);
 

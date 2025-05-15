@@ -122,8 +122,13 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 /*--------------------------------------------------------------------------*/
 bool DEV_SM_CpuIsActive(uint32_t cpuId)
 {
+    bool rc = false;
+
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        rc = true);
+
     /* No CPUs suspended */
-    return false;
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/

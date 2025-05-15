@@ -235,10 +235,12 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
     }
     else
     {
-        if ((s_fuseId[cpuId] > 0U)
-            && (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U))
+        if (s_fuseId[cpuId] > 0U)
         {
-            cpuDisabled = true;
+            if (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U)
+            {
+                cpuDisabled = true;
+            }
         }
     }
 

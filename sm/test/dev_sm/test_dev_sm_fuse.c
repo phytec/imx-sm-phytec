@@ -89,7 +89,7 @@ void TEST_DevSmFuse(void)
 #endif
 
     DEV_SM_FusePdDisabled(DEV_SM_PD_A55C0);
-    DEV_SM_FuseCpuDisabled(DEV_SM_FUSE_A55_CORE0_DISABLE);
+    (void) DEV_SM_FuseCpuDisabled(DEV_SM_FUSE_A55_CORE0_DISABLE);
 #endif
 
     printf("\n");

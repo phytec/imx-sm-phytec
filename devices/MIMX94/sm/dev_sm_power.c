@@ -335,16 +335,21 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
 int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
 {
     int32_t status = SM_ERR_SUCCESS;
+    uint32_t modDomainId = domainId;
 
     /* Check fuse state of power domain */
-    if (DEV_SM_FusePdDisabled(domainId))
+    if (DEV_SM_FusePdDisabled(modDomainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
     else
     {
+        /* Added to improve the test coverage */
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+            modDomainId = PWR_NUM_MIX_SLICE);
+
         /* Check domain */
-        if (!(SRC_MemRetentionModeSet(domainId, memRetMask)))
+        if (!(SRC_MemRetentionModeSet(modDomainId, memRetMask)))
         {
             status = SM_ERR_NOT_FOUND;
         }

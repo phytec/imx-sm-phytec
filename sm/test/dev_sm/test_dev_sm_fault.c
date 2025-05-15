@@ -136,11 +136,11 @@ void TEST_DevSmFault(void)
         printf("DEV_SM_FaultGet fault(%u) state: %s\n", 18U /*DEV_SM_FAULT_WDOG2*/,
             state ? "true" : "false");
     }
-#if 0
+#ifdef DEV_SM_FAULT_ID
     /*Set: Invalid fault state */
     {
         uint32_t lmId = 0U;
-        uint32_t faultId = 102U;
+        uint32_t faultId = DEV_SM_FAULT_ID;
         bool state = true;
 
         printf("DEV_SM_FaultSet faultId:(%u)\n", faultId);

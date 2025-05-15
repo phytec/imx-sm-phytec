@@ -36,6 +36,7 @@
 #include "fsl_reset.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
+#include "sm_test_mode.h"
 
 /* Local Defines */
 
@@ -696,10 +697,19 @@ bool SRC_MixSoftPowerUp(uint32_t srcMixIdx)
 bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx)
 {
     bool isPwrSwitchOn = false;
+    uint32_t modSrcMixIdx = srcMixIdx;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+#if defined(RUN_TEST) || defined(MONITOR)
+    /* Added to impove the test coverage for negative case */
+    if (g_testMode == SM_TEST_MODE_EXEC_LVL1) \
     {
-        const src_mix_slice_t *srcMix = s_srcMixPtrs[srcMixIdx];
+        modSrcMixIdx = PWR_NUM_MIX_SLICE;
+    }
+#endif
+
+    if (modSrcMixIdx < PWR_NUM_MIX_SLICE)
+    {
+        const src_mix_slice_t *srcMix = s_srcMixPtrs[modSrcMixIdx];
 
         if (0U == (srcMix->FUNC_STAT & FUNC_STAT_PSW_STAT_MASK))
         {

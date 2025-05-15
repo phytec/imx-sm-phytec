@@ -92,6 +92,8 @@
 
 #define HAS_FUSE_GET_SPEED
 
+#define DEV_SM_FAULT_ID     DEV_SM_FAULT_RESV98
+
 /* Local defines */
 
 /* Types */

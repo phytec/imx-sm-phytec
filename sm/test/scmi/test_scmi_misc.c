@@ -591,6 +591,19 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
         NECHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal,
             &val), SM_ERR_NOT_SUPPORTED);
+#else
+        if (ctrlId == DEV_SM_CTRL_TEST_E)
+        {
+            printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal,
+                &val));
+
+            numVal = 1U;
+            printf("SCMI_MiscControlExtGet(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, numVal, &numVal,
+                &val));
+            printf("SCMI_MiscControlExtGet: extVal: %x\n", val);
+        }
 #endif
 
 #ifdef SIMU

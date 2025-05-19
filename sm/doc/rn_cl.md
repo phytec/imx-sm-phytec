@@ -56,6 +56,9 @@ Bug {#RN_CL_BUG}
 | [SM-243](https://jira.sw.nxp.com/projects/SM/issues/SM-243) | Incorrect reference to WAKEUPMIX memory slice instance [[detail]](@ref RN_DETAIL_SM_243) |   | | | | Y |
 | [SM-246](https://jira.sw.nxp.com/projects/SM/issues/SM-246) | ELE enabled temp sensor may cause SM to reset [[detail]](@ref RN_DETAIL_SM_246) |   | | | Y | Y |
 | [SM-247](https://jira.sw.nxp.com/projects/SM/issues/SM-247) | Insufficient argument checking for monitor memory (mm/md) commands [[detail]](@ref RN_DETAIL_SM_247) |   | Y | Y | Y | Y |
+| [SM-258](https://jira.sw.nxp.com/projects/SM/issues/SM-258) | Misc. changes to other config files [[detail]](@ref RN_DETAIL_SM_258) |   | | | | Y |
+| [SM-259](https://jira.sw.nxp.com/projects/SM/issues/SM-259) | Manage SMMU TCU and TBUs during NOCMIX power flows [[detail]](@ref RN_DETAIL_SM_259) |   | | | Y | |
+| [SM-260](https://jira.sw.nxp.com/projects/SM/issues/SM-260) | Incorrect extended pin mapping for CCM_CLK03 [[detail]](@ref RN_DETAIL_SM_260) |   | | | | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -328,4 +331,19 @@ On i.MX94, V2X_SHE0 MU is configured in most cfgs for use by AP-NS.
 V2X_SHE1 MU, which was configured to be owned by the M7, is now given to AP core.
 
 The ELE FW team is planning to implement a scheme to share the MU between SHE and FCE and when these changes are delivered in a future release then this change will be reverted.
+
+SM-258: Misc. changes to other config files {#RN_DETAIL_SM_258}
+----------
+
+Copy changes to standard i.MX94 cfg files to some of the other cfg files.
+
+SM-259: Manage SMMU TCU and TBUs during NOCMIX power flows {#RN_DETAIL_SM_259}
+----------
+
+During low-power flows where NOCMIX is reset or powered down, the SMMU implementation requires SM to manage the SMMU TCU and TBU modules located in the NOCMIX and WAKEUPMIX.  SM has added support to manage the respective SMMU TCU and TBU modules during the NOCMIX low-power handshake.
+
+SM-260: Incorrect extended pin mapping for CCM_CLK03 {#RN_DETAIL_SM_260}
+----------
+
+Corrected the extended pin reference from DEV_SM_PIN_CCM_CLKO1 to DEV_SM_PIN_CCM_CLKO3. Without this change cannot use the extended (alt8/9/10) options for the CCM_CLKO3 pin.
 

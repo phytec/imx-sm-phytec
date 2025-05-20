@@ -1204,9 +1204,9 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                         uint32_t val[LMM_MAX_ARG];
 
                         /* Copy array */
-                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        for (uint32_t etr = 0U; etr < LMM_MAX_ARG; etr++)
                         {
-                            val[idx] = UINT64_L(ptr->arg[idx]);
+                            val[etr] = UINT64_L(ptr->arg[etr]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,
@@ -1311,9 +1311,9 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         uint32_t val[LMM_MAX_ARG];
 
                         /* Copy array */
-                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        for (uint32_t etr = 0U; etr < LMM_MAX_ARG; etr++)
                         {
-                            val[idx] = UINT64_L(ptr->arg[idx]);
+                            val[etr] = UINT64_L(ptr->arg[etr]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,

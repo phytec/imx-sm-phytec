@@ -121,13 +121,9 @@ void MONITOR_Cmd(string banner)
         printf("\n");
 
         /* Dispatch */
-#ifdef SIMU
+        MONITOR_EnterCS();
         status = MONITOR_Dispatch(line);
-#else
-        priMask = DisableGlobalIRQ();
-        status = MONITOR_Dispatch(line);
-        EnableGlobalIRQ(priMask);
-#endif
+        MONITOR_ExitCS();
 
         /* Clean up input buffer */
         while (MONITOR_CharPending() != false)
@@ -194,40 +190,6 @@ void MONITOR_LineUpdateDispatch(const char *my_string)
     strcpy(line, my_string);
     c_insert = '\n';
 }
-
-#ifdef SIMU
-/*--------------------------------------------------------------------------*/
-/* SystemMemoryProbe(addr, val, width)                                      */
-/*--------------------------------------------------------------------------*/
-uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
-{
-    uint32_t rtn = 0U;
-    uint32_t pAddr = (uint32_t) addr;
-
-    if ((pAddr >= 0x80000000UL) && (pAddr < 0x80010000UL))
-    {
-        // Perform the probe
-        switch (width)
-        {
-            default:
-                *((uint8_t *) val) = *((const uint8_t *) addr);
-                break;
-            case 16:
-                *((uint16_t *) val) = *((const uint16_t *) addr);
-                break;
-            case 32:
-                *((uint32_t *) val) = *((const uint32_t *) addr);
-                break;
-        }
-    }
-    else
-    {
-        rtn = 1U;
-    }
-
-    return rtn;
-}
-#endif
 
 /*--------------------------------------------------------------------------*/
 /* Search for string                                                        */
@@ -958,5 +920,25 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 
     /* Return string */
     return rtn;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enter ciritical section                                                  */
+/*--------------------------------------------------------------------------*/
+void MONITOR_EnterCS(void)
+{
+#ifndef SIMU
+    priMask = DisableGlobalIRQ();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enter ciritical section                                                  */
+/*--------------------------------------------------------------------------*/
+void MONITOR_ExitCS(void)
+{
+#ifndef SIMU
+    EnableGlobalIRQ(priMask);
+#endif
 }
 

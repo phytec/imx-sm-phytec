@@ -50,6 +50,7 @@
 /* Includes */
 
 #include "sm.h"
+#include "system_simu.h"
 #include "dev_sm_config.h"
 #include "dev_sm_power.h"
 #include "dev_sm_system.h"

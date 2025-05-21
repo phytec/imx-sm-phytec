@@ -99,5 +99,5 @@ TEST_OBJS += \
 	$(OUT)/scmi_voltage.o  \
 	$(OUT)/smt.o
 
-OBJS += $(SM_OBJS)
+OBJS += $(SM_OBJS) $(OUT)/system_simu.o
 

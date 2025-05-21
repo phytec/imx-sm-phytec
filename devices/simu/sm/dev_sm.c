@@ -187,6 +187,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
 // coverity[misra_c_2012_rule_19_2_violation:FALSE]
 static void DEV_SM_Tick(union sigval timer_data)
 {
+    /* Call system tick */
+    DEV_SM_SystemTick(1000U);
+
     /* Call board tick */
     BRD_SM_TimerTick(1000U);
 

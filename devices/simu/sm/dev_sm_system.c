@@ -273,3 +273,20 @@ int32_t DEV_SM_SystemIdle(void)
     return SM_ERR_SUCCESS;
 }
 
+/*--------------------------------------------------------------------------*/
+/* System timer tick                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemTick(uint32_t msec)
+{
+    /* Poll for CPU state changes */
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_0);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_1);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_2);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_3);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_4);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_5);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_6);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_7);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_8);
+}
+

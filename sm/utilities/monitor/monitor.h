@@ -134,10 +134,6 @@ int32_t MONITOR_FindN(string const *list, int32_t max, const char *str);
  */
 void MONITOR_ParseLine(char *line, int32_t *argc, const char *argv[]);
 
-#ifdef SIMU
-uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width);
-#endif
-
 /*!
  * Get character pending status.
  *
@@ -214,6 +210,16 @@ int32_t MONITOR_ConvI32(const char *str, int32_t *val);
  * @return Matching string.
  */
 string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair);
+
+/*!
+ * Enter criticial section.
+ */
+void MONITOR_EnterCS(void);
+
+/*!
+ * Exit criticial section.
+ */
+void MONITOR_ExitCS(void);
 
 #endif
 

@@ -149,6 +149,7 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[]);
 
 static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 
@@ -227,6 +228,7 @@ int32_t MONITOR_Dispatch(char *line)
         "ssm",
         "custom",
         "test",
+        "delay",
         "gcov"
     };
 
@@ -427,8 +429,11 @@ int32_t MONITOR_Dispatch(char *line)
             case 58:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
+            case 59:  /* delay */
+                status = MONITOR_CmdDelay(argc - 1, &argv[1]);
+                break;
 #if defined(GCOV) && !defined(SIMU)
-            case 59:  /* gcov */
+            case 60:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -3611,6 +3616,43 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
         {
             /* Set test mode */
             SM_TestModeSet(testMode);
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Delay command                                                            */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc < 1)
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+    else
+    {
+        int32_t ms;
+
+        /* Parse data */
+        status = MONITOR_ConvI32(argv[0], &ms);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (ms >= 0)
+            {
+                MONITOR_ExitCS();
+                SystemTimeDelay(((uint32_t) ms) * 1000U);
+                MONITOR_EnterCS();
+            }
+            else
+            {
+                SystemTimeDelay(((uint32_t) -ms) * 1000U);
+            }
         }
     }
 

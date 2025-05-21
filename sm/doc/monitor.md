@@ -34,6 +34,7 @@ General Commands
 | help                        | list commands                                                |
 | exit                        | exit the debug monitor                                       |
 | quit                        | exit the debug monitor                                       |
+| delay ms                    | delay *ms* milliseconds, interrupts disabled if negative     |
 
 Info Commands
 -------------

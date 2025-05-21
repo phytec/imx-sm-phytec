@@ -128,13 +128,11 @@ bool DEV_SM_CpuIsActive(uint32_t cpuId)
 {
     bool rc = cpuRunning[cpuId];
 
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
-        rc = true);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, rc = true)
 
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2,
-        rc = false);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2, rc = false)
 
-    /* No CPUs suspended */
+    /* Return state */
     return rc;
 }
 

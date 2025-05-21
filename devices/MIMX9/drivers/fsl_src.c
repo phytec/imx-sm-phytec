@@ -699,13 +699,9 @@ bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx)
     bool isPwrSwitchOn = false;
     uint32_t modSrcMixIdx = srcMixIdx;
 
-#if defined(RUN_TEST) || defined(MONITOR)
     /* Added to impove the test coverage for negative case */
-    if (g_testMode == SM_TEST_MODE_EXEC_LVL1) \
-    {
-        modSrcMixIdx = PWR_NUM_MIX_SLICE;
-    }
-#endif
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        modSrcMixIdx = PWR_NUM_MIX_SLICE)
 
     if (modSrcMixIdx < PWR_NUM_MIX_SLICE)
     {

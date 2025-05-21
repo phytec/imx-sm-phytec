@@ -34,6 +34,7 @@
 
 #include <stdint.h>
 #include <unistd.h>
+#include <system_simu.h>
 
 /* Local defines */
 
@@ -51,6 +52,7 @@ void SystemTimeDelay(uint32_t usec)
 uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
 {
     uint32_t rtn = 0U;
+    // coverity[misra_c_2012_rule_11_6_violation:FALSE]
     uint32_t pAddr = (uint32_t) addr;
 
     if ((pAddr >= 0x80000000UL) && (pAddr < 0x80010000UL))

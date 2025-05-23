@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -91,10 +91,14 @@ static int32_t RPC_SMT_DoorbellRing(uint32_t smtChannel);
 int32_t RPC_SMT_Init(uint32_t smtChannel, bool noIrq, uint32_t initCount)
 {
     int32_t status = SM_ERR_SUCCESS;
-    rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
+    rpc_smt_buf_t *buf = NULL;
 
     /* Check channel */
-    if (smtChannel >= SM_NUM_SMT_CHN)
+    if (smtChannel < SM_NUM_SMT_CHN)
+    {
+        buf = RPC_SMT_SmaGet(smtChannel);
+    }
+    else
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
@@ -316,7 +320,8 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
     {
         status = SM_ERR_PROTOCOL_ERROR;
     }
-    else
+
+    if (status == SM_ERR_SUCCESS)
     {
         uint32_t impStatus = s_smtConfig[smtChannel].crc;
 
@@ -425,19 +430,16 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
 {
     int32_t status = SM_ERR_SUCCESS;
     const rpc_smt_buf_t *buf = RPC_SMT_SmaGet(smtChannel);
-    uint32_t impStatus = s_smtConfig[smtChannel].crc;
+    uint32_t impStatus = SM_SMT_CRC_NONE;
 
     /* Check buffer */
-    if (buf == NULL)
+    if (buf != NULL)
+    {
+        impStatus = s_smtConfig[smtChannel].crc;
+    }
+    else
     {
         status = SM_ERR_GENERIC_ERROR;
-    }
-
-    /* Callee? */
-    if (callee)
-    {
-        /* Mark in progress */
-        s_smtInProgress[smtChannel] = true;
     }
 
     /* Check length */
@@ -445,10 +447,15 @@ int32_t RPC_SMT_Rx(uint32_t smtChannel, void* msgRx, uint32_t *len,
     {
         status = SM_ERR_PROTOCOL_ERROR;
     }
-    else
+
+    if (status == SM_ERR_SUCCESS)
     {
+        /* Callee? */
         if (callee)
         {
+            /* Mark in progress */
+            s_smtInProgress[smtChannel] = true;
+
             /* Check if free */
             if (RPC_SMT_ChannelFree(smtChannel))
             {
@@ -516,27 +523,32 @@ static rpc_smt_buf_t *RPC_SMT_SmaGet(uint32_t smtChannel)
 {
     rpc_smt_buf_t *buf = NULL;
 
-    switch (s_smtConfig[smtChannel].mbType)
+    /* Check channel */
+    if (smtChannel < SM_NUM_SMT_CHN)
     {
+        switch (s_smtConfig[smtChannel].mbType)
+        {
 #ifdef USES_MB_LOOPBACK
-        case SM_MB_LOOPBACK:
-            buf = (rpc_smt_buf_t*) MB_LOOPBACK_SmaGet(
-                s_smtConfig[smtChannel].mbInst,
-                s_smtConfig[smtChannel].mbDoorbell);
-            break;
+            case SM_MB_LOOPBACK:
+                buf = (rpc_smt_buf_t*) MB_LOOPBACK_SmaGet(
+                    s_smtConfig[smtChannel].mbInst,
+                    s_smtConfig[smtChannel].mbDoorbell);
+                break;
 #endif
 #ifdef USES_MB_MU
-        case SM_MB_MU:
-            buf = (rpc_smt_buf_t*) MB_MU_SmaGet(
-                s_smtConfig[smtChannel].mbInst,
-                s_smtConfig[smtChannel].mbDoorbell);
-            break;
+            case SM_MB_MU:
+                buf = (rpc_smt_buf_t*) MB_MU_SmaGet(
+                    s_smtConfig[smtChannel].mbInst,
+                    s_smtConfig[smtChannel].mbDoorbell);
+                break;
 #endif
-        default:
-            ; /* Intentional empty default */
-            break;
+            default:
+                ; /* Intentional empty default */
+                break;
+        }
     }
 
+    /* Return buffer pointer */
     return buf;
 }
 

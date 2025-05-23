@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,21 +33,15 @@
 */
 
 /*==========================================================================*/
-/* All unit tests.                                                          */
+/* Unit test for the SMT driver.                                            */
 /*==========================================================================*/
-
-/* TEST_00010 TEST_00020 TEST_00030 */
 
 /* Include Config */
 
 /* Includes */
 
-#include <stdlib.h>
-#include "sm.h"
 #include "test.h"
-#if defined(GCOV) && !defined(SIMU)
-#include "gcov_dump.h"
-#endif
+#include "rpc_smt.h"
 
 /* Local defines */
 
@@ -58,96 +52,38 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test all                                                                 */
+/* Test SMT driver                                                          */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
-void TEST_All(void)
+void TEST_Smt(void)
 {
-#ifndef TEST_MIN
-    /* Run device SM tests */
-    TEST_DevSmPower();
-    TEST_DevSmClock();
-    TEST_DevSmPerf();
-    TEST_DevSmSensor();
-    TEST_DevSmReset();
-    TEST_DevSmVoltage();
-    TEST_DevSmBbm();
-    TEST_DevSmCpu();
-    TEST_DevSmControl();
-    TEST_DevSmSystem();
-    TEST_DevSmRdc();
-    TEST_DevSmPin();
-    TEST_DevSmFault();
-    TEST_DevSm();
-    TEST_DevSmFuse();
-    TEST_DevSmHandler();
+    printf("**** SMT Tests ***\n\n");
 
-    /* Run board SM tests */
-#ifdef SIMU
-    TEST_BrdSmSensor();
-    TEST_BrdSm();
-    TEST_BrdSmControl();
-#endif
+    /* Init out of range */
+    NECHECK(RPC_SMT_Init(SM_NUM_SMT_CHN, false, 0U),
+        SM_ERR_OUT_OF_RANGE);
 
-    /* Run LMM tests */
-    TEST_LmmClock();
-    TEST_LmmPerf();
-    TEST_LmmSys();
-    TEST_LmmCpu();
-    TEST_LmmSensor();
-    TEST_LmmMisc();
-    TEST_LmmFuSa();
-    TEST_LmmVoltage();
-    TEST_LmmPower();
-    TEST_LmmFault();
-#endif
+    /* Abort out of range */
+    NECHECK(RPC_SMT_IsAborted(SM_NUM_SMT_CHN),
+        SM_ERR_OUT_OF_RANGE);
 
-    /* Run SCMI tests */
-    TEST_Scmi();
-    TEST_ScmiBase();
-    TEST_ScmiPower();
-    TEST_ScmiSystem();
-    TEST_ScmiPerf();
-    TEST_ScmiClock();
-    TEST_ScmiSensor();
-    TEST_ScmiReset();
-    TEST_ScmiVoltage();
-    TEST_ScmiPinctrl();
-    TEST_ScmiLmm();
-    TEST_ScmiBbmGpr();
-    TEST_ScmiBbmRtc();
-    TEST_ScmiBbmButton();
-    TEST_ScmiCpu();
-    TEST_ScmiFusa();
-    TEST_ScmiMisc();
+    /* Tx out of range */
+    NECHECK(RPC_SMT_Tx(SM_NUM_SMT_CHN, 0U, false, false),
+        SM_ERR_GENERIC_ERROR);
+    NECHECK(RPC_SMT_Tx(0U, 5000U, false, false),
+        SM_ERR_PROTOCOL_ERROR);
 
-    /* Test SMT */
-    TEST_Smt();
+    /* Rx out of range */
+    void *msgRx = NULL;
+    uint32_t len = 0U;
+    NECHECK(RPC_SMT_Rx(SM_NUM_SMT_CHN, &msgRx, &len, false),
+        SM_ERR_GENERIC_ERROR);
+    NECHECK(RPC_SMT_Rx(0U, &msgRx, &len, false),
+        SM_ERR_PROTOCOL_ERROR);
 
-    /* Run mailbox driver tests */
-#ifdef USES_MB_MU
-    TEST_MbMu();
-#endif
-#ifdef USES_MB_LOOPBACK
-    TEST_MbLoopback();
-#endif
+    /* Doorbell out of range */
+    (void) RPC_SMT_DoorbellState(0U);
+    (void) RPC_SMT_DoorbellState(SM_NUM_SMT_CHN);
 
-    /* Run Utility tests */
-    TEST_UtilitiesConfig();
-
-#if defined(GCOV) && !defined(SIMU)
-    /* Dump GCOV info */
-    GCOV_InfoDump();
-#endif
-
-#ifdef SIMU
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
-    SM_Error(SM_ERR_SUCCESS);
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL2);
-    SM_Error(SM_ERR_SUCCESS);
-#else
-    /* Exit */
-    BRD_SM_Exit(SM_ERR_SUCCESS, 0U);
-#endif
+    printf("\n");
 }
 

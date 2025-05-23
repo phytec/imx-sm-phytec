@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2025 NXP
+** Copyright 2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -33,21 +33,16 @@
 */
 
 /*==========================================================================*/
-/* All unit tests.                                                          */
+/* Unit test for the MB_LOOPBACK driver.                                    */
 /*==========================================================================*/
-
-/* TEST_00010 TEST_00020 TEST_00030 */
 
 /* Include Config */
 
 /* Includes */
 
-#include <stdlib.h>
-#include "sm.h"
 #include "test.h"
-#if defined(GCOV) && !defined(SIMU)
-#include "gcov_dump.h"
-#endif
+#include "mb_loopback.h"
+#include "config_mb_loopback.h"
 
 /* Local defines */
 
@@ -58,96 +53,35 @@
 /* Local functions */
 
 /*--------------------------------------------------------------------------*/
-/* Test all                                                                 */
+/* Test MB loopback driver                                                  */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
-void TEST_All(void)
+void TEST_MbLoopback(void)
 {
-#ifndef TEST_MIN
-    /* Run device SM tests */
-    TEST_DevSmPower();
-    TEST_DevSmClock();
-    TEST_DevSmPerf();
-    TEST_DevSmSensor();
-    TEST_DevSmReset();
-    TEST_DevSmVoltage();
-    TEST_DevSmBbm();
-    TEST_DevSmCpu();
-    TEST_DevSmControl();
-    TEST_DevSmSystem();
-    TEST_DevSmRdc();
-    TEST_DevSmPin();
-    TEST_DevSmFault();
-    TEST_DevSm();
-    TEST_DevSmFuse();
-    TEST_DevSmHandler();
+    printf("**** MB Loopback Tests ***\n\n");
 
-    /* Run board SM tests */
-#ifdef SIMU
-    TEST_BrdSmSensor();
-    TEST_BrdSm();
-    TEST_BrdSmControl();
-#endif
+    /* Init out of range */
+    NECHECK(MB_LOOPBACK_Init(SM_NUM_MB_LOOPBACK, 0U, false, 0U),
+        SM_ERR_OUT_OF_RANGE);
+    NECHECK(MB_LOOPBACK_Init(0U, SM_NUM_MB_LB_DB, false, 0U),
+        SM_ERR_OUT_OF_RANGE);
 
-    /* Run LMM tests */
-    TEST_LmmClock();
-    TEST_LmmPerf();
-    TEST_LmmSys();
-    TEST_LmmCpu();
-    TEST_LmmSensor();
-    TEST_LmmMisc();
-    TEST_LmmFuSa();
-    TEST_LmmVoltage();
-    TEST_LmmPower();
-    TEST_LmmFault();
-#endif
+    /* Ring out of range */
+    NECHECK(MB_LOOPBACK_DoorbellRing(SM_NUM_MB_LOOPBACK, 0U),
+        SM_ERR_OUT_OF_RANGE);
+    NECHECK(MB_LOOPBACK_DoorbellRing(0U, SM_NUM_MB_LB_DB),
+        SM_ERR_OUT_OF_RANGE);
 
-    /* Run SCMI tests */
-    TEST_Scmi();
-    TEST_ScmiBase();
-    TEST_ScmiPower();
-    TEST_ScmiSystem();
-    TEST_ScmiPerf();
-    TEST_ScmiClock();
-    TEST_ScmiSensor();
-    TEST_ScmiReset();
-    TEST_ScmiVoltage();
-    TEST_ScmiPinctrl();
-    TEST_ScmiLmm();
-    TEST_ScmiBbmGpr();
-    TEST_ScmiBbmRtc();
-    TEST_ScmiBbmButton();
-    TEST_ScmiCpu();
-    TEST_ScmiFusa();
-    TEST_ScmiMisc();
+    /* Abort out of range */
+    NECHECK(MB_LOOPBACK_AbortSet(SM_NUM_MB_LOOPBACK, false),
+        SM_ERR_OUT_OF_RANGE);
+    NECHECK(MB_LOOPBACK_IsAborted(SM_NUM_MB_LOOPBACK, 0U),
+        SM_ERR_OUT_OF_RANGE);
+    NECHECK(MB_LOOPBACK_IsAborted(0U, SM_NUM_MB_LB_DB),
+        SM_ERR_OUT_OF_RANGE);
 
-    /* Test SMT */
-    TEST_Smt();
+    /* Get doorbell state */
+    (void) MB_LOOPBACK_DoorbellState(0U, 0U);
 
-    /* Run mailbox driver tests */
-#ifdef USES_MB_MU
-    TEST_MbMu();
-#endif
-#ifdef USES_MB_LOOPBACK
-    TEST_MbLoopback();
-#endif
-
-    /* Run Utility tests */
-    TEST_UtilitiesConfig();
-
-#if defined(GCOV) && !defined(SIMU)
-    /* Dump GCOV info */
-    GCOV_InfoDump();
-#endif
-
-#ifdef SIMU
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
-    SM_Error(SM_ERR_SUCCESS);
-    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL2);
-    SM_Error(SM_ERR_SUCCESS);
-#else
-    /* Exit */
-    BRD_SM_Exit(SM_ERR_SUCCESS, 0U);
-#endif
+    printf("\n");
 }
 

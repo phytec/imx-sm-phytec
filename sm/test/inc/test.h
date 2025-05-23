@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -50,6 +50,7 @@
 
 /* Includes */
 
+#include "config_smt.h"
 #include "test_config.h"
 #include "sm.h"
 #include "brd_sm.h"
@@ -319,7 +320,15 @@ void TEST_ScmiBbmButton(void);
 void TEST_ScmiMisc(void);
 void TEST_ScmiReset(void);
 void TEST_ScmiFusa(void);
+void TEST_Smt(void);
+#ifdef USES_MB_MU
+void TEST_MbMu(void);
+#endif
+#ifdef USES_MB_LOOPBACK
+void TEST_MbLoopback(void);
+#endif
 void TEST_UtilitiesConfig(void);
+
 #endif
 
 #endif /* TEST_H */

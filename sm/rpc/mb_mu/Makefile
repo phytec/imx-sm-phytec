@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -40,4 +40,10 @@ VPATH += \
 
 OBJS += \
 	$(OUT)/mb_mu.o
+
+ifeq ($(T), all)
+OBJS += \
+	$(OUT)/test_mb_mu.o
+
+endif
 

@@ -193,9 +193,13 @@ When using bus expanders, all the signals on a specific bus expander need to be 
 and the I2C it is connected to owned by that LM. The interrupt signal from a bus expander needs to also
 be connected to a GPIO owned by that LM.
 
-In summary, it is important in the board design that IP modules be assigned to cores first and then
-pads be connected based on which LM (and associated CPU) has each module. The power domain of such
-modules will also determine which can wakeup from various power modes.
+In summary, it is **important in the board design that IP modules be assigned to cores first and then
+pads be connected based on which LM (and associated CPU) uses each module**. The power domain of such
+modules will also determine which can wakeup from various power modes. Modules such as GPIO and I2C
+must be allocated to CPUs and then that info used to connect board resources. Ideally, board designers
+should consult with SW leads and create a table of I2C, SPI, and GPIO (modules, not pins) and assign
+them to CPUs. Then list all the board devices (PMICs, audio CODECS, BT, WiFi, buttons, wake signals,
+etc.) and which CPU will own them. Then connect those to the interfaces owned by the same CPU.
 
 As a specific note on the SM (LM0). It needs to own an I2C for communication to the PMIC(s). Those
 PMIC(s) have interrupts that need to somehow make it to the SM. This should be done via an I2C and

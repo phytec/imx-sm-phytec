@@ -59,6 +59,7 @@ Bug {#RN_CL_BUG}
 | [SM-258](https://jira.sw.nxp.com/projects/SM/issues/SM-258) | Misc. changes to other config files [[detail]](@ref RN_DETAIL_SM_258) |   | | | | Y |
 | [SM-259](https://jira.sw.nxp.com/projects/SM/issues/SM-259) | Manage SMMU TCU and TBUs during NOCMIX power flows [[detail]](@ref RN_DETAIL_SM_259) |   | | | Y | |
 | [SM-260](https://jira.sw.nxp.com/projects/SM/issues/SM-260) | Incorrect extended pin mapping for CCM_CLK03 [[detail]](@ref RN_DETAIL_SM_260) |   | | | | Y |
+| [SM-262](https://jira.sw.nxp.com/projects/SM/issues/SM-262) | Control resource in start/stop list terminates start/stop processing [[detail]](@ref RN_DETAIL_SM_262) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -346,4 +347,9 @@ SM-260: Incorrect extended pin mapping for CCM_CLK03 {#RN_DETAIL_SM_260}
 ----------
 
 Corrected the extended pin reference from DEV_SM_PIN_CCM_CLKO1 to DEV_SM_PIN_CCM_CLKO3. Without this change cannot use the extended (alt8/9/10) options for the CCM_CLKO3 pin.
+
+SM-262: Control resource in start/stop list terminates start/stop processing {#RN_DETAIL_SM_262}
+----------
+
+Use of a control resource (CTRL_X) in an LMM start or stop list will cause all subsequent start/stop steps to be skipped. This change fixes that and adds test coverage in the simu config file..
 

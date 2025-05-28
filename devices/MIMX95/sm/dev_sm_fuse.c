@@ -199,11 +199,13 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
     }
     else
     {
-        /* Check fuse state */
-        if ((s_fuseId[domainId] > 0U)
-            && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+        if (s_fuseId[domainId] > 0U)
         {
-            pdDisabled = true;
+            /* Check fuse state */
+            if (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U)
+            {
+                pdDisabled = true;
+            }
         }
     }
 
@@ -228,7 +230,6 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
         [DEV_SM_CPU_A55C5] = DEV_SM_FUSE_A55_CORE5_DISABLE
     };
 
-    /* Check fuse state */
     if (cpuId >= DEV_SM_NUM_CPU)
     {
         cpuDisabled = true;
@@ -237,6 +238,7 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
     {
         if (s_fuseId[cpuId] > 0U)
         {
+            /* Check fuse state */
             if (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U)
             {
                 cpuDisabled = true;

@@ -201,13 +201,20 @@ void TEST_ScmiLmm(void)
 
     /* LmmPowerOn Invalid lm Invalid channel */
     {
-        printf("SCMI_LmmPowerOn(%u, %u)\n", SM_TEST_DEFAULT_CHN, numLm);
         NECHECK(SCMI_LmmPowerOn(SM_TEST_DEFAULT_CHN, numLm),
             SCMI_ERR_NOT_FOUND);
 
-        printf("SCMI_LmmPowerOn(%u, %u)\n", SM_SCMI_NUM_CHN, numLm);
         NECHECK(SCMI_LmmPowerOn(SM_SCMI_NUM_CHN, numLm),
             SCMI_ERR_INVALID_PARAMETERS);
+    }
+
+    /* LmmResetVectorSet -- Invalid lm Invalid channel */
+    {
+        NECHECK(SCMI_LmmResetVectorSet(SM_TEST_DEFAULT_CHN, numLm, 0U,
+            0U, 0U, 0U), SM_ERR_NOT_FOUND);
+
+        NECHECK(SCMI_LmmResetVectorSet(SM_SCMI_NUM_CHN, numLm, 0U,
+            0U, 0U, 0U), SCMI_ERR_INVALID_PARAMETERS);
     }
 
     /* Invalid notification */
@@ -470,6 +477,23 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
                     &shutdownFlags, NULL));
             }
         }
+
+        /* LmmResetVectorSet */
+        {
+            for (uint32_t cpuId = 0U; cpuId < SM_NUM_CPU; cpuId++)
+            {
+                flags = SCMI_LMM_VEC_FLAGS_TABLE(0U);
+                (void) SCMI_LmmResetVectorSet(channel, lmId, cpuId,
+                    flags, 0U, 0U);
+                flags = SCMI_LMM_VEC_FLAGS_TABLE(1U);
+                (void) SCMI_LmmResetVectorSet(channel, lmId, cpuId,
+                    flags, 0U, 0U);
+
+                NECHECK(SCMI_LmmResetVectorSet(channel, lmId, 500U,
+                    0U, 0U, 0U), SM_ERR_NOT_FOUND);
+            }
+        }
+
         /* LM_00020 Reset Config */
 #ifdef SIMU
         if (pass)
@@ -502,6 +526,16 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
             printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
             NECHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
                 &shutdownFlags, &extInfo), SCMI_ERR_DENIED);
+        }
+
+        /* LmmResetVectorSet */
+        {
+            for (uint32_t cpuId = 0U; cpuId < SM_NUM_CPU; cpuId++)
+            {
+                flags = SCMI_LMM_VEC_FLAGS_TABLE(0U);
+                NECHECK(SCMI_LmmResetVectorSet(channel, lmId, 0U,
+                    flags, 0U, 0U), SCMI_ERR_DENIED);
+            }
         }
     }
 }

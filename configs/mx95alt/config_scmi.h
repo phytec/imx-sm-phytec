@@ -68,15 +68,6 @@
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C2_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C3_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C4_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C5_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -103,7 +94,6 @@
         .clkPerms[DEV_SM_CLK_DISP1PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP2PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP3PIX] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_DISPOCRAM] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETREF] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_EXT1] = SM_SCMI_PERM_ALL, \
@@ -148,7 +138,6 @@
         .clkPerms[DEV_SM_CLK_LPUART7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART8] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M7SYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYCFG] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLBYPASS] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLREF] = SM_SCMI_PERM_ALL, \
@@ -545,15 +534,6 @@
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C2_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C3_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C4_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C5_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -580,7 +560,6 @@
         .clkPerms[DEV_SM_CLK_DISP1PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP2PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP3PIX] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_DISPOCRAM] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETREF] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_EXT1] = SM_SCMI_PERM_ALL, \
@@ -625,7 +604,6 @@
         .clkPerms[DEV_SM_CLK_LPUART7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART8] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M7SYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYCFG] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLBYPASS] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLREF] = SM_SCMI_PERM_ALL, \
@@ -1013,15 +991,6 @@
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .basePerms[DEV_SM_BASE_AGENT_2] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C2_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C3_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C4_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C5_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \
@@ -1048,7 +1017,6 @@
         .clkPerms[DEV_SM_CLK_DISP1PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP2PIX] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_DISP3PIX] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_DISPOCRAM] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETREF] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ENETTIMER1] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_EXT1] = SM_SCMI_PERM_ALL, \
@@ -1093,7 +1061,6 @@
         .clkPerms[DEV_SM_CLK_LPUART7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART8] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M7SYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M7] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYCFG] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLBYPASS] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_MIPIPHYPLLREF] = SM_SCMI_PERM_ALL, \

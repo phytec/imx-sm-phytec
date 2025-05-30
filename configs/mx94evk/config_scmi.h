@@ -67,7 +67,6 @@
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_LPUART8] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M33SYNCSYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M33SYNC] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM5] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM6] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_M33S] = SM_SCMI_PERM_ALL, \
@@ -200,7 +199,6 @@
         .clkPerms[DEV_SM_CLK_LPTMR2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART11] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M70SYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M70] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM4] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_M7P0] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \
@@ -364,7 +362,6 @@
         .clkPerms[DEV_SM_CLK_GPT2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_LPUART12] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_M71SYSTICK] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_M71] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_TPM2] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_XSPISLVROOT] = SM_SCMI_PERM_ALL, \
         .cpuPerms[DEV_SM_CPU_M7P1] = SM_SCMI_PERM_ALL, \
@@ -466,13 +463,6 @@
         .scmiInst = 3U, \
         .domId = 3U, \
         .secure = 1U, \
-        .clkPerms[DEV_SM_CLK_A55C0_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C1_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C2_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55C3_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55PERIPH] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55P_GPR_SEL] = SM_SCMI_PERM_ALL, \
-        .clkPerms[DEV_SM_CLK_A55] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD0_UNGATED] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_ARMPLL_PFD1] = SM_SCMI_PERM_ALL, \

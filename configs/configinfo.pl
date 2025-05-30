@@ -114,6 +114,8 @@ sub help_message
     print "information written to STDOUT\n";
 }
 
+###############################################################################
+
 sub load_config_files
 {
     my ($cfgFile) = @_;

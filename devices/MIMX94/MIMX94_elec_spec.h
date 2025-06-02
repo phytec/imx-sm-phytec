@@ -110,8 +110,8 @@
 
 /* Supply voltage setpoints */
 #define ES_SUSPEND_UV_VDD_SOC       650000
-#define ES_LOW_UV_VDD_SOC           750000
-#define ES_NOM_UV_VDD_SOC           800000
+#define ES_LOW_UV_VDD_SOC           800000
+#define ES_NOM_UV_VDD_SOC           850000
 #define ES_ODV_UV_VDD_SOC           900000
 
 

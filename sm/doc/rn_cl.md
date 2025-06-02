@@ -60,6 +60,7 @@ Bug {#RN_CL_BUG}
 | [SM-259](https://jira.sw.nxp.com/projects/SM/issues/SM-259) | Manage SMMU TCU and TBUs during NOCMIX power flows [[detail]](@ref RN_DETAIL_SM_259) |   | | | Y | |
 | [SM-260](https://jira.sw.nxp.com/projects/SM/issues/SM-260) | Incorrect extended pin mapping for CCM_CLK03 [[detail]](@ref RN_DETAIL_SM_260) |   | | | | Y |
 | [SM-262](https://jira.sw.nxp.com/projects/SM/issues/SM-262) | Control resource in start/stop list terminates start/stop processing [[detail]](@ref RN_DETAIL_SM_262) |   | Y | Y | Y | Y |
+| [SM-267](https://jira.sw.nxp.com/projects/SM/issues/SM-267) | Configtool doesn't clear some regions written by ELE [[detail]](@ref RN_DETAIL_SM_267) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -72,6 +73,7 @@ These are a mix of silicon errata workarounds and recommended usage changes.
 | [SM-244](https://jira.sw.nxp.com/projects/SM/issues/SM-244) | Align DRAM rates to datasheet [[detail]](@ref RN_DETAIL_SM_244) |   | | | | Y |
 | [SM-253](https://jira.sw.nxp.com/projects/SM/issues/SM-253) | Enable GPUMIX SSI transaction blocking for clock-gated GPU module [[detail]](@ref RN_DETAIL_SM_253) |   | | | Y | |
 | [SM-255](https://jira.sw.nxp.com/projects/SM/issues/SM-255) | Support extended industrial temp range [[detail]](@ref RN_DETAIL_SM_255) |   | Y | Y | Y | Y |
+| [SM-266](https://jira.sw.nxp.com/projects/SM/issues/SM-266) | Update i.MX94 VDD_SOC supply voltages per latest datasheet [[detail]](@ref RN_DETAIL_SM_266) |   | | | | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
@@ -352,4 +354,22 @@ SM-262: Control resource in start/stop list terminates start/stop processing {#R
 ----------
 
 Use of a control resource (CTRL_X) in an LMM start or stop list will cause all subsequent start/stop steps to be skipped. This change fixes that and adds test coverage in the simu config file..
+
+SM-266: Update i.MX94 VDD_SOC supply voltages per latest datasheet {#RN_DETAIL_SM_266}
+----------
+
+The VDD_SOC operational range for nominal and low drive has been updated in the latest i.MX94 datasheet.  The SM voltage supply definitions have been updated to reflect these changes.
+
+SM-267: Configtool doesn't clear some regions written by ELE {#RN_DETAIL_SM_267}
+----------
+
+The ELE writes some memory regions to various MRCs based on the images it finds in the boot container. The SM will overwrite these based on the TRDC configuration generated from the SM cfg file. Sometimes this will not write enough regions to overwrite all the ELE regions and create a conflict that can cause bus errors.
+
+By default, the SM configtool will clear up to four regions per MRC. This change adds a new clr option to the configtool that can be applied to an MRC. Just include the option on any of the regions in a specific MRC and the tool will generate code to clear that number of regions.
+
+For example:
+
+    DDR                 EXEC, begin=0x088000000, end=0x089FFFFFF, clr=8
+
+Will clear eight regions in the DDR TRDC MRC. Note this can even be applied to the DDR definition line in the ddrmix.cfg file to apply to any DDR region definition found in later cfg files.
 

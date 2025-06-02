@@ -2985,6 +2985,16 @@ sub get_trdc
                 $e .= ' nodbg=0';
             }
 
+            # Extract regions to clear
+            if ($line =~ /\bclr=(\d+) /)
+            {
+                $e .= ' clr=' . $1;
+            }
+            else
+            {
+                $e .= ' clr=' . 4;
+            }
+
             push @rdc, $e . ' ';
         }
     }
@@ -3209,7 +3219,7 @@ sub get_trdc
 	    }
 
         # Handle MRC
-        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+)/)
+        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
         {
             my $w0;
             my $w1;
@@ -3227,8 +3237,8 @@ sub get_trdc
 
 			my $perm = $8;
 		
-			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d",
-				$1, $2, $4, $3, $w0, $w1, $perm, $7);
+			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d, %d",
+				$1, $2, $4, $3, $w0, $w1, $perm, $7, $11);
             next;
         }
 		
@@ -3348,29 +3358,36 @@ sub get_trdc
 	my $curr_rgd = '';
 	my $old_elm = '';
 	my $old_rgn = 4;
+	my $maxClr = 0;
     foreach my $m (@rdc)
     {
         # Handle MRC region
-        if ($m =~ /(TRDC[A-Z]+_MRC\d+_DOM\d+_RGD)\d+ (\d+), (\d+) = (\d+), (\d+)/)
+        if ($m =~ /(TRDC[A-Z]+_MRC\d+_DOM\d+_RGD)\d+ (\d+), (\d+) = (\d+), (\d+), (\d+)/)
         {
 			my $elm = $1;
 			my $w0 = $2;
 			my $w1 = $3;
 			my $perm = $4;
 			my $rgn = $5;
+			my $clr = $6;
+
+            if ($maxClr == 0)
+            {
+                $maxClr = $clr;
+            }
 
             if ($w1 != 0)
             {
     			# New MRC
     			if ($curr_rgd ne $elm)
     			{
-					my $clr = 4;
-					if ($old_rgn < $clr)
+					my $nClr = $maxClr;
+					if ($old_rgn < $nClr)
 					{
-						$clr = $old_rgn;
+						$nClr = $old_rgn;
 					}
 
-                    while (($old_elm ne '') && ($rgd < $clr))
+                    while (($old_elm ne '') && ($rgd < $nClr))
                     {
                         my $new_m = sprintf("%s%02d %d, %d = %d", $old_elm, $rgd,
                             0, 0, 0);
@@ -3381,6 +3398,7 @@ sub get_trdc
 
     				$rgd = 0;
     				$curr_rgd = $elm;
+    				$maxClr = $clr;
     			}
 
     			# Check for overflow
@@ -3401,6 +3419,10 @@ sub get_trdc
 
                 $old_elm = $elm;
                 $old_rgn = $rgn;
+    			if ($clr > $maxClr)
+    			{
+    			    $maxClr = $clr;
+    			}
     		}
         }
 
@@ -3478,7 +3500,7 @@ sub get_trdc
 	# Finalize last MRC
 	if ($curr_rgd ne '')
 	{
-		my $clr = 4;
+		my $clr = $maxClr;
 		if ($old_rgn < $clr)
 		{
 			$clr = $old_rgn;

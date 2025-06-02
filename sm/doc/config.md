@@ -831,6 +831,7 @@ Resources support the following key=value pairs.
 |                | size      | Alternative to end, size of range to define permissions |
 |                | nrgns     | Number of regions |
 |                | nodbg     | Do not map to DAP DID |
+|                | clr       | Change how many regions will be cleared (default 4) |
 
 Notes:
 
@@ -867,6 +868,8 @@ Notes:
   file (each LMM/agent section): DFMT0 and DFMT1. DFMT0 will be used by the following CPUs
   to apply parameters for the TRDC DAC. DFMT1 will be used by the following non-CPU bus
   masters to apply parameters for their DACs.
+- the ELE can leave MCR memory regions defined. By default 4 are cleared. The clr parameter
+  can be used to increase this if boot containers have a lot more images.
 
 Permissions consist of a 16-bit value, divided into four 4-bit values. Each 4-bit value
 conists of bits for read, write, and execute (0RWX). The four groups are secure-privileged,

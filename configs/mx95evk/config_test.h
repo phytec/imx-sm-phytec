@@ -143,7 +143,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  39U
+#define SM_SCMI_NUM_TEST  42U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -151,6 +151,7 @@
     {.testId = TEST_CLK, .channel = 0U, .rsrc = DEV_SM_CLK_LPUART3}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_ENETREF}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_ENETTIMER1}, \
+    {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_GPU_CGC}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_LPUART8}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_MQS1}, \
     {.testId = TEST_CLK, .channel = 5U, .rsrc = DEV_SM_CLK_SAI1}, \
@@ -173,11 +174,13 @@
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_CAMERA}, \
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_DISPLAY}, \
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_GPU}, \
+    {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_GPU}, \
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_HSIO_TOP}, \
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_NPU}, \
     {.testId = TEST_PD, .channel = 5U, .rsrc = DEV_SM_PD_VPU}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_CAM}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_DISP}, \
+    {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_GPU}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_GPU}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_NPU}, \
     {.testId = TEST_PERF, .channel = 5U, .rsrc = DEV_SM_PERF_VPU}, \

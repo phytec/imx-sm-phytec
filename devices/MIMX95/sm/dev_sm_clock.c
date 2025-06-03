@@ -233,7 +233,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
         [DEV_SM_CLK_A55C5_GPR_SEL] =        "a55c5_gpr_sel",
         [DEV_SM_CLK_A55P_GPR_SEL] =         "a55p_gpr_sel",
         [DEV_SM_CLK_DRAM_GPR_SEL] =         "dram_gpr_sel",
-        [DEV_SM_CLK_TEMPSENSE_GPR_SEL] =    "tempsense_gpr_sel",
+        [DEV_SM_CLK_TEMP_GPR_SEL] =         "temp_gpr_sel",
 
         [DEV_SM_CLK_GPU_CGC] =              "gpu_cgc"
     };
@@ -439,7 +439,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_A55C5_GPR_SEL] =        ES_MAX_HZ_PFD,
         [DEV_SM_CLK_A55P_GPR_SEL] =         ES_MAX_HZ_PFD,
         [DEV_SM_CLK_DRAM_GPR_SEL] =         ES_MAX_HZ_DRAMPLL,
-        [DEV_SM_CLK_TEMPSENSE_GPR_SEL] =    ES_MAX_HZ_FRO,
+        [DEV_SM_CLK_TEMP_GPR_SEL] =         ES_MAX_HZ_FRO,
 
         [DEV_SM_CLK_GPU_CGC] =              ES_MAX_HZ_GPU
     };
@@ -621,7 +621,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
         [DEV_SM_CLK_A55C5_GPR_SEL] =        ES_MIN_HZ_ROOT,
         [DEV_SM_CLK_A55P_GPR_SEL] =         ES_MIN_HZ_ROOT,
         [DEV_SM_CLK_DRAM_GPR_SEL] =         ES_MIN_HZ_ROOT,
-        [DEV_SM_CLK_TEMPSENSE_GPR_SEL] =    ES_MIN_HZ_OSC24M,
+        [DEV_SM_CLK_TEMP_GPR_SEL] =         ES_MIN_HZ_OSC24M,
 
         [DEV_SM_CLK_GPU_CGC] =              ES_MIN_HZ_GPU
     };

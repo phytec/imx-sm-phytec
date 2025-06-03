@@ -255,8 +255,8 @@
     + CLOCK_NUM_ROOT)                                                                /*!< 179: A55P GPR SEL mux */
 #define DEV_SM_CLK_DRAM_GPR_SEL         (CLOCK_GPR_SEL_DRAM + CLOCK_NUM_SRC \
     + CLOCK_NUM_ROOT)                                                                /*!< 180: DRAM GPR SEL mux */
-#define DEV_SM_CLK_TEMPSENSE_GPR_SEL    (CLOCK_GPR_SEL_TEMPSENSE + CLOCK_NUM_SRC \
-    + CLOCK_NUM_ROOT)                                                                /*!< 181: TEMPSENSE GPR SEL mux */
+#define DEV_SM_CLK_TEMP_GPR_SEL         (CLOCK_GPR_SEL_TEMPSENSE + CLOCK_NUM_SRC \
+    + CLOCK_NUM_ROOT)                                                                /*!< 181: TEMP GPR SEL mux */
 
 #define DEV_SM_CLK_NPU_CGC              (CLOCK_CGC_NPU + CLOCK_NUM_SRC \
     + CLOCK_NUM_ROOT + CLOCK_NUM_GPR_SEL)                                            /*!< 182: NPU CGC */

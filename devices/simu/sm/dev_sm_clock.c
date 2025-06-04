@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -117,10 +117,10 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Return supported clock mux                                               */
+/* Return clock parent info                                                 */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
-    uint32_t *numMuxes)
+int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
+    uint32_t *parentId, uint32_t *numParents)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -129,19 +129,41 @@ int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
     {
         /* Return mux input and max number */
         status = SM_ERR_NOT_SUPPORTED;
-        *numMuxes = 0U;
+        *numParents = 0U;
+    }
+    else if (clockId == DEV_SM_CLK_2)
+    {
+        if (sel == 0U)
+        {
+            /* Return mux input and max number */
+            *parentId = DEV_SM_CLK_0;
+            *numParents = 2U;
+        }
+        else if (sel == 1U)
+        {
+            /* Return mux input and max number */
+            *parentId = DEV_SM_CLK_1;
+            *numParents = 2U;
+        }
+        else
+        {
+            /* Return mux input and max number */
+            status = SM_ERR_OUT_OF_RANGE;
+            *numParents = 2U;
+        }
     }
     else if (clockId < DEV_SM_NUM_CLOCK)
     {
         /* Return mux input and max number */
-        if (idx == 0U)
+        if (sel == 0U)
         {
-            *mux = DEV_SM_CLK_0;
-            *numMuxes = 1U;
+            *parentId = DEV_SM_CLK_0;
+            *numParents = 1U;
         }
         else
         {
             status = SM_ERR_OUT_OF_RANGE;
+            *numParents = 1U;
         }
     }
     else
@@ -253,7 +275,11 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if (clockId < DEV_SM_NUM_CLOCK)
+    if (clockId == DEV_SM_CLK_0)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else if (clockId < DEV_SM_NUM_CLOCK)
     {
         s_clockParent[clockId] = parent;
     }
@@ -274,7 +300,11 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check clock */
-    if (clockId < DEV_SM_NUM_CLOCK)
+    if (clockId == DEV_SM_CLK_0)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else if (clockId < DEV_SM_NUM_CLOCK)
     {
         *parent = s_clockParent[clockId];
     }

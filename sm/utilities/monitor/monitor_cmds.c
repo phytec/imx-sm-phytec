@@ -1679,9 +1679,30 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
     {
         default:  /* read */
             {
-                if (argc < 1)
+                int32_t firstArgv = 0;
+                int32_t newArgc = argc;
+                uint32_t startClk = 0U;
+                uint32_t stopClk = SM_NUM_CLOCK - 1U;
+
+                /* Check for clock specifier */
+                if (argc > 0)
                 {
-                    for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
+                    uint32_t num;
+
+                    if (MONITOR_NameToId(argv[0], &num,
+                        LMM_ClockNameGet, SM_NUM_CLOCK)
+                        == SM_ERR_SUCCESS)
+                    {
+                        firstArgv = 1;
+                        newArgc = argc - 1;
+                        startClk = num;
+                        stopClk = num;
+                    }
+                }
+
+                if (newArgc < 1)
+                {
+                    for (uint32_t clockId = startClk; clockId <= stopClk;
                         clockId++)
                     {
                         string clockNameAddr;
@@ -1740,22 +1761,29 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     {
                         "range",
                         "parent",
-                        "ext"
+                        "possible",
+                        "ex"
                     };
 
                     uint8_t subCmd = (uint8_t) MONITOR_Find(subCmds,
-                        (int32_t) ARRAY_SIZE(subCmds), argv[0]);
+                        (int32_t) ARRAY_SIZE(subCmds), argv[firstArgv]);
 
                     switch (subCmd)
                     {
-                        /* range/parent */
+                        /* range/parent/possible */
                         case 0:
                         case 1:
-                            for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
+                        case 2:
+                            for (uint32_t clockId = startClk; clockId <= stopClk;
                                 clockId++)
                             {
                                 string clockNameAddr;
                                 int32_t wName = 0;
+
+#ifndef SIMU
+                                /* Service wdog */
+                                BOARD_WdogRefresh();
+#endif
 
                                 status = LMM_ClockNameGet(s_lm, clockId,
                                     &clockNameAddr, &wName);
@@ -1780,7 +1808,7 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                                 minKHz);
                                         }
                                     }
-                                    else
+                                    else if (subCmd == 1U)
                                     {
                                         uint32_t parent;
                                         status = LMM_ClockParentGet(s_lm,
@@ -1801,24 +1829,68 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                             }
                                         }
                                     }
+                                    else
+                                    {
+                                        uint32_t parent;
+                                        uint32_t numParents = 0U;
+                                        if (LMM_ClockParentDescribe(s_lm,
+                                            clockId, 0U, &parent, &numParents)
+                                            != SM_ERR_SUCCESS)
+                                        {
+                                            numParents = 0U;
+                                        }
+
+                                        for (uint32_t sel = 0U; sel < numParents;
+                                            sel++)
+                                        {
+                                            status = LMM_ClockParentDescribe(s_lm,
+                                                clockId, sel, &parent, &numParents);
+
+                                            if (status == SM_ERR_SUCCESS)
+                                            {
+                                                string parentNameAddr;
+                                                if (LMM_ClockNameGet(s_lm, parent,
+                                                    &parentNameAddr, NULL)
+                                                    == SM_ERR_SUCCESS)
+                                                {
+                                                    if (sel == 0)
+                                                    {
+                                                        printf("%03u: %*s parent "
+                                                            "= %u (%s)\n",
+                                                            clockId, -wName,
+                                                            clockNameAddr, parent,
+                                                            parentNameAddr);
+                                                    }
+                                                    else
+                                                    {
+                                                        printf("     %*s parent "
+                                                            "= %u (%s)\n",
+                                                            -wName, "", parent,
+                                                            parentNameAddr);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             break;
 
                         /* ext */
-                        case 2:
+                        case 3:
                             {
                                 errno = 0;
                                 uint32_t ext = 0x80U;
-                                if (argc > 1)
+                                if (newArgc > 1)
                                 {
-                                    ext = strtoul(argv[1], NULL, 0);
+                                    ext = strtoul(argv[firstArgv + 1U],
+                                        NULL, 0);
                                 }
 
                                 if (errno == 0)
                                 {
-                                    for (uint32_t clockId = 0U;
-                                        clockId < SM_NUM_CLOCK; clockId++)
+                                    for (uint32_t clockId = startClk;
+                                        clockId <= stopClk; clockId++)
                                     {
                                         uint32_t extCfgValue = 0U;
 
@@ -1865,9 +1937,8 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     "on",
                     "reparent",
                     "rate",
-                    "ext"
+                    "ex"
                 };
-
 
                 if (argc < 2)
                 {
@@ -1898,9 +1969,11 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                         case 2:
                             if (argc == 3)
                             {
-                                errno = 0;
-                                uint32_t parent = strtoul(argv[2], NULL, 0);
-                                if (errno == 0)
+                                uint32_t parent = 0U;
+
+                                if (MONITOR_NameToId(argv[2], &parent,
+                                    LMM_ClockNameGet, SM_NUM_CLOCK)
+                                    == SM_ERR_SUCCESS)
                                 {
                                     status = LMM_ClockParentSet(s_lm,
                                         clockId, parent);

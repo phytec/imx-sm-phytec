@@ -781,8 +781,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     /* Return results */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mux;
-        uint32_t numMuxes;
+        uint32_t parentId;
+        uint32_t numParents;
         bool extSupported;
 
         /* No notifications */
@@ -793,8 +793,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             | CLOCK_ATTR_EXT_CONFIG(0UL);
 
         /* Parents? */
-        if (LMM_ClockMuxGet(caller->lmId, in->clockId, 0U, &mux,
-            &numMuxes) == SM_ERR_SUCCESS)
+        if (LMM_ClockParentDescribe(caller->lmId, in->clockId, 0U,
+            &parentId, &numParents) == SM_ERR_SUCCESS)
         {
             out->attributes |= CLOCK_ATTR_PARENT(1UL);
         }
@@ -1356,7 +1356,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
     const msg_rclock12_t *in, msg_tclock12_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t numMuxes = 0U;
+    uint32_t numParents = 0U;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1370,17 +1370,17 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Get number of muxes */
+    /* Get number of parents */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mux;
+        uint32_t parentId;
 
-        status = LMM_ClockMuxGet(caller->lmId, in->clockId, 0U,
-            &mux, &numMuxes);
+        status = LMM_ClockParentDescribe(caller->lmId, in->clockId, 0U,
+            &parentId, &numParents);
     }
 
     /* Check parent bounds */
-    if ((status == SM_ERR_SUCCESS) && (in->skipParents >= numMuxes))
+    if ((status == SM_ERR_SUCCESS) && (in->skipParents >= numParents))
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
@@ -1393,24 +1393,24 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
         out->numParentsFlags = 0U;
         for (index = 0U; index < CLOCK_MAX_PARENTS; index++)
         {
-            uint32_t mux;
+            uint32_t parentId;
             uint32_t temp;
 
             /* Break out if done */
-            if ((index + in->skipParents) >= numMuxes)
+            if ((index + in->skipParents) >= numParents)
             {
                 break;
             }
 
             /* Get parent */
-            status = LMM_ClockMuxGet(caller->lmId, in->clockId,
-                index + in->skipParents, &mux, &temp);
+            status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
+                index + in->skipParents, &parentId, &temp);
 
             /* Success? */
             if (status == SM_ERR_SUCCESS)
             {
                 /* Copy out data */
-                out->parents[index] = mux;
+                out->parents[index] = parentId;
 
                 /* Increment count */
                 (out->numParentsFlags)++;
@@ -1423,7 +1423,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
 
         /* Append remaining parents */
         out->numParentsFlags |= CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(
-            numMuxes - (index + in->skipParents));
+            numParents - (index + in->skipParents));
     }
 
     /* Return status */

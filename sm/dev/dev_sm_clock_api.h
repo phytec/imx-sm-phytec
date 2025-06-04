@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -104,26 +104,26 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
     dev_sm_clock_range_t *range);
 
 /*!
- * Get a device clock mux option.
+ * Get info about a parent for a clock.
  *
- * @param[in]     clockId   Clock description to get
- * @param[in]     idx       Mux index to get
- * @param[out]    mux       Pointer to return the clock index
- *                          of mux input
- * @param[out]    numMuxes  Number of mux inputs
+ * @param[in]     clockId     Clock description to get
+ * @param[in]     sel         Index of the parent
+ * @param[out]    parentId    Pointer to return the clock index
+ *                            of the selected parent
+ * @param[out]    numParents  Number of parents
  *
- * This function allows the caller to get the clock ID of the mux
- * input \a idx.
+ * This function allows the caller to get the clock ID of the
+ * parent \a sel.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_NOT_FOUND: if \a clockId is invalid.
- * - ::SM_ERR_OUT_OF_RANGE : if \a idx is invalid.
- * - ::SM_ERR_NOT_SUPPORTED : if no mux input.
+ * - ::SM_ERR_OUT_OF_RANGE : if \a sel is invalid.
+ * - ::SM_ERR_NOT_SUPPORTED : if the clock has no parent.
  */
-int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
-    uint32_t *numMuxes);
+int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
+    uint32_t *parentId, uint32_t *numParents);
 
 /*!
  * Set a device clock rate.

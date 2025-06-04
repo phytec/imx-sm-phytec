@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -295,9 +295,9 @@
 #define SM_CLOCKDESCRIBE        DEV_SM_ClockDescribe
 #endif
 
-#ifndef SM_CLOCKMUXGET
-/*! Redirector (device/board) to get clock mux */
-#define SM_CLOCKMUXGET          DEV_SM_ClockMuxGet
+#ifndef SM_CLOCKPARENTDESCRIBE
+/*! Redirector (device/board) to get clock parent info */
+#define SM_CLOCKPARENTDESCRIBE  DEV_SM_ClockParentDescribe
 #endif
 
 #ifndef SM_CLOCKRATESET

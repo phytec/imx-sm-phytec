@@ -642,26 +642,26 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Return supported clock mux                                               */
+/* Return clock parent info                                                 */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
-    uint32_t *numMuxes)
+int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
+    uint32_t *parentId, uint32_t *numParents)
 {
     int32_t status = SM_ERR_SUCCESS;
 
     if (clockId < CLOCK_NUM_SRC)
     {
         /* Query if clock source has a parent */
-        if (CLOCK_SourceGetParent(clockId, mux))
+        if (CLOCK_SourceGetParent(clockId, parentId))
         {
             /* Clock sources have at most a single parent */
-            if (idx >= 1U)
+            if (sel >= 1U)
             {
                 status = SM_ERR_OUT_OF_RANGE;
             }
             else
             {
-                *numMuxes = 1;
+                *numParents = 1U;
             }
         }
         else
@@ -675,22 +675,22 @@ int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
 
         if (clockIndex < CLOCK_NUM_ROOT)
         {
-            /* Query number of mux inputs */
-            if (!CCM_RootMuxNumInputsGet(clockIndex, numMuxes))
+            /* Query number of parents */
+            if (!CCM_RootMuxNumInputsGet(clockIndex, numParents))
             {
                 status = SM_ERR_NOT_FOUND;
             }
             else
             {
-                /* Check if mux index exceeds number of inputs */
-                if (idx >= *numMuxes)
+                /* Check if sel exceeds number of parents */
+                if (sel >= *numParents)
                 {
                     status = SM_ERR_OUT_OF_RANGE;
                 }
                 else
                 {
-                    /* Query specified mux input */
-                    if (!CCM_RootMuxInputGet(clockIndex, idx, mux))
+                    /* Query specified parent */
+                    if (!CCM_RootMuxInputGet(clockIndex, sel, parentId))
                     {
                         status = SM_ERR_NOT_FOUND;
                     }
@@ -703,22 +703,23 @@ int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
 
             if (clockIndex < CLOCK_NUM_GPR_SEL)
             {
-                /* Query number of mux inputs */
-                if (!CCM_GprSelMuxNumInputsGet(clockIndex, numMuxes))
+                /* Query number of parents */
+                if (!CCM_GprSelMuxNumInputsGet(clockIndex, numParents))
                 {
                     status = SM_ERR_NOT_FOUND;
                 }
                 else
                 {
-                    /* Check if mux index exceeds number of inputs */
-                    if (idx >= *numMuxes)
+                    /* Check if sel exceeds number of parents */
+                    if (sel >= *numParents)
                     {
                         status = SM_ERR_OUT_OF_RANGE;
                     }
                     else
                     {
-                        /* Query specified mux input */
-                        if (!CCM_GprSelMuxInputGet(clockIndex, idx, mux))
+                        /* Query specified parent */
+                        if (!CCM_GprSelMuxInputGet(clockIndex, sel,
+                            parentId))
                         {
                             status = SM_ERR_NOT_FOUND;
                         }
@@ -731,8 +732,25 @@ int32_t DEV_SM_ClockMuxGet(uint32_t clockId, uint32_t idx, uint32_t *mux,
 
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    /* CGCs have no mux options */
-                    status = SM_ERR_NOT_SUPPORTED;
+                    /* Query if CGC has a parent */
+                    uint32_t rootIdx;
+                    if (CCM_CgcGetParent(clockIndex, &rootIdx))
+                    {
+                        /* CGCs have at most a single parent */
+                        if (sel >= 1U)
+                        {
+                            status = SM_ERR_OUT_OF_RANGE;
+                        }
+                        else
+                        {
+                            *parentId = rootIdx + CLOCK_NUM_SRC;
+                            *numParents = 1U;
+                        }
+                    }
+                    else
+                    {
+                        status = SM_ERR_NOT_FOUND;
+                    }
                 }
                 else
                 {
@@ -1074,7 +1092,12 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
 
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    status = SM_ERR_INVALID_PARAMETERS;
+                    uint32_t rootIdx = parent - CLOCK_NUM_SRC;
+
+                    if (!CCM_CgcSetParent(clockIndex, rootIdx))
+                    {
+                        status = SM_ERR_INVALID_PARAMETERS;
+                    }
                 }
                 else
                 {

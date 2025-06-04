@@ -60,8 +60,8 @@ void TEST_DevSmClock(void)
     dev_sm_clock_range_t clockRange;
     uint64_t rate = 0U;
     bool enabled = false;
-    uint32_t mux = 0U;
-    uint32_t numMuxes = 0U;
+    uint32_t parentId = 0U;
+    uint32_t numParents = 0U;
 
 #ifdef SIMU
     uint32_t parent = 0U;
@@ -118,30 +118,32 @@ void TEST_DevSmClock(void)
             CHECK(DEV_SM_ClockIsEnabled(clockId, &enabled));
             printf("  enabled=%d\n",  enabled);
 
-            /* Pass RateSet ain invalid argument*/
+            /* Pass RateSet ain invalid argument */
             NECHECK(DEV_SM_ClockRateSet(clockId, 0U, 3U),
                 SM_ERR_INVALID_PARAMETERS);
 
             /* Make sure clockId is not clock 0*/
             if (clockId == DEV_SM_CLK_0)
             {
-                /* If it is throw err, and print number of muxes*/
-                printf("DEV_SM_ClockMuxGet(%u)\n", clockId);
-                NECHECK(DEV_SM_ClockMuxGet(clockId, 0U, &mux, &numMuxes),
-                    SM_ERR_NOT_SUPPORTED);
-                printf("  numMuxes=%d\n",  numMuxes);
+                /* If it is throw err, and print number of parents */
+                printf("DEV_SM_ClockParentDescribe(%u)\n", clockId);
+                NECHECK(DEV_SM_ClockParentDescribe(clockId, 0U, &parentId,
+                    &numParents), SM_ERR_NOT_SUPPORTED);
+                printf("  numParents=%d\n",  numParents);
             }
             else
             {
-                /* If not do MuxGet test and print mux and numMuxes*/
-                printf("DEV_SM_ClockMuxGet(%u)\n", clockId);
-                CHECK(DEV_SM_ClockMuxGet(clockId, 0U, &mux, &numMuxes));
-                printf("  mux=%d\n", mux);
-                printf("  numMuxes=%d\n",  numMuxes);
+                /* If not do ParentDescribe test and print parentId
+                   and numParents */
+                printf("DEV_SM_ClockParentDescribe(%u)\n", clockId);
+                CHECK(DEV_SM_ClockParentDescribe(clockId, 0U, &parentId,
+                    &numParents));
+                printf("  parentId=%d\n", parentId);
+                printf("  numParents=%d\n",  numParents);
 
-                /* Pass invalid argument for idx*/
-                NECHECK(DEV_SM_ClockMuxGet(clockId, 1U, &mux, &numMuxes),
-                    SM_ERR_OUT_OF_RANGE);
+                /* Pass invalid argument for idx */
+                NECHECK(DEV_SM_ClockParentDescribe(clockId, 1U, &parentId,
+                    &numParents), SM_ERR_OUT_OF_RANGE);
             }
         }
 #endif
@@ -162,12 +164,12 @@ void TEST_DevSmClock(void)
     }
 
 #ifndef SIMU
-    /* Pass invalid argument for idx*/
-    NECHECK(DEV_SM_ClockMuxGet(5U, 1U, &mux, &numMuxes),
+    /* Pass invalid argument for idx */
+    NECHECK(DEV_SM_ClockParentDescribe(5U, 1U, &parentId, &numParents),
         SM_ERR_OUT_OF_RANGE);
 
-    NECHECK(DEV_SM_ClockMuxGet(CLOCK_NUM_ROOT, 4U, &mux, &numMuxes),
-        SM_ERR_OUT_OF_RANGE);
+    NECHECK(DEV_SM_ClockParentDescribe(CLOCK_NUM_ROOT, 4U, &parentId,
+        &numParents), SM_ERR_OUT_OF_RANGE);
 #endif
 
     /* Test API bounds */
@@ -177,8 +179,8 @@ void TEST_DevSmClock(void)
         SM_ERR_NOT_FOUND);
 
 #ifdef SIMU
-    NECHECK(DEV_SM_ClockMuxGet(DEV_SM_NUM_CLOCK, 0U, &mux, &numMuxes),
-        SM_ERR_NOT_FOUND);
+    NECHECK(DEV_SM_ClockParentDescribe(DEV_SM_NUM_CLOCK, 0U, &parentId,
+        &numParents), SM_ERR_NOT_FOUND);
 #endif
 
     NECHECK(DEV_SM_ClockRateSet(DEV_SM_NUM_CLOCK, 0U, 0U),

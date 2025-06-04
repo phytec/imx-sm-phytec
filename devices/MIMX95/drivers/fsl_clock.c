@@ -78,6 +78,7 @@ const pll_attr_t g_pllAttrs[CLOCK_NUM_PLL] =
 
 static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
 {
+    [CLOCK_SRC_EXT] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = 1U,
@@ -105,6 +106,8 @@ static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
 
 static const uint8_t s_clockSourceParent[CLOCK_NUM_SRC] =
 {
+    [CLOCK_SRC_EXT] = CLOCK_GPR_SEL_EXT + U8(CLOCK_NUM_SRC)
+        + U8(CLOCK_NUM_ROOT),
     [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = CLOCK_SRC_SYSPLL1_VCO,
     [CLOCK_SRC_SYSPLL1_PFD0] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,
     [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,

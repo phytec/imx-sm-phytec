@@ -299,7 +299,7 @@ MX94 DRAM rates (MT/s) were aligned to the latest datasheet and corresponding ra
 SM-245: Remove BLK_CTRL_CORTEX from A55 NS domain {#RN_DETAIL_SM_245}
 ----------
 
-If the BLK_CTRL_CORTEX is assigned to A55 NS domain, the DEV_SM_PD_A55P will be assigned to A55 NS domain and Linux will then manage this power domain incorrectly. Nothing in BLK_CTRL_CORTEX needs to be controlled by Linux, so this resource assignment is removed from the A55 NS agent.
+On i.MX94, if the BLK_CTRL_CORTEX is assigned to A55 NS domain, the DEV_SM_PD_A55P will be assigned to A55 NS domain and Linux will then manage this power domain incorrectly. Nothing in BLK_CTRL_CORTEX needs to be controlled by Linux, so this resource assignment is removed from the A55 NS agent.
 
 SM-246: ELE enabled temp sensor may cause SM to reset {#RN_DETAIL_SM_246}
 ----------

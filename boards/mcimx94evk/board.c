@@ -386,10 +386,22 @@ void BOARD_InitTimers(void)
 
     /* Configure and enable M33 SysTick */
     uint64_t rate = CCM_RootGetRate(BOARD_SYSTICK_CLK_ROOT);
-    uint32_t reloadVal = (uint32_t) (rate & 0xFFFFFFFFU);
-    reloadVal = ((reloadVal * BOARD_TICK_PERIOD_MSEC) + 999U) / 1000U;
-    SYSTICK_Init(1U, BOARD_SYSTICK_CLKSRC, (uint32_t) (rate & 0xFFFFFFFFU),
-        reloadVal);
+    uint64_t reloadVal;
+
+    /* If value wraps/exceeds, use max reload value */
+    if (rate <= (((1000ULL * SYSTICK_MAX_RELOAD) - 999ULL)
+        / BOARD_TICK_PERIOD_MSEC))
+    {
+        reloadVal = ((rate * U64(BOARD_TICK_PERIOD_MSEC)) + 999ULL)
+            / 1000ULL;
+    }
+    else
+    {
+        reloadVal = U64(SYSTICK_MAX_RELOAD);
+        DEV_SM_ErrorLog(DEV_SM_ERR_INITTIMERS);
+    }
+
+    SYSTICK_Init(1U, BOARD_SYSTICK_CLKSRC, U32(rate), U32(reloadVal));
     NVIC_EnableIRQ(SysTick_IRQn);
 
     /* Configure and enable the WDOG */

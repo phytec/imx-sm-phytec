@@ -1204,11 +1204,12 @@ void DEV_SM_SystemTick(uint32_t msec)
     LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
 
 #ifdef USES_RX_REPLICA
+    /* Tick DDR */
     /*
-     * False Positive: The msec value is 10.
+     * False Positive: The msec value is 10
+     * and the base rolls to 0 at 1000.
      */
     // coverity[cert_int30_c_violation:FALSE]
-    /* Tick DDR */
     s_ddrMseconds += msec;
 
     /* Handle DDR periodic tick */

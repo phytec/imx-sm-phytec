@@ -242,23 +242,32 @@ void TEST_ScmiClock(void)
         bool sel = false;
         bool cgc = false;
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_CLOCK_MAX_NAME];
+        uint8_t name[SCMI_CLOCK_MAX_NAME] = { 0 };
         uint8_t perm = g_scmiAgentConfig[agentId].clkPerms[clockId];
 
-        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
-            name));
+        status = SCMI_ClockAttributes(channel, clockId, &attributes, name);
+        if (status == SCMI_ERR_SUCCESS)
+        {
+            char *cN = (char*) name;
 
-        /* Determine if sel or cgc */
-        int32_t len = DEV_SM_StrLen((string) name);
-        if ((len > 4) && (name[len - 4] == '_') && (name[len - 3] == 's')
-            && (name[len - 2] == 'e') && (name[len - 1] == 'l'))
-        {
-            sel = true;
+            /* Determine if sel */
+            int32_t len = DEV_SM_StrLen((string) cN);
+            if ((len > 4) && (cN[len - 4] == '_') && (cN[len - 3] == 's')
+                && (cN[len - 2] == 'e') && (cN[len - 1] == 'l'))
+            {
+                sel = true;
+            }
+
+            /* Determine if cgc */
+            if ((len > 4) && (cN[len - 4] == '_') && (cN[len - 3] == 'c')
+                && (cN[len - 2] == 'g') && (cN[len - 1] == 'c'))
+            {
+                cgc = true;
+            }
         }
-        if ((len > 4) && (name[len - 4] == '_') && (name[len - 3] == 'c')
-            && (name[len - 2] == 'g') && (name[len - 1] == 'c'))
+        else
         {
-            cgc = true;
+            SM_Error(status);
         }
 
         /* Test functions with no perm required */

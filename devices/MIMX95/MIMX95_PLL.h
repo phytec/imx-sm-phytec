@@ -7,7 +7,7 @@
 **         CMSIS Peripheral Access Layer for MIMX95_cm33
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2023 NXP
+**     Copyright 2016-2025 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -101,8 +101,7 @@ typedef struct {
       __IO uint32_t CLR;                               /**< DFS Division Register, offset: 0x88, not available in all instances (available on 1 out of 4) */
       __IO uint32_t TOG;                               /**< DFS Division Register, offset: 0x8C, not available in all instances (available on 1 out of 4) */
     } DFS_DIV;
-  } NO_OF_DFS[3];
-       uint8_t RESERVED_0[32];
+  } NO_OF_DFS[4];
   __I  uint32_t PLL_STATUS;                        /**< PLL Status Register, offset: 0xF0 */
   __I  uint32_t DFS_STATUS;                        /**< DFS Status Register, offset: 0xF4, not available in all instances (available on 1 out of 4) */
 } PLL_Type;

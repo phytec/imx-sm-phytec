@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2022,2024 NXP
+ * Copyright 2016-2022,2024-2025 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -256,8 +256,13 @@ typedef int32_t status_t;
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 #endif
 
-/*! @name UINT16_MAX/UINT32_MAX value */
+/*! @name UINT8_MAX/UINT16_MAX/UINT32_MAX value */
 /*! @{ */
+#if !defined(UINT8_MAX)
+/*! Max value of uint8_t type. */
+#define UINT8_MAX ((uint8_t)-1)
+#endif
+
 #if !defined(UINT16_MAX)
 /*! Max value of uint16_t type. */
 #define UINT16_MAX ((uint16_t)-1)

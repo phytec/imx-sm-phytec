@@ -42,6 +42,7 @@
 
 /* Defines */
 
+/*! Max reload value */
 #define SYSTICK_MAX_RELOAD  SysTick_LOAD_RELOAD_Msk
 
 /* Types */

@@ -798,9 +798,11 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
     /* Send header and NMI */
     MU_SendMsg(s_eleMuBase, 0, buf[0]);
 
+    /* Get message size */
+    size = (uint32_t) msg->hdr.size;
+
     /* Send message body */
-    size = ((uint32_t) msg->hdr.size) - 1UL;
-    while (size > 0U)
+    while (size > 1U)
     {
         MU_SendMsg(s_eleMuBase, pos % 8UL, buf[pos]);
 
@@ -834,20 +836,19 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
         if ((msg->hdr.tag == ELE_MSG_TAG_RESP)
             && (msg->hdr.ver == ELE_MSG_VER))
         {
-            uint8_t size;
-            uint8_t pos = 1U;
+            uint32_t size;
+            uint32_t pos = 1U;
 
             /* Get message size */
-            size = U8(MIN(msg->hdr.size - 1U, maxLen - 1U));
+            size = (uint32_t) MIN(msg->hdr.size, maxLen);
 
             /* Get message body */
-            while (size > 0U)
+            while (size > 1U)
             {
-                buf[pos] = MU_ReceiveMsg(s_eleMuBase, ((uint32_t) pos)
-                    % 8UL);
+                buf[pos] = MU_ReceiveMsg(s_eleMuBase, pos % 8UL);
 
                 /* Check for wrap */
-                if (pos <= (UINT8_MAX - 1U))
+                if (pos <= (UINT32_MAX - 1U))
                 {
                     pos++;
                 }

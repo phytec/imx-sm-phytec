@@ -361,6 +361,10 @@ void RPC_SCMI_P2aTxQ(uint32_t agentId, scmi_msg_id_t msgId, uint32_t *msg,
         {
             s_queue[agentId][queue].data[s_queue[agentId][queue].head]
                 = msg[idx];
+            /*
+             * Intentional: Mod keeps within a range
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             s_queue[agentId][queue].head = (s_queue[agentId][queue].head
                 + 1U) % SM_SCMI_MAX_NOTIFY;
             s_queue[agentId][queue].count++;
@@ -757,6 +761,10 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
             }
 
             /* Increment token */
+            /*
+             * Intentional: And keeps within a range
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             s_token[scmiChannel]++;
             s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 

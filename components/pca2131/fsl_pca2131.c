@@ -94,6 +94,7 @@
 
 #define PCA2131_SECONDS_OSF          0x80U
 #define PCA2131_CONTROL_3_BLF        0x04U
+#define PCA2131_DEFAULT_MODE         0x07U
 
 /* Local Types */
 
@@ -332,11 +333,18 @@ bool PCA2131_AlarmSet(const PCA2131_Type *dev, uint32_t day, uint32_t hour,
 /*--------------------------------------------------------------------------*/
 bool PCA2131_PowerModeSet(const PCA2131_Type *dev, uint32_t mode)
 {
-    bool rc;
+    bool rc = false;
+    static uint32_t s_cachedPwrMode = PCA2131_DEFAULT_MODE;
 
-    /* Set mode */
-    rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_3,
-        U32_U8(mode) << 5U, 0xE0U);
+    /* Power mode changed? */
+    if (s_cachedPwrMode != mode)
+    {
+        rc = PCA2131_RtcWriteOne(dev, PCA2131_REG_CONTROL_3,
+            U32_U8(mode) << 5U, 0xE0U);
+
+        /* Update cached power mode */
+        s_cachedPwrMode = mode;
+    }
 
     /* Return status */
     return rc;

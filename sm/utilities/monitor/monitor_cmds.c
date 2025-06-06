@@ -2459,10 +2459,10 @@ static int32_t MONITOR_CmdBb(int32_t argc, const char * const argv[],
             case 0:  /* rtc */
                 status = MONITOR_CmdBbRtc(argc - 1, &argv[1], rw);
                 break;
-            case 1:  /* lifecycle */
+            case 1:  /* ticks */
                 status = MONITOR_CmdBbTicks(argc - 1, &argv[1], rw);
                 break;
-            case 2:  /* events */
+            case 2:  /* gpr */
                 status = MONITOR_CmdBbGpr(argc - 1, &argv[1], rw);
                 break;
             default:

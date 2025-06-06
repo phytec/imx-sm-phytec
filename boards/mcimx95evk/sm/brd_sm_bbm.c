@@ -317,6 +317,12 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
         {
             status = SM_ERR_HARDWARE_ERROR;
         }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Enable battery */
+            (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
+        }
     }
 
     /* Return status */
@@ -341,10 +347,7 @@ int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
         /* Default state */
         *state = 0U;
 
-        /* Enable battery */
-        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
-
-        /* Get battery state */
+        /* Get time status */
         if (PCA2131_TimeStatusGet(&g_pca2131Dev, &st))
         {
             if (st)

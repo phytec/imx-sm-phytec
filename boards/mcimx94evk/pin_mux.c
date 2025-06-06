@@ -58,7 +58,7 @@ void BOARD_InitPins(void)
         | IOMUXC_PAD_FSEL1(0x3U) | IOMUXC_PAD_PU(0x1U) | IOMUXC_PAD_OD(0x1U));
 #endif
 
-    /* Configure GPIO1-2 (INT from the PCAL6416A */
+    /* Configure GPIO1-2 (INT from the PCAL6416A) */
     IOMUXC_SetPinMux(IOMUXC_PAD_I2C2_SCL__GPIO1_IO2, 0U);
     IOMUXC_SetPinConfig(IOMUXC_PAD_I2C2_SCL__GPIO1_IO2, 0U);
 }

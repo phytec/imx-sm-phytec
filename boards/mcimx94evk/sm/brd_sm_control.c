@@ -305,8 +305,7 @@ void BRD_SM_ControlHandler(uint16_t status, uint16_t val)
     }
 
     /* Handle PCIe2 wake */
-    if (((status & BIT16(PCAL6416A_INPUT_PCIE2_WAKE)) != 0U)
-        && !g_pca2131Used)
+    if ((status & BIT16(PCAL6416A_INPUT_PCIE2_WAKE)) != 0U)
     {
         LMM_MiscControlEvent(BRD_SM_CTRL_PCIE2_WAKE,
             ((data >> PCAL6416A_INPUT_PCIE2_WAKE) & 0x1U) + 1U);

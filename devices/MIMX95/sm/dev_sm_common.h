@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -81,6 +81,16 @@
 #define DEV_SM_SIVER_B0  0x00010000U  /*!< B0 */
 /** @} */
 
+/*!
+ * @name Device init error flags
+ */
+/** @{ */
+#define DEV_SM_ERR_INITCLOCKS   BIT32(0U)  /*!< BOARD_InitClocks() error */
+#define DEV_SM_ERR_INITCONSOLE  BIT32(1U)  /*!< BOARD_InitDebugConsole() error */
+#define DEV_SM_ERR_INITTIMERS   BIT32(2U)  /*!< BOARD_InitTimers() error */
+#define DEV_SM_ERR_INITSERIAL   BIT32(3U)  /*!< BOARD_InitSerialBus() error */
+/** @} */
+
 /* Types */
 
 /*!
@@ -90,6 +100,9 @@ typedef struct
 {
     /*! System sleep record */
     dev_sm_sys_sleep_rec_t sysSleepRecord;
+
+    /*! Device error log */
+    uint32_t devErrLog;
 
 #ifdef DEV_SM_MSG_PROF_CNT
     /*! Message profiling record */

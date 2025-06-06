@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -115,6 +115,13 @@ int32_t DEV_SM_SyslogDump(uint32_t flags);
  * @return Returns the time in uS.
  */
 uint64_t DEV_SM_Usec64Get(void);
+
+/*!
+ * Log a device error.
+ *
+ * @param[in]     err     error flag
+ */
+void DEV_SM_ErrorLog(uint32_t err);
 
 /*!
  * Dump device error info.

@@ -226,6 +226,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
         printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
         printf("Sleep count = %u\n", sysSleepRecord->sleepCnt);
+        printf("Device err log = 0x%08X\n", syslog->devErrLog);
 
 #ifdef DEV_SM_MSG_PROF_CNT
         printf("\nMessage profile log:\n");
@@ -257,10 +258,22 @@ uint64_t DEV_SM_Usec64Get(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Log device errors                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_ErrorLog(uint32_t err)
+{
+    g_syslog.devErrLog |= err;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Dump device errors                                                       */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_ErrorDump(void)
 {
+    if (g_syslog.devErrLog != 0U)
+    {
+        printf("DEV init err: 0x%08X\n", g_syslog.devErrLog);
+    }
 }
 
 /*--------------------------------------------------------------------------*/

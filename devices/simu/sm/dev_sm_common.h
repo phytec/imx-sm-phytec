@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -70,6 +70,12 @@
 /** @} */
 
 /*!
+ * @name Device init error flags
+ */
+/** @{ */
+/** @} */
+
+/*!
  * @name Base device indexes
  */
 /** @{ */
@@ -88,6 +94,9 @@ typedef struct
 
     /*! System sleep flags */
     uint32_t sysSleepFlags;
+
+    /*! Device error log */
+    uint32_t devErrLog;
 } dev_sm_syslog_t;
 
 /* Global variables */

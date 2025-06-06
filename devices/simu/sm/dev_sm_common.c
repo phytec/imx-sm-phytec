@@ -110,6 +110,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
     {
         printf("Sys sleep mode  = %u\n", syslog->sysSleepMode);
         printf("Sys sleep flags = 0x%08X\n", syslog->sysSleepFlags);
+        printf("Device err log  = 0x%08X\n", syslog->devErrLog);
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
@@ -142,10 +143,22 @@ uint64_t DEV_SM_Usec64Get(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Log device errors                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_ErrorLog(uint32_t err)
+{
+    g_syslog.devErrLog |= err;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Dump device errors                                                       */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_ErrorDump(void)
 {
+    if (g_syslog.devErrLog != 0U)
+    {
+        printf("DEV init err: 0x%08X\n", g_syslog.devErrLog);
+    }
 }
 
 /*--------------------------------------------------------------------------*/

@@ -118,6 +118,8 @@ int main(int argc, const char * const argv[])
 #endif
 
     /* Add to subtract time */
+    /* Intentional: used only for debug */
+    // coverity[cert_int30_c_violation:FALSE]
     g_bootTime[SM_BT_SUB] += (DEV_SM_Usec64Get() - delta);
 
     /* Init LMM */

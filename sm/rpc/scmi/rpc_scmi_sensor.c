@@ -762,6 +762,10 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
             }
 
             /* Increment count */
+            /*
+             * False Positive: limited by SENSOR_MAX_DESC.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (out->numSensorFlags)++;
         }
 

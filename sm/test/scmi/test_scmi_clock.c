@@ -248,7 +248,7 @@ void TEST_ScmiClock(void)
         status = SCMI_ClockAttributes(channel, clockId, &attributes, name);
         if (status == SCMI_ERR_SUCCESS)
         {
-            char *cN = (char*) name;
+            const char *cN = (char*) name;
 
             /* Determine if sel */
             int32_t len = DEV_SM_StrLen((string) cN);

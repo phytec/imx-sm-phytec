@@ -312,8 +312,16 @@ int32_t DEV_SM_StrLen(string str)
     /* Loop over string */
     while (*p != '\0')
     {
-        len++;
-        p++;
+        /* Check for wrap */
+        if (len <= (INT32_MAX - 1))
+        {
+            len++;
+            p++;
+        }
+        else
+        {
+            break;
+        }
     }
 
     /* Return result */

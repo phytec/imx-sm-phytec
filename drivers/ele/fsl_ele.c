@@ -804,7 +804,12 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
     {
         MU_SendMsg(s_eleMuBase, pos % 8UL, buf[pos]);
 
-        pos++;
+        /* Check for wrap */
+        if (pos <= (UINT32_MAX - 1U))
+        {
+            pos++;
+        }
+
         size--;
     }
 }
@@ -841,7 +846,12 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
                 buf[pos] = MU_ReceiveMsg(s_eleMuBase, ((uint32_t) pos)
                     % 8UL);
 
-                pos++;
+                /* Check for wrap */
+                if (pos <= (UINT8_MAX - 1U))
+                {
+                    pos++;
+                }
+
                 size--;
             }
         }

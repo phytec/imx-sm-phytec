@@ -95,6 +95,10 @@ void LMM_SsenvLmNumGet(uint32_t *num)
     {
         if (g_lmmConfig[lmId].safeType == LMM_SAFE_TYPE_SEENV)
         {
+            /*
+             * False Positive: limited by SM_NUM_LM.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (*num)++;
         }
     }

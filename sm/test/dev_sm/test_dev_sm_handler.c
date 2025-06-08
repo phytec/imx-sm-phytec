@@ -59,7 +59,7 @@
 void TEST_DevSmHandler(void)
 {
 #ifndef SIMU
-    uint32_t fakeStack[10] = { 0 };
+    const uint32_t fakeStack[10] = { 0 };
 #endif
 
     printf("TEST_DevSmHandler\n");

@@ -823,8 +823,8 @@ static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
          * and get increment upto the define value of PINCTRL_MAX_CONFIGS.
          */
         // coverity[cert_int30_c_violation:FALSE]
-        *len = (4U * sizeof(uint32_t))
-            + (out->numConfigs * sizeof(pin_config_t));
+        *len = (4U * sizeof(uint32_t)) + (out->numConfigs *
+            sizeof(pin_config_t));
 
         /* Append remaining levels */
         if (cfg != PINCTRL_CONFIG_FLAG_TYPE)

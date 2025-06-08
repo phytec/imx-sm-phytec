@@ -763,15 +763,22 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
 
             /* Increment count */
             /*
-             * False Positive: limited by SENSOR_MAX_DESC.
+             * False Positive: The value of numLogFlags is incremented within
+             * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
              */
             // coverity[cert_int30_c_violation:FALSE]
             (out->numSensorFlags)++;
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numSensorFlags * sizeof(sensor_desc_t));
+        /*
+         * Intentional : To cause an overflow in the expression below,
+         * the value of SENSOR_MAX_DESC would need to be excessively large
+         * number (larger than all the TCM available)
+         */
+        // coverity[cert_int30_c_violation]
+        *len = (3U * sizeof(uint32_t)) + (out->numSensorFlags *
+            sizeof(sensor_desc_t));
 
         /* Append remaining levels */
         out->numSensorFlags |= SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS(

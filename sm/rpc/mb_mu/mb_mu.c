@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -122,6 +122,10 @@ uint32_t *MB_MU_SmaGet(uint8_t inst, uint8_t db)
     }
 
     /* Apply channel spacing */
+    /*
+     * Intentional: The db value can only be 0-3 from the configtool
+     */
+    // coverity[cert_int30_c_violation]
     sma += ((uint32_t) db) * SM_MB_MU_BUF_SIZE;
 
     return (uint32_t*) sma;

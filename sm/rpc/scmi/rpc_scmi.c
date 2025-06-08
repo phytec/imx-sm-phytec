@@ -367,6 +367,12 @@ void RPC_SCMI_P2aTxQ(uint32_t agentId, scmi_msg_id_t msgId, uint32_t *msg,
             // coverity[cert_int30_c_violation]
             s_queue[agentId][queue].head = (s_queue[agentId][queue].head
                 + 1U) % SM_SCMI_MAX_NOTIFY;
+
+            /*
+             * False Positive: The max increment of count would be till
+             * SM_SCMI_MAX_NOTIFY
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             s_queue[agentId][queue].count++;
         }
 
@@ -681,6 +687,11 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
     caller.seenvId = (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
 
     /* Map agent to instance agent */
+    /*
+     * False Positive: g_scmiConfig[caller.scmiInst].firstAgent will
+     * always be less than the agentId
+     */
+    // coverity[cert_int30_c_violation:FALSE]
     caller.instAgentId = caller.agentId + 1U
         - g_scmiConfig[caller.scmiInst].firstAgent;
 

@@ -819,10 +819,19 @@ static int32_t MiscControlSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U + in->numVal) * sizeof(uint32_t)))
+    /* Check the numVal */
+    if (in->numVal <= MISC_MAX_VAL_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U + in->numVal) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status if numVal is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check and generate unified ctrlId */
@@ -987,10 +996,19 @@ static int32_t MiscControlAction(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numArg) * sizeof(uint32_t)))
+    /* Check numArg value */
+    if (in->numArg <= MISC_MAX_ARG_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numArg) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check and generate unified ctrlId */
@@ -1039,7 +1057,16 @@ static int32_t MiscControlAction(const scmi_caller_t *caller,
     /* Update length */
     if (status == SM_ERR_SUCCESS)
     {
-        *len = (3U + out->numRtn) * sizeof(uint32_t);
+        /* Check numRtn is within the range */
+        if (out->numRtn <= MISC_MAX_RTN)
+        {
+            *len = (3U + out->numRtn) * sizeof(uint32_t);
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -1085,12 +1112,12 @@ static int32_t MiscDiscoverBuildInfo(const scmi_caller_t *caller,
         out->buildCommit = SM_COMMIT;
 
         /* Copy out build date */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->buildDate, ((uint8_t const *) SM_DATE),
             MISC_MAX_BUILDDATE);
 
         /* Copy out build time */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->buildTime, ((uint8_t const *) SM_TIME),
             MISC_MAX_BUILDTIME);
     }
@@ -1524,7 +1551,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
         cfgName = LMM_CfgInfoGet(&(out->mSel));
 
         /* Copy out cfg name */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->cfgName, (const uint8_t*) cfgName,
             MISC_MAX_CFGNAME);
     }
@@ -1604,12 +1631,22 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
             out->syslog[index] = syslog[index + in->logIndex];
 
             /* Increment count */
+            /*
+             * False Positive: The value of numLogFlags is incremented within
+             * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (out->numLogFlags)++;
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numLogFlags * sizeof(uint32_t));
+        /*
+         * Intentional : To cause an overflow in the expression below,
+         * the value of MISC_MAX_SYSLOG would need to be excessively large
+         * number (larger than all the TCM available)
+         */
+        // coverity[cert_int30_c_violation]
+        *len = (3U * sizeof(uint32_t)) + (out->numLogFlags * sizeof(uint32_t));
 
         /* Append remaining logs */
         out->numLogFlags |= MISC_NUM_LOG_FLAGS_REMAING_LOGS(
@@ -1739,10 +1776,19 @@ static int32_t MiscControlExtSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((5U + in->numVal) * sizeof(uint32_t)))
+    /* Check the numVal is within the range */
+    if (in->numVal <= MISC_MAX_EXTVAL)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((5U + in->numVal) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check parameters */
@@ -1880,7 +1926,16 @@ static int32_t MiscControlExtGet(const scmi_caller_t *caller,
     /* Update length */
     if (status == SM_ERR_SUCCESS)
     {
-        *len = (3U + out->numVal) * sizeof(uint32_t);
+        /* Check the numVal with in range */
+        if (out->numVal <= MISC_MAX_EXTVAL)
+        {
+            *len = (3U + out->numVal) * sizeof(uint32_t);
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -1913,6 +1968,11 @@ static int32_t MiscControlEvent(scmi_msg_id_t msgId,
         }
         else
         {
+            /*
+             * False Positive: the value of uCtrlId value would always be
+             * greater than or equal to DEV_SM_NUM_CTRL.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             ctrlId = (uCtrlId - DEV_SM_NUM_CTRL) | MISC_CTRL_FLAG_BRD;
         }
 

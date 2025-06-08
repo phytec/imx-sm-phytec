@@ -131,6 +131,7 @@ void TEST_DevSmVoltage(void)
             /* Set the Level */
             /* Intentional: Test code */
             // coverity[cert_int30_c_violation]
+            // coverity[cert_int32_c_violation]
             CHECK(DEV_SM_VoltageLevelSet(0U, (level - BOARD_PERF_VDROP)));
 
             /* Get the Level */

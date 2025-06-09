@@ -116,20 +116,20 @@ void TEST_DevSmClock(void)
             /* Check to see if enabled */
             printf("DEV_SM_ClockIsEnabled(%u)\n", clockId);
             CHECK(DEV_SM_ClockIsEnabled(clockId, &enabled));
-            printf("  enabled=%d\n",  enabled);
+            printf("  enabled=%u\n",  enabled);
 
             /* Pass RateSet ain invalid argument */
             NECHECK(DEV_SM_ClockRateSet(clockId, 0U, 3U),
                 SM_ERR_INVALID_PARAMETERS);
 
-            /* Make sure clockId is not clock 0*/
+            /* Make sure clockId is not clock 0 */
             if (clockId == DEV_SM_CLK_0)
             {
                 /* If it is throw err, and print number of parents */
                 printf("DEV_SM_ClockParentDescribe(%u)\n", clockId);
                 NECHECK(DEV_SM_ClockParentDescribe(clockId, 0U, &parentId,
                     &numParents), SM_ERR_NOT_SUPPORTED);
-                printf("  numParents=%d\n",  numParents);
+                printf("  numParents=%u\n",  numParents);
             }
             else
             {
@@ -138,12 +138,12 @@ void TEST_DevSmClock(void)
                 printf("DEV_SM_ClockParentDescribe(%u)\n", clockId);
                 CHECK(DEV_SM_ClockParentDescribe(clockId, 0U, &parentId,
                     &numParents));
-                printf("  parentId=%d\n", parentId);
-                printf("  numParents=%d\n",  numParents);
+                printf("  parentId=%u\n", parentId);
+                printf("  numParents=%u\n", numParents);
 
                 /* Pass invalid argument for idx */
-                NECHECK(DEV_SM_ClockParentDescribe(clockId, 1U, &parentId,
-                    &numParents), SM_ERR_OUT_OF_RANGE);
+                NECHECK(DEV_SM_ClockParentDescribe(clockId, numParents,
+                    &parentId, &numParents), SM_ERR_OUT_OF_RANGE);
             }
         }
 #endif
@@ -153,8 +153,11 @@ void TEST_DevSmClock(void)
         printf("  rate=%u\n", UINT64_L(rate));
 
 #ifdef SIMU
-        CHECK(DEV_SM_ClockParentGet(clockId, &parent));
-        CHECK(DEV_SM_ClockParentSet(clockId, parent));
+        if (numParents > 0U)
+        {
+            CHECK(DEV_SM_ClockParentGet(clockId, &parent));
+            CHECK(DEV_SM_ClockParentSet(clockId, parent));
+        }
         CHECK(DEV_SM_ClockEnable(clockId, false));
         CHECK(DEV_SM_ClockIsEnabled(clockId, &enabled));
         CHECK(DEV_SM_ClockExtendedSet(clockId, DEV_SM_CLOCK_EXT_SSC, 0x0U));

@@ -142,12 +142,15 @@ void TEST_LmmClock(void)
         printf("  rate=%u\n", UINT64_L(rate));
 
 #ifdef SIMU
-        /* Get parent*/
-        printf("LMM_ClockParentGet(%u, %u)\n", lmId, clockId);
-        CHECK(LMM_ClockParentGet(lmId, clockId, &parent));
+        if (numParents > 0U)
+        {
+            /* Get parent*/
+            printf("LMM_ClockParentGet(%u, %u)\n", lmId, clockId);
+            CHECK(LMM_ClockParentGet(lmId, clockId, &parent));
 
-        printf("LMM_ClockParentSet(%u, %u)\n", lmId, clockId);
-        CHECK(LMM_ClockParentSet(lmId, clockId, parent));
+            printf("LMM_ClockParentSet(%u, %u)\n", lmId, clockId);
+            CHECK(LMM_ClockParentSet(lmId, clockId, parent));
+        }
 
         printf("LMM_ClockReset(%u, %u)\n", lmId, clockId);
         NECHECK(LMM_ClockReset(lmId, clockId), SM_ERR_BUSY);

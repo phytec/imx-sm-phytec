@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -182,18 +182,18 @@ static bool verify_memory(uint32_t start_addr, uint32_t numbytes,
     j = 0U;
 
     /* Verify memory source */
-    for (i = 0U; i < numbytes; i+=8U)
+    for (i = 0U; i < numbytes; i += 8U)
     {
         static uint32_t reg;
 
-        reg=Read32((start_addr+i));
+        reg = Read32((start_addr+i));
         if (reg != (pattern1 + i*pattern1))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
                 start_addr+i, (pattern1 + i*pattern1), reg);
             result = false;
         }
-        reg=Read32((start_addr+(i+4U)));
+        reg = Read32((start_addr+(i+4U)));
         if (reg != (pattern2 +i*pattern2))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
@@ -227,7 +227,7 @@ static void write_memory(uint32_t start_addr, uint32_t numbytes,
     uint32_t i = 0U;
 
     /* Fill memory source */
-    for (i = 0U; i < numbytes; i+=8U)
+    for (i = 0U; i < numbytes; i += 8U)
     {
         /* Update patterns pseudo-randomly by adding to them each of their
            unique patterns in an effort to eliminate repeating patterns */

@@ -627,7 +627,7 @@ static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
     if (rc)
     {
         /* Calculate month */
-        *month= (moy < 10U) ? (moy + 3U) : (moy - 9U);
+        *month = (moy < 10U) ? (moy + 3U) : (moy - 9U);
 
         /* Calculate day of the week */
         *weekday = (days + 4U) % 7U;

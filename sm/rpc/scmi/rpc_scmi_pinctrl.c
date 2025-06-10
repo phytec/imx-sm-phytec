@@ -784,7 +784,7 @@ static int32_t PinctrlSettingsGet(const scmi_caller_t *caller,
             if ((index + skipConfigs) >= maxConfigs)
             {
                 break;
-            };
+            }
 
             /* Determine parameters */
             switch (configList[index + skipConfigs])

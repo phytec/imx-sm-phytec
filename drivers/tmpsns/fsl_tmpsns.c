@@ -25,7 +25,7 @@
 void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
 {
     /* Clear CTRL1[ENABLE] */
-    base->CTRL1_CLR= TMPSNS_CTRL1_ENABLE(1U);
+    base->CTRL1_CLR = TMPSNS_CTRL1_ENABLE(1U);
 
     /* Configure REF_DIV[DIV] to divide MODULE_CLK to generate CONV_CLK */
     base->REF_DIV = TMPSNS_REF_DIV_DIV(config->clkDiv);
@@ -78,7 +78,7 @@ void TMPSNS_Deinit(TMPSNS_Type *base)
     base->CTRL1_SET = TMPSNS_CTRL1_STOP(1U);
 
     /* Clear CTRL1[ENABLE] */
-    base->CTRL1_CLR= TMPSNS_CTRL1_ENABLE(1U);
+    base->CTRL1_CLR = TMPSNS_CTRL1_ENABLE(1U);
 }
 
 /*!

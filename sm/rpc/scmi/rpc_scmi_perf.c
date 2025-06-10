@@ -834,8 +834,8 @@ static int32_t PerformanceDescribeLevels(const scmi_caller_t *caller,
                 out->perfLevels[index].value = lmmDesc.value;
                 out->perfLevels[index].powerCost = lmmDesc.powerCost;
                 out->perfLevels[index].attributes = lmmDesc.latency;
-                out->perfLevels[index].indicativeFrequency= lmmDesc.value;
-                out->perfLevels[index].levelIndex= index + in->skipIndex;
+                out->perfLevels[index].indicativeFrequency = lmmDesc.value;
+                out->perfLevels[index].levelIndex = index + in->skipIndex;
 
                 /* Check value doesn't wrap */
                 if (out->numLevels <= (UINT32_MAX - 1U))

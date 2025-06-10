@@ -124,7 +124,7 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
     }
 
     /* Added to improve the test coverage */
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, status=SM_ERR_SUCCESS);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, status = SM_ERR_SUCCESS);
 
     /* Get sleep mode */
     if (status == SM_ERR_SUCCESS)

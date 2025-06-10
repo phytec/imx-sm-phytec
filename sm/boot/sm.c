@@ -231,8 +231,8 @@ int main(int argc, const char * const argv[])
 // coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void SM_Error(int32_t status)
 {
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, s_lmmInited=false);
-    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2, s_lmmInited=true);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, s_lmmInited = false);
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2, s_lmmInited = true);
 
     if (s_lmmInited)
     {

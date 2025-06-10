@@ -1987,7 +1987,7 @@ static int32_t MiscControlUpdate(uint32_t lmId, uint32_t agentId,
         uint32_t newFlags = 0U;
 
         /* Record agent flags for this control */
-        s_ctrlNotify[ctrlId][agentId] =flags;
+        s_ctrlNotify[ctrlId][agentId] = flags;
 
         /* Calculate new aggregate state for the flags */
         for (uint32_t a = firstAgent; a < (firstAgent + numAgents); a++)

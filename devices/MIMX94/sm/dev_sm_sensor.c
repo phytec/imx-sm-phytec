@@ -153,7 +153,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
         config.measMode = 2U;
         config.measFreq = 100000U;
         config.pud = 236U;
-        config.nFilt= 5U;
+        config.nFilt = 5U;
 
         /* Apply trim */
         uint32_t trim1 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim1);

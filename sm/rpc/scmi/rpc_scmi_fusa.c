@@ -878,7 +878,7 @@ static int32_t FusaSeenvStateGet(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         out->seenvId = target.seenvId;
-        out->lmId= target.lmId;
+        out->lmId = target.lmId;
     }
 
     /* Return status */

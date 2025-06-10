@@ -669,16 +669,16 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
     caller.agentId = (uint32_t) g_scmiChannelConfig[scmiChannel].agentId;
 
     /* Map agent to instance */
-    caller.scmiInst= (uint32_t) g_scmiAgentConfig[caller.agentId].scmiInst;
+    caller.scmiInst = (uint32_t) g_scmiAgentConfig[caller.agentId].scmiInst;
 
     /* Map instance to LM */
-    caller.lmId= g_scmiConfig[caller.scmiInst].lmId;
+    caller.lmId = g_scmiConfig[caller.scmiInst].lmId;
 
     /* Record safety type */
-    caller.safeType= (uint32_t) g_lmmConfig[caller.lmId].safeType;
+    caller.safeType = (uint32_t) g_lmmConfig[caller.lmId].safeType;
 
     /* Record S-EENV ID */
-    caller.seenvId= (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
+    caller.seenvId = (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
 
     /* Map agent to instance agent */
     caller.instAgentId = caller.agentId + 1U

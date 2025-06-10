@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -254,11 +254,11 @@ void TEST_ScmiCpu(void)
     {
         uint32_t numConfigs = 1U;
         scmi_per_lpm_config_t per_lpm_config = { 0U };
-        per_lpm_config.perId= 0U;
+        per_lpm_config.perId = 0U;
         per_lpm_config.lpmSetting = 0U;
 
 #ifdef SIMU
-        per_lpm_config.perId= 1U;
+        per_lpm_config.perId = 1U;
         printf("SCMI_CpuPerLpmConfigSet (%u, %u) Invalid perID\n",
             SM_TEST_DEFAULT_CHN, numCpu);
         NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, 1U, numConfigs,
@@ -466,7 +466,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         {
             uint32_t numConfig = 1U;
             scmi_per_lpm_config_t per_lpm_config = { 0U };
-            per_lpm_config.perId= 0U;
+            per_lpm_config.perId = 0U;
             per_lpm_config.lpmSetting = 0U;
             printf("SCMI_CpuPerLpmConfigSet (%u, %u)\n",
                 channel, domainId);
@@ -530,7 +530,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         {
             uint32_t numConfig = 1U;
             scmi_per_lpm_config_t per_lpm_config = { 0U };
-            per_lpm_config.perId= 0U;
+            per_lpm_config.perId = 0U;
             per_lpm_config.lpmSetting = 0U;
 
             printf("SCMI_CpuPerLpmConfigSet (%u, %u)\n",

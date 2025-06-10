@@ -462,7 +462,7 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
 
         /* LmmShutdown */
         {
-            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo =0U;
+            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo = 0U;
             printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
             CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
                 &shutdownFlags, &extInfo));
@@ -522,7 +522,7 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
 
         /* LmmShutdown */
         {
-            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo =0U;
+            uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo = 0U;
             printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
             NECHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
                 &shutdownFlags, &extInfo), SCMI_ERR_DENIED);

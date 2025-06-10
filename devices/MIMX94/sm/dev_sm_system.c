@@ -281,7 +281,7 @@ int32_t DEV_SM_SystemReasonNameGet(uint32_t resetReason,
         [DEV_SM_REASON_WDOG7] =       "wdog7",
         [DEV_SM_REASON_WDOG8] =       "wdog8",
         [DEV_SM_REASON_WO_NETC] =     "wo_netc",
-        [DEV_SM_REASON_CM33S_LOCKUP] ="cm33s_lockup",
+        [DEV_SM_REASON_CM33S_LOCKUP] = "cm33s_lockup",
         [DEV_SM_REASON_CM33S_SWREQ] = "cm33s_swreq",
         [DEV_SM_REASON_CM71_LOCKUP] = "cm71_lockup",
         [DEV_SM_REASON_CM71_SWREQ] = "cm71_swreq",
@@ -1377,7 +1377,7 @@ void DEV_SM_SystemMsgProfEnd(uint32_t mu)
 
             /* Insert a blank entry */
             g_syslog.sysMsgRecord.msgProf[j].scmiChannel = 0U;
-            g_syslog.sysMsgRecord.msgProf[j].chanType= 0U;
+            g_syslog.sysMsgRecord.msgProf[j].chanType = 0U;
             g_syslog.sysMsgRecord.msgProf[j].protocolId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgLatUsec = 0U;

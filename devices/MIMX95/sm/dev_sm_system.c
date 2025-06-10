@@ -1414,7 +1414,7 @@ void DEV_SM_SystemMsgProfEnd(uint32_t mu)
 
             /* Insert a blank entry */
             g_syslog.sysMsgRecord.msgProf[j].scmiChannel = 0U;
-            g_syslog.sysMsgRecord.msgProf[j].chanType= 0U;
+            g_syslog.sysMsgRecord.msgProf[j].chanType = 0U;
             g_syslog.sysMsgRecord.msgProf[j].protocolId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgLatUsec = 0U;

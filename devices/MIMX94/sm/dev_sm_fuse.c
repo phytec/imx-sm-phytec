@@ -43,8 +43,6 @@
 
 /* Local defines */
 
-#define NUM_FUSES  818U
-
 /* Local types */
 
 /* Fuse map */
@@ -98,7 +96,7 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (fuseWord < NUM_FUSES)
+    if (fuseWord < DEV_SM_NUM_OTP)
     {
         *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
     }

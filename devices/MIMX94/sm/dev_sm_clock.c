@@ -754,6 +754,7 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
                 {
                     /* Query if CGC has a parent */
                     uint32_t rootIdx;
+
                     if (CCM_CgcGetParent(clockIndex, &rootIdx))
                     {
                         /* CGCs have at most a single parent */
@@ -1268,7 +1269,6 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
         /* Spread spectrum */
         case DEV_SM_CLOCK_EXT_SSC:
             {
-
                 uint32_t spreadPercent = 0U;
                 uint32_t modFreq = 0U;
                 uint32_t enable = 0U;

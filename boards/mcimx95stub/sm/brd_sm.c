@@ -108,7 +108,12 @@
 
 /* Local variables */
 
-static int32_t s_voltLevel[DEV_SM_NUM_VOLT];
+static int32_t s_voltLevel[DEV_SM_NUM_VOLT] =
+{
+    ES_NOM_UV_VDD_SOC,
+    ES_NOM_UV_VDD_ARM
+};
+
 static uint8_t s_voltMode[DEV_SM_NUM_VOLT] =
 {
     DEV_SM_VOLT_MODE_ON,
@@ -446,6 +451,10 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 int32_t BRD_SM_SystemReset(void)
 {
     printf("Reset - spinning...");
+
+    /* Disable watchdog */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
+
     // coverity[infinite_loop:FALSE]
     while (true)
     {
@@ -461,6 +470,10 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 {
     printf("  Reset to stage %u, container %u - spinning...\n", stage,
         container);
+
+    /* Disable watchdog */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
+
     // coverity[infinite_loop:FALSE]
     while (true)
     {
@@ -475,6 +488,10 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 int32_t BRD_SM_SystemShutdown(void)
 {
     printf("Shutdown - spinning...\n");
+
+    /* Disable watchdog */
+    BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
+
     // coverity[infinite_loop:FALSE]
     while (true)
     {

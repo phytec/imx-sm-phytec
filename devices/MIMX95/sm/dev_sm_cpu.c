@@ -285,6 +285,7 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
             status = SM_ERR_NOT_FOUND;
         }
     }
+
     /* Return status */
     return status;
 }

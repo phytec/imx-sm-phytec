@@ -76,7 +76,7 @@ void TEST_DevSmFuse(void)
 
 #ifndef SIMU
     /* Max number of fuses */
-    NECHECK(DEV_SM_FuseInfoGet(NUM_FUSES, NULL), SM_ERR_NOT_FOUND);
+    NECHECK(DEV_SM_FuseInfoGet(DEV_SM_NUM_OTP, NULL), SM_ERR_NOT_FOUND);
 
     SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
 #ifdef INC_LIBC

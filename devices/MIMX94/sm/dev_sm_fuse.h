@@ -53,8 +53,11 @@
 
 /* Defines */
 
-/*! Number of device fuse */
+/*! Number of device fuses */
 #define DEV_SM_NUM_FUSE  27U
+
+/*! Size of OTP */
+#define DEV_SM_NUM_OTP  818U
 
 /*!
  * @name Device fuse indexes

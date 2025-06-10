@@ -898,7 +898,7 @@
 #define IOMUXC_PAD_MUX_MODE_MASK  (0x7U)
 #define IOMUXC_PAD_MUX_MODE_SHIFT (0U)
 #define IOMUXC_PAD_MUX_MODE(x)    (((uint32_t)(((uint32_t)(x)) << IOMUXC_PAD_MUX_MODE_SHIFT)) & IOMUXC_PAD_MUX_MODE_MASK)
-#define IOMUXC_PAD_SION_MASK      (0x10)
+#define IOMUXC_PAD_SION_MASK      (0x10U)
 #define IOMUXC_PAD_SION_SHIFT     (4U)
 #define IOMUXC_PAD_SION(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_PAD_SION_SHIFT)) & IOMUXC_PAD_SION_MASK)
 
@@ -955,16 +955,17 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister,
     uint32_t configRegister,
     uint32_t inputOnfield)
 {
-    if (muxRegister)
+    if (muxRegister != 0U)
     {
         *((volatile uint32_t *)muxRegister) = IOMUXC_PAD_MUX_MODE(muxMode) | IOMUXC_PAD_SION(inputOnfield);
     }
 
-    if (inputRegister)
+    if (inputRegister != 0U)
     {
         *((volatile uint32_t *)inputRegister) = inputDaisy;
     }
 }
+
 /*!
  * @brief Sets the IOMUXC pin configuration.
  * @note The previous five parameters can be filled with the pin function ID
@@ -984,7 +985,7 @@ static inline void IOMUXC_SetPinConfig(uint32_t muxRegister,
     uint32_t configRegister,
     uint32_t configValue)
 {
-    if (configRegister)
+    if (configRegister != 0U)
     {
         *((volatile uint32_t *)configRegister) = configValue;
     }

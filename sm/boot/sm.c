@@ -119,7 +119,7 @@ int main(int argc, const char * const argv[])
 
     /* Add to subtract time */
     /* Intentional: used only for debug */
-    // coverity[cert_int30_c_violation:FALSE]
+    // coverity[cert_int30_c_violation]
     g_bootTime[SM_BT_SUB] += (DEV_SM_Usec64Get() - delta);
 
     /* Init LMM */
@@ -301,7 +301,7 @@ void exit(int status)
     }
 
     /* Hang */
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */

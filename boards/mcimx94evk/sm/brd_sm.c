@@ -187,7 +187,7 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 #endif
 
     /* Hang */
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -213,7 +213,7 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 #endif
 
     /* Hang */
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */
@@ -455,7 +455,7 @@ int32_t BRD_SM_SystemReset(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */
@@ -474,7 +474,7 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */
@@ -492,7 +492,7 @@ int32_t BRD_SM_SystemShutdown(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop:FALSE]
+    // coverity[infinite_loop]
     while (true)
     {
         ; /* Intentional empty while */

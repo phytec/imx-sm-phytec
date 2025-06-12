@@ -739,7 +739,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                      * Intentional: The timestamp exponent field is
                      * represented in two's complement format.
                      */
-                    // coverity[cert_int31_c_violation:FALSE]
+                    // coverity[cert_int31_c_violation]
                     attributes |= SENSOR_ATTR_LOW_TIME_EXP(
                         (uint32_t) lmmDesc.timestampExponent);
                 }
@@ -754,7 +754,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                  * Intentional: The timestamp exponent field is
                  * represented in two's complement format.
                  */
-                // coverity[cert_int31_c_violation:FALSE]
+                // coverity[cert_int31_c_violation]
                 attributes |= SENSOR_ATTR_HIGH_SENSOR_EXP(
                     (uint32_t) lmmDesc.sensorExponent);
 
@@ -942,7 +942,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation:FALSE]
+        // coverity[cert_int31_c_violation]
         uint64_t tp = ((((uint64_t) in->tripPointValHigh)
                 << 32U) | (uint64_t) in->tripPointValLow);
 
@@ -950,7 +950,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation:FALSE]
+        // coverity[cert_int31_c_violation]
         int64_t tpValue = (int64_t) tp;
 
         status = LMM_SensorTripPointSet(caller->lmId, in->sensorId,

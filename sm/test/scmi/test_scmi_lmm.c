@@ -374,6 +374,8 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             uint32_t recId = 0U;
 
             printf("SCMI_LmmEvent(%u, %u)\n", channel, lm);
+            /* Intentional: Test code */
+            // coverity[cert_int30_c_violation]
             CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, &flags));
 
             BCHECK(SCMI_LMM_EVENT_SHUTDOWN(flags) == 1U);

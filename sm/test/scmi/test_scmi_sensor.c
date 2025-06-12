@@ -599,6 +599,8 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         int64_t tp = -2525;
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
+        /* Intentional: Test code */
+        // coverity[cert_int31_c_violation]
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
     }

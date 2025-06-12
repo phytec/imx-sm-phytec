@@ -284,7 +284,7 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
          * Intentional: The token value will remain in
          * sync with the agent, even if it wraps.
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        // coverity[cert_int30_c_violation]
         s_token[scmiChannel]++;
         s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 
@@ -364,7 +364,7 @@ void RPC_SCMI_P2aTxQ(uint32_t agentId, scmi_msg_id_t msgId, uint32_t *msg,
             /*
              * Intentional: Mod keeps within a range
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            // coverity[cert_int30_c_violation]
             s_queue[agentId][queue].head = (s_queue[agentId][queue].head
                 + 1U) % SM_SCMI_MAX_NOTIFY;
             s_queue[agentId][queue].count++;
@@ -764,7 +764,7 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
             /*
              * Intentional: And keeps within a range
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            // coverity[cert_int30_c_violation]
             s_token[scmiChannel]++;
             s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 

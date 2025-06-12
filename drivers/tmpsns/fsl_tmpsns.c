@@ -169,7 +169,7 @@ int16_t TMPSNS_GetDataNonBlocking(const TMPSNS_Type *base)
      * Intentional: The value in the DATA register is 16-bit
      * signed value (in two's-complement form).
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     return (int16_t) value;
 }
 
@@ -183,7 +183,7 @@ void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
      * Intentional: The value store in  THR_CTRLm register is 16-bit
      * signed value (in two's-complement form).
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     uint16_t uval = (uint16_t) value;
 
     if (thresholdIdx == 0U)

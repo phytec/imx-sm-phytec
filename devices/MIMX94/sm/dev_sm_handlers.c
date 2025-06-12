@@ -344,7 +344,7 @@ void NMI_Handler(const uint32_t *sp)
     if (status == SM_ERR_SUCCESS)
     {
         /* Wait for delayed FCCU reaction (PMIC reset) */
-        // coverity[infinite_loop:FALSE]
+        // coverity[infinite_loop]
         while (true)
         {
             ;  /* Intentional empty while */
@@ -412,7 +412,7 @@ void SysTick_Handler(void)
     /*
      * Intentional: Upon overflow value will rollback to zero.
      */
-    // coverity[cert_int30_c_violation:FALSE]
+    // coverity[cert_int30_c_violation]
     s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 
     /* Call system tick */
@@ -1047,7 +1047,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,

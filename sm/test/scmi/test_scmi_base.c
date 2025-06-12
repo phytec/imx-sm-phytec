@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -292,6 +292,8 @@ static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
     uint32_t agentId)
 {
     uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
+    /* Intentional: Test code */
+    // coverity[cert_int30_c_violation]
     uint32_t agent =  resource + 1U - g_scmiConfig[scmiInst].firstAgent;
 
     /* Reset Agent Config */

@@ -1799,9 +1799,9 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                         if (status == SM_ERR_SUCCESS)
                                         {
                                             uint32_t maxKHz = UINT64_L(
-                                                range.highestRate/1000UL);
+                                                range.highestRate / 1000UL);
                                             uint32_t minKHz = UINT64_L(
-                                                range.lowestRate/1000UL);
+                                                range.lowestRate / 1000UL);
                                             printf("%03u: %*s MAX = %7uKHz,"
                                                 " MIN = %7uKHz\n", clockId,
                                                 -wName, clockNameAddr, maxKHz,
@@ -3076,7 +3076,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 16U) == 0U)
+                            if (((i + 1U) % 16U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())
@@ -3110,7 +3110,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 8U) == 0U)
+                            if (((i + 1U) % 8U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())
@@ -3144,7 +3144,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 4U) == 0U)
+                            if (((i + 1U) % 4U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())

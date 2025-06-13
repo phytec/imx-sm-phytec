@@ -110,7 +110,7 @@
  * @param[in]     X  Polarity of check
  * @param[in]     Y  Condition to check
  */
-#define XCHECK(X,Y) \
+#define XCHECK(X, Y) \
     { \
         int32_t lstat = (Y); \
         if ((X) && (lstat != SM_ERR_SUCCESS)) \
@@ -131,7 +131,7 @@
  * @param[in]     X  Condition to check
  * @param[in]     Y  Desired Error Code
  */
-#define NECHECK(X,Y) \
+#define NECHECK(X, Y) \
     { \
         int32_t lstat = (X); \
         if (lstat != (Y)) \
@@ -149,7 +149,7 @@
  * @param[in]     Y  Condition to check
  * @param[in]     Z  Desired Error Code
  */
-#define XECHECK(X,Y,Z) \
+#define XECHECK(X, Y, Z) \
     { \
         int32_t lstat = (Y); \
         if ((X) && (lstat != SM_ERR_SUCCESS)) \
@@ -213,7 +213,7 @@
  * @param[in]     X  Polarity of check
  * @param[in]     Y  Condition to check
  */
-#define XCHECK(X,Y) \
+#define XCHECK(X, Y) \
     { \
         int32_t lstat = (Y); \
         if ((X) && (lstat != SM_ERR_SUCCESS)) \
@@ -232,7 +232,7 @@
  * @param[in]     X  Condition to check
  * @param[in]     Y  Desired Error Code
  */
-#define NECHECK(X,Y) \
+#define NECHECK(X, Y) \
     { \
         int32_t lstat = (X); \
         if (lstat != (Y)) \
@@ -249,7 +249,7 @@
  * @param[in]     Y  Condition to check
  * @param[in]     Z  Desired Error Code
  */
-#define XECHECK(X,Y,Z) \
+#define XECHECK(X, Y, Z) \
     { \
         int32_t lstat = (Y); \
         if ((X) && (lstat != SM_ERR_SUCCESS)) \

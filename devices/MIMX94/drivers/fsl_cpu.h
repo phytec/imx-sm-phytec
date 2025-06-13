@@ -328,7 +328,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq);
  * @return Returns true if GPC handshake is set (enable/disable) successfully
  *         for the given CPU, otherwise false.
  */
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake);
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake);
 
 /*!
  * Get CPU FSM state

@@ -460,7 +460,7 @@ void TEST_ScmiMisc(void)
         TEST_ScmiMiscGet(perm >= SM_SCMI_PERM_GET, channel, sCtrlId);
 
         /* RPC_00170 Test functions with notify perms required */
-        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY,channel, sCtrlId);
+        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY, channel, sCtrlId);
 
         /* Test functions with EXCLUSIVE perm required */
         TEST_ScmiMiscExclusive(perm >= SM_SCMI_PERM_EXCLUSIVE, channel,

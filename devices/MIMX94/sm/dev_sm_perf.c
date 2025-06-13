@@ -48,7 +48,7 @@
 /* Number of voltage setpoints */
 #define DEV_SM_NUM_PERF_LVL_SOC     4U
 #define DEV_SM_NUM_PERF_SLEEP       8U
-#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF-1U)
+#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF - 1U)
 #define DEV_SM_A55_GPR_SEL_IDX      1U
 #define DEV_SM_A55_GPR_SEL_MASK     0x7FU
 
@@ -434,8 +434,8 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
          * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
-        .odiv = 16U,                             /* ODIV */
+        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
+        .odiv = 16U,                            /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
@@ -443,7 +443,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 8U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
@@ -452,7 +452,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
          * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
+        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
         .odiv = 8U,                             /* ODIV */
     }
 };
@@ -728,7 +728,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_SOC] =
          * PLL_VCO = 24MHz * 117 = 2808MHz
          */
         .mfi = 117U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 0U                              /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =

@@ -186,18 +186,18 @@ static bool verify_memory(uint32_t start_addr, uint32_t numbytes,
     {
         static uint32_t reg;
 
-        reg = Read32((start_addr+i));
-        if (reg != (pattern1 + i*pattern1))
+        reg = Read32((start_addr + i));
+        if (reg != (pattern1 + i * pattern1))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
-                start_addr+i, (pattern1 + i*pattern1), reg);
+                start_addr + i, (pattern1 + i * pattern1), reg);
             result = false;
         }
-        reg = Read32((start_addr+(i+4U)));
-        if (reg != (pattern2 +i*pattern2))
+        reg = Read32((start_addr + (i + 4U)));
+        if (reg != (pattern2 + i * pattern2))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
-                start_addr+i+4, (pattern2 + i*pattern2), reg);
+                start_addr + i + 4, (pattern2 + i * pattern2), reg);
             result = false;
         }
         j++;
@@ -231,8 +231,8 @@ static void write_memory(uint32_t start_addr, uint32_t numbytes,
     {
         /* Update patterns pseudo-randomly by adding to them each of their
            unique patterns in an effort to eliminate repeating patterns */
-        Write32((start_addr+i), pattern1 + i*pattern1);
-        Write32((start_addr+(i+4U)), pattern2 + i*pattern2);
+        Write32((start_addr + i), pattern1 + i * pattern1);
+        Write32((start_addr + (i + 4U)), pattern2 + i * pattern2);
 
         if ((i % DOT_BYTE_CNT) == 0U)
         {

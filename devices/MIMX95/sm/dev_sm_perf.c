@@ -49,7 +49,7 @@
 #define DEV_SM_NUM_PERF_LVL_SOC     4U
 #define DEV_SM_NUM_PERF_LVL_ARM     5U
 #define DEV_SM_NUM_PERF_SLEEP       10U
-#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF-1U)
+#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF - 1U)
 #define DEV_SM_A55_GPR_SEL_IDX      1U
 #define DEV_SM_A55_GPR_SEL_MASK     0x7FU
 
@@ -457,7 +457,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 8U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
@@ -475,7 +475,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 4U,                             /* ODIV */
     }
 };
@@ -527,7 +527,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC]
          * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
          */
         .mfi = 155U,                            /* VCO MFI */
-        .mfn = VCO_MFD/2U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 2U,                    /* VCO MFN */
         .odiv = 16U,                            /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
@@ -545,7 +545,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC]
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 6U,                             /* ODIV */
     }
 };
@@ -1087,7 +1087,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
          * PLL_VCO = 24MHz * 117 = 2808MHz
          */
         .mfi = 117U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 0U                              /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
@@ -2354,7 +2354,7 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     }
     if (status == SM_ERR_SUCCESS)
     {
-        if (DEV_SM_PerfDramTypeGet()== 4U)
+        if (DEV_SM_PerfDramTypeGet() == 4U)
         {
             status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
                 &s_perfRootCfgDramLp4x);
@@ -2589,7 +2589,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
         case DEV_SM_PERF_DRAM:
             clockId = DEV_SM_CLK_DRAM_GPR_SEL;
 
-            if (DEV_SM_PerfDramTypeGet()== 4U)
+            if (DEV_SM_PerfDramTypeGet() == 4U)
             {
                 perfDesc = s_perfDescDramLp4x;
             }

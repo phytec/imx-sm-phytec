@@ -106,7 +106,7 @@ void MONITOR_Cmd(string banner)
 
     /* Zero initialize command and history buffers */
     (void)memset((void *)line, 0, (size_t)MAXLINE);
-    (void)memset((void *)hist, 0, (((size_t)MAXLINE)*((size_t)HIST_SIZE)));
+    (void)memset((void *)hist, 0, (((size_t)MAXLINE) * ((size_t)HIST_SIZE)));
 
     printf("%s", banner);
 
@@ -523,7 +523,7 @@ static char* MONITOR_LineRead(void)
                         seek_cnt++;
 
                         /* Compute seek position based on offset from insert position */
-                        seek_idx = ((insert_idx-seek_cnt) + HIST_SIZE) % HIST_SIZE;
+                        seek_idx = ((insert_idx - seek_cnt) + HIST_SIZE) % HIST_SIZE;
 
                         /* Erase contents of current command buffer and
                          * replace with the previous command */
@@ -546,7 +546,7 @@ static char* MONITOR_LineRead(void)
                         seek_cnt--;
 
                         /* Compute seek position based on offset from insert position */
-                        seek_idx = ((insert_idx-seek_cnt) + HIST_SIZE) % HIST_SIZE;
+                        seek_idx = ((insert_idx - seek_cnt) + HIST_SIZE) % HIST_SIZE;
 
                         /* Erase contents of current command buffer and
                          * replace with the previous command */
@@ -811,7 +811,7 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
         errno = 0;
         index = strtoul(rsrcName, &endPtr, 0);
 
-        if ((errno !=0) || (*endPtr != EOL))
+        if ((errno != 0) || (*endPtr != EOL))
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }

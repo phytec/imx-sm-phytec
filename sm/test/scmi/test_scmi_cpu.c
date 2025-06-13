@@ -245,7 +245,7 @@ void TEST_ScmiCpu(void)
 
         printf("SCMI_CpuPdLpmConfigSet:(%u, %u)\n",
             SM_SCMI_NUM_CHN, numCpu);
-        NECHECK(SCMI_CpuPdLpmConfigSet(SM_SCMI_NUM_CHN, numCpu,numConfigs,
+        NECHECK(SCMI_CpuPdLpmConfigSet(SM_SCMI_NUM_CHN, numCpu, numConfigs,
             &lpm_config), SM_ERR_INVALID_PARAMETERS);
 
     }

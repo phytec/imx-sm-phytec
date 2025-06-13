@@ -249,7 +249,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr);
 static void FaultHandler(uint32_t faultId);
 static irq_prio_info_t *IrqPrioMap(IRQn_Type irq);
-static void IrqPrioBoost(irq_prio_info_t const * pInfo,uint32_t relPrio);
+static void IrqPrioBoost(irq_prio_info_t const * pInfo, uint32_t relPrio);
 static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
     uint32_t relPrio);
 static void IrqPrioUpdate(irq_prio_info_t *pInfo);

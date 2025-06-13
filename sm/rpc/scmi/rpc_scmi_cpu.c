@@ -1134,7 +1134,7 @@ static int32_t CpuPdLpmConfigSet(const scmi_caller_t *caller,
     uint32_t numConfigs = in->numConfigs;
 
     /* Check numConfigs*/
-    if (numConfigs <=CPU_MAX_PDCONFIGS_T)
+    if (numConfigs <= CPU_MAX_PDCONFIGS_T)
     {
         /* Check request length */
         if (caller->lenCopy < ((3U * sizeof(uint32_t))

@@ -49,7 +49,7 @@ static bool SRC_MemRetentionModeInit(uint32_t srcMixIdx);
 static void SRC_MixSetA55HdskMode(uint32_t srcMixIdx, uint8_t hdskMode);
 static void SRC_MixSetA55CpuWait(uint32_t srcMixIdx, bool enableCpuWait);
 static void SRC_MixSetCpuWait(uint32_t srcMixIdx, bool enableCpuWait);
-static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx,uint32_t sleepMode);
+static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx, uint32_t sleepMode);
 static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx);
 static bool SRC_MixPowerUpCompleted(uint32_t srcMixIdx);
 static bool SRC_MixPowerDownPoll(uint32_t srcMixIdx, uint32_t timeoutUsec);

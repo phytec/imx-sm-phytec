@@ -71,7 +71,7 @@ void TEST_LmmClock(void)
 
     for (uint32_t clockId = 0U; clockId < (SM_NUM_CLOCK - 1U); clockId++)
     {
-        printf("LMM_ClockNameGet(%u, %u)\n",lmId, clockId);
+        printf("LMM_ClockNameGet(%u, %u)\n", lmId, clockId);
         CHECK(LMM_ClockNameGet(lmId, clockId, &name, &len));
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
@@ -183,12 +183,12 @@ void TEST_LmmClock(void)
     NECHECK(LMM_ClockEnable(lmId, SM_NUM_CLOCK, enabled),
         SM_ERR_NOT_FOUND);
 
-    printf("LMM_ClockExtendedSet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    printf("LMM_ClockExtendedSet(%lu, %u)\n", SM_NUM_CLOCK, lmId);
     NECHECK(LMM_ClockExtendedSet(lmId, SM_NUM_CLOCK, 0U, 0U),
         SM_ERR_NOT_FOUND);
 
     uint32_t extCfgValue = 0U;
-    printf("LMM_ClockExtendedGet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    printf("LMM_ClockExtendedGet(%lu, %u)\n", SM_NUM_CLOCK, lmId);
     NECHECK(LMM_ClockExtendedGet(lmId, SM_NUM_CLOCK, 0U, &extCfgValue),
         SM_ERR_NOT_FOUND);
 

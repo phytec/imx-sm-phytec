@@ -56,7 +56,7 @@
 /* Defines */
 
 /*! Number of device power domains */
-#define DEV_SM_NUM_POWER        (PWR_NUM_MIX_SLICE+PWR_NUM_MIX_VSLICE)
+#define DEV_SM_NUM_POWER        (PWR_NUM_MIX_SLICE + PWR_NUM_MIX_VSLICE)
 
 /*! Number of device power states */
 #define DEV_SM_NUM_POWER_STATE  2U

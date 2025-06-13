@@ -146,7 +146,7 @@ void TEST_ScmiSensor(void)
 
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n",
             SM_TEST_DEFAULT_CHN, numSensors, sensorEventControl);
-        NCHECK(SCMI_SensorTripPointNotify(SM_TEST_DEFAULT_CHN,numSensors,
+        NCHECK(SCMI_SensorTripPointNotify(SM_TEST_DEFAULT_CHN, numSensors,
             sensorEventControl));
     }
 
@@ -267,7 +267,7 @@ void TEST_ScmiSensor(void)
                 SCMI_SENSOR_NUM_SENSOR_FLAGS_NUM_DESCS(numSensorFlags);
             printf(" numData=%u\n", numData);
 
-            for (uint16_t loopIndex = 0U; loopIndex<numData; loopIndex++)
+            for (uint16_t loopIndex = 0U; loopIndex < numData; loopIndex++)
             {
                 printf(" upper 32 data[%u]= %u\n lower 32 data[%u]= %u\n",
                     loopIndex + descIndex,
@@ -359,7 +359,7 @@ static void TEST_ScmiSensorNotify(bool pass, uint32_t channel,
     {
         uint32_t sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(1U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
-            sensorId,sensorEventControl);
+            sensorId, sensorEventControl);
         XCHECK(pass, SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
     }
@@ -368,7 +368,7 @@ static void TEST_ScmiSensorNotify(bool pass, uint32_t channel,
     {
         uint32_t sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(0U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
-            sensorId,sensorEventControl);
+            sensorId, sensorEventControl);
         XCHECK(pass, SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
     }
@@ -445,7 +445,7 @@ static void TEST_ScmiSensorSet(bool pass, uint32_t channel,
         printf("SCMI_SensorReadingGet(%u, %u)\n",
             SM_TEST_DEFAULT_CHN, sensorId);
         NCHECK(SCMI_SensorReadingGet(channel, sensorId,
-            flags,readings));
+            flags, readings));
     }
 
     /* Should fail with an error after trying to use protocol
@@ -550,7 +550,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         /* Enable notify */
         uint32_t sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(1U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
-            sensorId,sensorEventControl);
+            sensorId, sensorEventControl);
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 
@@ -578,7 +578,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         /* Enable notify */
         sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(1U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
-            sensorId,sensorEventControl);
+            sensorId, sensorEventControl);
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 
@@ -610,7 +610,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         /* Enable notify */
         uint32_t sensorEventControl = SCMI_SENSOR_EV_CTRL_ENABLE(1U);
         printf("SCMI_SensorTripPointNotify(%u, %u, %u)\n", channel,
-            sensorId,sensorEventControl);
+            sensorId, sensorEventControl);
         CHECK(SCMI_SensorTripPointNotify(channel, sensorId,
             sensorEventControl));
 

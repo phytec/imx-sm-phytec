@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -200,7 +200,7 @@ static void TEST_ScmiResetExclusive(bool pass, uint32_t channel,
     uint32_t flags = 0U;
 
     /* Access check */
-    flags = SCMI_RESET_FLAGS_ASYNC(0U)| SCMI_RESET_FLAGS_SIGNAL(0U)
+    flags = SCMI_RESET_FLAGS_ASYNC(0U) | SCMI_RESET_FLAGS_SIGNAL(0U)
         | SCMI_RESET_FLAGS_AUTO(1U);
 
     XECHECK(pass, SCMI_Reset(channel, domainId,
@@ -209,7 +209,7 @@ static void TEST_ScmiResetExclusive(bool pass, uint32_t channel,
     if (pass)
     {
         /* Asynchronous Call -- Should Fail */
-        flags = SCMI_RESET_FLAGS_ASYNC(1U)| SCMI_RESET_FLAGS_SIGNAL(0U)
+        flags = SCMI_RESET_FLAGS_ASYNC(1U) | SCMI_RESET_FLAGS_SIGNAL(0U)
             | SCMI_RESET_FLAGS_AUTO(1U);
 
         NECHECK(SCMI_Reset(channel, domainId,
@@ -260,7 +260,7 @@ static void TEST_ScmiResetExclusive(bool pass, uint32_t channel,
     }
     else
     {
-        flags = SCMI_RESET_FLAGS_ASYNC(0U)| SCMI_RESET_FLAGS_SIGNAL(0U)
+        flags = SCMI_RESET_FLAGS_ASYNC(0U) | SCMI_RESET_FLAGS_SIGNAL(0U)
             | SCMI_RESET_FLAGS_AUTO(1U);
 
         XECHECK(pass, SCMI_Reset(channel, domainId,

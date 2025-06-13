@@ -831,7 +831,7 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
     uint32_t remain = pllSsc->spreadPercent % 10U;
 
     uint64_t spreadFreq = ((rate / 100U) * quotient) +
-        ((rate/1000U) * remain);
+        ((rate / 1000U) * remain);
 
     /* Check if spread frequency exceeds (4 * (Fref/RDIV)) */
     if (spreadFreq > (4U * CLOCK_PLL_FREF_HZ))

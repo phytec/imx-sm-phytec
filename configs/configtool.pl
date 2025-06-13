@@ -3946,12 +3946,12 @@ sub startstop
 				if (@words > 0)
 				{
 					$rtn .= ', '  . '\\' . "\n";
-					$rtn .= '     .numArg = ' . @words . ',';
+					$rtn .= '     .numArg = ' . @words . ', ';
 				}
 
 				for my $i (0 .. $#words)
 			    {
-		        	$rtn .= ' .arg[' . $i . '] = ' . $words[$i] . 'U,';
+		        	$rtn .= '.arg[' . $i . '] = ' . $words[$i] . 'U, ';
 				}				
 	        }
 

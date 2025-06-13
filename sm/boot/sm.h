@@ -213,7 +213,7 @@
 #define Read32(a)     (*(volatile uint32_t *)(a))
 
 /*! Macro for writing register value */
-#define Write32(a,v)  (*(volatile uint32_t *)(a) = (v))
+#define Write32(a, v)  (*(volatile uint32_t *)(a) = (v))
 /** @} */
 
 /* Types */

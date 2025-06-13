@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -265,7 +265,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq);
  * @return Returns true if GPC handshake is set (enable/disable) successfully
  *         for the given CPU, otherwise false.
  */
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake);
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake);
 
 /*!
  * Get CPU FSM state

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023, 2025 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -116,7 +116,7 @@ bool PCAL6408A_Init(const PCAL6408A_Type *dev,
     }
 
     /* Set latch */
-    if (rc && (config->inputLatch!= defConfig.inputLatch))
+    if (rc && (config->inputLatch != defConfig.inputLatch))
     {
         uint8_t data = config->inputLatch;
 

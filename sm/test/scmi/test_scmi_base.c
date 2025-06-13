@@ -181,7 +181,7 @@ void TEST_ScmiBase(void)
         printf("  numProtocols=%u\n", numProtocols);
         for (uint32_t p = 0U; p < numProtocols; p++)
         {
-            printf("  prot%u=0x%02X\n", p, (protocols[p/4U] >> ((p % 4U)
+            printf("  prot%u=0x%02X\n", p, (protocols[p / 4U] >> ((p % 4U)
                 * 8U)) & 0xFFU);
         }
 

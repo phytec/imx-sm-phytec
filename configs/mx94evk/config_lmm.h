@@ -195,11 +195,11 @@
     {.lmId = 4U, .mSel = 1U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 4U, .mSel = 2U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_A55P}, \
     {.lmId = 4U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
-     .numArg = 1, .arg[0] = 3U,}, \
+     .numArg = 1, .arg[0] = 3U, }, \
     {.lmId = 4U, .mSel = 1U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
-     .numArg = 1, .arg[0] = 3U,}, \
+     .numArg = 1, .arg[0] = 3U, }, \
     {.lmId = 4U, .mSel = 2U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_A55, \
-     .numArg = 1, .arg[0] = 3U,}, \
+     .numArg = 1, .arg[0] = 3U, }, \
     {.lmId = 4U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0}, \
     {.lmId = 4U, .mSel = 1U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0}, \
     {.lmId = 4U, .mSel = 2U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_A55C0},

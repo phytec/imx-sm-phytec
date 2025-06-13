@@ -408,7 +408,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
         else
         {
             NECHECK(SCMI_ClockPossibleParentsGet(channel, clockId,
-                skipParents,&numParentsFlags, parents),
+                skipParents, &numParentsFlags, parents),
                 SCMI_ERR_NOT_SUPPORTED);
         }
     }

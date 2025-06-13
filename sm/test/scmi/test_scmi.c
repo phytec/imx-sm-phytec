@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -79,7 +79,7 @@ void TEST_Scmi(void)
         /* Loop over protocols */
         for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
         {
-            uint32_t prot = (protocols[protIndex/4U]
+            uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;
 
             /* Test protocol version and negotiate protocol attributes */
@@ -144,7 +144,7 @@ void TEST_Scmi(void)
         /* Loop over protocols */
         for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
         {
-            uint32_t prot = (protocols[protIndex/4U]
+            uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;
             uint32_t header = 0U;
 

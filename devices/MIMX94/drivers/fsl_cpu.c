@@ -773,7 +773,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq)
 /*--------------------------------------------------------------------------*/
 /* Set GPC shandshakes associated with CPU                                  */
 /*--------------------------------------------------------------------------*/
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake)
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake)
 {
     bool rc = false;
 

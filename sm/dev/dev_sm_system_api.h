@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -277,7 +277,7 @@ void DEV_SM_SystemMsgProfStart(uint32_t mu);
  * @param[in]   messageId       SCMI message ID
  */
 void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
-    uint32_t protocolId,uint32_t messageId);
+    uint32_t protocolId, uint32_t messageId);
 
 /*!
  * Message profile end notification.

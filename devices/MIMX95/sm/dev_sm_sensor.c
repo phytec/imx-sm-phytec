@@ -94,10 +94,12 @@ static bool s_tmpsnsOwn[DEV_SM_NUM_SENSOR];
 static bool s_tmpsnsEnb[DEV_SM_NUM_SENSOR];
 static uint8_t s_tmpsnsDir[DEV_SM_NUM_SENSOR];
 static uint32_t s_thresholdEnb[DEV_SM_NUM_SENSOR];
+static int16_t s_thresholdVal[DEV_SM_NUM_SENSOR][SM_NUM_THRESHOLDS];
+static uint8_t s_thresholdMode[DEV_SM_NUM_SENSOR][SM_NUM_THRESHOLDS];
 
 /* Local functions */
 
-static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
+static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
     int64_t value, uint8_t eventControl);
 
 /*--------------------------------------------------------------------------*/
@@ -143,6 +145,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
     {
         TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
         tmpsns_config_t config;
+        uint32_t mask = s_thresholdEnb[sensorId];
 
         /* Panic temps */
         const int64_t panicTemp[4] =
@@ -183,9 +186,22 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
         /* Init NS section of sensor */
         TMPSNS_InitNs(base, &config);
 
+        /* Loop over thresholds */
+        for (uint8_t threshold = 0U; threshold < SM_NUM_THRESHOLDS;
+            threshold++)
+        {
+            if ((mask & BIT32(threshold)) != 0U)
+            {
+                /* Restore thresholds */
+                TMPSNS_SetThreshold(base, threshold,
+                    s_thresholdVal[sensorId][threshold],
+                    s_thresholdMode[sensorId][threshold]);
+            }
+        }
+
         /* Configure panic */
         uint32_t mktSeg = DEV_SM_FuseGet(DEV_SM_FUSE_MARKET_SEGMENT);
-        status = TMPSNS_ThresholdSet(sensorId,
+        status = DEV_SM_SensorThresholdSet(sensorId,
             s_tmpsns[sensorId].panicThreshold, panicTemp[mktSeg],
             DEV_SM_SENSOR_TP_HIGH);
     }
@@ -236,11 +252,25 @@ int32_t DEV_SM_SensorPowerDown(uint32_t sensorId)
     }
     else
     {
+        TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
+        uint32_t mask = s_thresholdEnb[sensorId];
+
+        /* Loop over thresholds */
+        for (uint8_t threshold = 0U; threshold < SM_NUM_THRESHOLDS;
+            threshold++)
+        {
+            if ((mask & BIT32(threshold)) != 0U)
+            {
+                /* Record the NS thresholds */
+                TMPSNS_GetThreshold(base, threshold,
+                    &s_thresholdVal[sensorId][threshold],
+                    &s_thresholdMode[sensorId][threshold]);
+            }
+        }
+
         /* Do we own the secure section? */
         if (s_tmpsnsOwn[sensorId])
         {
-            TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
-
             /* Stop and disable */
             TMPSNS_Deinit(base);
         }
@@ -407,7 +437,7 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                     + (uint8_t) tripPoint;
 
                 /* Configure sensor threshold */
-                status = TMPSNS_ThresholdSet(sensorId, threshold, value,
+                status = DEV_SM_SensorThresholdSet(sensorId, threshold, value,
                     eventControl);
             }
         }
@@ -547,7 +577,7 @@ void DEV_SM_SensorTick(uint32_t msec)
 /*--------------------------------------------------------------------------*/
 /* Set sensor threshold                                                     */
 /*--------------------------------------------------------------------------*/
-static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
+static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
     int64_t value, uint8_t eventControl)
 {
     int32_t status = SM_ERR_SUCCESS;

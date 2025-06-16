@@ -228,6 +228,20 @@ int16_t TMPSNS_GetDataNonBlocking(const TMPSNS_Type *base);
 void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
     int16_t value, uint8_t mode);
 
+/*!
+ * @brief Get TMPSNS threshold.
+ *
+ * This function gets the threshold value and direction to trigger an
+ * interrupt.
+ *
+ * @param base TMPSNS peripheral base address.
+ * @param thresholdIdx Index into the thresholds.
+ * @param value Pointer to return compare value (signed, 1/64 degree).
+ * @param mode Pointer to return trigger direction.
+ */
+void TMPSNS_GetThreshold(const TMPSNS_Type *base, uint8_t thresholdIdx,
+    int16_t *value, uint8_t *mode);
+
 #if defined(__cplusplus)
 }
 #endif /*_cplusplus*/

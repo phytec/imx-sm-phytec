@@ -242,3 +242,59 @@ void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
     }
 }
 
+/*
+ * Get a threshold config.
+ */
+void TMPSNS_GetThreshold(const TMPSNS_Type *base, uint8_t thresholdIdx,
+    int16_t *value, uint8_t *mode)
+{
+    uint32_t uVal = 0U;
+    uint32_t uMode = 0U;
+
+    if (thresholdIdx == 0U)
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL01
+            & TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD0_MASK)
+            >> TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD0_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR0_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR0_MODE_SHIFT;
+    }
+    else if (thresholdIdx == 1U)
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL01
+            & TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD1_MASK)
+            >> TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD1_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR1_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR1_MODE_SHIFT;
+    }
+    else
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL23
+            & TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2_MASK)
+            >> TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR2_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR2_MODE_SHIFT;
+    }
+
+    /* Convert and return */
+    /*
+     * Intentional: register is U32 but field in the register
+     * is I16.
+     */
+    // coverity[cert_int31_c_violation]
+    *value = (int16_t) uVal;
+    *mode = U32_U8(uMode);
+}
+

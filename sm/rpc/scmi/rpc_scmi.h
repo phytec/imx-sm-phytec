@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -227,30 +227,6 @@ void RPC_SCMI_Dispatch(uint32_t scmiChannel);
  */
 int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
     uint32_t messageId, uint32_t len, uint32_t *header, bool notify);
-
-/*!
- * Receive P2A response.
- *
- * @param[in]     scmiChannel P2A channel for comms
- * @param[in]     minLen      Minimum length of message
- * @param[in]     header      Return header value
- *
- * @return Returns the status (::SCMI_ERR_SUCCESS = success).
- *
- * Receive a response sent by the agent to the platform (P2A). Calls the
- * transport to receive the buffer. Blocks until the message is available.
- * The \a scmiChannel parameter should be the channel the message was sent on
- * via RPC_SCMI_P2aTx(). The \a minLen is the minimum size message in bytes
- * expected including the payload + header.
- *
- * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_INVALID_PARAMETERS: if the buffer address is incorrectly
- *   configured.
- * - ::SM_ERR_OUT_OF_RANGE: if the channel is incorrectly configured.
- * - ::SM_ERR_PROTOCOL_ERROR: if the header doesn't match or if the
- *   received message is too small.
- */
-int32_t RPC_SCMI_P2aRx(uint32_t scmiChannel, uint32_t minLen, uint32_t header);
 
 /*!
  * Reset SCMI instance.

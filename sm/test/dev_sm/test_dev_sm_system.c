@@ -165,22 +165,6 @@ void TEST_DevSmSystem(void)
         SWI_Trigger();
     }
 
-    /* Dump the error */
-    {
-        DEV_SM_ErrorDump();
-    }
-
-    /* DEV_SM_SiInfoGet Err Test*/
-    {
-        uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
-        const char *siName = NULL;
-
-
-        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
-        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName),
-            SM_ERR_TEST);
-        SM_TestModeSet(SM_TEST_MODE_OFF);
-    }
     /* Reason Name Get: Invalid Reason */
     {
         const char *name[15];
@@ -209,6 +193,28 @@ void TEST_DevSmSystem(void)
         SM_TestModeSet(SM_TEST_MODE_OFF);
     }
 #endif
+
+    /* Dump the error log */
+    {
+        DEV_SM_ErrorDump();
+        DEV_SM_ErrorLog(1U);
+        DEV_SM_ErrorDump();
+    }
+
+    /* DEV_SM_SiInfoGet Test */
+    {
+        uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
+        const char *siName = NULL;
+
+        CHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName));
+        CHECK(DEV_SM_SiInfoGet(NULL, NULL, NULL, NULL));
+
+        SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
+        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName),
+            SM_ERR_TEST);
+        (void) DEV_SM_SiVerGet();
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
 
 #ifndef SIMU
     /* dev_sm stage reset coverage */
@@ -269,6 +275,9 @@ void TEST_DevSmSystem(void)
 
         /* DEV_SM_SystemError coverage */
         DEV_SM_SystemError(0, 0U);
+
+        /* DEV_SM_SystemError coverage */
+        DEV_SM_SystemError(0, 4U);
 
         /* Reset the test mode */
         SM_TestModeSet(SM_TEST_MODE_OFF);

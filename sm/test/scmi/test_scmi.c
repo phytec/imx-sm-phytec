@@ -157,7 +157,7 @@ void TEST_Scmi(void)
                 prot, 0U, NULL));
 
             /* INNER LOOP: messageIds */
-            for (uint32_t messIndex = 0U; messIndex < 32U; messIndex++)
+            for (uint32_t messIndex = 0U; messIndex < 64U; messIndex++)
             {
                 int32_t status = 0;
                 uint32_t attributes = 0U;
@@ -186,7 +186,7 @@ void TEST_Scmi(void)
 
             /* Invalid messageId */
             CHECK(SCMI_A2pTx(SM_TEST_DEFAULT_CHN, prot,
-                32U, 2U, &header));
+                64U, 2U, &header));
 
             /* Check to ensure protocol error returned */
             NECHECK(SCMI_A2pRx(SM_TEST_DEFAULT_CHN, 2U,

@@ -183,15 +183,6 @@ void MONITOR_Cmd(string banner)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Insert command                                                           */
-/*--------------------------------------------------------------------------*/
-void MONITOR_LineUpdateDispatch(const char *my_string)
-{
-    strcpy(line, my_string);
-    c_insert = '\n';
-}
-
-/*--------------------------------------------------------------------------*/
 /* Search for string                                                        */
 /*--------------------------------------------------------------------------*/
 int32_t MONITOR_Find(string const *list, int32_t max, const char *str)

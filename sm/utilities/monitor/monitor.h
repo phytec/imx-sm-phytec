@@ -86,15 +86,6 @@ typedef int32_t (*func_t)(uint32_t lm, uint32_t id, string *addr,
 void MONITOR_Cmd(string banner);
 
 /*!
- * Insert a string into the monitor line buffer.
- *
- * @param[in]     my_string    Character string of command
- *
- * This function allows a caller to issue a monitor command.
- */
-void MONITOR_LineUpdateDispatch(const char *my_string);
-
-/*!
  * Search string list for matching string.
  *
  * @param[in]     list         List of strings to search

@@ -311,16 +311,6 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Receive P2A message                                                      */
-/*--------------------------------------------------------------------------*/
-int32_t RPC_SCMI_P2aRx(uint32_t scmiChannel, uint32_t minLen,
-    uint32_t header)
-{
-    /* Return status */
-    return SM_ERR_SUCCESS;
-}
-
-/*--------------------------------------------------------------------------*/
 /* Check queue full status                                                  */
 /*--------------------------------------------------------------------------*/
 bool RPC_SCMI_P2aTxQFull(uint32_t agentId, uint32_t len, uint32_t queue)

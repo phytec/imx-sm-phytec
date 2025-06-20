@@ -68,16 +68,18 @@ void TEST_Scmi(void)
     /* Test list protocols */
     {
         uint32_t numProtocols = 0U;
-        uint32_t protocols[SCMI_BASE_MAX_PROTOCOLS] = { 0 };
+        uint32_t protocols[SCMI_BASE_MAX_PROTOCOLS + 1U] = { 0 };
 
         CHECK(SCMI_BaseDiscoverListProtocols(SM_TEST_DEFAULT_CHN, 0U,
-            &numProtocols, protocols));
+            &numProtocols, &protocols[1]));
+        protocols[0] = (SCMI_PROTOCOL_BASE << 24U);
+        numProtocols += 4U;
 
         printf("Test SCMI_ProtocolVersion() and "
             "SCMI_NegotiateProtocolVersion(%u) \n", SM_TEST_DEFAULT_CHN);
 
         /* Loop over protocols */
-        for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
+        for (uint32_t protIndex = 3U; protIndex < numProtocols; protIndex++)
         {
             uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;
@@ -142,7 +144,7 @@ void TEST_Scmi(void)
 
         printf("**** SCMI Test Invalid Message Lengths ***\n\n");
         /* Loop over protocols */
-        for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
+        for (uint32_t protIndex = 3U; protIndex < numProtocols; protIndex++)
         {
             uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;

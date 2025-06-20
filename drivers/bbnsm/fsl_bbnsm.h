@@ -383,6 +383,15 @@ void BBNSM_ButtonGetDefaultConfig(bbnsm_button_config_t *btnConfig);
  */
 void BBNSM_ButtonSetConfig(BBNSM_Type *base, bbnsm_button_config_t *btnConfig);
 
+/*!
+ * @brief Turn off system power.
+ *
+ * @param base BBNSM peripheral base address
+ */
+static inline void BBNSM_SystemPowerOff(BBNSM_Type *base)
+{
+    base->BBNSM_CTRL |= BBNSM_BBNSM_CTRL_TOSP(0x1U);
+}
 
 
 #if defined(__cplusplus)

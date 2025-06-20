@@ -459,14 +459,6 @@ uint32_t PWR_NumChildPowered(uint32_t srcMixIdx)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Request system power down                                                */
-/*--------------------------------------------------------------------------*/
-void PWR_SystemPowerDown(void)
-{
-    BBNSM->BBNSM_CTRL |= BBNSM_BBNSM_CTRL_TOSP(0x1U);
-}
-
-/*--------------------------------------------------------------------------*/
 /* Configure SM LP handshake mask                                           */
 /*--------------------------------------------------------------------------*/
 void PWR_LpHandshakeMaskSet(uint32_t srcMixIdx, bool enableHandshake)

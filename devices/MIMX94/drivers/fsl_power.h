@@ -293,13 +293,6 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx);
 uint32_t PWR_NumChildPowered(uint32_t srcMixIdx);
 
 /*!
- * Request system power down
- *
- * This function allows caller to request system power down.
- */
-void PWR_SystemPowerDown(void);
-
-/*!
  * Configure SM LP handshake mask
  *
  * @param[in]   srcMixIdx           SRC MIX identifier

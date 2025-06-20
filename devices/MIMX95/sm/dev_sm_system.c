@@ -41,6 +41,8 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#include "fsl_bbnsm.h"
+#include "fsl_ele.h"
 #include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
@@ -101,8 +103,8 @@ int32_t DEV_SM_SystemInit(void)
     }
 
 #ifdef DEVICE_HAS_ELE
-    /* Enable GPC-to-ELE handshake */
-    GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
+    /* Configure GPC-to-ELE handshake */
+    GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 0U;
 #endif
 
     /* Default to keep M7 clocks running during sleep modes */
@@ -220,8 +222,11 @@ int32_t DEV_SM_SystemShutdown(void)
     /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Inform ELE */
+        ELE_StartDvfsChange(ELE_DVFS_FLAG_BBSM, 0U, 0U, 0U);
+
         /* Request shutdown */
-        PWR_SystemPowerDown();
+        BBNSM_SystemPowerOff(BBNSM);
     }
 
     /* Return status */
@@ -747,6 +752,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
             else
             {
+                /* Notify ELE of suspend entry */
+                ELE_StartDvfsChange(ELE_DVFS_FLAG_SUSPEND, 0U, 0U, 0U);
+
                 /* Move ELE and SM clock roots to OSC_24M to allow SysPLL to be
                  * powered down. OSC_24M may be gated by hardware during final phases
                  * of system SUSPEND entry.
@@ -885,6 +893,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
                         s_clkRootCtrl[sleepRootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
                 }
+
+                /* Notify ELE of suspend exit */
+                ELE_StopDvfsChange();
             }
 
             /* Enable bypass for clock sources */

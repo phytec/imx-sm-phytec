@@ -69,6 +69,8 @@ typedef enum
     ELE_GET_TRNG_STATE_REQ      = 0xA4,
     ELE_V2X_PING_REQ            = 0xB0,
     ELE_V2X_GET_STATE_REQ       = 0xB2,
+    ELE_START_DVFS_CHANGE       = 0xC0,
+    ELE_STOP_DVFS_CHANGE        = 0xC1,
     ELE_ENABLE_PATCH_REQ        = 0xC3,
     ELE_RELEASE_RDC_REQ         = 0xC4,
     ELE_GET_FW_STATUS_REQ       = 0xC5,
@@ -524,6 +526,54 @@ void ELE_EnableAuxRequest(uint32_t core)
 
     /* Call ELE */
     ELE_Call(&s_msgMax, ELE_ENABLE_AUX_REQ, 2U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Start voltage/frequency change                                           */
+/*--------------------------------------------------------------------------*/
+void ELE_StartDvfsChange(uint32_t flags, uint32_t mode, uint32_t eleMhz,
+    uint32_t m33Mhz)
+{
+    /* API LAYOUT:
+     *
+     *            |BITS[31:24|BITS[23:16]|BITS[15:08]|BITS[07:00|
+     *  word[0] = |                   header                    |
+     *  word[1] = |   rsvd   | volt mode |         flags        |
+     *  word[2] = |       M33 freq       |         ELE freq     |
+     */
+
+    /* Fill flags and voltage mode */
+    s_msgMax.word[1] = ((mode & 0xFFU) << 16U) | (flags & 0xFFFFU);
+
+    /* Fill in freq */
+    s_msgMax.word[2] = ((m33Mhz & 0xFFFFU) << 16)
+        | (eleMhz & 0xFFFFU);
+
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_START_DVFS_CHANGE, 3U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Stop voltage/frequency change                                            */
+/*--------------------------------------------------------------------------*/
+void ELE_StopDvfsChange(void)
+{
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_STOP_DVFS_CHANGE, 1U);
 
     /* Translate error */
     ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);

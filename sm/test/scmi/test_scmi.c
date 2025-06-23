@@ -72,7 +72,7 @@ void TEST_Scmi(void)
 
         CHECK(SCMI_BaseDiscoverListProtocols(SM_TEST_DEFAULT_CHN, 0U,
             &numProtocols, &protocols[1]));
-        protocols[0] = (SCMI_PROTOCOL_BASE << 24U);
+        protocols[0] = (U32(SCMI_PROTOCOL_BASE) << 24U);
         numProtocols += 4U;
 
         printf("Test SCMI_ProtocolVersion() and "

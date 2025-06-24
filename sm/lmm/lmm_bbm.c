@@ -88,6 +88,14 @@ int32_t LMM_BbmRtcNameGet(uint32_t lmId, uint32_t rtcId, string *rtcNameAddr,
     int32_t *len)
 {
     /* Just passthru to device */
+    /*
+     * False Positive: The rtcId parameter is properly validated within
+     * the acceptable range by the underlying function. As a result,
+     * there is no actual buffer underrun or unsafe memory access
+     * in this implementation.
+     */
+    // coverity[cert_arr30_c_violation:FALSE]
+    // coverity[cert_str31_c_violation:FALSE]
     return SM_BBMRTCNAMEGET(rtcId, rtcNameAddr, len);
 }
 

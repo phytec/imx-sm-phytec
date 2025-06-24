@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -65,6 +65,13 @@ int32_t LMM_VoltageNameGet(uint32_t lmId, uint32_t domainId,
     string *voltNameAddr, int32_t *len)
 {
     /* Just passthru to device */
+    /*
+     * False Positive:  The check for a domainId value of zero in the context
+     * of underrun has already been properly handled within the underlying
+     * function (BRD_SM_VoltageNameGet).
+     */
+    // coverity[cert_arr30_c_violation:FALSE]
+    // coverity[cert_str31_c_violation:FALSE]
     return SM_VOLTAGENAMEGET(domainId, voltNameAddr, len);
 }
 

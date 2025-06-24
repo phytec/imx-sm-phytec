@@ -153,8 +153,16 @@ int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
     }
     else
     {
-        /* Return pointer to name */
-        *rtcNameAddr = s_name[rtcId - DEV_SM_NUM_RTC];
+        if ((rtcId - DEV_SM_NUM_RTC) < BRD_SM_NUM_RTC)
+        {
+            /* Return pointer to name */
+            *rtcNameAddr = s_name[rtcId - DEV_SM_NUM_RTC];
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
     /* Return status */

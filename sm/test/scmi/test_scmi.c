@@ -222,6 +222,14 @@ void TEST_Scmi(void)
             SCMI_ERR_INVALID_PARAMETERS);
     }
 
+    {
+        uint32_t sequences[36] = { 0U };
+
+        /* Sequence save/restore */
+        SCMI_SequenceSave(sequences);
+        SCMI_SequenceRestore(sequences);
+    }
+
     printf("\n");
 }
 

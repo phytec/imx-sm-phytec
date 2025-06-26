@@ -9,6 +9,9 @@ statically configurable access rights to both hardware and RPC API calls.
 
 Supported development environments include Ubuntu 2020.04, 2022.04, and 2024.04.
 
+**If upgrading, please follow the instructions below to build and review the release notes to understand
+required board port and configuration file changes.**
+
 Download from GitHub
 ====================
 

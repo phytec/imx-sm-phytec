@@ -1403,7 +1403,14 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
             }
 
             /* Get parent */
-            status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
+            /*
+             * False Positive: The indexing into the array in the
+             * CCM_GprSelMuxInputGet function is bounds checked
+             * in that function.
+             */
+             // coverity[cert_arr30_c_violation:FALSE]
+             // coverity[cert_str31_c_violation:FALSE]
+             status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
                 index + in->skipParents, &parentId, &temp);
 
             /* Success? */
@@ -1413,6 +1420,11 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
                 out->parents[index] = parentId;
 
                 /* Increment count */
+                /*
+                 * False Positive: Value starts at 0 and is limited by
+                 * the loop to CLOCK_MAX_PARENTS.
+                 */
+                // coverity[cert_int30_c_violation:FALSE]
                 (out->numParentsFlags)++;
             }
         }

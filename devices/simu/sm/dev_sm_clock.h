@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device clocks */
-#define DEV_SM_NUM_CLOCK  4UL
+#define DEV_SM_NUM_CLOCK  6UL
 
 /*!
  * @name Device clock domain indexes
@@ -64,6 +64,8 @@
 #define DEV_SM_CLK_1            1U  /*!< Clock 1 */
 #define DEV_SM_CLK_2            2U  /*!< Clock 2 */
 #define DEV_SM_CLK_3            3U  /*!< Clock 3 */
+#define DEV_SM_CLK_4            4U  /*!< Clock 4 */
+#define DEV_SM_CLK_5            5U  /*!< Clock 5 */
 /** @} */
 
 /*!

@@ -191,9 +191,12 @@ int32_t MONITOR_Find(string const *list, int32_t max, const char *str)
 
     for (r = 0; r < max; r++)
     {
-        if (strcasecmp(str, list[r]) == 0)
+        if (list[r] != NULL)
         {
-            break;
+            if (strcasecmp(str, list[r]) == 0)
+            {
+                break;
+            }
         }
     }
 

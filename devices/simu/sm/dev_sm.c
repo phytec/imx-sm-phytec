@@ -121,7 +121,9 @@ int32_t DEV_SM_Init(void)
 void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList)
 {
     /* List of clocks used by SM to be kept on */
-    static const uint32_t clocks[] = {DEV_SM_CLK_3};
+    static const uint32_t clocks[] =
+    {
+    };
 
     /* Return list */
     *numClock = ARRAY_SIZE(clocks);

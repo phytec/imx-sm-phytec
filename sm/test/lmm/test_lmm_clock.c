@@ -71,6 +71,11 @@ void TEST_LmmClock(void)
 
     for (uint32_t clockId = 0U; clockId < (SM_NUM_CLOCK - 1U); clockId++)
     {
+        if (DEV_SM_ClockIsReserved(clockId))
+        {
+            continue;
+        }
+
         printf("LMM_ClockNameGet(%u, %u)\n", lmId, clockId);
         CHECK(LMM_ClockNameGet(lmId, clockId, &name, &len));
         printf("  name=%s\n",  name);
@@ -156,7 +161,7 @@ void TEST_LmmClock(void)
         NECHECK(LMM_ClockReset(lmId, clockId), SM_ERR_BUSY);
 
         /* Disable clock */
-        printf("LMM_ClockEnable(%u, %u)\n", lmId, clockId);
+        printf("LMM_ClockEnable(%u, %u, %u)\n", lmId, clockId, !enable);
         CHECK(LMM_ClockEnable(lmId, clockId, !enable));
 
         /* Check to see if disabled */

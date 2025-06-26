@@ -73,6 +73,11 @@ void TEST_DevSmClock(void)
 
     for (uint32_t clockId = 0U; clockId < DEV_SM_NUM_CLOCK; clockId++)
     {
+        if (DEV_SM_ClockIsReserved(clockId))
+        {
+            continue;
+        }
+
         printf("DEV_SM_ClockNameGet(%u)\n", clockId);
         CHECK(DEV_SM_ClockNameGet(clockId, &name, &len));
         printf("  name=%s\n",  name);

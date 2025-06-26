@@ -242,7 +242,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CLOCK);
 
     /* Check clock */
-    if (clockId < DEV_SM_NUM_CLOCK)
+    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
     {
         /* Return pointer to name */
         *clockNameAddr = s_name[clockId];
@@ -627,7 +627,7 @@ int32_t DEV_SM_ClockDescribe(uint32_t clockId,
     };
 
     /* Check clock */
-    if (clockId < DEV_SM_NUM_CLOCK)
+    if ((clockId < DEV_SM_NUM_CLOCK) && (!DEV_SM_ClockIsReserved(clockId)))
     {
         /* Return range */
         range->lowestRate = s_lowestRateHz[clockId];
@@ -649,7 +649,12 @@ int32_t DEV_SM_ClockParentDescribe(uint32_t clockId, uint32_t sel,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         /* Query if clock source has a parent */
         if (CLOCK_SourceGetParent(clockId, parentId))
@@ -773,7 +778,12 @@ int32_t DEV_SM_ClockRateSet(uint32_t clockId, uint64_t rate,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         switch (roundSel)
         {
@@ -878,7 +888,12 @@ int32_t DEV_SM_ClockRateGet(uint32_t clockId, uint64_t *rate)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         *rate = CLOCK_SourceGetRate(clockId);
     }
@@ -925,7 +940,12 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         /* Disable bypass when enabling clock source */
         if (enable)
@@ -1011,7 +1031,12 @@ int32_t DEV_SM_ClockIsEnabled(uint32_t clockId, bool *enabled)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         *enabled = CLOCK_SourceGetEnable(clockId);
     }
@@ -1058,7 +1083,12 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         if (!CLOCK_SourceSetParent(clockId, parent))
         {
@@ -1119,7 +1149,12 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (clockId < CLOCK_NUM_SRC)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (clockId < CLOCK_NUM_SRC)
     {
         if (!CLOCK_SourceGetParent(clockId, parent))
         {
@@ -1181,16 +1216,26 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ClockExtendedInfo(uint32_t clockId, bool *supported)
 {
-    uint32_t spreadPercent = 0U;
-    uint32_t modFreq = 0U;
-    uint32_t enable = 0U;
+    int32_t status = SM_ERR_SUCCESS;
 
-    /* Check if SCC is supported */
-    *supported = CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
-        &enable);
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        uint32_t spreadPercent = 0U;
+        uint32_t modFreq = 0U;
+        uint32_t enable = 0U;
+
+        /* Check if SCC is supported */
+        *supported = CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
+            &enable);
+    }
 
     /* Return status */
-    return SM_ERR_SUCCESS;
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1201,46 +1246,54 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    switch (extId)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
     {
-        /* Spread spectrum */
-        case DEV_SM_CLOCK_EXT_SSC:
-            {
-                /* Parse extended configuration
-                 *
-                 * extConfigValue[7:0]   - spread percentage (%)
-                 * extConfigValue[23:8]  - Modulation Frequency (KHz)
-                 * extConfigValue[24]    - Enable/Disable
-                 * extConfigValue[31:25] - Reserved
-                 *
-                 */
-
-                /* Get spread percentage Bit[7:0] from extended config */
-                uint32_t spreadPercent =  (extConfigValue &
-                    DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_MASK) >>
-                    DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_SHIFT;
-
-                /* Get modulation freq Bit[23:8] from extended config */
-                uint32_t modFreq = (extConfigValue &
-                    DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_MASK) >>
-                    DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_SHIFT;
-
-                /* Get enable field Bit[24] from extended config */
-                uint32_t enable = (extConfigValue &
-                    DEV_SM_CLOCK_EXT_SSC_ENABLE_MASK)
-                    >> DEV_SM_CLOCK_EXT_SSC_ENABLE_SHIFT;
-
-                if (!CLOCK_SourceSetSsc(clockId, spreadPercent, modFreq,
-                    enable))
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        switch (extId)
+        {
+            /* Spread spectrum */
+            case DEV_SM_CLOCK_EXT_SSC:
                 {
-                    status = SM_ERR_INVALID_PARAMETERS;
-                }
-            }
-            break;
+                    /* Parse extended configuration
+                     *
+                     * extConfigValue[7:0]   - spread percentage (%)
+                     * extConfigValue[23:8]  - Modulation Frequency (KHz)
+                     * extConfigValue[24]    - Enable/Disable
+                     * extConfigValue[31:25] - Reserved
+                     *
+                     */
 
-        default:
-            status = SM_ERR_NOT_FOUND;
-            break;
+                    /* Get spread percentage Bit[7:0] from extended config */
+                    uint32_t spreadPercent =  (extConfigValue &
+                        DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_MASK) >>
+                        DEV_SM_CLOCK_EXT_SSC_PERCENTAGE_SHIFT;
+
+                    /* Get modulation freq Bit[23:8] from extended config */
+                    uint32_t modFreq = (extConfigValue &
+                        DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_MASK) >>
+                        DEV_SM_CLOCK_EXT_SSC_MOD_FREQ_SHIFT;
+
+                    /* Get enable field Bit[24] from extended config */
+                    uint32_t enable = (extConfigValue &
+                        DEV_SM_CLOCK_EXT_SSC_ENABLE_MASK)
+                        >> DEV_SM_CLOCK_EXT_SSC_ENABLE_SHIFT;
+
+                    if (!CLOCK_SourceSetSsc(clockId, spreadPercent, modFreq,
+                        enable))
+                    {
+                        status = SM_ERR_INVALID_PARAMETERS;
+                    }
+                }
+                break;
+
+            default:
+                status = SM_ERR_NOT_FOUND;
+                break;
+        }
     }
 
     /* Return status */
@@ -1255,36 +1308,55 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    switch (extId)
+    /* Check clock */
+    if (DEV_SM_ClockIsReserved(clockId))
     {
-        /* Spread spectrum */
-        case DEV_SM_CLOCK_EXT_SSC:
-            {
-                uint32_t spreadPercent = 0U;
-                uint32_t modFreq = 0U;
-                uint32_t enable = 0U;
-
-                if (!CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
-                    &enable))
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        switch (extId)
+        {
+            /* Spread spectrum */
+            case DEV_SM_CLOCK_EXT_SSC:
                 {
-                    status = SM_ERR_INVALID_PARAMETERS;
-                }
-                else
-                {
-                    *extConfigValue =
-                        DEV_SM_CLOCK_EXT_SSC_PERCENTAGE(spreadPercent) |
-                        DEV_SM_CLOCK_EXT_SSC_MOD_FREQ(modFreq) |
-                        DEV_SM_CLOCK_EXT_SSC_ENABLE(enable);
-                }
-            }
-            break;
+                    uint32_t spreadPercent = 0U;
+                    uint32_t modFreq = 0U;
+                    uint32_t enable = 0U;
 
-        default:
-            status = SM_ERR_NOT_FOUND;
-            break;
+                    if (!CLOCK_SourceGetSsc(clockId, &spreadPercent,
+                        &modFreq, &enable))
+                    {
+                        status = SM_ERR_INVALID_PARAMETERS;
+                    }
+                    else
+                    {
+                        *extConfigValue =
+                            DEV_SM_CLOCK_EXT_SSC_PERCENTAGE(spreadPercent)
+                            | DEV_SM_CLOCK_EXT_SSC_MOD_FREQ(modFreq)
+                            | DEV_SM_CLOCK_EXT_SSC_ENABLE(enable);
+                    }
+                }
+                break;
+
+            default:
+                status = SM_ERR_NOT_FOUND;
+                break;
+        }
     }
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if clock domain is reserved                                        */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_ClockIsReserved(uint32_t clockId)
+{
+    bool rc = false;
+
+    /* Return status */
+    return rc;
 }
 

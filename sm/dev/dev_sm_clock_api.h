@@ -279,6 +279,17 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
 int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
     uint32_t *extConfigValue);
 
+/*!
+ * Check if clock domain is reserved .
+ *
+ * @param[in]     clockId            Identifier for the clock device
+ *
+ * This function allows the caller to check if a clock is reserved.
+ *
+ * @return Returns true if reserved.
+ */
+bool DEV_SM_ClockIsReserved(uint32_t clockId);
+
 #endif /* DEV_SM_CLOCK_API_H */
 
 /** @} */

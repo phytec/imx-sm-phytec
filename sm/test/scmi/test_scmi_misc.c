@@ -341,6 +341,16 @@ void TEST_ScmiMisc(void)
         NECHECK(SCMI_MiscControlSet(SM_TEST_DEFAULT_CHN, numDevCtrl,
             1U, &val), SCMI_ERR_NOT_FOUND);
 
+        const uint32_t val1[25] = {0};
+
+        /* Invalid number of numVal */
+        NECHECK(SCMI_MiscControlSet(SM_TEST_DEFAULT_CHN, numDevCtrl,
+            25U /* numCtrl */, &val1[0]), SM_ERR_INVALID_PARAMETERS);
+
+        /* Invalid number of the brdCtrl */
+        NECHECK(SCMI_MiscControlSet(SM_TEST_DEFAULT_CHN, MAX_MISC_BRD_CTRL_ID,
+            1U /* numCtrl */, &val1[0]), SM_ERR_NOT_FOUND);
+
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlSet(SM_SCMI_NUM_CHN, 0U,
             1U, &val), SCMI_ERR_INVALID_PARAMETERS);
@@ -351,6 +361,10 @@ void TEST_ScmiMisc(void)
         /* Control Get -- Invalid ctrlId */
         NECHECK(SCMI_MiscControlGet(SM_TEST_DEFAULT_CHN, numDevCtrl, NULL,
             NULL), SCMI_ERR_NOT_FOUND);
+
+        /* Control Get -- Invalid BrdctrlId */
+        NECHECK(SCMI_MiscControlGet(SM_TEST_DEFAULT_CHN, MAX_MISC_BRD_CTRL_ID,
+            NULL, NULL), SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlGet(SM_SCMI_NUM_CHN, 0U, NULL, NULL),
@@ -363,9 +377,17 @@ void TEST_ScmiMisc(void)
         const uint32_t arg[3] = {5U, 1U, 2U};
         uint32_t numVal = 0U;
         uint32_t rtnVal[5] = {0U, 0U, 0U, 0U, 0U};
+        const uint32_t args[25] = { 0 };
 
         NECHECK(SCMI_MiscControlAction(SM_TEST_DEFAULT_CHN, numDevCtrl, 23U,
             3, arg, &numVal, rtnVal), SCMI_ERR_NOT_FOUND);
+
+        NECHECK(SCMI_MiscControlAction(SM_TEST_DEFAULT_CHN, numDevCtrl, 23U,
+            25, args, &numVal, rtnVal), SM_ERR_INVALID_PARAMETERS);
+
+        NECHECK(SCMI_MiscControlAction(SM_TEST_DEFAULT_CHN,
+            MAX_MISC_BRD_CTRL_ID, 23U, 3, arg, &numVal, rtnVal),
+            SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlAction(SM_SCMI_NUM_CHN, 0U, 23U,
@@ -379,6 +401,9 @@ void TEST_ScmiMisc(void)
             ctrlId);
         NECHECK(SCMI_MiscControlNotify(SM_TEST_DEFAULT_CHN, numDevCtrl, 1U),
             SCMI_ERR_NOT_FOUND);
+
+        NECHECK(SCMI_MiscControlNotify(SM_TEST_DEFAULT_CHN,
+            MAX_MISC_BRD_CTRL_ID, 1U), SCMI_ERR_NOT_FOUND);
 
         /* Branch -- Invalid Channel */
         NECHECK(SCMI_MiscControlNotify(SM_SCMI_NUM_CHN, 0U, 1U),
@@ -475,9 +500,49 @@ void TEST_ScmiMisc(void)
         }
     }
 
+    /* MiscCtrlExt */
+    {
+        uint32_t addr = 0x12345678;
+        uint32_t len = 0x4;
+        uint32_t extval[25] = { 0 };
+
+        printf("SCMI_MiscControlExtSet(%u)\n", SM_TEST_DEFAULT_CHN);
+
+        /* Invalid numVal value */
+        NECHECK(SCMI_MiscControlExtSet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
+            len, 25, &extval[0]), SM_ERR_INVALID_PARAMETERS);
+
+        /* Invalid len */
+        NECHECK(SCMI_MiscControlExtSet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
+            len, 10, &extval[0]), SM_ERR_INVALID_PARAMETERS);
+
+        /* Invalid devCtrl */
+        NECHECK(SCMI_MiscControlExtSet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
+            len, 4, &extval[0]), SM_ERR_NOT_FOUND);
+
+        /* Invalid brdctrl */
+        NECHECK(SCMI_MiscControlExtSet(SM_TEST_DEFAULT_CHN,
+            MAX_MISC_BRD_CTRL_ID, addr, len, 4, &extval[0]), SM_ERR_NOT_FOUND);
+
+        uint32_t numVal = 0U;
+
+        printf("SCMI_MiscControlExtGet(%u)\n", SM_TEST_DEFAULT_CHN);
+
+        /* Invalid devCtrl */
+        NECHECK(SCMI_MiscControlExtGet(SM_TEST_DEFAULT_CHN, numDevCtrl, addr,
+            len, &numVal, &extval[0]), SM_ERR_NOT_FOUND);
+
+        /* Invalid brdctrl */
+        NECHECK(SCMI_MiscControlExtGet(SM_TEST_DEFAULT_CHN,
+            MAX_MISC_BRD_CTRL_ID, addr, len, &numVal, &extval[0]),
+            SM_ERR_NOT_FOUND);
+
+    }
+
     /* Loop over control test domains */
     status = TEST_ConfigFirstGet(TEST_CTRL, &agentId,
         &channel, &ctrlId, &lmId);
+
     while (status == SM_ERR_SUCCESS)
     {
         uint32_t sCtrlId = ctrlId;
@@ -685,6 +750,12 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         /* Control Action */
         NECHECK(SCMI_MiscControlAction(channel, ctrlId, 23U, 3, arg,
             &numVal, rtnVal), SCMI_ERR_DENIED);
+
+        uint32_t extVal[4] = { 0 };
+        uint32_t Val = 0U;
+
+        NECHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0x12345678U,
+            4U, &Val, &extVal[0]), SCMI_ERR_DENIED);
 
 #ifndef SIMU
         printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);

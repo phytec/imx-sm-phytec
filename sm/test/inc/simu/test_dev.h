@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -39,8 +39,11 @@
 
 /* Defines */
 
-#define BOARD_PERF_VDROP    0
-#define DEV_SM_CPU_A55P     8U
+#define BOARD_PERF_VDROP         0
+#define DEV_SM_CPU_A55P          8U
+#define FUSA_LM_SAFE_TYPE_ERROR  3U
+#define FUSA_LM_ACCESS_DENIED    7U
+#define MAX_MISC_BRD_CTRL_ID     0x8005
 
 /* Local defines */
 

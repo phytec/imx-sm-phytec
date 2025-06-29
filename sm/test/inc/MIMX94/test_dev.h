@@ -41,8 +41,9 @@
 
 /* Defines */
 
-#define ROM_CONTAINER_1  0x55CCU
-#define ROM_CONTAINER_2  0xAA33U
+#define ROM_CONTAINER_1       0x55CCU
+#define ROM_CONTAINER_2       0xAA33U
+#define MAX_MISC_BRD_CTRL_ID  0x8009
 
 #define NMI_INT_TRIGGER             NonMaskableInt_IRQn
 #define HARD_FAULT_INT_TRIGGER      HardFault_IRQn

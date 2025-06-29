@@ -155,6 +155,8 @@ void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 {
     /* Save shutdown record */
     s_shutdownRecord = shutdownRec;
+    s_shutdownRecord.extLen = 1U;
+    s_shutdownRecord.extInfo[0] = 0xFFFFFFFFU;
 
     /* Print shutdown record */
     if (s_shutdownRecord.reset)

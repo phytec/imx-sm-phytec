@@ -131,7 +131,6 @@
         .scmiInst = 1U, \
         .domId = 3U, \
         .secure = 1U, \
-        .seenvId = 2U, \
         .basePerms[DEV_SM_BASE_DEV_TEST] = SM_SCMI_PERM_PRIV, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_NOTIFY, \
         .clkPerms[DEV_SM_CLK_0] = SM_SCMI_PERM_GET, \
@@ -186,7 +185,6 @@
         .scmiInst = 1U, \
         .domId = 3U, \
         .secure = 0U, \
-        .seenvId = 3U, \
         .basePerms[DEV_SM_BASE_AGENT_1] = SM_SCMI_PERM_ALL, \
         .buttonPerms[DEV_SM_BUTTON_0] = SM_SCMI_PERM_ALL, \
         .clkPerms[DEV_SM_CLK_2] = SM_SCMI_PERM_ALL, \
@@ -245,8 +243,9 @@
         .scmiInst = 2U, \
         .domId = 16U, \
         .secure = 0U, \
-        .seenvId = 4U, \
+        .seenvId = 2U, \
         .cpuPerms[DEV_SM_CPU_2] = SM_SCMI_PERM_ALL, \
+        .fusaPerms = SM_SCMI_PERM_NONE, \
         .perlpiPerms[DEV_SM_PERLPI_RESV] = SM_SCMI_PERM_ALL, \
     }
 

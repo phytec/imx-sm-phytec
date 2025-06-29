@@ -61,6 +61,15 @@ void TEST_DevSmSystem(void)
 {
     printf("**** Device SM System API Tests ***\n\n");
 
+    /* Reason Name Get: Invalid Reason */
+    {
+        const char *name[15];
+        int32_t len = 0;
+
+        NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
+            &name[0], &len), SM_ERR_NOT_FOUND);
+    }
+
 #ifdef SIMU
     /* Reset Coverage */
     {
@@ -166,14 +175,6 @@ void TEST_DevSmSystem(void)
     /* Trigger Software Interrupt Test */
     {
         SWI_Trigger();
-    }
-
-    /* Reason Name Get: Invalid Reason */
-    {
-        const char *name[15];
-        int32_t len = 0;
-        NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
-            &name[0], &len), SM_ERR_NOT_FOUND);
     }
 
     /* Branch coverage: DEV_SM_RomHandoverGet */

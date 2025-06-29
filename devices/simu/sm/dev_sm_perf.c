@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2025  NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -115,10 +115,18 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Return dummy info */
-    info->rateLimit = 0U;
-    info->sustainedFreq = 2000000U;          /* KHz */
-    info->sustainedPerfLevel = 2000000U;     /* KHz */
+    /* Check domain */
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        /* Return dummy info */
+        info->rateLimit = 0U;
+        info->sustainedFreq = 2000000U;          /* KHz */
+        info->sustainedPerfLevel = 2000000U;     /* KHz */
+    }
 
     /* Return status */
     return status;
@@ -131,7 +139,15 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    *numLevels = sizeof(s_perfLevels) / sizeof(dev_sm_perf_desc_t);
+    /* Check domain */
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        *numLevels = sizeof(s_perfLevels) / sizeof(dev_sm_perf_desc_t);
+    }
 
     /* Return status */
     return status;
@@ -145,8 +161,15 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /* Check domain */
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
     /* Check array bounds */
-    if (levelIndex >= (sizeof(s_perfLevels) / sizeof(dev_sm_perf_desc_t)))
+    if ((status == SM_ERR_SUCCESS) &&
+        (levelIndex >= (sizeof(s_perfLevels) / sizeof(dev_sm_perf_desc_t))))
     {
         status = SM_ERR_OUT_OF_RANGE;
     }

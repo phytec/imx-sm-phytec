@@ -228,6 +228,7 @@ void DEV_SM_ControlHandler(void)
     if (s_action)
     {
         LMM_MiscControlEvent(DEV_SM_CTRL_TEST, 1U);
+        LMM_MiscControlEvent(BRD_SM_CTRL_TEST, 1U);
     }
 }
 

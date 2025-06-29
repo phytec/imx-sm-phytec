@@ -93,7 +93,7 @@
         .rpcType = SM_RPC_SCMI, \
         .rpcInst = 1U, \
         .boot[0] = 3U, \
-        .safeType = LMM_SAFE_TYPE_SEENV, \
+        .safeType = LMM_SAFE_TYPE_NSEENV, \
         .start = 6U, \
         .stop = 6U, \
     }
@@ -133,7 +133,7 @@
 #define SM_LM_NUM_MSEL  1U
 
 /*! Number of  S-EENV */
-#define SM_LM_NUM_SEENV  4U
+#define SM_LM_NUM_SEENV  2U
 
 /*! Config name */
 #define SM_LM_CFG_NAME  "simu"

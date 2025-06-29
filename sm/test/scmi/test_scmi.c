@@ -40,6 +40,7 @@
 
 /* Includes */
 
+#include "rpc_scmi.h"
 #include "test_scmi.h"
 #include "scmi_internal.h"
 
@@ -232,6 +233,14 @@ void TEST_Scmi(void)
         /* Sequence save/restore */
         SCMI_SequenceSave(sequences);
         SCMI_SequenceRestore(sequences);
+    }
+
+    {
+        /* Invalid SCMI Inst. value */
+        NECHECK(RPC_SCMI_Init(SM_NUM_SCMI), SM_ERR_OUT_OF_RANGE);
+
+        /* Invalid SCMI agent num value */
+        NECHECK(RPC_SCMI_AgentInit(SM_SCMI_NUM_AGNT), SM_ERR_OUT_OF_RANGE);
     }
 
     printf("\n");

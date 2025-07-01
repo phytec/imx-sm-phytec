@@ -216,7 +216,7 @@ int32_t SCMI_ClockDescribeRates(uint32_t channel, uint32_t clockId,
         if (rates != NULL)
         {
             SCMI_MemCpy((uint8_t*) rates, (uint8_t*) &msgRx->rates,
-                (SCMI_CLOCK_NUM_RATES * sizeof(scmi_clock_rate_t)));
+                SCMI_CLOCK_NUM_RATES, sizeof(scmi_clock_rate_t), &status);
         }
     }
 
@@ -553,7 +553,7 @@ int32_t SCMI_ClockPossibleParentsGet(uint32_t channel, uint32_t clockId,
         if (parents != NULL)
         {
             SCMI_MemCpy((uint8_t*) parents, (uint8_t*) &msgRx->parents,
-                (SCMI_CLOCK_NUM_PARENTS * sizeof(uint32_t)));
+                SCMI_CLOCK_NUM_PARENTS, sizeof(uint32_t), &status);
         }
     }
 

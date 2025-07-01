@@ -557,7 +557,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             uint32_t config = 0U;
 
             attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U) |
-                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80U);
+                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80UL);
 
             /* OEM defined extended config value
              * For spread spectrum (type 0x80) :

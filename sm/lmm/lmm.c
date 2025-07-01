@@ -59,7 +59,7 @@ static uint64_t s_lmStartTime[SM_NUM_LM];
 /* Init logical machine manager                                             */
 /*--------------------------------------------------------------------------*/
 // cppcheck-suppress constParameter
-// coverity[misra_c_2012_rule_8_13_violation:FALSE]
+// coverity[misra_c_2012_rule_8_13_violation]
 int32_t LMM_Init(uint32_t *mSel, uint32_t lmmInitFlags)
 {
     int32_t status;
@@ -335,7 +335,7 @@ void LMM_ErrorDump(void)
     }
 
     /* Dump device/board errors */
-    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_2_2_violation]
     SM_ERRORDUMP();
 }
 

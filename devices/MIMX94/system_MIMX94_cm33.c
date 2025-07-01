@@ -101,7 +101,7 @@ void SystemInit(void)
     lfast &= (~HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_CREF_EN_MASK);
     Write32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR, lfast);
 
-    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_2_2_violation]
     SystemInitHook();
 }
 
@@ -109,7 +109,7 @@ void SystemInit(void)
    -- SystemInitHook()
    ---------------------------------------------------------------------------- */
 
-// coverity[misra_c_2012_rule_1_2_violation:FALSE]
+// coverity[misra_c_2012_rule_1_2_violation]
 __attribute__((weak)) void SystemInitHook(void)
 {
     /* Void implementation of the weak function. */
@@ -145,7 +145,7 @@ void SystemDebugWaitAttach(void)
         BOARD_WdogRefresh();
     }
 
-    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_1_2_violation]
     __BKPT(0);
 }
 

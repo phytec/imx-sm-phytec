@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -109,7 +109,7 @@
 
 /*! Write a 32-bit */
 #define SM_CFG_W1(A)        (SM_CFG_OC_WRITE << SM_CFG_OC_SHIFT) \
-    | (1U << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
+    | (1UL << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
 
 /*! Conditionly write multiple 32-bit values */
 #define SM_CFG_CN(A, L)     (SM_CFG_OC_CWRITE << SM_CFG_OC_SHIFT) \
@@ -117,7 +117,7 @@
 
 /*! Conditionly write a 32-bit value */
 #define SM_CFG_C1(A)        (SM_CFG_OC_CWRITE << SM_CFG_OC_SHIFT) \
-    | (1U << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
+    | (1UL << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
 
 /*! Fill multiple words with a 32-bit */
 #define SM_CFG_FN(A, L)     (SM_CFG_OC_FILL << SM_CFG_OC_SHIFT) \
@@ -129,7 +129,7 @@
 
 /*! Zero one 32-bit word */
 #define SM_CFG_Z1(A)        (SM_CFG_OC_ZERO << SM_CFG_OC_SHIFT) \
-    | (1U << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
+    | (1UL << SM_CFG_OPL_SHIFT) | (((A) &SM_CFG_OPA_MASK))
 
 /* Types */
 

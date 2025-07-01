@@ -535,9 +535,14 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
 
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
+
+        /* Intentional: Test code */
+        // coverity[misra_c_2012_rule_10_8_violation]
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
 
+        /* Intentional: Test code */
+        // coverity[misra_c_2012_rule_10_8_violation]
         NECHECK(SCMI_SensorTripPointConfig(SM_SCMI_NUM_CHN, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)),
             SCMI_ERR_INVALID_PARAMETERS);
@@ -600,6 +605,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
         /* Intentional: Test code */
+        // coverity[misra_c_2012_rule_10_8_violation]
         // coverity[cert_int31_c_violation]
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
             tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));

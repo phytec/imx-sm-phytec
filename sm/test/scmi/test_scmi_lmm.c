@@ -397,6 +397,10 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             uint32_t recId = 0U;
 
             printf("SCMI_LmmEvent(%u, %u)\n", channel, lm);
+            /*
+             * Intentional: Test code
+             */
+            // coverity[cert_int30_c_violation]
             CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, &flags));
 
             BCHECK(SCMI_LMM_EVENT_BOOT(flags) == 1U);
@@ -496,16 +500,12 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
             }
         }
 
-        /* LM_00020 Reset Config */
 #ifdef SIMU
-        if (pass)
-        {
-            /* Reset */
-            uint32_t sysManager = 0U;
-            printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-                &g_swReason));
-        }
+        /* LM_00020 Reset Config */
+        uint32_t sysManager = 0U;
+        printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
 #endif
     }
     /* Access denied */

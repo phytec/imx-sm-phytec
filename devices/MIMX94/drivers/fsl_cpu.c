@@ -2075,7 +2075,7 @@ static bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
             uint32_t lpcgIdx = s_cpuPerLpiInfo[perLpiIdx].lpcgIdx;
 
             /* Default LPCG access list to SM only */
-            // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+            // coverity[misra_c_2012_rule_14_3_violation]
             uint32_t accessList = WHITELIST_MASK(CPU_IDX_M33P);
             rc = CCM_LpcgAccessSet(lpcgIdx, accessList);
 
@@ -2120,7 +2120,7 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
                 accessList &= (~(WHITELIST_MASK(cpuIdx)));
 
                 /* Check if only SM remains in the access list */
-                // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+                // coverity[misra_c_2012_rule_14_3_violation]
                 if (accessList == WHITELIST_MASK(CPU_IDX_M33P))
                 {
                     /* Move LPCG to software control (LPM_MODE = 0) */

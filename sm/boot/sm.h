@@ -185,8 +185,8 @@
 
 #if !defined(INC_LIBC)
 /*! Eliminate printf */
-// coverity[misra_c_2012_rule_21_1_violation:FALSE]
-// coverity[misra_c_2012_rule_21_2_violation:FALSE]
+// coverity[misra_c_2012_rule_21_1_violation]
+// coverity[misra_c_2012_rule_21_2_violation]
 #define printf(...)
 #endif
 
@@ -270,7 +270,7 @@ void SM_TestModeSet(uint32_t mode);
 /*!
  * Init C lib.
  */
-// coverity[misra_c_2012_rule_21_2_violation:FALSE]
+// coverity[misra_c_2012_rule_21_2_violation]
 void __libc_init_array(void);
 #endif
 

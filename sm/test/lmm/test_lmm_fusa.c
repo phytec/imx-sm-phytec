@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,13 +60,14 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM CPU                                                       */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 void TEST_LmmFuSa(void)
 {
     /* LM tests */
     printf("**** LMM FuSa API Tests ***\n\n");
 
 #ifdef SIMU
-    uint32_t status = 0U;
+    int32_t status = 0;
     /* Recover from global error */
     {
         LMM_FusaGlobalRecovery(status);
@@ -105,6 +106,7 @@ void TEST_LmmFuSa(void)
             SM_ERR_NOT_FOUND);
     }
 #endif
+
     /* Test API bounds */
     printf("\n**** LMM FuSa API Err Tests ***\n\n");
 

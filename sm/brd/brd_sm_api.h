@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -73,7 +73,7 @@
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
-// coverity[misra_c_2012_directive_4_6_violation:FALSE]
+// coverity[misra_c_2012_directive_4_6_violation]
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel);
 
 /*!

@@ -50,9 +50,6 @@
 
 /* Local variables */
 
-static uint32_t numDevCtrl = 0U;
-static uint32_t numBrdCtrl = 0U;
-
 /* Local functions */
 
 static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
@@ -72,6 +69,10 @@ void TEST_ScmiMisc(void)
     uint32_t channel = 0U;
     uint32_t ctrlId = 0U;
     uint32_t lmId = 0U;
+    uint32_t numDevCtrl = 0U;
+#ifdef INC_LIBC
+    uint32_t numBrdCtrl = 0U;
+#endif
 
     /* RPC_00350 RPC_00160 Misc tests */
     printf("**** Misc Protocol Tests ***\n\n");
@@ -103,7 +104,9 @@ void TEST_ScmiMisc(void)
         CHECK(SCMI_MiscProtocolAttributes(SM_TEST_DEFAULT_CHN,
             &attributes));
         numDevCtrl = SCMI_MISC_PROTO_ATTR_NUM_DEV_CTRL(attributes);
+#ifdef INC_LIBC
         numBrdCtrl = SCMI_MISC_PROTO_ATTR_NUM_BRD_CTRL(attributes);
+#endif
         printf("  numDevCtrl=%u\n", numDevCtrl);
         printf("  numBrdCtrl=%u\n", numBrdCtrl);
     }
@@ -636,14 +639,10 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
 
 #ifdef SIMU
         /* Reset Config */
-        if (pass)
-        {
-            /* Reset */
-            uint32_t sysManager = 0U;
-            printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-                &g_swReason));
-        }
+        uint32_t sysManager = 0U;
+        printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
 #endif
     }
     /* Access denied */

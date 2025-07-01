@@ -277,7 +277,7 @@ void NMI_Handler(const uint32_t *sp)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Wait for delayed FCCU reaction (PMIC reset) */
@@ -442,7 +442,7 @@ void TMPSNS_CORTEXA_1_IRQHandler(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         DEV_SM_SensorHandler(1U, 1U);
@@ -459,7 +459,7 @@ void TMPSNS_CORTEXA_2_IRQHandler(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         DEV_SM_SensorHandler(1U, 2U);

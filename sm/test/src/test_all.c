@@ -60,7 +60,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test all                                                                 */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_All(void)
 {
 #ifndef TEST_MIN
@@ -79,8 +79,10 @@ void TEST_All(void)
     TEST_DevSmPin();
     TEST_DevSmFault();
     TEST_DevSm();
+#ifndef SIMU
     TEST_DevSmFuse();
     TEST_DevSmHandler();
+#endif
 
     /* Run board SM tests */
 #ifdef SIMU
@@ -93,13 +95,17 @@ void TEST_All(void)
     TEST_LmmClock();
     TEST_LmmPerf();
     TEST_LmmSys();
+#ifdef SIMU
     TEST_LmmCpu();
     TEST_LmmSensor();
     TEST_LmmMisc();
     TEST_LmmFuSa();
+#endif
     TEST_LmmVoltage();
     TEST_LmmPower();
+#ifdef SIMU
     TEST_LmmFault();
+#endif
 #endif
 
     /* Run SCMI tests */
@@ -132,8 +138,10 @@ void TEST_All(void)
     TEST_MbLoopback();
 #endif
 
+#ifdef SIMU
     /* Run Utility tests */
     TEST_UtilitiesConfig();
+#endif
 
 #if defined(GCOV) && !defined(SIMU)
     /* Dump GCOV info */

@@ -583,8 +583,8 @@ static void *RPC_SCMI_HdrAddrGet(uint32_t scmiChannel)
 
     /* Get message buffer address */
     /* Switch to allow transport expansion */
-    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
-    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
         default: /* SM_XPORT_SMT */
@@ -604,8 +604,8 @@ static bool RPC_SCMI_ChannelFree(uint32_t scmiChannel)
     bool channelFree = false;
 
     /* Switch to allow transport expansion */
-    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
-    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
         default: /* SM_XPORT_SMT */
@@ -637,8 +637,8 @@ static int32_t RPC_SCMI_IsAborted(uint32_t scmiChannel)
 
     /* Get abort status */
     /* Switch to allow transport expansion */
-    // coverity[misra_c_2012_rule_16_1_violation:FALSE]
-    // coverity[misra_c_2012_rule_16_6_violation:FALSE]
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
         default: /* SM_XPORT_SMT */
@@ -761,9 +761,9 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 }
             }
 
-            /* Increment token */
             /*
-             * Intentional: And keeps within a range
+             * Intentional: The token value will remain in
+             * sync with the agent, even if it wraps.
              */
             // coverity[cert_int30_c_violation]
             s_token[scmiChannel]++;

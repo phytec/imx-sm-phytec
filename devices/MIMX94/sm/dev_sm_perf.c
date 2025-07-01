@@ -764,7 +764,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =

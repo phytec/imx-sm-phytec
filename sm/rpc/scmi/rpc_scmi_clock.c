@@ -1408,9 +1408,9 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
              * CCM_GprSelMuxInputGet function is bounds checked
              * in that function.
              */
-             // coverity[cert_arr30_c_violation:FALSE]
-             // coverity[cert_str31_c_violation:FALSE]
-             status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
+            status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
                 index + in->skipParents, &parentId, &temp);
 
             /* Success? */

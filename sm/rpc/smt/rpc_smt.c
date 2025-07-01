@@ -370,8 +370,11 @@ int32_t RPC_SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
             switch (impStatus)
             {
                 case SM_SMT_CRC_XOR:
-                    // coverity[misra_c_2012_rule_18_1_violation:FALSE]
-                    // coverity[callee_ptr_arith:FALSE]
+                    /*
+                     * Intentional: CRC includes header
+                     */
+                    // coverity[misra_c_2012_rule_18_1_violation]
+                    // coverity[callee_ptr_arith]
                     buf->impCrc = CRC_Xor((const uint32_t*) &buf->header,
                         len / 4U);
                     break;

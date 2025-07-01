@@ -142,13 +142,13 @@ void TEST_LmmCpu(void)
     /* pdLPMConfigSet: Valid NUM */
     {
         CpuId = 3U;
-        CHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1 << CpuId)));
+        CHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1UL << CpuId)));
     }
 
     /* pdLPMConfigSet: InValid NUM */
     {
         CpuId = 3U;
-        NECHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1 << 2U)),
+        NECHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1UL << 2U)),
             SM_ERR_INVALID_PARAMETERS);
     }
 

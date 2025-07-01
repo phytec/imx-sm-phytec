@@ -104,8 +104,8 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db)
         };
 
         /* Switch to allow easy addition of other transport protocols */
-        // coverity[misra_c_2012_rule_16_1_violation:FALSE]
-        // coverity[misra_c_2012_rule_16_6_violation:FALSE]
+        // coverity[misra_c_2012_rule_16_1_violation]
+        // coverity[misra_c_2012_rule_16_6_violation]
         switch (s_mbLbConfig[inst].xportType[db])
         {
             default:

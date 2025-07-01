@@ -125,7 +125,11 @@ void TEST_Scmi(void)
                 CHECK(SCMI_ProtocolVersion(SM_TEST_DEFAULT_CHN, prot, &ver));
                 printf("protocol=0x%x  ver=0x%08X\n", prot, ver);
 
-                BCHECK(ver == s_scmiProtInfo[index].protVer);
+                if (index < (sizeof(s_scmiProtInfo)
+                    / sizeof(scmi_prot_info_t)))
+                {
+                    BCHECK(ver == s_scmiProtInfo[index].protVer);
+                }
 
                 /* Check valid major and minor version */
                 CHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,

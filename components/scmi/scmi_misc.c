@@ -105,7 +105,7 @@ int32_t SCMI_MiscControlSet(uint32_t channel, uint32_t ctrlId,
         msgTx->numVal = numVal;
 
         SCMI_MemCpy((uint8_t*) &msgTx->val, (const uint8_t*) val,
-            (SCMI_MISC_NUM_VAL_T * sizeof(uint32_t)));
+            SCMI_MISC_NUM_VAL_T, sizeof(uint32_t), &status);
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
@@ -191,7 +191,7 @@ int32_t SCMI_MiscControlGet(uint32_t channel, uint32_t ctrlId,
         if (val != NULL)
         {
             SCMI_MemCpy((uint8_t*) val, (uint8_t*) &msgRx->val,
-                (SCMI_MISC_NUM_VAL * sizeof(uint32_t)));
+                SCMI_MISC_NUM_VAL, sizeof(uint32_t), &status);
         }
     }
 
@@ -248,7 +248,7 @@ int32_t SCMI_MiscControlAction(uint32_t channel, uint32_t ctrlId,
         msgTx->numArg = numArg;
 
         SCMI_MemCpy((uint8_t*) &msgTx->arg, (const uint8_t*) arg,
-            (SCMI_MISC_NUM_ARG_T * sizeof(uint32_t)));
+            SCMI_MISC_NUM_ARG_T, sizeof(uint32_t), &status);
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
@@ -277,7 +277,7 @@ int32_t SCMI_MiscControlAction(uint32_t channel, uint32_t ctrlId,
         if (rtn != NULL)
         {
             SCMI_MemCpy((uint8_t*) rtn, (uint8_t*) &msgRx->rtn,
-                (SCMI_MISC_NUM_RTN * sizeof(uint32_t)));
+                SCMI_MISC_NUM_RTN, sizeof(uint32_t), &status);
         }
     }
 
@@ -419,7 +419,7 @@ int32_t SCMI_MiscRomPassoverGet(uint32_t channel, uint32_t *numPassover,
         if (passover != NULL)
         {
             SCMI_MemCpy((uint8_t*) passover, (uint8_t*) &msgRx->passover,
-                (SCMI_MISC_NUM_PASSOVER * sizeof(uint32_t)));
+                SCMI_MISC_NUM_PASSOVER, sizeof(uint32_t), &status);
         }
     }
 
@@ -629,7 +629,7 @@ int32_t SCMI_MiscResetReason(uint32_t channel, uint32_t flags,
         if (extInfo != NULL)
         {
             SCMI_MemCpy((uint8_t*) extInfo, (uint8_t*) &msgRx->extInfo,
-                (SCMI_MISC_NUM_EXTINFO * sizeof(uint32_t)));
+                SCMI_MISC_NUM_EXTINFO, sizeof(uint32_t), &status);
         }
     }
 
@@ -848,7 +848,7 @@ int32_t SCMI_MiscSyslog(uint32_t channel, uint32_t flags, uint32_t logIndex,
         if (syslog != NULL)
         {
             SCMI_MemCpy((uint8_t*) syslog, (uint8_t*) &msgRx->syslog,
-                (SCMI_MISC_NUM_SYSLOG * sizeof(uint32_t)));
+                SCMI_MISC_NUM_SYSLOG, sizeof(uint32_t), &status);
         }
     }
 
@@ -970,7 +970,7 @@ int32_t SCMI_MiscControlExtSet(uint32_t channel, uint32_t ctrlId,
         msgTx->numVal = numVal;
 
         SCMI_MemCpy((uint8_t*) &msgTx->extVal, (const uint8_t*) extVal,
-            (SCMI_MISC_NUM_EXTVAL_T * sizeof(uint32_t)));
+            SCMI_MISC_NUM_EXTVAL_T, sizeof(uint32_t), &status);
 
         /* Send message */
         status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
@@ -1062,7 +1062,7 @@ int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
         if (extVal != NULL)
         {
             SCMI_MemCpy((uint8_t*) extVal, (uint8_t*) &msgRx->extVal,
-                (SCMI_MISC_NUM_EXTVAL * sizeof(uint32_t)));
+                SCMI_MISC_NUM_EXTVAL, sizeof(uint32_t), &status);
         }
     }
 

@@ -57,7 +57,7 @@ void TEST_DevSmClock(void)
 {
     string name;
     int32_t len = 0;
-    dev_sm_clock_range_t clockRange;
+    dev_sm_clock_range_t clockRange = { 0 };
     uint64_t rate = 0U;
     bool enabled = false;
     uint32_t parentId = 0U;

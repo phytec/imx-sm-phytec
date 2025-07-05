@@ -136,7 +136,7 @@ bool SRC_MixCpuLpmSet(uint32_t srcMixIdx, uint32_t cpuIdx,
 {
     bool rc = false;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+    if ((srcMixIdx < PWR_NUM_MIX_SLICE) && (cpuIdx < CPU_NUM_IDX))
     {
         if ((g_pwrMixMgmtInfo[srcMixIdx].flags & PWR_MIX_FLAG_LPMSET) != 0U)
         {
@@ -167,7 +167,7 @@ bool SRC_MixCpuLpmGet(uint32_t srcMixIdx, uint32_t cpuIdx,
 {
     bool rc = false;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+    if ((srcMixIdx < PWR_NUM_MIX_SLICE) && (cpuIdx < CPU_NUM_IDX))
     {
         const src_mix_slice_t *srcMix = s_srcMixPtrs[srcMixIdx];
 

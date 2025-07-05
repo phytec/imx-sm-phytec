@@ -31,8 +31,9 @@
 
 #include "fsl_clock.h"
 #include "fsl_ccm.h"
-#include "fsl_device_registers.h"
+#include "fsl_cpu.h"
 #include "fsl_power.h"
+#include "fsl_device_registers.h"
 
 /* Local Defines */
 
@@ -702,7 +703,7 @@ bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting)
 {
     bool rc = false;
 
-    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    if ((lpcgIdx < CCM_LPCG_LPM0_COUNT) && (cpuIdx < CPU_NUM_IDX))
     {
         uint64_t lpmSetting = ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1)
                 << 32U) | ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
@@ -727,7 +728,7 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting)
 {
     bool rc = false;
 
-    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    if ((lpcgIdx < CCM_LPCG_LPM0_COUNT) && (cpuIdx < CPU_NUM_IDX))
     {
         uint64_t lpmSetting =
             ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1) << 32U) |

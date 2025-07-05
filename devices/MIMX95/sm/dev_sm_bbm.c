@@ -87,7 +87,7 @@ int32_t DEV_SM_BbmClear(bool disableAlarm)
             ((uint32_t) kBBNSM_RTC_AlarmInterrupt)
             | ((uint32_t) kBBNSM_RTC_RolloverInterrupt));
 
-        /* Clear pending alarm */
+        /* Clear status flags */
         BBNSM_ClearStatusFlags(BBNSM, s_statusFlags);
 
         if (disableAlarm)

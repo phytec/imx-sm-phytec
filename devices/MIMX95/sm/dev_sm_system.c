@@ -192,7 +192,7 @@ int32_t DEV_SM_SystemReset(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -240,7 +240,7 @@ int32_t DEV_SM_SystemShutdown(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -260,7 +260,7 @@ void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Store shutdown record */
@@ -379,7 +379,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -810,7 +810,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
-            // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+            // coverity[misra_c_2012_rule_1_2_violation]
             __WFI();
             __ISB();
 

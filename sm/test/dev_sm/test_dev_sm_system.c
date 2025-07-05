@@ -56,7 +56,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM system                                                    */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_DevSmSystem(void)
 {
     printf("**** Device SM System API Tests ***\n\n");

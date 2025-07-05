@@ -56,7 +56,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM Sys                                                       */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_LmmSys(void)
 {
     /* LM_00010 LM tests */

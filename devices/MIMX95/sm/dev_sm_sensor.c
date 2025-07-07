@@ -581,11 +581,20 @@ static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
     int64_t value, uint8_t eventControl)
 {
     int32_t status = SM_ERR_SUCCESS;
-    int64_t raw64 = (value * 64) / 100;
+    int64_t raw64;
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
 
+    if ((value <= (INT64_MAX / 64)) && (value >= (INT64_MIN / 64)))
+    {
+        raw64 = (value * 64) / 100;
+    }
+    else
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
     /* Check raw64 fit in int16_t */
-    if (CHECK_I64_FIT_I16(raw64))
+    if ((status == SM_ERR_SUCCESS) && (CHECK_I64_FIT_I16(raw64)))
     {
         int16_t raw16 = (int16_t) raw64;
         uint32_t mask = BIT32(threshold);

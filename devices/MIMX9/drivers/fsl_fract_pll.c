@@ -851,6 +851,12 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
     uint32_t quotient = pllSsc->spreadPercent / 10U;
     uint32_t remain = pllSsc->spreadPercent % 10U;
 
+    /*
+     * False Positive: The spread percentage is extracted from Bits[7:0] of
+     * extended configuration. So ((rate * 100U) * quotient) cannot exceed
+     * UINT64_MAX value.
+     */
+    // coverity[cert_int30_c_violation]
     uint64_t spreadFreq = ((rate / 100U) * quotient) +
         ((rate / 1000U) * remain);
 

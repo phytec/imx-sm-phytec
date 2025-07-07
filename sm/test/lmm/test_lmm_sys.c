@@ -125,11 +125,13 @@ void TEST_LmmSys(void)
 
     /* Check the LM CPU state */
     {
-#ifdef MIMX94
-        uint32_t lmId = 4U, cpuId = 2U;
+        uint32_t lmId = SM_LM_DEFAULT;
+#ifdef DEV_SM_CPU_A55C0
+        uint32_t cpuId = DEV_SM_CPU_A55C0;
 #else
-        uint32_t lmId = 1U, cpuId = 1U;
+        uint32_t cpuId = DEV_SM_CPU_2;
 #endif
+
         printf("LM_CpuCheck(%u %u)\n", lmId, cpuId);
         bool rc = LM_CpuCheck(lmId, cpuId);
         if (rc != true)

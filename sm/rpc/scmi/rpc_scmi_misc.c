@@ -1173,6 +1173,11 @@ static int32_t MiscRomPassoverGet(const scmi_caller_t *caller,
         out->numPassover = numPassover;
 
         /* Copy data */
+        /*
+         * False Positive: Copy size is checked with a compile assert
+         * above.
+         */
+        // coverity[buffer_size:FALSE]
         (void) memcpy((void*) out->passover, (const void*) passover,
             out->numPassover * sizeof(uint32_t));
 

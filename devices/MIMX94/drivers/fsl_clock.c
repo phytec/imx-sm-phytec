@@ -812,7 +812,7 @@ const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL] =
         .selMask = CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_MASK,
         .selShift = CCM_GPR_SHARED1_CA55_CORE1_CLOCK_SELECT_SHIFT,
         .selMux[0] = CLOCK_NUM_SRC + CLOCK_ROOT_A55,
-        .selMux[1] = CLOCK_SRC_ARMPLL_PFD0,
+        .selMux[1] = CLOCK_SRC_ARMPLL_PFD1,
     },
 
     [CLOCK_GPR_SEL_A55C2]
@@ -821,7 +821,7 @@ const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL] =
         .selMask = CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_MASK,
         .selShift = CCM_GPR_SHARED1_CA55_CORE2_CLOCK_SELECT_SHIFT,
         .selMux[0] = CLOCK_NUM_SRC + CLOCK_ROOT_A55,
-        .selMux[1] = CLOCK_SRC_ARMPLL_PFD1,
+        .selMux[1] = CLOCK_SRC_ARMPLL_PFD2,
     },
 
     [CLOCK_GPR_SEL_A55C3]
@@ -830,7 +830,7 @@ const ccm_gpr_sel_attr_t g_clockGprSel[CLOCK_NUM_GPR_SEL] =
         .selMask = CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_MASK,
         .selShift = CCM_GPR_SHARED1_CA55_CORE3_CLOCK_SELECT_SHIFT,
         .selMux[0] = CLOCK_NUM_SRC + CLOCK_ROOT_A55,
-        .selMux[1] = CLOCK_SRC_ARMPLL_PFD1,
+        .selMux[1] = CLOCK_SRC_ARMPLL_PFD2,
     },
 
     [CLOCK_GPR_SEL_A55P]

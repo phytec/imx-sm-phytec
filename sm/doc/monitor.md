@@ -146,6 +146,7 @@ Resource Commands
 | ctrl.r                      | display values for all controls                              |
 | ctrl.w *ctrl* *list...*     | set *list* values for *ctrl* control                         |
 | ctrl.notify *ctrl* *flags*  | set notify flags to *flags* for *ctrl* control               |
+| ctrl.action *ctrl action list...* | do *action* for *ctrl* control with *list* values      |
 
 Data R/W Commands
 -----------------

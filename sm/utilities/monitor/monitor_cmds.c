@@ -69,16 +69,19 @@
 #define WRITE       1
 #define RESET       2
 #define NOTIFY      3
+#define ACTION      4
 
 /* Types */
 
 /* Local Functions */
 
 static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[]);
-#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[]);
+#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[]);
+#endif
 static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[]);
+#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
@@ -208,6 +211,7 @@ int32_t MONITOR_Dispatch(char *line)
         "cpu.w",
         "ctrl.r",
         "ctrl.w",
+        "ctrl.action",
         "ctrl.notify",
         "extctrl.r",
         "extctrl.w",
@@ -257,11 +261,9 @@ int32_t MONITOR_Dispatch(char *line)
             case 4:  /* info */
                 status = MONITOR_CmdInfo(argc - 1, &argv[1]);
                 break;
-#ifdef DEVICE_HAS_ELE
             case 5:  /* ele */
                 status = MONITOR_CmdEle(argc - 1, &argv[1]);
                 break;
-#endif
 #ifdef DEVICE_HAS_V2X
             case 6: /* v2x */
                 status = MONITOR_CmdV2x(argc - 1, &argv[1]);
@@ -367,73 +369,76 @@ int32_t MONITOR_Dispatch(char *line)
             case 38:  /* ctrl.w */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 39:  /* ctrl.notify */
+            case 39:  /* ctrl.action */
+                status = MONITOR_CmdCtrl(argc - 1, &argv[1], ACTION);
+                break;
+            case 40:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 40:  /* extctrl.r */
+            case 41:  /* extctrl.r */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 41:  /* extctrl.w */
+            case 42:  /* extctrl.w */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 42:  /* md.b */
+            case 43:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 43:  /* md.w */
+            case 44:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 44:  /* md.l */
+            case 45:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 45:  /* mm.b */
+            case 46:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 46:  /* mm.w */
+            case 47:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 47:  /* mm.l */
+            case 48:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 48:  /* fuse.r */
+            case 49:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 49:  /* fuse.w */
+            case 50:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 50:  /* pmic.r */
+            case 51:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 51:  /* pmic.w */
+            case 52:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 52:  /* idle */
+            case 53:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 53:  /* assert */
+            case 54:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 54:  /* syslog */
+            case 55:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 55:  /* group */
+            case 56:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 56:  /* ssm */
+            case 57:  /* ssm */
                 status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
-            case 57:  /* custom */
+            case 58:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
-            case 58:  /* test */
+            case 59:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
-            case 59:  /* delay */
+            case 60:  /* delay */
                 status = MONITOR_CmdDelay(argc - 1, &argv[1]);
                 break;
 #if defined(GCOV) && !defined(SIMU)
-            case 60:  /* gcov */
+            case 61:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -577,7 +582,6 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     return SM_ERR_SUCCESS;
 }
 
-#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* ELE command                                                              */
 /*--------------------------------------------------------------------------*/
@@ -603,6 +607,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
 
         switch (sub)
         {
+#ifdef DEVICE_HAS_ELE
             case 0:  /* info */
                 status = MONITOR_CmdEleInfo(argc - 1, &argv[1]);
                 break;
@@ -618,6 +623,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
             case 4:  /* abort */
                 ELE_Abort();
                 break;
+#endif
             case 5:  /* ext */
                 status = MONITOR_CmdEleExt(argc - 1, &argv[1]);
                 break;
@@ -626,11 +632,13 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
                 break;
         }
 
+#ifdef DEVICE_HAS_ELE
         if ((sub < (int32_t) ARRAY_SIZE(cmds))
             && (status != SM_ERR_SUCCESS))
         {
             printf("ELE err: 0x%X\n", ELE_ErrNumber());
         }
+#endif
     }
     else
     {
@@ -641,6 +649,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
     return status;
 }
 
+#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* Dump ELE info                                                            */
 /*--------------------------------------------------------------------------*/
@@ -744,6 +753,7 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
     /* Return status */
     return status;
 }
+#endif
 
 /*--------------------------------------------------------------------------*/
 /* Dump ELE ext                                                             */
@@ -751,6 +761,7 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
 static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[])
 {
     int32_t status = SM_ERR_SUCCESS;
+#ifdef DEVICE_HAS_ELE
     ele_info_t info = { 0 };
 
     ELE_InfoGet(&info);
@@ -768,11 +779,27 @@ static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[])
         /* Display patch SHA256 */
         MONITOR_DumpLongHex("PQC SRKH  = 0x", &info.oemPqcSrkh[0], 16U);
     }
+#else
+    uint32_t info[16] = { 0 };
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("Patch SHA = 0x", &info[0], 8U);
+
+    /* Display FW SHA256 */
+    MONITOR_DumpLongHex("FW SHA    = 0x", &info[0], 8U);
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("OEM SRKH  = 0x", &info[0], 16U);
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("PQC SRKH  = 0x", &info[0], 16U);
+#endif
 
     /* Return status */
     return status;
 }
 
+#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* Set ELE lifecycle                                                        */
 /*--------------------------------------------------------------------------*/
@@ -1303,6 +1330,7 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
     if (argc != 0)
     {
         int32_t arg = 0;
+        bool graceful = false;
 
         if (argc > 1)
         {
@@ -1318,60 +1346,51 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
             }
         }
 
-        if (arg >= argc)
+        int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+            argv[arg]);
+        arg++;
+
+        /* Graceful? */
+        if (arg < argc)
         {
-            status = SM_ERR_MISSING_PARAMETERS;
+            graceful = true;
         }
-        else
+
+        switch (sub)
         {
-            bool graceful = false;
-
-            int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
-                argv[arg]);
-            arg++;
-
-            /* Graceful? */
-            if (arg < argc)
-            {
-                graceful = true;
-            }
-
-            switch (sub)
-            {
-                case 0:  /* info */
-                    status = MONITOR_CmdLmInfo(argc - arg, &argv[arg]);
-                    break;
-                case 1:  /* default */
-                    s_lm = lm;
-                    break;
-                case 2:  /* boot */
-                    status = LMM_SystemLmBoot(0U, 0U, lm, &g_swReason);
-                    break;
-                case 3:  /* shutdown */
-                    status = LMM_SystemLmShutdown(0U, 0U, lm, graceful,
-                        &g_swReason);
-                    break;
-                case 4:  /* reset */
-                    status = MONITOR_CmdLmReset(argc - arg, &argv[arg],
-                        lm);
-                    break;
-                case 5:  /* wake */
-                    status = LMM_SystemLmWake(0U, 0U, lm);
-                    break;
-                case 6:  /* suspend */
-                    status = LMM_SystemLmSuspend(0U, 0U, lm);
-                    break;
-                case 7:  /* reason */
-                    status = MONITOR_CmdLmReason(argc - arg, &argv[arg],
-                        lm);
-                    break;
-                case 8:  /* power */
-                    status = LMM_SystemLmPowerOn(0U, 0U, lm);
-                    break;
-                default:
-                    status = SM_ERR_INVALID_PARAMETERS;
-                    break;
-            }
+            case 0:  /* info */
+                status = MONITOR_CmdLmInfo(argc - arg, &argv[arg]);
+                break;
+            case 1:  /* default */
+                s_lm = lm;
+                break;
+            case 2:  /* boot */
+                status = LMM_SystemLmBoot(0U, 0U, lm, &g_swReason);
+                break;
+            case 3:  /* shutdown */
+                status = LMM_SystemLmShutdown(0U, 0U, lm, graceful,
+                    &g_swReason);
+                break;
+            case 4:  /* reset */
+                status = MONITOR_CmdLmReset(argc - arg, &argv[arg],
+                    lm);
+                break;
+            case 5:  /* wake */
+                status = LMM_SystemLmWake(0U, 0U, lm);
+                break;
+            case 6:  /* suspend */
+                status = LMM_SystemLmSuspend(0U, 0U, lm);
+                break;
+            case 7:  /* reason */
+                status = MONITOR_CmdLmReason(argc - arg, &argv[arg],
+                    lm);
+                break;
+            case 8:  /* power */
+                status = LMM_SystemLmPowerOn(0U, 0U, lm);
+                break;
+            default:
+                status = SM_ERR_INVALID_PARAMETERS;
+                break;
         }
     }
     else
@@ -2888,7 +2907,6 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                         status = LMM_MiscControlSet(s_lm, ctrl, numVal,
                             val);
                     }
-
                 }
                 else
                 {
@@ -2913,6 +2931,59 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                     {
                         status = LMM_MiscControlFlagsSet(s_lm, ctrl,
                             flags);
+                    }
+                }
+                else
+                {
+                    status = SM_ERR_MISSING_PARAMETERS;
+                }
+            }
+            break;
+        case ACTION:  /* action */
+            {
+                if (argc >= 2)
+                {
+                    uint32_t ctrl;
+                    uint32_t action = 0U;
+                    uint32_t numVal = 0U;
+                    uint32_t val[24] = { 0 };
+                    uint32_t numRtn = 0U;
+                    uint32_t rtn[24];
+
+                    status = MONITOR_ConvU32(argv[0], &ctrl);
+
+                    if ((ctrl & LMM_CTRL_FLAG_BRD) != 0U)
+                    {
+                        ctrl &= ~LMM_CTRL_FLAG_BRD;
+                        ctrl += DEV_SM_NUM_CTRL;
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = MONITOR_ConvU32(argv[1], &action);
+                    }
+
+                    while ((status == SM_ERR_SUCCESS) && (numVal <
+                        ((uint32_t) argc) - 2U))
+                    {
+                        status = MONITOR_ConvU32(argv[numVal + 2U],
+                            &val[numVal]);
+                        numVal++;
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = LMM_MiscControlAction(s_lm, ctrl, action,
+                            numVal, val, &numRtn, rtn);
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        for (uint32_t idx = 0U; idx < numRtn; idx++)
+                        {
+                            printf("0x%08X ", rtn[idx]);
+                        }
+                        printf("\n");
                     }
                 }
                 else
@@ -3567,6 +3638,8 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
     {
         int32_t arg = 0;
         uint32_t grp = 0U;
+        bool graceful = false;
+        bool noReturn = false;
 
         if (argc > 1)
         {
@@ -3583,42 +3656,32 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
             }
         }
 
-        if (arg >= argc)
+        int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+            argv[arg]);
+        arg++;
+
+        /* Graceful? */
+        if (arg < argc)
         {
-            status = SM_ERR_MISSING_PARAMETERS;
+            graceful = true;
         }
-        else
+
+        switch (sub)
         {
-            bool graceful = false;
-            bool noReturn = false;
-
-            int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
-                argv[arg]);
-            arg++;
-
-            /* Graceful? */
-            if (arg < argc)
-            {
-                graceful = true;
-            }
-
-            switch (sub)
-            {
-                case 0:  /* boot */
-                    status = LMM_SystemGrpBoot(0U, 0U, &g_swReason, grp);
-                    break;
-                case 1:  /* shutdown */
-                    status = LMM_SystemGrpShutdown(0U, 0U, graceful,
-                        &g_swReason, grp, &noReturn);
-                    break;
-                case 2:  /* reset */
-                    status = LMM_SystemGrpReset(0U, 0U, graceful,
-                        &g_swReason, grp, &noReturn);
-                    break;
-                default:
-                    status = SM_ERR_INVALID_PARAMETERS;
-                    break;
-            }
+            case 0:  /* boot */
+                status = LMM_SystemGrpBoot(0U, 0U, &g_swReason, grp);
+                break;
+            case 1:  /* shutdown */
+                status = LMM_SystemGrpShutdown(0U, 0U, graceful,
+                    &g_swReason, grp, &noReturn);
+                break;
+            case 2:  /* reset */
+                status = LMM_SystemGrpReset(0U, 0U, graceful,
+                    &g_swReason, grp, &noReturn);
+                break;
+            default:
+                status = SM_ERR_INVALID_PARAMETERS;
+                break;
         }
     }
     else

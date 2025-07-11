@@ -78,10 +78,6 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
         [DEV_SM_CLK_AUDIOPLL2] =            "audiopll2",
         [DEV_SM_CLK_VIDEOPLL1_VCO] =        "videopll1_vco",
         [DEV_SM_CLK_VIDEOPLL1] =            "videopll1",
-        [DEV_SM_CLK_RESERVED20] =           "reserved20",
-        [DEV_SM_CLK_RESERVED21] =           "reserved21",
-        [DEV_SM_CLK_RESERVED22] =           "reserved22",
-        [DEV_SM_CLK_RESERVED23] =           "reserved23",
         [DEV_SM_CLK_ARMPLL_VCO] =           "armpll_vco",
         [DEV_SM_CLK_ARMPLL_PFD0_UNGATED] =  "armpll_pfd0_ungated",
         [DEV_SM_CLK_ARMPLL_PFD0] =          "armpll_pfd0",
@@ -136,9 +132,7 @@ int32_t DEV_SM_ClockNameGet(uint32_t clockId, string *clockNameAddr,
         [DEV_SM_CLK_DRAMAPB] =              "dramapb",
         [DEV_SM_CLK_DISPAPB] =              "dispapb",
         [DEV_SM_CLK_DISPAXI] =              "dispaxi",
-        [DEV_SM_CLK_RESERVED77] =           "reserved77",
         [DEV_SM_CLK_DISPOCRAM] =            "dispocram",
-        [DEV_SM_CLK_RESERVED79] =           "reserved79",
         [DEV_SM_CLK_DISP1PIX] =             "disp1pix",
         [DEV_SM_CLK_DISP2PIX] =             "disp2pix",
         [DEV_SM_CLK_DISP3PIX] =             "disp3pix",
@@ -1355,6 +1349,21 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
 bool DEV_SM_ClockIsReserved(uint32_t clockId)
 {
     bool rc = false;
+    static bool const s_clockIsReserved[DEV_SM_NUM_CLOCK] =
+    {
+        [DEV_SM_CLK_RESERVED20] = true,
+        [DEV_SM_CLK_RESERVED21] = true,
+        [DEV_SM_CLK_RESERVED22] = true,
+        [DEV_SM_CLK_RESERVED23] = true,
+        [DEV_SM_CLK_RESERVED77] = true,
+        [DEV_SM_CLK_RESERVED79] = true
+    };
+
+
+    if (clockId < DEV_SM_NUM_CLOCK)
+    {
+        rc = s_clockIsReserved[clockId];
+    }
 
     /* Return status */
     return rc;

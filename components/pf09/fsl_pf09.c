@@ -771,7 +771,7 @@ bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
 
         if (rc)
         {
-            uint8_t ctrlMask = U8((1U << (state * 4U)) + gpio);
+            uint8_t ctrlMask = U8(1U << ((state * 4U) + gpio));
 
             *ctrl = ((ctrlVal & ctrlMask) != 0U);
         }

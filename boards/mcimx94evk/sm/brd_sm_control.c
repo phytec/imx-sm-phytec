@@ -104,12 +104,7 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
         {
             status = DEV_SM_ControlGet(ctrlId, numRtn, rtn);
         }
-        else if ((ctrlId == BRD_SM_CTRL_PCA2131)
-            || (ctrlId == BRD_SM_CTRL_TEST))
-        {
-            status = SM_ERR_NOT_SUPPORTED;
-        }
-        else
+        else if (ctrlId < BRD_SM_CTRL_TEST)
         {
             uint16_t data;
 
@@ -131,6 +126,10 @@ int32_t BRD_SM_ControlGet(uint32_t ctrlId, uint32_t *numRtn, uint32_t *rtn)
             {
                 status = SM_ERR_HARDWARE_ERROR;
             }
+        }
+        else
+        {
+            status = SM_ERR_NOT_SUPPORTED;
         }
     }
     else
@@ -234,6 +233,15 @@ int32_t BRD_SM_ControlAction(uint32_t ctrlId, uint32_t action,
         {
             /* Test response to a reported SM error */
             SM_Error(SM_ERR_GENERIC_ERROR);
+        }
+        else if (ctrlId == BRD_SM_CTRL_TEST_A)
+        {
+            for (uint32_t idx = 0U; idx < numArg; idx++)
+            {
+                rtn[idx] = arg[idx];
+            }
+
+            *numRtn = numArg;
         }
         else
         {

@@ -72,6 +72,7 @@
         .cpuPerms[DEV_SM_CPU_M33S] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[BRD_SM_CTRL_TEST_A] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPUART8_RXD] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_LPUART8_TXD] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_TPM5_CH_1] = SM_SCMI_PERM_ALL, \
@@ -204,6 +205,7 @@
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_PCA2131] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[BRD_SM_CTRL_TEST_A] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_GPT_MUX] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_XBAR_DIR_CTRL] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_XBAR_TRIG_SYNC] = SM_SCMI_PERM_ALL, \
@@ -367,6 +369,7 @@
         .cpuPerms[DEV_SM_CPU_M7P1] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[BRD_SM_CTRL_BUTTON] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_TEST] = SM_SCMI_PERM_ALL, \
+        .ctrlPerms[BRD_SM_CTRL_TEST_A] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_FLEXPWM4_PWMA_0] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_FLEXPWM4_PWMA_1] = SM_SCMI_PERM_ALL, \
         .daisyPerms[DEV_SM_DAISY_FLEXPWM4_PWMA_2] = SM_SCMI_PERM_ALL, \
@@ -613,6 +616,7 @@
         .ctrlPerms[BRD_SM_CTRL_PCIE1_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_PCIE2_WAKE] = SM_SCMI_PERM_NOTIFY, \
         .ctrlPerms[BRD_SM_CTRL_SD3_WAKE] = SM_SCMI_PERM_NOTIFY, \
+        .ctrlPerms[BRD_SM_CTRL_TEST_A] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_ADC_TEST] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_MQS1_SETTINGS] = SM_SCMI_PERM_ALL, \
         .ctrlPerms[DEV_SM_CTRL_MQS2_SETTINGS] = SM_SCMI_PERM_ALL, \

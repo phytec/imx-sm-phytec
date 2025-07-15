@@ -67,7 +67,7 @@
 /** @} */
 
 /*! Number of board controls */
-#define BRD_SM_NUM_CTRL  8UL
+#define BRD_SM_NUM_CTRL  9UL
 
 /*! Total number of controls */
 #define SM_NUM_CTRL  (DEV_SM_NUM_CTRL + BRD_SM_NUM_CTRL)
@@ -84,6 +84,7 @@
 #define BRD_SM_CTRL_FAN         (DEV_SM_NUM_CTRL + 5U)  /*!< PCAL6416A-8 */
 #define BRD_SM_CTRL_TEST        (DEV_SM_NUM_CTRL + 6U)  /*!< Test */
 #define BRD_SM_CTRL_PCA2131     (DEV_SM_NUM_CTRL + 7U)  /*!< PCA2131 raw access */
+#define BRD_SM_CTRL_TEST_A      (DEV_SM_NUM_CTRL + 8U)  /*!< Test action */
 /** @} */
 
 /* Types */

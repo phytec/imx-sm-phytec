@@ -114,8 +114,8 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
          *  32-bit interface (4 bytes)
          * DBW=01b (32-bit interface) and DC=1 (Dual Channel Enable):
          *  Not an allowable configuration */
-        if (((DDRC_CTRL->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_DBW_MASK)
-            == 0x00100000U) && ((DDRC_CTRL->DDR_SDRAM_CFG
+        if (((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_DBW_MASK)
+            == 0x00100000U) && ((DDRC->DDR_SDRAM_CFG
             & DDRC_DDR_SDRAM_CFG_DC_EN_MASK) == 0U))
         {
             ddrRxcWa->dbytes = 2U;

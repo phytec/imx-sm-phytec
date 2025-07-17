@@ -94,7 +94,7 @@ static const dev_sm_ctrl_t s_control[DEV_SM_NUM_CTRL] =
     },
     [DEV_SM_CTRL_ADC_TEST] =
     {
-        .addr = BLK_CTRL_BBSMMIX_BBSMMIX1_BASE + 0x4U,
+        .addr = BLK_CTRL_BBSMMIX_BASE + 0x4U,
         .mask = 0x00000080U,
     },
     [DEV_SM_CTRL_GPT_MUX] =

@@ -980,9 +980,9 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
 
     /* Configure SYSPLL for software control (ROM sets hardware control) */
     SYS_PLL1->CTRL.CLR = PLL_CTRL_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[0].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[1].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[2].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[0].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[1].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[2].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
 
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;

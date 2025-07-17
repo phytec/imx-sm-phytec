@@ -1732,12 +1732,12 @@ static bool CPU_IrqMaskSet(uint32_t cpuIdx, bool maskIrqs)
             break;
 
         case CPU_IDX_A55P:
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK0 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK1 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK2 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK3 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK4 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK5 = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[0] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[1] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[2] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[3] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[4] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[5] = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK6 = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK7 = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK8 = irqMaskVal;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -36,12 +36,14 @@
 
 /* Local Variables */
 
+static SYS_CTR_CONTROL_Type *const s_sysctrBases[] = SYS_CTR_CONTROL_BASE_PTRS;
+
 /*--------------------------------------------------------------------------*/
 /* Initialize and enable SYSCTR                                             */
 /*--------------------------------------------------------------------------*/
 void SYSCTR_Init(void)
 {
-    SYS_CTR_CONTROL->CNTCR =
+    s_sysctrBases[0]->CNTCR =
         SYS_CTR_CONTROL_CNTCR_HDBG(1U) |
         SYS_CTR_CONTROL_CNTCR_EN(1U);
 }
@@ -57,9 +59,9 @@ uint64_t SYSCTR_GetCounter64(void)
     /* Do consecutive reads to guard against ripple */
     do
     {
-        ms = SYS_CTR_CONTROL->CNTCV1;
-        ls = SYS_CTR_CONTROL->CNTCV0;
-        ms2 = SYS_CTR_CONTROL->CNTCV1;
+        ms = s_sysctrBases[0]->CNTCV1;
+        ls = s_sysctrBases[0]->CNTCV0;
+        ms2 = s_sysctrBases[0]->CNTCV1;
     } while (ms != ms2);
 
     uint64_t ticks = ms;
@@ -73,7 +75,7 @@ uint64_t SYSCTR_GetCounter64(void)
 /*--------------------------------------------------------------------------*/
 uint32_t SYSCTR_GetCounter32(void)
 {
-    return SYS_CTR_CONTROL->CNTCV0;
+    return s_sysctrBases[0]->CNTCV0;
 }
 
 
@@ -126,15 +128,15 @@ void SYSCTR_FreqMode(bool bLowFreq, bool bWaitAck)
     if (bLowFreq)
     {
         // Low-frequency mode request
-        cntcr = SYS_CTR_CONTROL->CNTCR;
+        cntcr = s_sysctrBases[0]->CNTCR;
         cntcr |= SYS_CTR_CONTROL_CNTCR_FCR1_MASK;
         cntcr &= ~SYS_CTR_CONTROL_CNTCR_FCR0_MASK;
-        SYS_CTR_CONTROL->CNTCR = cntcr;
+        s_sysctrBases[0]->CNTCR = cntcr;
 
         if (bWaitAck)
         {
             /* Wait for low-frequency mode ack */
-            while ((SYS_CTR_CONTROL->CNTSR &
+            while ((s_sysctrBases[0]->CNTSR &
                 SYS_CTR_CONTROL_CNTSR_FCA1_MASK) == 0U)
             {
             }
@@ -143,15 +145,15 @@ void SYSCTR_FreqMode(bool bLowFreq, bool bWaitAck)
     else
     {
         /* High-frequency mode request */
-        cntcr = SYS_CTR_CONTROL->CNTCR;
+        cntcr = s_sysctrBases[0]->CNTCR;
         cntcr &= ~SYS_CTR_CONTROL_CNTCR_FCR1_MASK;
         cntcr |= SYS_CTR_CONTROL_CNTCR_FCR0_MASK;
-        SYS_CTR_CONTROL->CNTCR = cntcr;
+        s_sysctrBases[0]->CNTCR = cntcr;
 
         if (bWaitAck)
         {
             // Wait for high-frequency mode ack
-            while ((SYS_CTR_CONTROL->CNTSR &
+            while ((s_sysctrBases[0]->CNTSR &
                 SYS_CTR_CONTROL_CNTSR_FCA0_MASK) == 0U)
             {
             }

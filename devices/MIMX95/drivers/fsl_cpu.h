@@ -337,6 +337,30 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode);
 bool CPU_RunModeGet(uint32_t cpuIdx, uint32_t *runMode);
 
 /*!
+ * Enable/disable CPU LP compute mode
+ *
+ * @param[in]   cpuIdx          CPU identifier
+ * @param[in]   enableLpCompute Enable flag (1=enable, 0=disable)
+ *
+ * This function allows the caller to enable/disable LP compute for the
+ * specified CPU.
+ *
+ * @return Returns true if CPU LP compute mode is successfully configured,
+ *         otherwise false.
+ */
+bool CPU_LpComputeSet(uint32_t cpuIdx, bool enableLpCompute);
+
+/*!
+ * Get list of CPUs enabled for LP compute mode
+ *
+ * This function queries for the current list of CPU enabled for LP compute
+ * mode.
+ *
+ * @return Returns the list of CPU currently enabled for LP compute mode.
+ */
+uint32_t CPU_LpComputeListGet(void);
+
+/*!
  * Set CPU sleep mode
  *
  * @param[in]   cpuIdx      CPU identifier

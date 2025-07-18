@@ -346,6 +346,26 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
                 }
             }
         }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            bool enableLpCompute = (sleepFlags &
+                DEV_SM_CPU_SLEEP_FLAG_LP_COMPUTE) != 0U;
+
+            /* LP compute only allowed in RUN sleep mode */
+            if ((sleepMode != CPU_SLEEP_MODE_RUN) && (enableLpCompute))
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
+            else
+            {
+                /* Set LP compute mode enable */
+                if (!(CPU_LpComputeSet(modCpuId, enableLpCompute)))
+                {
+                    status = SM_ERR_NOT_FOUND;
+                }
+            }
+        }
     }
 
     /* Return status */

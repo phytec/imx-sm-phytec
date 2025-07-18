@@ -634,15 +634,42 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 }
             }
 
+            /* Query if any CPU in LP compute mode */
+            bool lpComputeActive = (CPU_LpComputeListGet() != 0U);
+
+            /* Track if WAKEUPMIX powered down */
+            bool wakeupMixOff = false;
+
+            /* Track if WAKEUPMIX performance level forced */
+            bool restoreWakeupMixPerf = false;
+            uint32_t savedWakeupMixPerf;
+
             /* If WAKEUPMIX powered down during SUSPEND, force power down */
             if ((lpmSettingWakeup <= sleepMode) &&
                 ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0U))
             {
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
-                    DEV_SM_POWER_STATE_OFF) == SM_ERR_SUCCESS)
+                /* Keep WAKEUPMIX powered at parked level during LP compute */
+                if (lpComputeActive)
                 {
-                    g_syslog.sysSleepRecord.mixPwrStat &=
-                        (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                    if (DEV_SM_PerfLevelGet(DEV_SM_PERF_WAKEUP,
+                        &savedWakeupMixPerf) == SM_ERR_SUCCESS)
+                    {
+                        if (DEV_SM_PerfLevelSet(DEV_SM_PERF_WAKEUP,
+                            DEV_SM_PERF_LVL_PRK) == SM_ERR_SUCCESS)
+                        {
+                            restoreWakeupMixPerf = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+                        DEV_SM_POWER_STATE_OFF) == SM_ERR_SUCCESS)
+                    {
+                        g_syslog.sysSleepRecord.mixPwrStat &=
+                            (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                        wakeupMixOff = true;
+                    }
                 }
             }
 
@@ -696,7 +723,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
              * and OSC24M configuration.
              */
             bool activeSleep = (perfLevelSleep != DEV_SM_PERF_LVL_PRK) ||
-                ((s_sysSleepFlags & DEV_SM_SSF_OSC24M_ACTIVE_MASK) != 0U);
+                ((s_sysSleepFlags & DEV_SM_SSF_OSC24M_ACTIVE_MASK) != 0U) ||
+                lpComputeActive;
 
             /* Check if OSC24M must remain active */
             if (activeSleep)
@@ -801,8 +829,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 SYSCTR_FreqMode(true, true);
             }
 
-            /* Check FRO system sleep mode flag */
-            if ((s_sysSleepFlags & DEV_SM_SSF_FRO_ACTIVE_MASK) == 0U)
+            /* Manage FRO based on system sleep flags and active sleep state */
+            if (((s_sysSleepFlags & DEV_SM_SSF_FRO_ACTIVE_MASK) == 0U) &&
+                !activeSleep)
             {
                 /* Power down FRO */
                 FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
@@ -890,10 +919,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = lpHs2Ele;
 
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
-            if (lpmSettingWakeup <= sleepMode)
+            if (wakeupMixOff)
             {
                 status = DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
                     DEV_SM_POWER_STATE_ON);
+            }
+
+            /* Check if WAKEUPMIX forced to parked level during LP compute */
+            if ((status == SM_ERR_SUCCESS) && restoreWakeupMixPerf)
+            {
+                /* Restore saved WAKEUPMIX performance level */
+                status = DEV_SM_PerfLevelSet(DEV_SM_PERF_WAKEUP,
+                    savedWakeupMixPerf);
             }
 
             /* If NOCMIX powered down during SUSPEND, force power up */

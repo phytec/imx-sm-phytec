@@ -32,8 +32,9 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Added support for i.MX95 B0
-- Toolchain moved to GNU Version 14.2.rel1
+- Support putting DDR into retention while Ethernet Switch and M33S is active
+- Add device error log
+- Add monitor delay command
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.

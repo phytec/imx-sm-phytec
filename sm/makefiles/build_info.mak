@@ -30,12 +30,12 @@
 ##
 ## ###################################################################
 
-SM_VERSION = imx_sm_2025q2
-SM_PREV_VER = imx_sm_2025q1
+SM_VERSION = imx_sm_2025q3
+SM_PREV_VER = imx_sm_2025q2
 SM_SNAP = 0
 
 SM_DEVICES = i.MX95 (A0), i.MX95 (A1), i.MX95 (B0), i.MX94 (A0)
-SM_ELE_VER = 2.0.2
+SM_ELE_VER = 2.0.3
 
 MKIMAGE_BRANCH = lf-6.12.20_2.0.0
 MKIMAGE_BUILD = Linux_IMX_6.12.20_2.0.0_RC2

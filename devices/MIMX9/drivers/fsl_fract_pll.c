@@ -538,6 +538,27 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             uint32_t mfn = (divider & PLL_DFS_MFN_MASK)
                 >> PLL_DFS_MFN_SHIFT;
 
+            /* DFS_DIV register resets to zero.  DFS MFI and MFN values
+             * are forced to be in range by the PLL digital wrapper.
+             */
+            if (mfi < 2U)
+            {
+                /* Add 2 to MFI register values below 2 */
+                mfi += 2U;
+            }
+
+            if (mfn > 4U)
+            {
+                /* If MFN is greater than 4, add 1 to MFI (limited to 255)
+                 * and zero out MFN
+                 */
+                if (mfi < 255U)
+                {
+                    mfi += 1U;
+                }
+                mfn = 0U;
+            }
+
             rate = FRACTPLL_GetRate(pllIdx, true);
 
             /* Check the multiplication doesn't wrap */

@@ -255,6 +255,11 @@
 #define SM_SYSTEMERROR          DEV_SM_SystemError
 #endif
 
+#ifndef SM_MEMDDRINFOGET
+/*! Redirector (device/board) to get DDR info */
+#define SM_MEMDDRINFOGET        DEV_SM_MemDdrInfoGet
+#endif
+
 #ifndef SM_PERFNAMEGET
 /*! Redirector (device/board) to get performance domain name */
 #define SM_PERFNAMEGET          DEV_SM_PerfNameGet

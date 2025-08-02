@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -32,43 +32,24 @@
 ** ###################################################################
 */
 
+#ifndef DEV_SM_MEM_H
+#define DEV_SM_MEM_H
+
 /*==========================================================================*/
 /*!
- * @addtogroup DEV_SM_SIMU
- *
+ * @addtogroup DEV_SM_SIMU_MEM
  * @{
+ *
  * @file
  * @brief
  *
- * Header file containing the SM API for the device.
+ * Header file containing the SM API for the device memory.
  */
 /*==========================================================================*/
-
-#ifndef DEV_SM_H
-#define DEV_SM_H
 
 /* Includes */
 
 #include "sm.h"
-#include "system_simu.h"
-#include "dev_sm_config.h"
-#include "dev_sm_power.h"
-#include "dev_sm_system.h"
-#include "dev_sm_mem.h"
-#include "dev_sm_perf.h"
-#include "dev_sm_clock.h"
-#include "dev_sm_sensor.h"
-#include "dev_sm_reset.h"
-#include "dev_sm_voltage.h"
-#include "dev_sm_bbm.h"
-#include "dev_sm_cpu.h"
-#include "dev_sm_pin.h"
-#include "dev_sm_control.h"
-#include "dev_sm_rdc.h"
-#include "dev_sm_common.h"
-#include "dev_sm_rom.h"
-#include "dev_sm_fault.h"
-#include "dev_sm_fuse.h"
 
 /* Defines */
 
@@ -76,40 +57,12 @@
 
 /* Functions */
 
-/*!
- * Initialize the device.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_Init(void);
-
-/*!
- * Return lists of resources used by the SM.
- *
- * @param[in]  numClock    Number of clocks
- * @param[in]  clockList   Return pointer to array of clocks
- */
-void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
-
-/*!
- * Configure power domain hardware after power up.
- *
- * @param[in]  domainId    power domain powered up
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerUpPost(uint32_t domainId);
-
-/*!
- * Configure power domain hardware before power down.
- *
- * @param[in]  domainId    power domain to be powered down
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerDownPre(uint32_t domainId);
-
-#endif /* DEV_SM_H */
-
 /** @} */
+
+/* Include SM device API */
+
+// coverity[misra_c_2012_rule_20_1_violation]
+#include "dev_sm_mem_api.h"
+
+#endif /* DEV_SM_MEM_H */
 

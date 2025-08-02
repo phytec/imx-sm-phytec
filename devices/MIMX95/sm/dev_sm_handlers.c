@@ -355,6 +355,9 @@ void SysTick_Handler(void)
     /* Call system tick */
     DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
 
+    /* Call memory tick */
+    DEV_SM_MemTick(BOARD_TICK_PERIOD_MSEC);
+
     /* Call sensor tick */
     DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
 

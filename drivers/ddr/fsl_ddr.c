@@ -419,20 +419,23 @@ static bool DDR_DdrcInit(const struct ddr_info *ddrp)
         {
             /* With ECC, MTCR is used to clear DDR
              * skip it in retention exit */
-            if (ddrc_cfg[i].reg == (uint32_t)(&DDRC->DDR_MTCR))
+            if (((ddrc_cfg[i].reg ^ (uint32_t)(&DDRC->DDR_MTCR)) &
+                0xFFFFFU) == 0U)
             {
                 continue;
             }
 
             /* Skip DDRC EN */
-            if (ddrc_cfg[i].reg == (uint32_t)(&DDRC->DDR_SDRAM_CFG))
+            if (((ddrc_cfg[i].reg ^ (uint32_t)(&DDRC->DDR_SDRAM_CFG)) &
+                0xFFFFFU) == 0U)
             {
                 Write32(ddrc_cfg[i].reg, ddrc_cfg[i].val & 0x7FFFFFFFU);
                 continue;
             }
 
             /* Skip the dram init as we resume from retention */
-            if (ddrc_cfg[i].reg == (uint32_t)(&DDRC->DDR_SDRAM_CFG_2))
+            if (((ddrc_cfg[i].reg ^ (uint32_t)(&DDRC->DDR_SDRAM_CFG_2)) &
+                0xFFFFFU) == 0U)
             {
                 Write32(ddrc_cfg[i].reg, ddrc_cfg[i].val & ~(1U << 4));
             }
@@ -474,6 +477,99 @@ static bool DDR_DdrcInit(const struct ddr_info *ddrp)
     {
         DDRC->DDR_SDRAM_CFG_3
             |= DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN(1U);
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get the DDR Info                                                         */
+/*--------------------------------------------------------------------------*/
+bool DDR_GetDRAMInfo(const struct ddr_info *ddrp, struct dram_info *info)
+{
+    bool rc = true;
+
+    if ((ddrp != NULL) && (info != NULL))
+    {
+        uint32_t addr;
+
+        /* Update total address region */
+        info->totalRegions = 1U;
+
+        /* 001b - LPDDR5 SDRAM, 100b - LPDDR4X SDRAM*/
+        info->sdramType = (DDRC->DDR_SDRAM_CFG
+            & DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_MASK)
+            >> DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_SHIFT;
+
+        /* Detect how many bytes are used in the DDR interface
+         * Read DDRC DDR_SDRAM_CFG: DBW (Data Bus Width) and DC (Dual Channel)
+         * DBW=10b (16-bit interface) and DC=0 (Dual Channel Disable):
+         *  16-bit interface (2 bytes)
+         * DBW=10b (16-bit interface) and DC=1 (Dual Channel Enable):
+         *  16-bit dual channel mode, means entire 32-bit intf used (4 bytes)
+         * DBW=01b (32-bit interface) and DC=0 (Dual Channel Disable):
+         *  32-bit interface (4 bytes)
+         * DBW=01b (32-bit interface) and DC=1 (Dual Channel Enable):
+         *  Not an allowable configuration */
+        if (((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_DBW_MASK)
+            == 0x00100000U) && ((DDRC->DDR_SDRAM_CFG
+            & DDRC_DDR_SDRAM_CFG_DC_EN_MASK) == 0U))
+        {
+            info->sdramDatabusWidth = 16U;
+        }
+        else
+        {
+            info->sdramDatabusWidth = 32U;
+        }
+
+        /* Check if Inline ECC enabled */
+        if ((DDRC->ERR_EN & DDRC_ERR_EN_INLINE_ECC_EN_MASK) != 0U)
+        {
+            info->eccEnb = true;
+        }
+        else
+        {
+            info->eccEnb = false;
+        }
+
+        /* extract MTS from DDR info */
+        info->mts = ddrp->pstate_freq[0];
+
+        /* start address from CS0 bounds (top 12 of 36 bits addr)
+           + DDR AXI start */
+        addr = ((DDRC->CS_BNDS[0].CS_BNDS & DDRC_CS_BNDS_CS_BNDS_SA_MASK)
+            >> DDRC_CS_BNDS_CS_BNDS_SA_SHIFT);
+        info->startAddr = U64(addr);
+        info->startAddr <<= 24U;
+        info->startAddr += 0x80000000ULL;
+
+        /* end address from CS0 bounds if Rank interleaving set
+           + DDR AXI start */
+        if ((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_BA_INTLV_CTL_MASK)
+            != 0U)
+        {
+            /* end address from CS0 bounds if Rank interleaving set
+               + DDR AXI start */
+            addr = ((DDRC->CS_BNDS[0].CS_BNDS
+                & DDRC_CS_BNDS_CS_BNDS_EA_MASK)
+                >> DDRC_CS_BNDS_CS_BNDS_EA_SHIFT);
+        }
+        else
+        {
+            /* end address from CS1 bounds + DDR AXI start */
+            addr = ((DDRC->CS_BNDS[1].CS_BNDS
+                & DDRC_CS_BNDS_CS_BNDS_EA_MASK)
+                >> DDRC_CS_BNDS_CS_BNDS_EA_SHIFT);
+        }
+        info->endAddr = U64(addr);
+        info->endAddr <<= 24U;
+        info->endAddr += 0xFFFFFFULL;
+        info->endAddr += 0x80000000ULL;
+    }
+    else
+    {
+        rc = false;
     }
 
     /* Return status */

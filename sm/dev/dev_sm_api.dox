@@ -115,6 +115,12 @@ implementations for each supported SoC.
 */
 
 /*!
+@defgroup DEV_SM_MEM_API DEVICE_MEM: SM Device Interface (MEM)
+
+@brief Module for the device memory functions.
+*/
+
+/*!
 @defgroup DEV_SM_PERF_API DEVICE_PERF: SM Device Interface (PERF)
 
 @brief Module for the device performance functions.

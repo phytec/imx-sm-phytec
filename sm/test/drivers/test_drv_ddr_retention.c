@@ -111,7 +111,7 @@ void TEST_DrvDdrRetention(void)
         write_memory(memSrc, numbytes, pattern1, pattern2);
 
         /* Enter retention */
-        status = DEV_SM_SystemDramRetentionEnter();
+        status = DEV_SM_MemDdrRetentionEnter();
 
 #if DDRMIX_PWR_DOWN
         if (status == SM_ERR_SUCCESS)
@@ -137,7 +137,7 @@ void TEST_DrvDdrRetention(void)
         if (status == SM_ERR_SUCCESS)
         {
             printf("Exit retention\n");
-            status = DEV_SM_SystemDramRetentionExit();
+            status = DEV_SM_MemDdrRetentionExit();
         }
 
         if (status == SM_ERR_SUCCESS)

@@ -194,11 +194,6 @@ typedef struct
 
 /* Functions */
 
-/* Externs */
-
-/*! External pointer to the DRAM info */
-extern uint32_t *__DramInfo;
-
 /** @} */
 
 /* Include SM device API */

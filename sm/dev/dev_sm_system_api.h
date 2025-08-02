@@ -234,24 +234,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
 int32_t DEV_SM_SystemIdle(void);
 
 /*!
- * Place the system DRAM into retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_SystemDramRetentionEnter(void);
-
-/*!
- * Exit the system DRAM from retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_SystemDramRetentionExit(void);
-
-/*!
  * System timer tick.
  *
  * @param[in]     msec          Period in milliseconds

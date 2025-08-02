@@ -92,6 +92,12 @@ Lots of detail here.
 */
 
 /*!
+@defgroup DEV_SM_SIMU_MEM DEVICE_SIMU_MEM: SM SIMU Device (MEM)
+
+@brief Module for the SIMU device memory functions.
+*/
+
+/*!
 @defgroup DEV_SM_SIMU_PERF DEVICE_SIMU_PERF: SM SIMU Device (PERF)
 
 @brief Module for the SIMU device performance functions.

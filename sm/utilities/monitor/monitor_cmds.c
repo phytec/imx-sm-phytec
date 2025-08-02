@@ -153,6 +153,7 @@ static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdDdr(int32_t argc, const char * const argv[]);
 
 static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 
@@ -233,6 +234,7 @@ int32_t MONITOR_Dispatch(char *line)
         "custom",
         "test",
         "delay",
+        "ddr",
         "gcov"
     };
 
@@ -437,8 +439,11 @@ int32_t MONITOR_Dispatch(char *line)
             case 60:  /* delay */
                 status = MONITOR_CmdDelay(argc - 1, &argv[1]);
                 break;
+            case 61:  /* ddr */
+                status = MONITOR_CmdDdr(argc - 1, &argv[1]);
+                break;
 #if defined(GCOV) && !defined(SIMU)
-            case 61:  /* gcov */
+            case 62:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -3790,6 +3795,58 @@ static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[])
                 SystemTimeDelay(((uint32_t) -ms) * 1000U);
             }
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR command                                                              */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdDdr(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    uint32_t ddrRgdId = 0U;
+    uint32_t numRgd = 1U;
+
+    /* Loop over regions */
+    while ((status == SM_ERR_SUCCESS) && (ddrRgdId < numRgd))
+    {
+        uint32_t ddrType;
+        uint32_t ddrWidth;
+        bool eccEnb;
+        uint32_t mts;
+        uint64_t startAddr;
+        uint64_t endAddr;
+
+        string const ddrTypeNames[] =
+        {
+            "5",
+            "5X",
+            "4",
+            "4X"
+        };
+
+        /* Get region info */
+        status = LMM_MiscDdrInfoGet(0U, ddrRgdId, &numRgd, &ddrType,
+            &ddrWidth, &eccEnb, &mts, &startAddr, &endAddr);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            printf("%03u: LPDDR%s-%u (x%u", ddrRgdId, ddrTypeNames[ddrType],
+                mts, ddrWidth);
+            if (eccEnb)
+            {
+                printf(", ecc");
+            }
+            printf("), 0x%X%08X", INT64_H(startAddr), INT64_L(startAddr));
+            printf("-0x%X%08X\n", INT64_H(endAddr), INT64_L(endAddr));
+        }
+
+        /* Next region */
+        ddrRgdId++;
     }
 
     /* Return status */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2025 NXP
+**     Copyright 2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -33,83 +33,38 @@
 */
 
 /*==========================================================================*/
-/*!
- * @addtogroup DEV_SM_SIMU
- *
- * @{
- * @file
- * @brief
- *
- * Header file containing the SM API for the device.
- */
+/* File containing the implementation of the device memory.                 */
 /*==========================================================================*/
-
-#ifndef DEV_SM_H
-#define DEV_SM_H
 
 /* Includes */
 
 #include "sm.h"
-#include "system_simu.h"
-#include "dev_sm_config.h"
-#include "dev_sm_power.h"
-#include "dev_sm_system.h"
-#include "dev_sm_mem.h"
-#include "dev_sm_perf.h"
-#include "dev_sm_clock.h"
-#include "dev_sm_sensor.h"
-#include "dev_sm_reset.h"
-#include "dev_sm_voltage.h"
-#include "dev_sm_bbm.h"
-#include "dev_sm_cpu.h"
-#include "dev_sm_pin.h"
-#include "dev_sm_control.h"
-#include "dev_sm_rdc.h"
-#include "dev_sm_common.h"
-#include "dev_sm_rom.h"
-#include "dev_sm_fault.h"
-#include "dev_sm_fuse.h"
+#include "dev_sm.h"
 
-/* Defines */
+/* Local defines */
 
-/* Types */
+/* Local types */
 
-/* Functions */
+/* Local variables */
 
-/*!
- * Initialize the device.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_Init(void);
+/* Local functions */
 
-/*!
- * Return lists of resources used by the SM.
- *
- * @param[in]  numClock    Number of clocks
- * @param[in]  clockList   Return pointer to array of clocks
- */
-void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
+/*--------------------------------------------------------------------------*/
+/* Return DDR memory region info                                            */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_MemDdrInfoGet(uint32_t ddrRgdId, uint32_t *numRgd,
+    uint32_t *ddrType, uint32_t *ddrWidth, bool *eccEnb, uint32_t *mts,
+    uint64_t *startAddr, uint64_t *endAddr)
+{
+    *numRgd = 1U;
+    *ddrType = DEV_SM_DDR_TYPE_LPDDR5;
+    *ddrWidth = 32U;
+    *eccEnb = false;
+    *mts = 8400U;
+    *startAddr = 0x80000000ULL;
+    *endAddr = 0xFFFFFFFFULL;
 
-/*!
- * Configure power domain hardware after power up.
- *
- * @param[in]  domainId    power domain powered up
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerUpPost(uint32_t domainId);
-
-/*!
- * Configure power domain hardware before power down.
- *
- * @param[in]  domainId    power domain to be powered down
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- */
-int32_t DEV_SM_PowerDownPre(uint32_t domainId);
-
-#endif /* DEV_SM_H */
-
-/** @} */
+    /* Return status */
+    return SM_ERR_SUCCESS;
+}
 

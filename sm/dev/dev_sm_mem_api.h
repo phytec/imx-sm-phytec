@@ -34,52 +34,33 @@
 
 /*==========================================================================*/
 /*!
- * @addtogroup DEV_SM_MX94
+ * @addtogroup DEV_SM_MEM_API
  * @{
  *
  * @file
  * @brief
  *
- * Header file containing the SM API for the device.
+ * Header file containing the SM API for the device memory.
  */
 /*==========================================================================*/
 
-#ifndef DEV_SM_H
-#define DEV_SM_H
+#ifndef DEV_SM_MEM_API_H
+#define DEV_SM_MEM_API_H
 
 /* Includes */
 
 #include "sm.h"
-#include "dev_sm_config.h"
-#include "dev_sm_power.h"
-#include "dev_sm_system.h"
-#include "dev_sm_mem.h"
-#include "dev_sm_perf.h"
-#include "dev_sm_clock.h"
-#include "dev_sm_sensor.h"
-#include "dev_sm_reset.h"
-#include "dev_sm_voltage.h"
-#include "dev_sm_bbm.h"
-#include "dev_sm_cpu.h"
-#include "dev_sm_pin.h"
-#include "dev_sm_control.h"
-#include "dev_sm_rdc.h"
-#include "dev_sm_common.h"
-#include "dev_sm_rom.h"
-#include "dev_sm_fault.h"
-#include "dev_sm_fuse.h"
-#include "dev_sm_handlers.h"
 
 /* Defines */
 
 /*!
- * @name Device general parameters
+ * @name Type of device DDR
  */
 /** @{ */
-#define DEVICE_HAS_ELE   /*!< Has ELE */
-#define DEVICE_HAS_V2X   /*!< Has V2X */
-#define DEVICE_HAS_FCCU  /*!< Has FCCU */
-#define DEVICE_HAS_TRDC  /*!< Has TRDC */
+#define DEV_SM_DDR_TYPE_LPDDR5   0  /*!< LPDDR5 */
+#define DEV_SM_DDR_TYPE_LPDDR5X  1  /*!< LPDDR5X */
+#define DEV_SM_DDR_TYPE_LPDDR4   2  /*!< LPDDR4 */
+#define DEV_SM_DDR_TYPE_LPDDR4X  3  /*!< LPDDR4X */
 /** @} */
 
 /* Types */
@@ -87,51 +68,67 @@
 /* Functions */
 
 /*!
- * Initialize the device.
- *
- * @param[in]     bootPerfLevel   Boot performance level
- * @param[in]     runPerfLevel    Run performance level for all active domains
+ * Initialize the device memory functions.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
  */
-int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel);
+int32_t DEV_SM_MemInit(void);
 
 /*!
- * Return lists of resources used by the SM.
+ * Get device DDR memory region info.
  *
- * @param[in]  numClock    Number of clocks
- * @param[in]  clockList   Return pointer to array of clocks
- */
-void DEV_SM_LmmInitGet(uint32_t *numClock, const uint32_t **clockList);
-
-/*!
- * Configure power domain hardware after power up ACK sent to GPC/SRC.
+ * @param[in]     ddrRgdId  Region call is for
+ * @param[out]    numRgd    Pointer to return the number of regions
+ * @param[out]    ddrType   Pointer to return the DDR type
+ * @param[out]    ddrWidth  Pointer to return the DDR width
+ * @param[out]    eccEnb    Pointer to return the ECC enable state
+ * @param[out]    mts       Pointer to return MTS
+ * @param[out]    startAddr Pointer to return the start address
+ * @param[out]    endAddr   Pointer to return the end address
  *
- * @param[in]  domainId    power domain powered up
+ * This function allows a caller to get DDR memory region info.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if info is returned.
+ * - ::SM_ERR_NOT_FOUND: if \a ddrRgdId is invalid.
+ * - ::SM_ERR_POWER: if the DDR controller is not powered/configured.
  */
-int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId);
+int32_t DEV_SM_MemDdrInfoGet(uint32_t ddrRgdId, uint32_t *numRgd,
+    uint32_t *ddrType, uint32_t *ddrWidth, bool *eccEnb, uint32_t *mts,
+    uint64_t *startAddr, uint64_t *endAddr);
 
 /*!
- * Configure power domain hardware after power up.
- *
- * @param[in]  domainId    power domain powered up
+ * Place the DDR into retention.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
  */
-int32_t DEV_SM_PowerUpPost(uint32_t domainId);
+int32_t DEV_SM_MemDdrRetentionEnter(void);
 
 /*!
- * Configure power domain hardware before power down.
- *
- * @param[in]  domainId    power domain to be powered down
+ * Exit the DDR from retention.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
  */
-int32_t DEV_SM_PowerDownPre(uint32_t domainId);
+int32_t DEV_SM_MemDdrRetentionExit(void);
 
-#endif /* DEV_SM_H */
+/*!
+ * Memory timer tick.
+ *
+ * @param[in]     msec          Period in milliseconds
+ *
+ * This function is called periodically by a timer.
+ */
+void DEV_SM_MemTick(uint32_t msec);
+
+#endif /* DEV_SM_MEM_API_H */
 
 /** @} */
 

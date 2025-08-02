@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -192,7 +192,7 @@ int32_t LMM_MiscControlFlagsSet(uint32_t lmId, uint32_t ctrlId,
  * Get passover data from ROM.
  *
  * @param[in]     lmId     LM call is for
- * @param[in]     passover Pointer to return passover pointer
+ * @param[out]    passover Pointer to return passover pointer
  *
  * This function allows a caller to obtain a pointer to the ROM
  * passover data.
@@ -205,6 +205,31 @@ int32_t LMM_MiscControlFlagsSet(uint32_t lmId, uint32_t ctrlId,
  */
 int32_t LMM_MiscRomPassoverGet(uint32_t lmId,
     const rom_passover_t **passover);
+
+/*!
+ * Get DDR memory region info.
+ *
+ * @param[in]     lmId      LM call is for
+ * @param[in]     ddrRgdId  Region call is for
+ * @param[out]    numRgd    Pointer to return the number of regions
+ * @param[out]    ddrType   Pointer to return the DDR type
+ * @param[out]    ddrWidth  Pointer to return the DDR width
+ * @param[out]    eccEnb    Pointer to return the ECC enable state
+ * @param[out]    mts       Pointer to return MTS
+ * @param[out]    startAddr Pointer to return the start address
+ * @param[out]    endAddr   Pointer to return the end address
+ *
+ * This function allows a caller to get DDR memory region info.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if pointer is returned.
+ * - others returned by ::SM_MEMDDRINFOGET
+ */
+int32_t LMM_MiscDdrInfoGet(uint32_t lmId, uint32_t ddrRgdId, uint32_t *numRgd,
+    uint32_t *ddrType, uint32_t *ddrWidth, bool *eccEnb, uint32_t *mts,
+    uint64_t *startAddr, uint64_t *endAddr);
 
 /*!
  * Report control event.

@@ -42,6 +42,7 @@ Info Commands
 | Command                     | Description                                                  |
 |-----------------------------|--------------------------------------------------------------|
 | info                        | display SM/SoC info like unique ID, etc.                     |
+| ddr                         | dump info about DDR memory regions                           |
 | ele info                    | display ELE info like FW version, lifecycle, etc.            |
 | ele ext                     | display ELE extended info like ROM patch SHA, etc.           |
 | ele dump                    | dump ELE debug data                                          |

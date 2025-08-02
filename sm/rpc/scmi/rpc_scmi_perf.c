@@ -469,7 +469,7 @@ static int32_t PerfProtocolVersion(const scmi_caller_t *caller,
 /*   located. This value should be 64-bit aligned. The address must be in   */
 /*   the memory map of the calling agent. If the statisticsLen field is 0,  */
 /*   then this field is invalid and must be ignored                         */
-/* - out->statisticsAddressHigh: High address: The upper 32 bit of the      */
+/* - out->statisticsAddressHigh: High address: The upper 32 bits of the     */
 /*   physical address where the shared memory region is located. The        */
 /*   address must be in the memory map of the calling agent. If the         */
 /*   statisticsLen field is 0, then this field is invalid and must be       */

@@ -73,11 +73,6 @@ typedef struct
 static uint32_t s_sysSleepMode = 0U;
 static uint32_t s_sysSleepFlags = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-static BLK_CTRL_DDRMIX_Type s_ddrBlkCtrl;
-#ifdef USES_RX_REPLICA
-static ddr_rxclkdelay_wa_data_t s_rxClkDelay;
-static uint32_t s_ddrMseconds = 0U;
-#endif
 #ifdef DEV_SM_MSG_PROF_CNT
 static dev_sm_sys_msg_cur_t s_curMsgRecord = { 0 };
 #endif
@@ -85,11 +80,6 @@ static dev_sm_sys_msg_cur_t s_curMsgRecord = { 0 };
 /* Local functions */
 
 static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve);
-#ifdef USES_RX_REPLICA
-static void DEV_SM_RxReplicaInit(void);
-static void DEV_SM_RxReplicaDeinit(void);
-static void DEV_SM_RxReplicaReinit(void);
-#endif
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -138,11 +128,6 @@ int32_t DEV_SM_SystemInit(void)
 
     /* Enable bypass for clock sources */
     DEV_SM_ClockSourceBypass(true, false);
-
-#ifdef USES_RX_REPLICA
-    /* Init RX Replica workaround */
-    DEV_SM_RxReplicaInit();
-#endif
 
     /* Return status */
     return status;
@@ -574,12 +559,12 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 g_syslog.sysSleepRecord.sleepCnt = 0U;
             }
 
-            bool dramInRetention = false;
-            /* Attempt to place DRAM into retention */
-            if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
+            bool ddrInRetention = false;
+            /* Attempt to place DDR into retention */
+            if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
             {
-                /* Set flag to indicate DRAM retention is active */
-                dramInRetention = true;
+                /* Set flag to indicate DDR retention is active */
+                ddrInRetention = true;
 
                 /* Power down DDRMIX */
                 if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
@@ -901,8 +886,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     DEV_SM_POWER_STATE_ON);
             }
 
-            /* Check if DRAM retention active */
-            if (dramInRetention)
+            /* Check if DDR retention active */
+            if (ddrInRetention)
             {
                 if (status == SM_ERR_SUCCESS)
                 {
@@ -913,8 +898,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
                 if (status == SM_ERR_SUCCESS)
                 {
-                    /* Take DRAM out of retention */
-                    status = DEV_SM_SystemDramRetentionExit();
+                    /* Take DDR out of retention */
+                    status = DEV_SM_MemDdrRetentionExit();
                 }
             }
 
@@ -1031,205 +1016,6 @@ int32_t DEV_SM_SystemIdle(void)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Place the system DRAM into retention                                     */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemDramRetentionEnter(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
-    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
-
-    /* Get power state of DDRMIX */
-    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* DDRMIX must be ON to apply retention */
-        if (powerState != DEV_SM_POWER_STATE_ON)
-        {
-            status = SM_ERR_POWER;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Save DDRMIX block control */
-        s_ddrBlkCtrl.HWFFC_CTRL = BLK_CTRL_DDRMIX->HWFFC_CTRL;
-        s_ddrBlkCtrl.CA55_SEL_CTRL = BLK_CTRL_DDRMIX->CA55_SEL_CTRL;
-        s_ddrBlkCtrl.VREF_PSW_CTRL = BLK_CTRL_DDRMIX->VREF_PSW_CTRL;
-        s_ddrBlkCtrl.DDRC_STOP_CTRL = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
-        s_ddrBlkCtrl.AUTO_CG_CTRL = BLK_CTRL_DDRMIX->AUTO_CG_CTRL;
-        s_ddrBlkCtrl.SSI_PWR_CTRL = BLK_CTRL_DDRMIX->SSI_PWR_CTRL;
-        s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN = BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN;
-        s_ddrBlkCtrl.DDRC_URGENT_EN = BLK_CTRL_DDRMIX->DDRC_URGENT_EN;
-        s_ddrBlkCtrl.RT_MASTER_ID_0_1 = BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1;
-        s_ddrBlkCtrl.RT_MASTER_ID_2_3 = BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3;
-        s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT =
-            BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT;
-        s_ddrBlkCtrl.RT_MASTER_ID_4_5 = BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5;
-        s_ddrBlkCtrl.RT_MASTER_ID_6_7 = BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7;
-
-#ifdef USES_RX_REPLICA
-        DEV_SM_RxReplicaDeinit();
-#endif
-
-        /* Enter retention */
-        if (!DDR_EnterRetention(ddr))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Assert DDRPHY Reset */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
-            RST_LINE_CTRL_ASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Deassert BP_PWROK */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRMIX_PHY,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Exit the system DRAM from retention                                      */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemDramRetentionExit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
-    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
-
-    /* Get power state of DDRMIX */
-    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* DDRMIX must be ON to remove retention */
-        if (powerState != DEV_SM_POWER_STATE_ON)
-        {
-            status = SM_ERR_POWER;
-        }
-    }
-
-    /**
-     * BIT(8) => src_ipc_ddrphy_presetn, PRESETN
-     * BIT(9) => src_ipc_ddrphy_reset_n, RESET_N
-     * for some reason BIT(8)=1 at this point, so PRESETN go LOW after power-up
-     * Ensure PRESETN go HIGH after power-up
-     * Ensure RESET_N go LOW  after power-up
-     */
-    if (status == SM_ERR_SUCCESS)
-    {
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN, RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* sleep for a while, just random */
-        SystemTimeDelay(15U);
-
-        /* set PRESETN LOW after power-up */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
-            RST_LINE_CTRL_ASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The delay below must be at least 16 APBCLK
-         * APBCLK is @200MHz in waveform. Timer clock is @24MHz =>
-         * => (16 * 24.000.000 / 200.000.000) = 1.92us minimum
-         * => set x4 = 8us */
-        SystemTimeDelay(15U);
-
-        /* set PRESETN HIGH */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The delay below shall be 0 according to PHY PUB, set 8 just in case */
-        SystemTimeDelay(15U);
-
-        /* set RESET_N HIGH */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The duration for the delay below is not mentioned in PHY PUB,
-           set 8 just in case */
-        SystemTimeDelay(15U);
-
-        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL_VCO, true);
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL, true);
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Exit retention */
-        if (!DDR_ExitRetention(ddr))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-
-        /* Restore DDRMIX block control */
-        BLK_CTRL_DDRMIX->HWFFC_CTRL = s_ddrBlkCtrl.HWFFC_CTRL;
-        BLK_CTRL_DDRMIX->CA55_SEL_CTRL = s_ddrBlkCtrl.CA55_SEL_CTRL;
-        BLK_CTRL_DDRMIX->VREF_PSW_CTRL = s_ddrBlkCtrl.VREF_PSW_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_STOP_CTRL = s_ddrBlkCtrl.DDRC_STOP_CTRL;
-        BLK_CTRL_DDRMIX->AUTO_CG_CTRL = s_ddrBlkCtrl.AUTO_CG_CTRL;
-        BLK_CTRL_DDRMIX->SSI_PWR_CTRL = s_ddrBlkCtrl.SSI_PWR_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN = s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN;
-        BLK_CTRL_DDRMIX->DDRC_URGENT_EN = s_ddrBlkCtrl.DDRC_URGENT_EN;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1 = s_ddrBlkCtrl.RT_MASTER_ID_0_1;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3 = s_ddrBlkCtrl.RT_MASTER_ID_2_3;
-        BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT =
-            s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5 = s_ddrBlkCtrl.RT_MASTER_ID_4_5;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7 = s_ddrBlkCtrl.RT_MASTER_ID_6_7;
-
-#ifdef USES_RX_REPLICA
-        /* Perform one-time RxReplica work-around prior to DDR accesses and
-         * before enabling periodic operation */
-        DEV_SM_RxReplicaReinit();
-#endif
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
 /* System timer tick                                                        */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemTick(uint32_t msec)
@@ -1239,23 +1025,6 @@ void DEV_SM_SystemTick(uint32_t msec)
     LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P1);
     LMM_SystemCpuModeChanged(DEV_SM_CPU_M33S);
     LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
-
-#ifdef USES_RX_REPLICA
-    /* Tick DDR */
-    /*
-     * False Positive: The msec value is 10
-     * and the base rolls to 0 at 1000.
-     */
-    // coverity[cert_int30_c_violation:FALSE]
-    s_ddrMseconds += msec;
-
-    /* Handle DDR periodic tick */
-    if (s_ddrMseconds >= 1000U)
-    {
-        s_ddrMseconds = 0U;
-        DDR_RxReplicaWa(&s_rxClkDelay, 16U);
-    }
-#endif
 }
 
 /*==========================================================================*/
@@ -1293,46 +1062,6 @@ static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve)
         (void) FRACTPLL_SetBypass(CLOCK_PLL_ENCODER, bypass);
     }
 }
-
-#ifdef USES_RX_REPLICA
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Init                                           */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaInit(void)
-{
-    uint64_t rate;
-    int32_t status = SM_ERR_SUCCESS;
-
-    status = DEV_SM_ClockRateGet(DEV_SM_CLK_DRAMPLL, &rate);
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        s_rxClkDelay.dramFreqMhz = U64_U32(rate / 1000000U);
-        s_rxClkDelay.pmro = DEV_SM_FuseGet(DEV_SM_FUSE_PMRO);
-
-        (void) DDR_RxClkDelayInit(&s_rxClkDelay, DDR_RXCLK_DELAY_CNT);
-    }
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Deinit                                         */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaDeinit(void)
-{
-    s_rxClkDelay.initComplete = false;
-    s_ddrMseconds = 0U;
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Reinit                                         */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaReinit(void)
-{
-    s_ddrMseconds = 0U;
-    s_rxClkDelay.initComplete = true;
-    DDR_RxReplicaWa(&s_rxClkDelay, 128U);
-}
-#endif
 
 #ifdef DEV_SM_MSG_PROF_CNT
 /*--------------------------------------------------------------------------*/

@@ -1074,6 +1074,110 @@ int32_t SCMI_MiscControlExtGet(uint32_t channel, uint32_t ctrlId,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get DDR memory region info                                               */
+/*--------------------------------------------------------------------------*/
+int32_t SCMI_MiscDdrInfoGet(uint32_t channel, uint32_t ddrRgdId,
+    uint32_t *attributes, uint32_t *mts, uint32_t *startLow,
+    uint32_t *startHigh, uint32_t *endLow, uint32_t *endHigh)
+{
+    int32_t status;
+    uint32_t header;
+    void *msg;
+
+    /* Response message structure */
+    typedef struct
+    {
+        uint32_t header;
+        int32_t status;
+        uint32_t attributes;
+        uint32_t mts;
+        uint32_t startLow;
+        uint32_t startHigh;
+        uint32_t endLow;
+        uint32_t endHigh;
+    } msg_rmiscd34_t;
+
+    /* Acquire lock */
+    SCMI_A2P_LOCK(channel);
+
+    /* Init buffer */
+    status = SCMI_BufInit(channel, &msg);
+
+    /* Send request */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        /* Request message structure */
+        typedef struct
+        {
+            uint32_t header;
+            uint32_t ddrRgdId;
+        } msg_tmiscd34_t;
+        msg_tmiscd34_t *msgTx = (msg_tmiscd34_t*) msg;
+
+        /* Fill in parameters */
+        msgTx->ddrRgdId = ddrRgdId;
+
+        /* Send message */
+        status = SCMI_A2pTx(channel, COMMAND_PROTOCOL,
+            SCMI_MSG_MISC_DDR_INFO_GET, sizeof(msg_tmiscd34_t), &header);
+    }
+
+    /* Receive response */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        status = SCMI_A2pRx(channel, sizeof(msg_rmiscd34_t), header);
+    }
+
+    /* Copy out if no error */
+    if (status == SCMI_ERR_SUCCESS)
+    {
+        const msg_rmiscd34_t *msgRx = (const msg_rmiscd34_t*) msg;
+
+        /* Extract attributes */
+        if (attributes != NULL)
+        {
+            *attributes = msgRx->attributes;
+        }
+
+        /* Extract mts */
+        if (mts != NULL)
+        {
+            *mts = msgRx->mts;
+        }
+
+        /* Extract startLow */
+        if (startLow != NULL)
+        {
+            *startLow = msgRx->startLow;
+        }
+
+        /* Extract startHigh */
+        if (startHigh != NULL)
+        {
+            *startHigh = msgRx->startHigh;
+        }
+
+        /* Extract endLow */
+        if (endLow != NULL)
+        {
+            *endLow = msgRx->endLow;
+        }
+
+        /* Extract endHigh */
+        if (endHigh != NULL)
+        {
+            *endHigh = msgRx->endHigh;
+        }
+    }
+
+    /* Release lock */
+    SCMI_A2P_UNLOCK(channel);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Read control notification event                                          */
 /*--------------------------------------------------------------------------*/
 int32_t SCMI_MiscControlEvent(uint32_t channel, uint32_t *ctrlId,

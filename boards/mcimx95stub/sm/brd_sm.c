@@ -46,7 +46,7 @@
 
 /* Local defines */
 
-#define BRD_SM_RST_REC_FIRST  4U     /* First GPR for shutdown record */
+#define BRD_SM_RST_REC_FIRST  0U     /* First GPR for shutdown record */
 #define BRD_SM_RST_REC_NUM    4U     /* Number of GPR for shutdown record */
 
 /* Defines to encode the reason */

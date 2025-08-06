@@ -148,6 +148,36 @@ void TEST_ScmiMisc(void)
             NULL, NULL, NULL));
     }
 
+    /* Test DDR info */
+    {
+        uint32_t attributes;
+        uint32_t mts;
+        uint32_t startLow;
+        uint32_t startHigh;
+        uint32_t endLow;
+        uint32_t endHigh;
+
+        printf("SCMI_MiscDdrInfoGet(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+            &attributes, &mts, &startLow, &startHigh,
+            &endLow, &endHigh));
+
+        printf("  attributes=0x%08X\n",  attributes);
+        printf("  mts=%u\n",  mts);
+        printf("  start=0x%X%08X\n",  startHigh, startLow);
+        printf("  end=0x%X%08X\n",  endHigh, endLow);
+
+        /* Branch -- Invalid Channel */
+        NECHECK(SCMI_MiscDdrInfoGet(SM_SCMI_NUM_CHN, 0U,
+            NULL, NULL, NULL, NULL, NULL, NULL),
+            SCMI_ERR_INVALID_PARAMETERS);
+
+        /* Branch -- Nullpointer */
+        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+            NULL, NULL, NULL, NULL, NULL, NULL));
+    }
+
     /* MiscReasonAttributes */
     {
         uint32_t reasonId = DEV_SM_REASON_POR;

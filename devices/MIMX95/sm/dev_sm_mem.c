@@ -377,12 +377,6 @@ static void DEV_SM_RxReplicaInit(void)
         s_rxClkDelay.dramFreqMhz = U64_U32(rate / 1000000U);
         s_rxClkDelay.pmro = DEV_SM_FuseGet(DEV_SM_FUSE_PMRO);
 
-        /* if PMRO fuse is not set, assume default */
-        if (s_rxClkDelay.pmro == 0U)
-        {
-            s_rxClkDelay.pmro = 0x5000U;
-        }
-
         (void) DDR_RxClkDelayInit(&s_rxClkDelay, DDR_RXCLK_DELAY_CNT);
     }
 }

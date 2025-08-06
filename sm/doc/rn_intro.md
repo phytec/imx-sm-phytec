@@ -32,7 +32,8 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Support putting DDR into retention while Ethernet Switch and M33S is active
+- Support putting DDR into retention while Ethernet Switch and M33S are active
+- Add new SCMI MISC API to get DDR info
 - Add device error log
 - Add monitor delay command
 

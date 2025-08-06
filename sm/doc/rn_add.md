@@ -24,8 +24,9 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-None, but some internal coding standards fixes. Agents should update to the latest
-API implementation.
+Add a new SCMI MISC protocol function, SCMI_MiscDdrInfoGet(), that can be used to get
+info about the DDR memory regions in the system. The MISC protocol version was
+updated to 1.1.
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================

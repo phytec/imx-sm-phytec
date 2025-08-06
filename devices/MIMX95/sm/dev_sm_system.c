@@ -46,9 +46,6 @@
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_sysctr.h"
-#ifdef USES_RX_REPLICA
-#include "fsl_ddr_rx_replica.h"
-#endif
 
 /* Local defines */
 

@@ -41,7 +41,6 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
-#include "fsl_ddr.h"
 #include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"

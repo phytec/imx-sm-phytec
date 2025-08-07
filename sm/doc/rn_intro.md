@@ -32,10 +32,12 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Support putting DDR into retention while Ethernet Switch and M33S are active
-- Add new SCMI MISC API to get DDR info
-- Add device error log
-- Add monitor delay command
+Added:
+
+- Support for low-power (LP) compute mode during system sleep
+- New SCMI MISC API to get DDR info
+- Device error log support
+- A monitor delay command
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.

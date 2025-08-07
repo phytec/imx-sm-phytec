@@ -24,9 +24,13 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-Add a new SCMI MISC protocol function, SCMI_MiscDdrInfoGet(), that can be used to get
-info about the DDR memory regions in the system. The MISC protocol version was
-updated to 1.1.
+Made some API additions:
+
+- LP compute flag for the SCMI_CpuSleepModeSet() function. This can be set
+  with the SCMI_CPU_FLAGS_LP_COMPUTE() macro.
+- SCMI MISC protocol function, SCMI_MiscDdrInfoGet(), that can be used to get
+  info about the DDR memory regions in the system. The MISC protocol version
+  updated to 1.1.
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================

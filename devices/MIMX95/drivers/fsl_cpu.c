@@ -29,13 +29,11 @@
 
 /* Includes */
 
-#include "fsl_def.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 

@@ -84,18 +84,6 @@ bool FRACTPLL_SetEnable(uint32_t pllIdx, uint32_t enMask, bool enable)
 
         if (enable)
         {
-#if (defined(FSL_FEATURE_FRAC_PLL_HAS_ERRATA_628654) && FSL_FEATURE_FRAC_PLL_HAS_ERRATA_628654)
-            /* If fractional PLL, rewrite MFN (not retained during PLL disable) */
-            if (((enMask & PLL_CTRL_POWERUP_MASK) != 0U) &&
-                (g_pllAttrs[pllIdx].isFrac))
-            {
-                uint32_t pllNum = pll->NUMERATOR.RW;
-                pll->NUMERATOR.RW = pllNum;
-
-                /* Wait before POWERUP */
-                SystemTimeDelay(ES_MAX_USEC_PLL_PREP);
-            }
-#endif
             pll->CTRL.SET = enMask;
 
             if (pll->SPREAD_SPECTRUM.RW != 0U)

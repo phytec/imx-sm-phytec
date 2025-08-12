@@ -30,7 +30,6 @@
 /* Includes */
 
 #include "fsl_reset.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 

@@ -1220,7 +1220,7 @@ static int32_t CpuPerLpmConfigSet(const scmi_caller_t *caller,
     uint32_t numConfigs = in->numConfigs;
 
     /* Check numConfigs */
-    if (numConfigs <= CPU_MAX_PDCONFIGS_T)
+    if (numConfigs <= CPU_MAX_PERCONFIGS_T)
     {
         /* Check request length */
         if (caller->lenCopy < ((3U * sizeof(uint32_t))

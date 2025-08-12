@@ -13,58 +13,58 @@ Below is a list of changes between the previous release (imx_sm_2025q2) and this
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-263](https://jira.sw.nxp.com/projects/SM/issues/SM-263) | Add monitor delay command [[detail]](@ref RN_DETAIL_SM_263) |   | Y | Y | Y | Y |
-| [SM-269](https://jira.sw.nxp.com/projects/SM/issues/SM-269) | Add device error log [[detail]](@ref RN_DETAIL_SM_269) |   | Y | Y | Y | Y |
-| [SM-275](https://jira.sw.nxp.com/projects/SM/issues/SM-275) | Add support for LP compute mode during system sleep [[detail]](@ref RN_DETAIL_SM_275) |   | Y | Y | Y | Y |
-| [SM-282](https://jira.sw.nxp.com/projects/SM/issues/SM-282) | Add SCMI message to get DDR info [[detail]](@ref RN_DETAIL_SM_282) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-263](https://jira.sw.nxp.com/projects/SM/issues/SM-263) | Add monitor delay command [[detail]](@ref RN_DETAIL_SM_263) |   | Y | Y |
+| [SM-269](https://jira.sw.nxp.com/projects/SM/issues/SM-269) | Add device error log [[detail]](@ref RN_DETAIL_SM_269) |   | Y | Y |
+| [SM-275](https://jira.sw.nxp.com/projects/SM/issues/SM-275) | Add support for LP compute mode during system sleep [[detail]](@ref RN_DETAIL_SM_275) |   | Y | Y |
+| [SM-282](https://jira.sw.nxp.com/projects/SM/issues/SM-282) | Add SCMI message to get DDR info [[detail]](@ref RN_DETAIL_SM_282) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-250](https://jira.sw.nxp.com/projects/SM/issues/SM-250) | Save/restore A55 TMPSNS thresholds across mix resets  [[detail]](@ref RN_DETAIL_SM_250) |   | Y | Y | Y | Y |
-| [SM-252](https://jira.sw.nxp.com/projects/SM/issues/SM-252) | Coding standard fixes and test improvements [[detail]](@ref RN_DETAIL_SM_252) |   | Y | Y | Y | Y |
-| [SM-268](https://jira.sw.nxp.com/projects/SM/issues/SM-268) | Add CGC parent nodes to discoverable clock tree attributes [[detail]](@ref RN_DETAIL_SM_268) |   | Y | Y | Y | Y |
-| [SM-270](https://jira.sw.nxp.com/projects/SM/issues/SM-270) | RTC PCA2131 miscellaneous fixes [[detail]](@ref RN_DETAIL_SM_270) |   | Y | Y | Y | Y |
-| [SM-277](https://jira.sw.nxp.com/projects/SM/issues/SM-277) | Make ports to various SoC more common [[detail]](@ref RN_DETAIL_SM_277) |   | Y | Y | Y | Y |
-| [SM-278](https://jira.sw.nxp.com/projects/SM/issues/SM-278) | Create new config file to demonstrate NETC sharing [[detail]](@ref RN_DETAIL_SM_278) |   | | | | Y |
-| [SM-279](https://jira.sw.nxp.com/projects/SM/issues/SM-279) | Support M33S DDR target boot [[detail]](@ref RN_DETAIL_SM_279) |   | | | | Y |
-| [SM-284](https://jira.sw.nxp.com/projects/SM/issues/SM-284) | Give M33S permission to PERF domain [[detail]](@ref RN_DETAIL_SM_284) |   | | | | Y |
-| [SM-292](https://jira.sw.nxp.com/projects/SM/issues/SM-292) | Move DDR RxReplica pathPhase initialization to OEI [[detail]](@ref RN_DETAIL_SM_292) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-250](https://jira.sw.nxp.com/projects/SM/issues/SM-250) | Save/restore A55 TMPSNS thresholds across mix resets  [[detail]](@ref RN_DETAIL_SM_250) |   | Y | Y |
+| [SM-252](https://jira.sw.nxp.com/projects/SM/issues/SM-252) | Coding standard fixes and test improvements [[detail]](@ref RN_DETAIL_SM_252) |   | Y | Y |
+| [SM-268](https://jira.sw.nxp.com/projects/SM/issues/SM-268) | Add CGC parent nodes to discoverable clock tree attributes [[detail]](@ref RN_DETAIL_SM_268) |   | Y | Y |
+| [SM-270](https://jira.sw.nxp.com/projects/SM/issues/SM-270) | RTC PCA2131 miscellaneous fixes [[detail]](@ref RN_DETAIL_SM_270) |   | Y | Y |
+| [SM-277](https://jira.sw.nxp.com/projects/SM/issues/SM-277) | Make ports to various SoC more common [[detail]](@ref RN_DETAIL_SM_277) |   | Y | Y |
+| [SM-278](https://jira.sw.nxp.com/projects/SM/issues/SM-278) | Create new config file to demonstrate NETC sharing [[detail]](@ref RN_DETAIL_SM_278) |   | | Y |
+| [SM-279](https://jira.sw.nxp.com/projects/SM/issues/SM-279) | Support M33S DDR target boot [[detail]](@ref RN_DETAIL_SM_279) |   | | Y |
+| [SM-284](https://jira.sw.nxp.com/projects/SM/issues/SM-284) | Give M33S permission to PERF domain [[detail]](@ref RN_DETAIL_SM_284) |   | | Y |
+| [SM-292](https://jira.sw.nxp.com/projects/SM/issues/SM-292) | Move DDR RxReplica pathPhase initialization to OEI [[detail]](@ref RN_DETAIL_SM_292) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-265](https://jira.sw.nxp.com/projects/SM/issues/SM-265) | Some perf controlled clocks assigned to agents as clock controls [[detail]](@ref RN_DETAIL_SM_265) |   | Y | Y | Y | Y |
-| [SM-274](https://jira.sw.nxp.com/projects/SM/issues/SM-274) | A55 CORECLK mapping to ARM_PLL_DFS is incorrect on MX94 [[detail]](@ref RN_DETAIL_SM_274) |   | | | | Y |
-| [SM-276](https://jira.sw.nxp.com/projects/SM/issues/SM-276) | Monitor shows ARM voltage always on [[detail]](@ref RN_DETAIL_SM_276) |   | Y | Y | Y | |
-| [SM-281](https://jira.sw.nxp.com/projects/SM/issues/SM-281) | Incorrect rate returned for uninitialized DFS clock nodes [[detail]](@ref RN_DETAIL_SM_281) |   | Y | Y | Y | Y |
-| [SM-283](https://jira.sw.nxp.com/projects/SM/issues/SM-283) | BBNSM GPR use conflict between board port and cfg usage [[detail]](@ref RN_DETAIL_SM_283) |   | Y | Y | Y | Y |
-| [SM-288](https://jira.sw.nxp.com/projects/SM/issues/SM-288) | System unable to resume when both console and CAN are enabled as wakeups [[detail]](@ref RN_DETAIL_SM_288) |   | Y | Y | Y | Y |
-| [SM-289](https://jira.sw.nxp.com/projects/SM/issues/SM-289) | DATA definition for AP secure in default config files allows non-secure access [[detail]](@ref RN_DETAIL_SM_289) |   | Y | Y | Y | Y |
-| [SM-290](https://jira.sw.nxp.com/projects/SM/issues/SM-290) | CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit [[detail]](@ref RN_DETAIL_SM_290) |   | Y | Y | Y | Y |
-| [SM-291](https://jira.sw.nxp.com/projects/SM/issues/SM-291) | PCA2131 power mode configured even when call is for other RTC [[detail]](@ref RN_DETAIL_SM_291) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-265](https://jira.sw.nxp.com/projects/SM/issues/SM-265) | Some perf controlled clocks assigned to agents as clock controls [[detail]](@ref RN_DETAIL_SM_265) |   | Y | Y |
+| [SM-274](https://jira.sw.nxp.com/projects/SM/issues/SM-274) | A55 CORECLK mapping to ARM_PLL_DFS is incorrect on MX94 [[detail]](@ref RN_DETAIL_SM_274) |   | | Y |
+| [SM-276](https://jira.sw.nxp.com/projects/SM/issues/SM-276) | Monitor shows ARM voltage always on [[detail]](@ref RN_DETAIL_SM_276) |   | Y | |
+| [SM-281](https://jira.sw.nxp.com/projects/SM/issues/SM-281) | Incorrect rate returned for uninitialized DFS clock nodes [[detail]](@ref RN_DETAIL_SM_281) |   | Y | Y |
+| [SM-283](https://jira.sw.nxp.com/projects/SM/issues/SM-283) | BBNSM GPR use conflict between board port and cfg usage [[detail]](@ref RN_DETAIL_SM_283) |   | Y | Y |
+| [SM-288](https://jira.sw.nxp.com/projects/SM/issues/SM-288) | System unable to resume when both console and CAN are enabled as wakeups [[detail]](@ref RN_DETAIL_SM_288) |   | Y | Y |
+| [SM-289](https://jira.sw.nxp.com/projects/SM/issues/SM-289) | DATA definition for AP secure in default config files allows non-secure access [[detail]](@ref RN_DETAIL_SM_289) |   | Y | Y |
+| [SM-290](https://jira.sw.nxp.com/projects/SM/issues/SM-290) | CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit [[detail]](@ref RN_DETAIL_SM_290) |   | Y | Y |
+| [SM-291](https://jira.sw.nxp.com/projects/SM/issues/SM-291) | PCA2131 power mode configured even when call is for other RTC [[detail]](@ref RN_DETAIL_SM_291) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
 
 These are a mix of silicon errata workarounds and recommended usage changes.
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-285](https://jira.sw.nxp.com/projects/SM/issues/SM-285) | Remove PMRO default val for i.MX95 [[detail]](@ref RN_DETAIL_SM_285) |   | Y | Y | Y | |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-285](https://jira.sw.nxp.com/projects/SM/issues/SM-285) | Remove PMRO default val for i.MX95 [[detail]](@ref RN_DETAIL_SM_285) |   | Y | |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-237](https://jira.sw.nxp.com/projects/SM/issues/SM-237) | SM 2025Q3 documentation updates |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-237](https://jira.sw.nxp.com/projects/SM/issues/SM-237) | SM 2025Q3 documentation updates |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======

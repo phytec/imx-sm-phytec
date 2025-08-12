@@ -178,25 +178,16 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_ON:
                 if (PWR_IsParentPowered(domainId))
                 {
-                    /* Skip MIX-level transaction blocking on Rev A  */
-                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+                    /* Disable MIX-level transaction blocking */
+                    PWR_MixSsiBlockingSet(domainId, false);
+                    if (SRC_MixSoftPowerUp(domainId))
                     {
-                        if (SRC_MixSoftPowerUp(domainId))
-                        {
-                            status = DEV_SM_PowerUpPost(domainId);
-                        }
-                    }
-                    else
-                    {
-                        PWR_MixSsiBlockingSet(domainId, false);
-                        if (SRC_MixSoftPowerUp(domainId))
-                        {
-                            status = DEV_SM_PowerUpPost(domainId);
+                        status = DEV_SM_PowerUpPost(domainId);
 
-                            if (status == SM_ERR_SUCCESS)
-                            {
-                                PWR_MixSsiBlockingUpdate(domainId);
-                            }
+                        if (status == SM_ERR_SUCCESS)
+                        {
+                            /* Restore MIX-level transaction blocking */
+                            PWR_MixSsiBlockingUpdate(domainId);
                         }
                     }
                 }
@@ -208,21 +199,11 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_OFF:
                 if (!PWR_AnyChildPowered(domainId))
                 {
-                    /* Skip MIX-level transaction blocking on Rev A  */
-                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+                    /* Disable MIX-level transaction blocking */
+                    PWR_MixSsiBlockingSet(domainId, false);
+                    if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
                     {
-                        if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
-                        {
-                            SRC_MixSoftPowerDown(domainId);
-                        }
-                    }
-                    else
-                    {
-                        PWR_MixSsiBlockingSet(domainId, false);
-                        if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
-                        {
-                            SRC_MixSoftPowerDown(domainId);
-                        }
+                        SRC_MixSoftPowerDown(domainId);
                     }
                 }
                 else

@@ -35,7 +35,6 @@
 #include "fsl_clock.h"
 #include "fsl_power.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 

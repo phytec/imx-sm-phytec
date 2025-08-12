@@ -108,16 +108,9 @@ static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
 int32_t DEV_SM_SensorInit(void)
 {
     int32_t status;
-    bool secAccess = false;
-
-    /* Check if A0/1 which allows SM to start */
-    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
-    {
-        secAccess = true;
-    }
 
     /* Power on ANA sensor */
-    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, secAccess);
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, false);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);

@@ -29,13 +29,11 @@
 
 /* Includes */
 
-#include "fsl_def.h"
-#include "fsl_clock.h"
 #include "fsl_cpu.h"
-#include "sm_test_mode.h"
 #include "fsl_power.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
+#include "fsl_clock.h"
+#include "sm_test_mode.h"
 
 /* Local Defines */
 #define WHITELIST_MASK(cpuId)   (1UL << (CPU2GPC(cpuId)))

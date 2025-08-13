@@ -2223,8 +2223,7 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
             rc = true;
 
             /* Set lower 32-bit vector */
-            *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
-                vectorShift);
+            *vectorRegLow = U32(vector >> vectorShift);
 
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)

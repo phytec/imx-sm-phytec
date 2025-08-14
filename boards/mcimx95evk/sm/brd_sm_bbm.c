@@ -255,12 +255,12 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }
-    }
 
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Enable battery */
-        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Enable battery */
+            (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
+        }
     }
 
     /* Return status */

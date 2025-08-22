@@ -240,15 +240,31 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
             ddrRxcWa->pathsel[idx] =
                 U32_U16(DWC_DDRPHY_APB_RD(0x10000U + (idx << 12U) + 0xadU));
 
-            while (loop-- != 0U)
+            /* Read DDRC DDR_MTP0 for special code key that indicate that
+             * the RxReplica pathPhase initialization was performed in the OEI
+             */
+            if (DDRC->DDR_MTP[0] != 0x0C0DE0E1U)
             {
-                sumpathphase += DWC_DDRPHY_APB_RD(0x10000U +
-                    (idx << 12U) + 0xd0U + ddrRxcWa->pathsel[idx]);
+                /* Initial pathphase collection must be performed in OEI;
+                 * this is left for backwards compatibility, will be removed.
+                 */
+                while (loop-- != 0U)
+                {
+                    sumpathphase += DWC_DDRPHY_APB_RD(0x10000U +
+                        (idx << 12U) + 0xd0U + ddrRxcWa->pathsel[idx]);
+                }
+
+                /* Got Pathphase init values*/
+                ddrRxcWa->init[idx] = U32_U16(DDR_SimpleDivRound(sumpathphase,
+                    count));
+            }
+            else
+            {
+                /* Read RxReplicaCtl03 which stored in OEI */
+                ddrRxcWa->init[idx] = U32_U16(DWC_DDRPHY_APB_RD(0x10000U
+                                              + (idx << 12U) + 0xafU));
             }
 
-            /* Got Pathphase init values*/
-            ddrRxcWa->init[idx] = U32_U16(DDR_SimpleDivRound(sumpathphase,
-                count));
             ddrRxcWa->rxclkoffset[idx] = 0;
         }
 

@@ -33,6 +33,7 @@ Improvement {#RN_CL_IMP}
 | [SM-278](https://jira.sw.nxp.com/projects/SM/issues/SM-278) | Create new config file to demonstrate NETC sharing [[detail]](@ref RN_DETAIL_SM_278) |   | | | | Y |
 | [SM-279](https://jira.sw.nxp.com/projects/SM/issues/SM-279) | Support M33S DDR target boot [[detail]](@ref RN_DETAIL_SM_279) |   | | | | Y |
 | [SM-284](https://jira.sw.nxp.com/projects/SM/issues/SM-284) | Give M33S permission to PERF domain [[detail]](@ref RN_DETAIL_SM_284) |   | | | | Y |
+| [SM-292](https://jira.sw.nxp.com/projects/SM/issues/SM-292) | Move DDR RxReplica pathPhase initialization to OEI [[detail]](@ref RN_DETAIL_SM_292) |   | Y | Y | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -44,6 +45,10 @@ Bug {#RN_CL_BUG}
 | [SM-276](https://jira.sw.nxp.com/projects/SM/issues/SM-276) | Monitor shows ARM voltage always on [[detail]](@ref RN_DETAIL_SM_276) |   | Y | Y | Y | |
 | [SM-281](https://jira.sw.nxp.com/projects/SM/issues/SM-281) | Incorrect rate returned for uninitialized DFS clock nodes [[detail]](@ref RN_DETAIL_SM_281) |   | Y | Y | Y | Y |
 | [SM-283](https://jira.sw.nxp.com/projects/SM/issues/SM-283) | BBNSM GPR use conflict between board port and cfg usage [[detail]](@ref RN_DETAIL_SM_283) |   | Y | Y | Y | Y |
+| [SM-288](https://jira.sw.nxp.com/projects/SM/issues/SM-288) | System unable to resume when both console and CAN are enabled as wakeups [[detail]](@ref RN_DETAIL_SM_288) |   | Y | Y | Y | Y |
+| [SM-289](https://jira.sw.nxp.com/projects/SM/issues/SM-289) | DATA definition for AP secure in default config files allows non-secure access [[detail]](@ref RN_DETAIL_SM_289) |   | Y | Y | Y | Y |
+| [SM-290](https://jira.sw.nxp.com/projects/SM/issues/SM-290) | CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit [[detail]](@ref RN_DETAIL_SM_290) |   | Y | Y | Y | Y |
+| [SM-291](https://jira.sw.nxp.com/projects/SM/issues/SM-291) | PCA2131 power mode configured even when call is for other RTC [[detail]](@ref RN_DETAIL_SM_291) |   | Y | Y | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -197,4 +202,32 @@ SM-285: Remove PMRO default val for i.MX95 {#RN_DETAIL_SM_285}
 ----------
 
 i.MX95 RX Replica implementation assumed a value of 0x5000 for PMRO if the fuse was not programmed. With silicon rev B0, the PMRO fuse is always programmed as per silicon characterization. Hence, the default was removed.
+
+SM-288: System unable to resume when both console and CAN are enabled as wakeups {#RN_DETAIL_SM_288}
+----------
+
+This issue was caused by a typo introduced during the MSG Coverity fixes. The resolution involved correcting the typo in the _CpuPerLpmConfigSet_ function.
+
+SM-289: DATA definition for AP secure in default config files allows non-secure access {#RN_DETAIL_SM_289}
+----------
+
+Changed the definition for DATA in the AP secure section on the NXP cfg files to be secure R/W rather than non-secure R/W. This is already redefined as NS in the following AP non-secure section.
+
+The DATA define wasn't used in NXP cfg files so this did not cause any problem and the change did not result in any change to the generated headers. If customer cfg files used then secure DATA memory regions are accessible in a non-secure state. Customers should make this change and rebuild their headers.
+
+SM-290: CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit {#RN_DETAIL_SM_290}
+----------
+
+Fixed CPU vector address reconstruction in CPU_ResetVectorSet() and CPU_ResetVectorGet() APIs.
+
+
+SM-291: PCA2131 power mode configured even when call is for other RTC {#RN_DETAIL_SM_291}
+----------
+
+Move the PCA2131 power mode configuration into the else condition block of PCA2131 RTC support in the NXP reference board ports.
+
+SM-292: Move DDR RxReplica pathPhase initialization to OEI {#RN_DETAIL_SM_292}
+----------
+
+Move DDR RxReplica pathPhase initialization to OEI as more accurate to capture the pathPhase after data training. Also, Quickboot can use same set of PHY CSRs.
 

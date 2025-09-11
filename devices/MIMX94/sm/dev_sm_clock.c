@@ -979,9 +979,17 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 
         if (clockIndex < CLOCK_NUM_ROOT)
         {
-            if (!CCM_RootSetEnable(clockIndex, enable))
+            /* Reject clock disable if associated LPI active */
+            if (!enable && CLOCK_RootLpiIsActive(clockIndex))
             {
-                status = SM_ERR_INVALID_PARAMETERS;
+                status = SM_ERR_HARDWARE_ERROR;
+            }
+            else
+            {
+                if (!CCM_RootSetEnable(clockIndex, enable))
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
             }
         }
         else

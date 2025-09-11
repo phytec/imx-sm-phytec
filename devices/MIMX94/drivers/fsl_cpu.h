@@ -140,62 +140,6 @@
 #define CPU_PER_LPI_IDX_WDOG7           28U
 #define CPU_PER_LPI_IDX_WDOG8           29U
 
-/* LPCGs */
-#define CCM_LPCG_NPU                    1U
-#define CCM_LPCG_A55_SSI                10U
-#define CCM_LPCG_A55                    11U
-#define CCM_LPCG_GPIO1                  39U
-#define CCM_LPCG_LPUART1                46U
-#define CCM_LPCG_LPUART2                47U
-#define CCM_LPCG_CAN1                   57U
-#define CCM_LPCG_WDOG3                  145U
-#define CCM_LPCG_WDOG4                  146U
-#define CCM_LPCG_WDOG7                  166U
-#define CCM_LPCG_WDOG8                  167U
-#define CCM_LPCG_CAN2                   193U
-#define CCM_LPCG_CAN3                   194U
-#define CCM_LPCG_CAN4                   195U
-#define CCM_LPCG_CAN5                   196U
-#define CCM_LPCG_GPIO2                  210U
-#define CCM_LPCG_GPIO3                  211U
-#define CCM_LPCG_GPIO4                  212U
-#define CCM_LPCG_GPIO5                  213U
-#define CCM_LPCG_GPIO7                  214U
-#define CCM_LPCG_LPUART10               235U
-#define CCM_LPCG_LPUART11               236U
-#define CCM_LPCG_LPUART12               237U
-#define CCM_LPCG_LPUART3                238U
-#define CCM_LPCG_LPUART4                239U
-#define CCM_LPCG_LPUART5                240U
-#define CCM_LPCG_LPUART6                241U
-#define CCM_LPCG_LPUART7                242U
-#define CCM_LPCG_LPUART8                243U
-#define CCM_LPCG_LPUART9                244U
-#define CCM_LPCG_WDOG5                  270U
-#define CCM_LPCG_WDOG6                  271U
-#define CCM_LPCG_GPIO6                  276U
-
-#define CCM_LPCG_NPUMIX_START           0U
-#define CCM_LPCG_NPUMIX_END             9U
-#define CCM_LPCG_A55MIX_START           10U
-#define CCM_LPCG_A55MIX_END             24U
-#define CCM_LPCG_M70MIX_START           81U
-#define CCM_LPCG_M70MIX_END             90U
-#define CCM_LPCG_M71MIX_START           91U
-#define CCM_LPCG_M71MIX_END             100U
-#define CCM_LPCG_HSIOMIX_START          101U
-#define CCM_LPCG_HSIOMIX_END            110U
-#define CCM_LPCG_DRAMMIX_START          111U
-#define CCM_LPCG_DRAMMIX_END            122U
-#define CCM_LPCG_DISPLAYMIX_START       123U
-#define CCM_LPCG_DISPLAYMIX_END         136U
-#define CCM_LPCG_NOCMIX_START           137U
-#define CCM_LPCG_NOCMIX_END             146U
-#define CCM_LPCG_NETCMIX_START          147U
-#define CCM_LPCG_NETCMIX_END            186U
-#define CCM_LPCG_WAKEUPMIX_START        187U
-#define CCM_LPCG_WAKEUPMIX_END          319U
-
 #endif
 
 /* Types */
@@ -240,6 +184,7 @@ typedef struct
 typedef struct
 {
     uint32_t lpcgIdx;
+    uint32_t rootIdx;
 } cpu_per_lpi_info_t;
 
 /* Functions */
@@ -696,6 +641,19 @@ bool CPU_PerLpiConfigSet(uint32_t cpuIdx, uint32_t perLpiIdx,
  */
 bool CPU_PerLpiConfigGet(uint32_t cpuIdx, uint32_t perLpiIdx,
     uint32_t *lpmSetting);
+
+/*!
+ * Query if CCM root of LPI is active
+ *
+ * @param[in]       perLpiIdx       CPU low power interface identifier
+ *
+ * This function allows the caller to query if the CCM root associated with
+ * the specified peripheral LPI is active.
+ *
+ * @return Returns true if CCM root for the LPI is active,
+ *         otherwise false.
+ */
+bool CPU_PerLpiRootEnabled(uint32_t perLpiIdx);
 
 /*!
  * Handle notification of MIX power up

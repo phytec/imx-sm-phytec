@@ -30,6 +30,7 @@
 /* Includes */
 
 #include "fsl_def.h"
+#include "fsl_clock.h"
 #include "fsl_cpu.h"
 #include "sm_test_mode.h"
 #include "fsl_power.h"
@@ -125,8 +126,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 0U,
         .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_M7P_1),
         .lpmSetting = LPMSETTING_CPU(CPU_IDX_M7P_1),
-        .lpcgIdxStart = CCM_LPCG_M71MIX_START,
-        .lpcgIdxEnd = CCM_LPCG_M71MIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_M71MIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_M71MIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_CCMSRCGPC] =
@@ -212,8 +213,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_A55P),
         .lpmSetting = LPMSETTING_CPU(CPU_IDX_A55P),
-        .lpcgIdxStart = CCM_LPCG_A55MIX_START,
-        .lpcgIdxEnd = CCM_LPCG_A55MIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_A55MIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_A55MIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_DDR] =
@@ -230,8 +231,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_DRAMMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_DRAMMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_DRAMMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_DRAMMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_DISPLAY] =
@@ -246,8 +247,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_DISPLAYMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_DISPLAYMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_DISPLAYMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_DISPLAYMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_M7_0] =
@@ -262,8 +263,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_CPU(CPU_IDX_M7P_0),
         .lpmSetting = LPMSETTING_CPU(CPU_IDX_M7P_0),
-        .lpcgIdxStart = CCM_LPCG_M70MIX_START,
-        .lpcgIdxEnd = CCM_LPCG_M70MIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_M70MIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_M70MIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_HSIO_TOP] =
@@ -284,8 +285,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_HSIOMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_HSIOMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_HSIOMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_HSIOMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_HSIO_WAON] =
@@ -315,8 +316,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_VCPU(CPU_IDX_M33P_S),
         .lpmSetting = LPMSETTING_DOM(CPU_IDX_M33P_S, CPU_PD_LPM_ON_RUN_WAIT),
-        .lpcgIdxStart = CCM_LPCG_NETCMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_NETCMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_NETCMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_NETCMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_NOC] =
@@ -332,8 +333,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_NOCMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_NOCMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_NOCMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_NOCMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_NPU] =
@@ -348,8 +349,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_NPUMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_NPUMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_NPUMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_NPUMIX_END,
     },
 
     [PWR_MIX_SLICE_IDX_WAKEUP] =
@@ -365,8 +366,8 @@ pwrmix_mgmt_info_t const g_pwrMixMgmtInfo[PWR_NUM_MIX_SLICE] =
         .gpcReqIdxPwr = 1U,
         .authenCtrl = AUTHENCTRL_SW,
         .lpmSetting = LPMSETTING_SWCTRL,
-        .lpcgIdxStart = CCM_LPCG_WAKEUPMIX_START,
-        .lpcgIdxEnd = CCM_LPCG_WAKEUPMIX_END,
+        .lpcgIdxStart = CLOCK_LPCG_WAKEUPMIX_START,
+        .lpcgIdxEnd = CLOCK_LPCG_WAKEUPMIX_END,
     }
 };
 

@@ -492,14 +492,23 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     }
     else
     {
-        /* Added to improve the test coverage */
-        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
-
-        /* Configure CPU LPM response for the peripheral low-power
-           interface */
-        if (!CPU_PerLpiConfigSet(modCpuId, perId, lpmSetting))
+        /* CCM clock root of LPI must be enabled to change configuration  */
+        if (!CPU_PerLpiRootEnabled(perId))
         {
-            status = SM_ERR_NOT_FOUND;
+            status = SM_ERR_HARDWARE_ERROR;
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Added to improve the test coverage */
+            SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, modCpuId = DEV_SM_NUM_CPU);
+
+            /* Configure CPU LPM response for the peripheral low-power
+               interface */
+            if (!CPU_PerLpiConfigSet(modCpuId, perId, lpmSetting))
+            {
+                status = SM_ERR_NOT_FOUND;
+            }
         }
     }
 

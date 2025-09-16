@@ -178,7 +178,6 @@
         .faultPerms[DEV_SM_FAULT_WDOG4] = SM_SCMI_PERM_ALL, \
         .pdPerms[DEV_SM_PD_A55P] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_A55] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN2] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN3] = SM_SCMI_PERM_ALL, \
         .perlpiPerms[DEV_SM_PERLPI_CAN4] = SM_SCMI_PERM_ALL, \
@@ -459,7 +458,6 @@
         .perfPerms[DEV_SM_PERF_A55] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_CAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_DISP] = SM_SCMI_PERM_ALL, \
-        .perfPerms[DEV_SM_PERF_DRAM] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_GPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_NPU] = SM_SCMI_PERM_ALL, \
         .perfPerms[DEV_SM_PERF_VPU] = SM_SCMI_PERM_ALL, \

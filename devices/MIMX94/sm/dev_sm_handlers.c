@@ -51,7 +51,7 @@
 /* Local defines */
 
 /* Dynamic IRQ priority definitions */
-#define DEV_SM_NUM_IRQ_PRIO_IDX                 27U
+#define DEV_SM_NUM_IRQ_PRIO_IDX                 30U
 
 #define DEV_SM_IRQ_PRIO_IDX_SYSTICK             0U
 #define DEV_SM_IRQ_PRIO_IDX_BBNSM               1U
@@ -79,7 +79,10 @@
 #define DEV_SM_IRQ_PRIO_IDX_MU4_B               23U
 #define DEV_SM_IRQ_PRIO_IDX_MU5_B               24U
 #define DEV_SM_IRQ_PRIO_IDX_MU6_B               25U
-#define DEV_SM_IRQ_PRIO_IDX_GPC_SM_REQ          26U
+#define DEV_SM_IRQ_PRIO_IDX_MU7_B               26U
+#define DEV_SM_IRQ_PRIO_IDX_MU8_B               27U
+#define DEV_SM_IRQ_PRIO_IDX_MU9_B               28U
+#define DEV_SM_IRQ_PRIO_IDX_GPC_SM_REQ          29U
 
 /* Local types */
 
@@ -292,6 +295,30 @@ static irq_prio_info_t s_irqPrioInfo[DEV_SM_NUM_IRQ_PRIO_IDX] =
     [DEV_SM_IRQ_PRIO_IDX_MU6_B] =
     {
         .irqId = MU6_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU7_B] =
+    {
+        .irqId = MU7_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU8_B] =
+    {
+        .irqId = MU8_B_IRQn,
+        .irqCntr = 0U,
+        .basePrio = 0U,
+        .dynPrioEn = false
+    },
+
+    [DEV_SM_IRQ_PRIO_IDX_MU9_B] =
+    {
+        .irqId = MU9_B_IRQn,
         .irqCntr = 0U,
         .basePrio = 0U,
         .dynPrioEn = false
@@ -800,6 +827,7 @@ void MU7_B_IRQHandler(void)
 #ifdef SM_MB_MU13_CONFIG
     MB_MU_Handler(13U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU7_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -810,6 +838,7 @@ void MU8_A_IRQHandler(void)
 #ifdef SM_MB_MU14_CONFIG
     MB_MU_Handler(14U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU8_B]);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -820,6 +849,7 @@ void MU8_B_IRQHandler(void)
 #ifdef SM_MB_MU15_CONFIG
     MB_MU_Handler(15U);
 #endif
+    IrqPrioUpdate(&s_irqPrioInfo[DEV_SM_IRQ_PRIO_IDX_MU9_B]);
 }
 
 /*--------------------------------------------------------------------------*/

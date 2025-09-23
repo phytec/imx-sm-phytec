@@ -619,7 +619,7 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
              * a uint8_t type variable cannot be automatically converted to an
              * int.
              */
-            // coverity[cert_int31_c_violation:FALSE]
+            /* coverity[cert_int31_c_violation:FALSE] */
             *mode = modeVal >> shft;
         }
         else

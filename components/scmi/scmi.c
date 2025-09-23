@@ -166,7 +166,7 @@ int32_t SCMI_A2pTx(uint32_t channel, uint32_t protocolId,
          * Intentional: The token value will remain in
          * sync with the platform, even if it wraps.
          */
-        // coverity[cert_int30_c_violation]
+        /* coverity[cert_int30_c_violation] */
         s_token[channel]++;
         s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
 
@@ -321,7 +321,7 @@ int32_t SCMI_P2aRx(uint32_t channel, uint32_t protocolId,
          * Intentional: The token value will remain in
          * sync with the platform, even if it wraps.
          */
-        // coverity[cert_int30_c_violation]
+        /* coverity[cert_int30_c_violation] */
         s_token[channel]++;
         s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
     }

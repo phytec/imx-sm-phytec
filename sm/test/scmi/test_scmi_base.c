@@ -293,7 +293,7 @@ static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
 {
     uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
     /* Intentional: Test code */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     uint32_t agent =  resource + 1U - g_scmiConfig[scmiInst].firstAgent;
 
     /* Reset Agent Config */
@@ -327,12 +327,12 @@ static void TEST_ScmiBasePriv(bool pass, uint32_t channel, uint32_t resource,
         flags = 0U;
         printf("SCMI_BaseSetDevicePermissions(%u, %u, %u)\n", channel,
             0U, flags);
-        // coverity[unused_value]
+        /* coverity[unused_value] */
         status = SCMI_BaseSetDevicePermissions(channel, agent,
             0U, flags);
         printf("   status=%d\n", status);
 
-        // coverity[unused_value]
+        /* coverity[unused_value] */
         status = SCMI_BaseSetDevicePermissions(SM_SCMI_NUM_CHN, agent,
             0U, flags);
         BCHECK(status == SCMI_ERR_INVALID_PARAMETERS);

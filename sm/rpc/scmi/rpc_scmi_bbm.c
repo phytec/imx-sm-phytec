@@ -425,8 +425,8 @@ int32_t RPC_SCMI_BbmDispatchCommand(scmi_caller_t *caller,
              * As a result, there is no actual buffer underrun or unsafe
              * memory access in this implementation.
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = BbmRtcAttributes(caller, (const msg_rbbm5_t*) in,
                 (msg_tbbm5_t*) out);
             break;
@@ -837,8 +837,8 @@ static int32_t BbmRtcAttributes(const scmi_caller_t *caller,
          * As a result, there is no actual buffer underrun or unsafe
          * memory access in this implementation.
          */
-        // coverity[cert_arr30_c_violation:FALSE]
-        // coverity[cert_str31_c_violation:FALSE]
+        /* coverity[cert_arr30_c_violation:FALSE] */
+        /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_BbmRtcNameGet(caller->lmId, in->rtcId,
             (string*) &nameAddr, NULL);
     }

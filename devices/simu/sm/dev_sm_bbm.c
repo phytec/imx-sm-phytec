@@ -305,7 +305,7 @@ void DEV_SM_BbmHandler(void)
     /*
      * False Positive: Roll over condition is taken case below
      */
-    // coverity[cert_int30_c_violation:FALSE]
+    /* coverity[cert_int30_c_violation:FALSE] */
     s_ticks += (1ULL << 15U);
 
     /* Roll over */

@@ -125,7 +125,7 @@ uint32_t *MB_MU_SmaGet(uint8_t inst, uint8_t db)
     /*
      * Intentional: The db value can only be 0-3 from the configtool
      */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     sma += ((uint32_t) db) * SM_MB_MU_BUF_SIZE;
 
     return (uint32_t*) sma;

@@ -62,8 +62,8 @@ int32_t LMM_SensorNameGet(uint32_t lmId, uint32_t sensorId,
      * the underrun end function (BRD_SM_SensorNameGet), ensuring
      * appropriate processing of sensorId value zero.
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_SENSORNAMEGET(sensorId, sensorNameAddr, len);
 }
 
@@ -90,8 +90,8 @@ int32_t LMM_SensorReadingGet(uint32_t lmId, uint32_t sensorId,
      * the underrun end function (BRD_SM_SensorReadingGet), ensuring
      * appropriate processing of sensorId value zero.
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_SENSORREADINGGET(sensorId, sensorValue, sensorTimestamp);
 }
 
@@ -108,8 +108,8 @@ int32_t LMM_SensorTripPointSet(uint32_t lmId, uint32_t sensorId,
      * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
      * appropriate processing of sensorId value zero.
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_SENSORTRIPPOINTSET(sensorId, tripPoint, value,
         eventControl);
 }
@@ -158,8 +158,8 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
          * the underrun end function (BRD_SM_SensorEnable), ensuring
          * appropriate processing of sensorId value zero.
          */
-        // coverity[cert_arr30_c_violation:FALSE]
-        // coverity[cert_str31_c_violation:FALSE]
+        /* coverity[cert_arr30_c_violation:FALSE] */
+        /* coverity[cert_str31_c_violation:FALSE] */
         status = SM_SENSORENABLE(sensorId, newEnable, timestampReporting);
     }
 
@@ -182,8 +182,8 @@ int32_t LMM_SensorIsEnabled(uint32_t lmId, uint32_t sensorId,
      * the underrun end function (BRD_SM_SensorIsEnabled), ensuring
      * appropriate processing of sensorId value zero.
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_SENSORISENABLED(sensorId, enabled, timestampReporting);
 }
 

@@ -198,7 +198,7 @@ typedef struct
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation]
+/* coverity[misra_c_2012_rule_20_1_violation] */
 #include "dev_sm_system_api.h"
 
 #endif /* DEV_SM_SYSTEM_H */

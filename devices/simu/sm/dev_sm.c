@@ -39,9 +39,9 @@
 /* Includes */
 
 #include "sm.h"
-// coverity[misra_c_2012_rule_21_5_violation]
+/* coverity[misra_c_2012_rule_21_5_violation] */
 #include <signal.h>
-// coverity[misra_c_2012_rule_21_10_violation]
+/* coverity[misra_c_2012_rule_21_10_violation] */
 #include <time.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -76,7 +76,7 @@ int32_t DEV_SM_Init(void)
     signalEvent.sigev_notify = SIGEV_THREAD;
     signalEvent.sigev_notify_function = &DEV_SM_Tick;
     signalEvent.sigev_value.sival_ptr = NULL;
-    // coverity[misra_c_2012_rule_19_2_violation]
+    /* coverity[misra_c_2012_rule_19_2_violation] */
     signalEvent.sigev_notify_attributes = NULL;
     (void) timer_create(CLOCK_MONOTONIC, &signalEvent, &timer);
 
@@ -90,9 +90,9 @@ int32_t DEV_SM_Init(void)
     (void) timer_settime(timer, 0, &timerPeriod, NULL);
 
     /* Allocate DDR */
-    // coverity[misra_c_2012_directive_4_12_violation]
-    // coverity[misra_c_2012_rule_11_6_violation]
-    // coverity[misra_c_2012_directive_4_6_violation]
+    /* coverity[misra_c_2012_directive_4_12_violation] */
+    /* coverity[misra_c_2012_rule_11_6_violation] */
+    /* coverity[misra_c_2012_directive_4_6_violation] */
     (void) mmap((void*) 0x80000000U, 0x10000, (int) prot, (int) flags,
         -1, 0);
 
@@ -186,7 +186,7 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
 /*--------------------------------------------------------------------------*/
 /* Timer tick                                                               */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 static void DEV_SM_Tick(union sigval timer_data)
 {
     /* Call system tick */

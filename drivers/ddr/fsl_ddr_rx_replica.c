@@ -262,7 +262,7 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
             {
                 /* Read RxReplicaCtl03 which stored in OEI */
                 ddrRxcWa->init[idx] = U32_U16(DWC_DDRPHY_APB_RD(0x10000U
-                                              + (idx << 12U) + 0xafU));
+                    + (idx << 12U) + 0xafU));
             }
 
             ddrRxcWa->rxclkoffset[idx] = 0;
@@ -417,7 +417,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
                  * it could be as big as 511*128 = 65408. which is  still
                  * smaller then UINT16_MAX
                  */
-                // coverity[cert_int30_c_violation]
+                /* coverity[cert_int30_c_violation] */
                 sumPathphase[idx] += ddrRxcWa->aPathphase[idx][cnt];
             }
 
@@ -543,7 +543,7 @@ static uint32_t DDR_SimpleDivRound(uint32_t val, uint32_t denom)
      * which ensures that wrapping cannot occur.
      * Therefore, this is a false positive.
      */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     absV = (val / denom) + oneOrZero;
 
     return absV;

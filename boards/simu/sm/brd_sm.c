@@ -56,7 +56,7 @@ static uint8_t s_voltMode[DEV_SM_NUM_VOLT];
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_directive_4_6_violation]
+/* coverity[misra_c_2012_directive_4_6_violation] */
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -66,13 +66,13 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     {
         int32_t val = 0;
 
-        // coverity[misra_c_2012_rule_21_7_violation]
+        /* coverity[misra_c_2012_rule_21_7_violation] */
         val = atoi(argv[1]);
 
         /* Check the val is positive */
         if (CHECK_I32_POSITIVE(val))
         {
-            // coverity[misra_c_2012_rule_21_7_violation]
+            /* coverity[misra_c_2012_rule_21_7_violation] */
             *mSel = (uint32_t)(val);
         }
         else
@@ -98,7 +98,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
     printf("exit %d, 0x%08X\n", status, pc);
-    // coverity[misra_c_2012_rule_21_8_violation]
+    /* coverity[misra_c_2012_rule_21_8_violation] */
     exit(status);
 }
 
@@ -142,7 +142,7 @@ int32_t BRD_SM_Custom(int32_t argc, const char * const argv[])
 /* Get fault reaction                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
-    // coverity[misra_c_2012_rule_8_13_violation]
+    /* coverity[misra_c_2012_rule_8_13_violation] */
     uint32_t *reaction, uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;

@@ -148,7 +148,7 @@ int32_t DEV_SM_SystemReset(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -196,7 +196,7 @@ int32_t DEV_SM_SystemShutdown(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -216,7 +216,7 @@ void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Store shutdown record */
@@ -328,7 +328,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -348,7 +348,7 @@ void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation]
+    /* coverity[cert_int31_c_violation] */
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
@@ -784,7 +784,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
-            // coverity[misra_c_2012_rule_1_2_violation]
+            /* coverity[misra_c_2012_rule_1_2_violation] */
             __WFI();
             __ISB();
 
@@ -990,7 +990,7 @@ int32_t DEV_SM_SystemIdle(void)
             {
                 (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
                 __DSB();
-                // coverity[misra_c_2012_rule_1_2_violation]
+                /* coverity[misra_c_2012_rule_1_2_violation] */
                 __WFI();
                 __ISB();
             }
@@ -1001,7 +1001,7 @@ int32_t DEV_SM_SystemIdle(void)
     {
         (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
         __DSB();
-        // coverity[misra_c_2012_rule_1_2_violation]
+        /* coverity[misra_c_2012_rule_1_2_violation] */
         __WFI();
         __ISB();
     }

@@ -388,7 +388,7 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
                          * False Positive: (mfi * CLOCK_PLL_FREF_HZ) can not be
                          * greater than rate.
                          */
-                        // coverity[cert_int30_c_violation:FALSE]
+                        /* coverity[cert_int30_c_violation:FALSE] */
                         mfn = U64_U32((rate - (mfi * CLOCK_PLL_FREF_HZ))
                             / ((uint64_t) CLOCK_PLL_CALC_ACCURACY_HZ));
                     }
@@ -683,7 +683,7 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
              * vcoRate divided by newRate hence, the below expression
              * can not wrap.
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            /* coverity[cert_int30_c_violation:FALSE] */
             uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate
                 * 5UL);
             uint64_t quotient = num / newRate;
@@ -697,7 +697,7 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
                 /*
                  * False positive: As per RM MFN length is 3-bit.
                  */
-                // coverity[cert_int30_c_violation:FALSE]
+                /* coverity[cert_int30_c_violation:FALSE] */
                 mfn++;
             }
 
@@ -844,7 +844,7 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
      * extended configuration. So ((rate * 100U) * quotient) cannot exceed
      * UINT64_MAX value.
      */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     uint64_t spreadFreq = ((rate / 100U) * quotient) +
         ((rate / 1000U) * remain);
 

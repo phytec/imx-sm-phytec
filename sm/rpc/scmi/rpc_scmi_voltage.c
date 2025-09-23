@@ -319,8 +319,8 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
              * context of underrun has already been properly handled within
              * the underlying function (BRD_SM_VoltageNameGet).
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = VoltageDomainAttributes(caller,
                 (const msg_rvoltage3_t*) in, (msg_tvoltage3_t*) out);
             break;
@@ -584,8 +584,8 @@ static int32_t VoltageDomainAttributes(const scmi_caller_t *caller,
          * context of underrun has already been properly handled within
          * the underlying function (BRD_SM_VoltageNameGet).
          */
-        // coverity[cert_arr30_c_violation:FALSE]
-        // coverity[cert_str31_c_violation:FALSE]
+        /* coverity[cert_arr30_c_violation:FALSE] */
+        /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_VoltageNameGet(caller->lmId, in->domainId,
             (string*) &nameAddr, NULL);
     }

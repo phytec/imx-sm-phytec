@@ -448,7 +448,7 @@ uint32_t PWR_NumChildPowered(uint32_t srcMixIdx)
                  * False positive: The loop will go to value 14 and the
                  * initial value is of numChildPowered = 0U;
                  */
-                // coverity[cert_int30_c_violation:FALSE]
+                /* coverity[cert_int30_c_violation:FALSE] */
                 ++numChildPowered;
             }
             idx++;

@@ -309,7 +309,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for V2X */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -425,7 +425,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDram =
 };
 
 /* Setpoint PLL configuration for DRAM */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -710,7 +710,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 };
 
 /* Setpoint PLL configuration for A55 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -743,7 +743,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint PFD configuration for A55 cores */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -764,7 +764,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -814,7 +814,7 @@ static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for A55PER */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1115,7 +1115,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
         /*
          * False positive:Max s_perfNumLevels would be 4.
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        /* coverity[cert_int30_c_violation:FALSE] */
         uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
 
         info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;

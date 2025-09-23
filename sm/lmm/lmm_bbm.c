@@ -94,8 +94,8 @@ int32_t LMM_BbmRtcNameGet(uint32_t lmId, uint32_t rtcId, string *rtcNameAddr,
      * there is no actual buffer underrun or unsafe memory access
      * in this implementation.
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_BBMRTCNAMEGET(rtcId, rtcNameAddr, len);
 }
 

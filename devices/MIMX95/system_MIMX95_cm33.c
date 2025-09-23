@@ -71,27 +71,27 @@ void SystemInit(void)
 
     /* Disable NMI generation for sources assigned to other CPUs */
     BLK_CTRL_S_AONMIX->NMI_MASK |= (BLK_CTRL_S_AONMIX_NMI_MASK_CM7_MASK |
-                                    BLK_CTRL_S_AONMIX_NMI_MASK_WDG3_NMI_MASK_MASK |
-                                    BLK_CTRL_S_AONMIX_NMI_MASK_WDG4_NMI_MASK_MASK |
-                                    BLK_CTRL_S_AONMIX_NMI_MASK_WDG5_NMI_MASK_MASK);
+        BLK_CTRL_S_AONMIX_NMI_MASK_WDG3_NMI_MASK_MASK |
+        BLK_CTRL_S_AONMIX_NMI_MASK_WDG4_NMI_MASK_MASK |
+        BLK_CTRL_S_AONMIX_NMI_MASK_WDG5_NMI_MASK_MASK);
 
     /* Disable all SRC boot reset holds */
     SRC_GEN->SCR = 0xFFFFFFFFU;
 
     /* Mask reset sources handled by SM */
-    SRC_GEN->SRMASK = (1UL << RST_REASON_CM7_LOCKUP) | 
-                      (1UL << RST_REASON_CM7_SWREQ) |
-                      (1UL << RST_REASON_ELE) |
-                      (1UL << RST_REASON_WDOG3) |
-                      (1UL << RST_REASON_WDOG4) |
-                      (1UL << RST_REASON_WDOG5);
+    SRC_GEN->SRMASK = (1UL << RST_REASON_CM7_LOCKUP) |
+        (1UL << RST_REASON_CM7_SWREQ) |
+        (1UL << RST_REASON_ELE) |
+        (1UL << RST_REASON_WDOG3) |
+        (1UL << RST_REASON_WDOG4) |
+        (1UL << RST_REASON_WDOG5);
 
     /* Disable current reference for LFAST I/O */
     uint32_t lfast = Read32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR);
     lfast &= (~HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_CREF_EN_MASK);
     Write32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR, lfast);
 
-    // coverity[misra_c_2012_rule_2_2_violation]
+    /* coverity[misra_c_2012_rule_2_2_violation] */
     SystemInitHook();
 }
 
@@ -99,7 +99,7 @@ void SystemInit(void)
    -- SystemInitHook()
    ---------------------------------------------------------------------------- */
 
-// coverity[misra_c_2012_rule_1_2_violation]
+/* coverity[misra_c_2012_rule_1_2_violation] */
 __attribute__((weak)) void SystemInitHook(void)
 {
     /* Void implementation of the weak function. */
@@ -135,7 +135,7 @@ void SystemDebugWaitAttach(void)
         BOARD_WdogRefresh();
     }
 
-    // coverity[misra_c_2012_rule_1_2_violation]
+    /* coverity[misra_c_2012_rule_1_2_violation] */
     __BKPT(0);
 }
 
@@ -167,7 +167,7 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
     __disable_fault_irq();
 
     // Perform the probe
-    switch(width)
+    switch (width)
     {
         case 8:
             *((uint8_t *) val) = *((const uint8_t *) addr);

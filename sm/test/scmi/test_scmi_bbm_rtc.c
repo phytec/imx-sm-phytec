@@ -284,7 +284,7 @@ static void TEST_ScmiRtcPriv(bool pass, uint32_t channel,
             do
             {
                 /* Intentional: Test code */
-                // coverity[cert_int30_c_violation]
+                /* coverity[cert_int30_c_violation] */
                 status = SCMI_P2aPending(channel + 1U, &protocolId,
                     &messageId);
             }

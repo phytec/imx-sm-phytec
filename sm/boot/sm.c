@@ -75,7 +75,7 @@ static bool s_lmmInited = false;
 /* Global variables */
 
 /* Boot times */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 uint64_t g_bootTime[SM_BT_SUB + 1U];
 
 #ifdef HAS_SM_TEST_MODE
@@ -119,7 +119,7 @@ int main(int argc, const char * const argv[])
 
     /* Add to subtract time */
     /* Intentional: used only for debug */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     g_bootTime[SM_BT_SUB] += (DEV_SM_Usec64Get() - delta);
 
     /* Init LMM */
@@ -228,7 +228,7 @@ int main(int argc, const char * const argv[])
 /*--------------------------------------------------------------------------*/
 /* Report error                                                             */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void SM_Error(int32_t status)
 {
     SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, s_lmmInited = false);
@@ -241,7 +241,7 @@ void SM_Error(int32_t status)
 #if !defined(SIMU)
         /* Get the LR as PC */
         // cppcheck-suppress uninitvar
-        // coverity[misra_c_2012_rule_1_2_violation]
+        /* coverity[misra_c_2012_rule_1_2_violation] */
         __ASM ("MOV %0, LR\n" : "=r" (pc));
 #else
         pc = 0U;
@@ -276,9 +276,9 @@ void SM_TestModeSet(uint32_t mode)
 /*--------------------------------------------------------------------------*/
 /* Exit function for no clib                                                */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_21_2_violation]
-// coverity[misra_c_2012_rule_21_8_violation]
-// coverity[misra_c_2012_directive_4_6_violation]
+/* coverity[misra_c_2012_rule_21_2_violation] */
+/* coverity[misra_c_2012_rule_21_8_violation] */
+/* coverity[misra_c_2012_directive_4_6_violation] */
 void exit(int status)
 {
     if (s_lmmInited)
@@ -287,7 +287,7 @@ void exit(int status)
 
         /* Get the LR as PC */
         // cppcheck-suppress uninitvar
-        // coverity[misra_c_2012_rule_1_2_violation]
+        /* coverity[misra_c_2012_rule_1_2_violation] */
         __ASM ("MOV %0, LR\n" : "=r" (pc));
 
         /* Request board reset */
@@ -301,7 +301,7 @@ void exit(int status)
     }
 
     /* Hang */
-    // coverity[infinite_loop]
+    /* coverity[infinite_loop] */
     while (true)
     {
         ; /* Intentional empty while */
@@ -313,7 +313,7 @@ void exit(int status)
 /*--------------------------------------------------------------------------*/
 /* C array init for no clib                                                 */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_21_2_violation]
+/* coverity[misra_c_2012_rule_21_2_violation] */
 void __libc_init_array(void)
 {
 }

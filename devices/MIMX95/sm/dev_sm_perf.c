@@ -332,7 +332,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for V2X */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -448,7 +448,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp5 =
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR5) */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -510,7 +510,7 @@ static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
 {
     .parent = DEV_SM_CLK_OSC24M,            /* root parent */
@@ -518,7 +518,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -821,7 +821,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgVpu[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for VPUJPEG */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgVpuJpeg[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -901,7 +901,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCam[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for CAM ISI */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -927,7 +927,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for CAM CM0 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamCm0[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1007,7 +1007,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for DISP OCRAM */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDispOcram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1069,7 +1069,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 };
 
 /* Setpoint PLL configuration for A55 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1111,7 +1111,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55 cores */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1137,7 +1137,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1198,7 +1198,7 @@ static dev_sm_perf_desc_t s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint clock root configuration for A55PER */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =

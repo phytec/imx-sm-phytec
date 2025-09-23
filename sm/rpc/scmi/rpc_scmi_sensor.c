@@ -407,8 +407,8 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              * (BRD_SM_SensorTripPointSet), ensuring
              * appropriate processing of sensorId value zero.
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = SensorReadingGet(caller, (const msg_rsensor6_t*) in,
                 (msg_tsensor6_t*) out, &lenOut);
             break;
@@ -421,8 +421,8 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
              * (BRD_SM_SensorTripPointSet), ensuring
              * appropriate processing of sensorId value zero.
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = SensorConfigGet(caller, (const msg_rsensor9_t*) in,
                 (msg_tsensor9_t*) out);
             break;
@@ -730,8 +730,8 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                  * (BRD_SM_SensorTripPointSet), ensuring
                  * appropriate processing of sensorId value zero.
                  */
-                // coverity[cert_arr30_c_violation:FALSE]
-                // coverity[cert_str31_c_violation:FALSE]
+                /* coverity[cert_arr30_c_violation:FALSE] */
+                /* coverity[cert_str31_c_violation:FALSE] */
                 status = LMM_SensorNameGet(caller->lmId, sensor
                     + in->descIndex, (string*) &nameAddr, NULL);
             }
@@ -751,8 +751,8 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
              * (BRD_SM_SensorTripPointSet), ensuring
              * appropriate processing of sensorId value zero.
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = LMM_SensorDescribe(caller->lmId,
                 sensor + in->descIndex, &lmmDesc);
 
@@ -775,7 +775,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                      * Intentional: The timestamp exponent field is
                      * represented in two's complement format.
                      */
-                    // coverity[cert_int31_c_violation]
+                    /* coverity[cert_int31_c_violation] */
                     attributes |= SENSOR_ATTR_LOW_TIME_EXP(
                         (uint32_t) lmmDesc.timestampExponent);
                 }
@@ -790,7 +790,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                  * Intentional: The timestamp exponent field is
                  * represented in two's complement format.
                  */
-                // coverity[cert_int31_c_violation]
+                /* coverity[cert_int31_c_violation] */
                 attributes |= SENSOR_ATTR_HIGH_SENSOR_EXP(
                     (uint32_t) lmmDesc.sensorExponent);
 
@@ -802,7 +802,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
              * False Positive: The value of numLogFlags is incremented within
              * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            /* coverity[cert_int30_c_violation:FALSE] */
             (out->numSensorFlags)++;
         }
 
@@ -812,7 +812,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
          * the value of SENSOR_MAX_DESC would need to be excessively large
          * number (larger than all the TCM available)
          */
-        // coverity[cert_int30_c_violation]
+        /* coverity[cert_int30_c_violation] */
         *len = (3U * sizeof(uint32_t)) + (out->numSensorFlags *
             sizeof(sensor_desc_t));
 
@@ -985,7 +985,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation]
+        /* coverity[cert_int31_c_violation] */
         uint64_t tp = ((((uint64_t) in->tripPointValHigh)
                 << 32U) | (uint64_t) in->tripPointValLow);
 
@@ -993,7 +993,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation]
+        /* coverity[cert_int31_c_violation] */
         int64_t tpValue = (int64_t) tp;
 
         /*
@@ -1002,8 +1002,8 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
          * appropriate processing of sensorId value zero.
          */
-        // coverity[cert_arr30_c_violation:FALSE]
-        // coverity[cert_str31_c_violation:FALSE]
+        /* coverity[cert_arr30_c_violation:FALSE] */
+        /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_SensorTripPointSet(caller->lmId, in->sensorId,
             tripPoint, tpValue, eventControl);
     }
@@ -1185,8 +1185,8 @@ static int32_t SensorConfigGet(const scmi_caller_t *caller,
          * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
          * appropriate processing of sensorId value zero.
          */
-        // coverity[cert_arr30_c_violation:FALSE]
-        // coverity[cert_str31_c_violation:FALSE]
+        /* coverity[cert_arr30_c_violation:FALSE] */
+        /* coverity[cert_str31_c_violation:FALSE] */
         status = LMM_SensorIsEnabled(caller->lmId, in->sensorId,
             &enabled, &timestampReporting);
     }

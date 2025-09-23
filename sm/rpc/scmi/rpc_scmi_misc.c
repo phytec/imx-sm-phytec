@@ -1162,12 +1162,12 @@ static int32_t MiscDiscoverBuildInfo(const scmi_caller_t *caller,
         out->buildCommit = SM_COMMIT;
 
         /* Copy out build date */
-        // coverity[misra_c_2012_rule_7_4_violation]
+        /* coverity[misra_c_2012_rule_7_4_violation] */
         RPC_SCMI_StrCpy(out->buildDate, ((uint8_t const *) SM_DATE),
             MISC_MAX_BUILDDATE);
 
         /* Copy out build time */
-        // coverity[misra_c_2012_rule_7_4_violation]
+        /* coverity[misra_c_2012_rule_7_4_violation] */
         RPC_SCMI_StrCpy(out->buildTime, ((uint8_t const *) SM_TIME),
             MISC_MAX_BUILDTIME);
     }
@@ -1227,7 +1227,7 @@ static int32_t MiscRomPassoverGet(const scmi_caller_t *caller,
          * False Positive: Copy size is checked with a compile assert
          * above.
          */
-        // coverity[buffer_size:FALSE]
+        /* coverity[buffer_size:FALSE] */
         (void) memcpy((void*) out->passover, (const void*) passover,
             out->numPassover * sizeof(uint32_t));
 
@@ -1606,7 +1606,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
         cfgName = LMM_CfgInfoGet(&(out->mSel));
 
         /* Copy out cfg name */
-        // coverity[misra_c_2012_rule_7_4_violation]
+        /* coverity[misra_c_2012_rule_7_4_violation] */
         RPC_SCMI_StrCpy(out->cfgName, (const uint8_t*) cfgName,
             MISC_MAX_CFGNAME);
     }
@@ -1690,7 +1690,7 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
              * False Positive: The value of numLogFlags is incremented within
              * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            /* coverity[cert_int30_c_violation:FALSE] */
             (out->numLogFlags)++;
         }
 
@@ -1700,7 +1700,7 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
          * the value of MISC_MAX_SYSLOG would need to be excessively large
          * number (larger than all the TCM available)
          */
-        // coverity[cert_int30_c_violation]
+        /* coverity[cert_int30_c_violation] */
         *len = (3U * sizeof(uint32_t)) + (out->numLogFlags * sizeof(uint32_t));
 
         /* Append remaining logs */
@@ -2124,7 +2124,7 @@ static int32_t MiscControlEvent(scmi_msg_id_t msgId,
              * False Positive: the value of uCtrlId value would always be
              * greater than or equal to DEV_SM_NUM_CTRL.
              */
-            // coverity[cert_int30_c_violation:FALSE]
+            /* coverity[cert_int30_c_violation:FALSE] */
             ctrlId = (uCtrlId - DEV_SM_NUM_CTRL) | MISC_CTRL_FLAG_BRD;
         }
 

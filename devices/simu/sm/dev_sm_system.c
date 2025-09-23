@@ -229,7 +229,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
 /*--------------------------------------------------------------------------*/
 /* Complete system reset processing                                         */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 {
     return SM_SYSTEMRSTCOMP(resetRec);
@@ -238,14 +238,14 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 /*--------------------------------------------------------------------------*/
 /* Report SM error to log and reset                                         */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void DEV_SM_SystemError(int32_t status, uint32_t pc)
 {
     /*
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation]
+    /* coverity[cert_int31_c_violation] */
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,

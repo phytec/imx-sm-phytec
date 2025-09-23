@@ -56,7 +56,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM system                                                    */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void TEST_DevSmSystem(void)
 {
     printf("**** Device SM System API Tests ***\n\n");
@@ -200,11 +200,11 @@ void TEST_DevSmSystem(void)
     /* Dump the error log */
     {
         /* Intentional: Test code */
-        // coverity[misra_c_2012_rule_2_2_violation]
+        /* coverity[misra_c_2012_rule_2_2_violation] */
         DEV_SM_ErrorDump();
         DEV_SM_ErrorLog(1U);
         /* Intentional: Test code */
-        // coverity[misra_c_2012_rule_2_2_violation]
+        /* coverity[misra_c_2012_rule_2_2_violation] */
         DEV_SM_ErrorDump();
     }
 

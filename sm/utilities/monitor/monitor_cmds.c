@@ -1077,11 +1077,11 @@ static int32_t MONITOR_CmdReason(int32_t argc, const char * const argv[])
     }
     else
     {
-        /* Print boot reason */
-        BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
-
         /* Print shutdown reason */
         BRD_SM_ResetRecordPrint("Shutdown:", shutdownRec);
+
+        /* Print boot reason */
+        BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
     }
 
     /* Return status */
@@ -1525,11 +1525,11 @@ static int32_t MONITOR_CmdLmReason(int32_t argc, const char * const argv[],
         }
         else
         {
-            /* Print boot reason */
-            BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
-
             /* Print shutdown reason */
             BRD_SM_ResetRecordPrint("Shutdown:", shutdownRec);
+
+            /* Print boot reason */
+            BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
         }
     }
 

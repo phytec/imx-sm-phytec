@@ -254,6 +254,7 @@
 #define SM_LM_FAULT_DATA \
     [DEV_SM_FAULT_SWNCF03] = {.reaction = LMM_REACT_GRP_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_SWNCF04] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
+    [DEV_SM_FAULT_DDR_MBE] = {.reaction = LMM_REACT_SYS_RESET, .lm = 0U}, \
     [DEV_SM_FAULT_M33_SYNC_LOCKUP] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_M33_SYNC_RST] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \
     [DEV_SM_FAULT_WDOG7] = {.reaction = LMM_REACT_LM_RESET, .lm = 1U}, \

@@ -41,6 +41,7 @@ Table of Contents
 - [Developer's Guide](@ref DEV_GUIDE)
 - [Configuration](@ref CONFIGURATION)
 - [Porting Guide](@ref PORT_GUIDE)
+- [Debugging](@ref DEBUG)
 - [Platform-side System Control and Management Interface](@ref SCMI_PROTO)
 - [Client-side System Control and Management Interface](@ref scmi_proto)
   - ARM-defined Protocols

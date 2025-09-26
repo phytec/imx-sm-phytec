@@ -47,7 +47,17 @@
 
 /* Local types */
 
+/* Sensor owner info */
+typedef struct
+{
+    uint32_t lmId;
+    uint32_t tp;
+} sensor_owner_t;
+
 /* Local variables */
+
+static bool s_sensorState[SM_NUM_SENSOR][SM_NUM_LM];
+static sensor_owner_t s_sensorOwner[SM_NUM_SENSOR];
 
 /*--------------------------------------------------------------------------*/
 /* Return sensor name                                                       */
@@ -83,16 +93,34 @@ int32_t LMM_SensorDescribe(uint32_t lmId, uint32_t sensorId,
 int32_t LMM_SensorReadingGet(uint32_t lmId, uint32_t sensorId,
     int64_t *sensorValue, uint64_t *sensorTimestamp)
 {
-    /* Just passthru to board/device */
-    /*
-     * False Positive: The sensorId value of zero is associated with the
-     * device layer function. Its handling is correctly implemented within
-     * the underrun end function (BRD_SM_SensorReadingGet), ensuring
-     * appropriate processing of sensorId value zero.
-     */
-    /* coverity[cert_arr30_c_violation:FALSE] */
-    /* coverity[cert_str31_c_violation:FALSE] */
-    return SM_SENSORREADINGGET(sensorId, sensorValue, sensorTimestamp);
+    int32_t status = SM_ERR_NOT_SUPPORTED;
+
+    /* Check sensorId and lmId are within allowed range  */
+    if ((sensorId < SM_NUM_SENSOR) && (lmId < SM_NUM_LM))
+    {
+        /* Sensor is enabled ? */
+        if (s_sensorState[sensorId][lmId])
+        {
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly implemented
+             * within the underrun end function (BRD_SM_SensorReadingGet),
+             * ensuring appropriate processing of sensorId value zero.
+             */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
+            status = SM_SENSORREADINGGET(sensorId, sensorValue,
+                sensorTimestamp);
+        }
+    }
+    else
+    {
+        /* Set the status if out of range */
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return Status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -101,17 +129,42 @@ int32_t LMM_SensorReadingGet(uint32_t lmId, uint32_t sensorId,
 int32_t LMM_SensorTripPointSet(uint32_t lmId, uint32_t sensorId,
     uint8_t tripPoint, int64_t value, uint8_t eventControl)
 {
-    /* Just passthru to board/device */
-    /*
-     * False Positive: The sensorId value of zero is associated with the
-     * device layer function. Its handling is correctly implemented within
-     * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
-     * appropriate processing of sensorId value zero.
-     */
-    /* coverity[cert_arr30_c_violation:FALSE] */
-    /* coverity[cert_str31_c_violation:FALSE] */
-    return SM_SENSORTRIPPOINTSET(sensorId, tripPoint, value,
-        eventControl);
+    int32_t status = SM_ERR_NOT_SUPPORTED;
+
+    /* Check sensorId and lmId are within allowed range  */
+    if ((sensorId < SM_NUM_SENSOR) && (lmId < SM_NUM_LM))
+    {
+        /* Sensor is enabled ? */
+        if (s_sensorState[sensorId][lmId])
+        {
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly implemented
+             * within the underrun end function (BRD_SM_SensorTripPointSet),
+             * ensuring appropriate processing of sensorId value zero.
+             */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
+            status = SM_SENSORTRIPPOINTSET(sensorId, tripPoint, value,
+                eventControl);
+        }
+
+        if ((status == SM_ERR_SUCCESS)
+            && (eventControl != DEV_SM_SENSOR_TP_NONE))
+        {
+            /* Record the sensor owner */
+            s_sensorOwner[sensorId].lmId = lmId;
+            s_sensorOwner[sensorId].tp |= (uint32_t)(1UL << tripPoint);
+        }
+    }
+    else
+    {
+        /* Set the status if out of range */
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -136,11 +189,39 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
 
     if (status == SM_ERR_SUCCESS)
     {
-        static bool s_sensorState[SM_NUM_SENSOR][SM_NUM_LM];
         bool newEnable = false;
 
         /* Record new state */
         s_sensorState[sensorId][lmId] = enable;
+
+        if (!enable && (s_sensorOwner[sensorId].lmId == lmId))
+        {
+            uint32_t tp = s_sensorOwner[sensorId].tp;
+            uint8_t count = 0U;
+            int64_t tripPoint = 0;
+
+            /* Loop over owner trip points */
+            while (tp != 0U)
+            {
+                if ((tp & 1U) != 0U)
+                {
+                    /* Clear the theshold point */
+                    (void)LMM_SensorTripPointSet(lmId, sensorId, count,
+                        tripPoint, DEV_SM_SENSOR_TP_NONE);
+                }
+
+                /* Shift to next trip point */
+                tp >>= 1U;
+
+                /*
+                 * False positive: The count value increments only up to
+                 * a maximum of 32.
+                 */
+                /* coverity[cert_int31_c_violation] */
+                /* coverity[cert_int30_c_violation] */
+                count++;
+            }
+        }
 
         /* Aggregate sensor enable */
         for (uint32_t lm = 0U; lm < SM_NUM_LM; lm++)
@@ -161,6 +242,12 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
         /* coverity[cert_arr30_c_violation:FALSE] */
         /* coverity[cert_str31_c_violation:FALSE] */
         status = SM_SENSORENABLE(sensorId, newEnable, timestampReporting);
+
+        if (status != SM_ERR_SUCCESS)
+        {
+            /* Revert to previous sensor state in case of failure */
+            s_sensorState[sensorId][lmId] = !enable;
+        }
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
@@ -175,16 +262,38 @@ int32_t LMM_SensorEnable(uint32_t lmId, uint32_t sensorId, bool enable,
 int32_t LMM_SensorIsEnabled(uint32_t lmId, uint32_t sensorId,
     bool *enabled, bool *timestampReporting)
 {
-    /* Just passthru to board/device */
-    /*
-     * False Positive: The sensorId value of zero is associated with the
-     * device layer function. Its handling is correctly implemented within
-     * the underrun end function (BRD_SM_SensorIsEnabled), ensuring
-     * appropriate processing of sensorId value zero.
-     */
-    /* coverity[cert_arr30_c_violation:FALSE] */
-    /* coverity[cert_str31_c_violation:FALSE] */
-    return SM_SENSORISENABLED(sensorId, enabled, timestampReporting);
+    int32_t status = SM_ERR_SUCCESS;
+
+    /* Check sensorId and lmId are within allowed range  */
+    if ((sensorId < SM_NUM_SENSOR) && (lmId < SM_NUM_LM))
+    {
+        /* Sensor is enabled ? */
+        if (s_sensorState[sensorId][lmId])
+        {
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly implemented
+             * within the underrun end function (BRD_SM_SensorIsEnabled),
+             * ensuring appropriate processing of sensorId value zero.
+             */
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
+            status = SM_SENSORISENABLED(sensorId, enabled, timestampReporting);
+        }
+        else
+        {
+            *enabled = false;
+            *timestampReporting = false;
+        }
+    }
+    else
+    {
+        /* Set the status if out of range */
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/

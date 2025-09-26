@@ -2083,6 +2083,12 @@ sub generate_trdc
     # Loop over the TRDC list
     foreach my $trdc (sort keys %$trdcRef)
     {
+        # Check if no TRDC_CONFIG
+        if (!exists $trdcRef->{$trdc}->{ndid})
+        {
+            next;
+        }
+
 		my @avpTrdc = grep(/^$trdc: /i, @avp);
 		my $line = 'TRDC ' . $trdc . ' Config';
 	    print $out "\n" . &banner($line);
@@ -2712,6 +2718,26 @@ sub get_trdc_config
 	            $t{nmrc} = $parm;
 	        }
 
+			# Extract TRDC kpaen
+	        if ((my $parm = &param($line, 'kpaen')) ne '!')
+	        {
+	            $t{kpaen} = $parm;
+	        }
+	        else
+	        {
+	            $t{kpaen} = '1';
+	        }
+
+			# Extract TRDC sidsz
+	        if ((my $parm = &param($line, 'sidsz')) ne '!')
+	        {
+	            $t{sidsz} = $parm;
+	        }
+	        else
+	        {
+	            $t{sidsz} = '6';
+	        }
+
 	        $hash{$idx} = \%t;
 	    }
 	}
@@ -3219,11 +3245,25 @@ sub get_trdc
         # Handle MDAC
         if ($m =~ /MDAC_([A-Z]+)(\d+)(C*)=(\d+) mdid=(\d+) sa=(\w+) pa=(\w+) sid=(\d+) kpa=(\d+)/)
         {
+            my $idx = $1;
 			my $dfmt;
 			my $data = (1 << 31) | $5;
+			my $kpaen = $trdcRef->{$idx}->{kpaen};
+			my $sidsz = $trdcRef->{$idx}->{sidsz};
+            my $maxSid = (2 ** $sidsz) - 1;
 
-			$data |= ($8 << 22);
-			$data |= ($9 << 28);
+            if ($8 <= $maxSid)
+            {
+			    $data |= ($8 << 22);
+			}
+			else
+			{
+		        error_line('SID too big MDAC_' . $1 . $2, '');
+			}
+            if ($kpaen == 1)
+            {
+				$data |= ($9 << 28);
+			}
 
 			if ($3 eq 'C')
 			{

@@ -385,7 +385,8 @@ sub load_file
 				$copyright = $_;
 
 			    # Replace hashs
-			    $copyright =~ s/#/*/g;				
+                $copyright =~ s/^# /## /;
+			    $copyright =~ s/#/*/g;
 			}
 		}
 

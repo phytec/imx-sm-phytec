@@ -183,8 +183,8 @@ typedef struct
  */
 typedef struct
 {
-    uint32_t lpcgIdx;
-    uint32_t rootIdx;
+    uint32_t lpcgIdx;                   /*!< LPCG index */
+    uint32_t rootIdx;                   /*!< Clock root index */
 } cpu_per_lpi_info_t;
 
 /* Functions */

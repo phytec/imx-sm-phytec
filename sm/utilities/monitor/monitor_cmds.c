@@ -468,6 +468,7 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t buildCommit = SM_COMMIT;
     const rom_passover_t *passover;
     const uint8_t *siName;
+    const uint8_t *pnName;
     uint32_t deviceId;
     uint32_t siRev;
     uint32_t partNum;
@@ -486,10 +487,10 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     printf("Board         = %s, attr=0x%08X\n", BRD_SM_NAME, BRD_SM_ATTR);
 
     /* Get the silicon info */
-    if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName)
-        == SM_ERR_SUCCESS)
+    if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName,
+        (string*) &pnName) == SM_ERR_SUCCESS)
     {
-        printf("Silicon       = %s\n", siName);
+        printf("Silicon       = %s, M%s\n", siName, pnName);
     }
 
     /* Display ROM passover info */

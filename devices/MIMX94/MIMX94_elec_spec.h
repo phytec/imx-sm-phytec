@@ -118,6 +118,7 @@
 /* Speed grade frequencies */
 #define ES_SPEED_GRADE_HZ_DEFAULT   1700000000UL        /* Unprogrammed SPEED_GRADE default */
 #define ES_SPEED_GRADE_HZ_MAX       2300000000UL
+#define ES_SPEED_GRADE_HZ_BASE      1000000000UL
 #define ES_SPEED_GRADE_HZ_STEP      100000000UL
 
 /* Clock frequency setpoints */

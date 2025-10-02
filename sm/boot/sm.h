@@ -162,8 +162,14 @@
 
 /*! @brief Computes the number of elements in an array. */
 #if !defined(ARRAY_SIZE)
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#define ARRAY_SIZE(X) (sizeof(X) / sizeof((X)[0]))
 #endif
+
+/*! @brief Returns the number of characters in a string literal. */
+#define STR_SIZE(X) (sizeof(X) - 1U)
+
+/*! @brief Returns the number of characters in a string literal. */
+#define STR_LU(X, Y, Z)  X[(Y) % (sizeof(Z) - 1U)]
 
 /*!
  * @name Min/max macros

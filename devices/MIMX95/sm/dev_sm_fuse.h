@@ -54,7 +54,7 @@
 /* Defines */
 
 /*! Number of device fuses */
-#define DEV_SM_NUM_FUSE  30U
+#define DEV_SM_NUM_FUSE  31U
 
 /*! Size of OTP */
 #define DEV_SM_NUM_OTP  610U
@@ -93,6 +93,48 @@
 #define DEV_SM_FUSE_ECID1              27U  /*!< ECID 1 */
 #define DEV_SM_FUSE_ECID0              28U  /*!< ECID 0 */
 #define DEV_SM_FUSE_PMRO               29U  /*!< PMRO */
+#define DEV_SM_FUSE_SDP                30U  /*!< SDP1/2 enable/disable */
+/** @} */
+
+/*! Extract PN package */
+#define DEV_SM_PN_PKG(X)   (((X) >> 6U) & 0x3U)
+/*! Extract PN segment */
+#define DEV_SM_PN_SEG(X)   (((X) >> 2U) & 0xFU)
+/*! Extract PN core count */
+#define DEV_SM_PN_CORE(X)  ((X) & 0x3U)
+
+/*!
+ * @name PN packages
+ */
+/** @{ */
+#define DEV_SM_PN_PKG_VT  1U  /*!< 15x15 no lid */
+#define DEV_SM_PN_PKG_VY  2U  /*!< 19x19 lidded */
+#define DEV_SM_PN_PKG_VZ  3U  /*!< 19x19 no lid */
+/** @} */
+
+/*!
+ * @name PN core count
+ */
+/** @{ */
+#define DEV_SM_PN_CORE_2  1U  /*!< 2 cores */
+#define DEV_SM_PN_CORE_4  2U  /*!< 4 cores */
+#define DEV_SM_PN_CORE_6  3U  /*!< 6 cores */
+/** @} */
+
+/*!
+ * @name PN letter arrays
+ */
+/** @{ */
+/*! Letters for PN package */
+#define DEV_SM_PN_LTR_PKG   "XTYZ"
+/*! Letters for PN segment */
+#define DEV_SM_PN_LTR_SEG   "0123456789TVGCIN"
+/*! Letters for PN core count */
+#define DEV_SM_PN_LTR_CORE  "1246"
+/*! Letters for market segment/temp */
+#define DEV_SM_LTR_MKT     "DXCA"
+/*! Letters for SDP */
+#define DEV_SM_LTR_SDP     "AXXB"
 /** @} */
 
 /* Types */

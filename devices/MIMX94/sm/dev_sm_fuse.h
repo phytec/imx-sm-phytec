@@ -92,6 +92,19 @@
 #define DEV_SM_FUSE_PMRO               26U  /*!< PMRO */
 /** @} */
 
+/*! Extract PN family */
+#define DEV_SM_PN_FAM(X)  ((X) / 10U)
+/*! Extract PN segment */
+#define DEV_SM_PN_SEG(X)  ((X) % 10U)
+
+/*!
+ * @name PN letter arrays
+ */
+/** @{ */
+/*! Letters for market segment/temp */
+#define DEV_SM_LTR_MKT     "DXCA"
+/** @} */
+
 /* Types */
 
 /* Functions */

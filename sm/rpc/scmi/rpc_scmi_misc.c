@@ -1550,7 +1550,7 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         status = SM_SIINFOGET(&deviceId, &siRev, &partNum,
-            (string*) &nameAddr);
+            (string*) &nameAddr, NULL);
     }
 
     /* Return results */

@@ -59,10 +59,11 @@ dev_sm_syslog_t g_syslog;
 /* Get silicon info                                                         */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
-    uint32_t *partNum, string *siNameAddr)
+    uint32_t *partNum, string *siNameAddr, string *pnNameAddr)
 {
     int32_t status = SM_ERR_SUCCESS;
     static string siName = "Simulation";
+    static string pnName = "SimPn";
 
     /* Return device ID */
     if (deviceId != NULL)
@@ -86,6 +87,12 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     if (siNameAddr != NULL)
     {
         *siNameAddr = siName;
+    }
+
+    /* Return name */
+    if (pnNameAddr != NULL)
+    {
+        *pnNameAddr = pnName;
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)

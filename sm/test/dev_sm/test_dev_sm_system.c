@@ -212,12 +212,13 @@ void TEST_DevSmSystem(void)
     {
         uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
         const char *siName = NULL;
+        const char *pnName = NULL;
 
-        CHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName));
-        CHECK(DEV_SM_SiInfoGet(NULL, NULL, NULL, NULL));
+        CHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName, &pnName));
+        CHECK(DEV_SM_SiInfoGet(NULL, NULL, NULL, NULL, NULL));
 
         SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
-        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName),
+        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName, &pnName),
             SM_ERR_TEST);
         (void) DEV_SM_SiVerGet();
         SM_TestModeSet(SM_TEST_MODE_OFF);

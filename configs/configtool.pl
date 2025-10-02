@@ -1109,7 +1109,7 @@ sub generate_scmi
             {
                 if ($lmName eq '<invalid>')
                 {
-                    error_line('missing LM, invalid SCMI instance', $dat);
+                    error_line('missing LM name, invalid SCMI instance', $dat);
                 }
 
                 my $line = 'SCMI Instance ' . $scmiInst
@@ -1184,6 +1184,10 @@ sub generate_scmi
             {
                 $parm =~ s/\"//g;
                 $line .= ' (' . $parm . ')';
+            }
+            else
+            {
+                error_line('missing agent name', $dat);
             }
             if ((my $parm = &param($dat, 'did')) ne '!')
             {
@@ -2767,6 +2771,10 @@ sub get_trdc
         # Handle DOM
         if ($line =~ /^(DOM\d*)\b/)
         {
+            if ((my $parm = &param($line, 'name')) eq '!')
+            {
+                error_line('missing DOM name', $line);
+            }
             if ((my $parm = &param($line, 'did')) ne '!')
             {
                 $did = $parm;

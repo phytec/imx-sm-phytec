@@ -719,7 +719,8 @@ The configtool supports the following commands and key=value pairs in the input 
 | DOX         | name     | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
 |             | desc     | Group description, quoted |
 | BOARD       | \<DEF\>  | Define BOARD_\<DEF\> as \<VAL\> in config_board.h |
-| DOMn        | did      | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc.,  the DID is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
+| DOMn        | name     | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc., DOM name string, quoted, 15 characters max |
+|             | did      | Domain ID for the DOM, is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
 | LMn         | name     | Starts an LM section *n*, *n* starts at 0 and should increment, LM name string, quoted, 15 characters max |
 |             | rpc      | Linked RPC is SM_RPC_\<VAL\>, e.g. ::SM_RPC_SCMI |
 |             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |

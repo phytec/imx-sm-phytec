@@ -3303,7 +3303,7 @@ sub get_trdc
 			next;
 	    }
 
-        # Handle MRC
+        # Handle MRC (with end)
         if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
         {
             my $w0;
@@ -3327,6 +3327,30 @@ sub get_trdc
             next;
         }
 		
+        # Handle MRC (with size)
+        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) size=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
+        {
+            my $w0;
+            my $w1;
+            my $end = $5 + $6 - 1;
+
+            if ($9 == 1)
+            {
+			    $w0 = ($5 >> 4) & 0xFFFFFC00;
+			    $w1 = (($end >> 4) & 0xFFFFFC00) | 1;
+            }
+            else
+            {
+			    $w0 = $5 & 0xFFFFC000;
+			    $w1 = ($end & 0xFFFFC000) | 1;
+			}
+
+			my $perm = $8;
+		
+			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d, %d",
+				$1, $2, $4, $3, $w0, $w1, $perm, $7, $11);
+            next;
+        }
 	}
 
 	# Collapse MBC

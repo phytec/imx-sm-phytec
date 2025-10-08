@@ -383,8 +383,8 @@ int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
                 - DEV_SM_NUM_SENSOR))
             {
                 *enabled = (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON)
-                     && sensorEnb[BRD_SM_SENSOR_TEMP_PF5301
-                     - DEV_SM_NUM_SENSOR];
+                    && sensorEnb[BRD_SM_SENSOR_TEMP_PF5301
+                        - DEV_SM_NUM_SENSOR];
                 *timestampReporting = false;
             }
             else

@@ -171,6 +171,31 @@ void CONFIG_Condition(bool cond);
  */
 int32_t CONFIG_Load(const uint32_t *base, const uint32_t *config);
 
+/*!
+ * Load a configuration array with mask.
+ *
+ * @param[in]     base      Base pointer
+ * @param[in]     config    Pointer to command array
+ * @param[in]     range     True if ranged
+ * @param[in]     start     Start of range (inclusive)
+ * @param[in]     end       End of range (inclusive)
+ * @param[in]     zero      Zero matching words if true
+ *
+ * This function will process and load an array of configuration
+ * commands. The \a base address is used for all relative (base) command
+ * types. The range can be used to selectively load. Zero will zero
+ * words that would have been loaded.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if array completely loaded without error.
+ * - ::SM_ERR_NOT_FOUND: if a command code is invalid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if a command parameter is invalid.
+ */
+int32_t CONFIG_LoadRange(const uint32_t *base, const uint32_t *config,
+    bool range, uint32_t start, uint32_t end, bool zero);
+
 /** @} */
 
 #endif /* CONFIG_H */

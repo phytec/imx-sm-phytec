@@ -75,6 +75,21 @@
 
 /* Functions */
 
+/*!
+ * Block DDR memory access.
+ *
+ * @param[in]     enable       True to block access
+ *
+ * This function will load an RDC after it is powered on.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if \a rdcId is invalid.
+ * - others returned by CONFIG_LoadRange().
+ */
+int32_t DEV_SM_RdcDdrBlock(bool enable);
+
 /** @} */
 
 /* Include SM device API */

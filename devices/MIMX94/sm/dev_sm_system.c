@@ -556,18 +556,22 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
 
             bool ddrInRetention = false;
-            /* Attempt to place DDR into retention */
-            if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
+            /* Limit DDR access path to SM  */
+            if (DEV_SM_RdcDdrBlock(true) == SM_ERR_SUCCESS)
             {
-                /* Set flag to indicate DDR retention is active */
-                ddrInRetention = true;
-
-                /* Power down DDRMIX */
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
-                    == SM_ERR_SUCCESS)
+                /* Attempt to place DDR into retention */
+                if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
                 {
-                    g_syslog.sysSleepRecord.mixPwrStat &=
-                        (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    /* Set flag to indicate DDR retention is active */
+                    ddrInRetention = true;
+
+                    /* Power down DDRMIX */
+                    if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
+                        == SM_ERR_SUCCESS)
+                    {
+                        g_syslog.sysSleepRecord.mixPwrStat &=
+                            (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    }
                 }
             }
 
@@ -875,11 +879,19 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     savedWakeupMixPerf);
             }
 
-            /* If NOCMIX powered down during SUSPEND, force power up */
-            if ((status == SM_ERR_SUCCESS) && (lpmSettingNoc <= sleepMode))
+            if (status == SM_ERR_SUCCESS)
             {
-                status = DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
-                    DEV_SM_POWER_STATE_ON);
+                /* If NOCMIX powered down during SUSPEND, force power up */
+                if (lpmSettingNoc <= sleepMode)
+                {
+                    status = DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
+                        DEV_SM_POWER_STATE_ON);
+                }
+                else
+                {
+                    /* Reopen DDR access if NOCMIX TRDC is not reloaded */
+                    status = DEV_SM_RdcDdrBlock(false);
+                }
             }
 
             /* Check if DDR retention active */

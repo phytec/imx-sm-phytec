@@ -46,6 +46,12 @@
 
 /* Local defines */
 
+/* DDR MRC region start address (inclusive) */
+#define DDR_MRC_REGION_START  0x4902A040U
+
+/* DDR MRC region end address (inclusive) */
+#define DDR_MRC_REGION_END    0x4902AFC0U
+
 /* Local types */
 
 typedef struct
@@ -178,6 +184,23 @@ int32_t DEV_SM_RdcLoad(uint32_t rdcId)
         status = CONFIG_Load((uint32_t*)
             s_trdcInfo[rdcId].rdcBase, s_trdcInfo[rdcId].config);
     }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Load RDC config                                                          */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_RdcDdrBlock(bool enable)
+{
+    int32_t status;
+    uint32_t rdcId = DEV_SM_TRDC_N;
+
+    /* Load config */
+    status = CONFIG_LoadRange((uint32_t*)
+        s_trdcInfo[rdcId].rdcBase, s_trdcInfo[rdcId].config,
+        true, DDR_MRC_REGION_START, DDR_MRC_REGION_END, enable);
 
     /* Return status */
     return status;

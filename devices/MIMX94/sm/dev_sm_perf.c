@@ -431,16 +431,20 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
+         * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+         * PLL_OUT = PLL_VCO / 12 = 266.625MHz
+         * 266.625MHz * 8 = 2133 MTs
          */
-        .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
-        .odiv = 16U,                            /* ODIV */
+        .mfi = 133U,                            /* VCO MFI */
+        .mfn = VCO_MFD * 5U / 16U,              /* VCO MFN */
+        .odiv = 12U,                            /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         /*
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_OUT = PLL_VCO / 8 = 400MHz
+         * 400MHz * 8 = 3200 MTs
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD / 3U,                    /* VCO MFN */
@@ -449,11 +453,13 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
+         * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+         * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+         * 533.25MHz * 8 = 4266 MTs
          */
-        .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
-        .odiv = 8U,                             /* ODIV */
+        .mfi = 133U,                            /* VCO MFI */
+        .mfn = VCO_MFD * 5U / 16U,              /* VCO MFN */
+        .odiv = 6U,                            /* ODIV */
     }
 };
 
@@ -468,19 +474,19 @@ static dev_sm_perf_desc_t const s_perfDescDram[DEV_SM_NUM_PERF_LVL_SOC] =
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
-        .value = ES_LOW_KHZ_DRAM,                   /* KHz */
+        .value = ES_LOW_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
-        .value = ES_NOM_KHZ_DRAM,                   /* KHz */
+        .value = ES_NOM_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
-        .value = ES_ODV_KHZ_DRAM,                   /* KHz */
+        .value = ES_ODV_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }

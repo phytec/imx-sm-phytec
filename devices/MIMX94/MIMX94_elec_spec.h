@@ -55,14 +55,14 @@
 #define ES_150000KHZ                150000U
 #define ES_166667KHZ                166667U
 #define ES_200000KHZ                200000U
-#define ES_233333KHZ                233333U
+#define ES_233250KHZ                233250U
 #define ES_250000KHZ                250000U
 #define ES_266625KHZ                266625U
 #define ES_266667KHZ                266667U
 #define ES_333333KHZ                333333U
 #define ES_360000KHZ                360000U
 #define ES_400000KHZ                400000U
-#define ES_466667KHZ                466667U
+#define ES_466250KHZ                466250U
 #define ES_500000KHZ                500000U
 #define ES_533250KHZ                533250U
 #define ES_533333KHZ                533333U
@@ -151,9 +151,13 @@
 #define ES_NOM_KHZ_A55PER           ES_333333KHZ
 #define ES_ODV_KHZ_A55PER           ES_400000KHZ
 
-#define ES_LOW_KHZ_DRAM             ES_266625KHZ /* 2133 MT/s / 8 */
-#define ES_NOM_KHZ_DRAM             ES_400000KHZ /* 3200 MT/s / 8 */
-#define ES_ODV_KHZ_DRAM             ES_533250KHZ /* 4266 MT/s / 8 */
+#define ES_LOW_KHZ_DRAM_19X19       ES_266625KHZ /* 2133 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_19X19       ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_19X19       ES_533250KHZ /* 4266 MT/s / 8 */
+
+#define ES_LOW_KHZ_DRAM_15X15       ES_266625KHZ /* 2133 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_15X15       ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_15X15       ES_466250KHZ /* 3733 MT/s / 8 */
 
 #define ES_LOW_KHZ_HSIO             ES_250000KHZ
 #define ES_NOM_KHZ_HSIO             ES_400000KHZ

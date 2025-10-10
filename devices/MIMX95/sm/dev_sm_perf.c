@@ -174,8 +174,8 @@ static int32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
 static dev_sm_perf_ps_cfg_t const s_psCfgSoc =
 {
     .psIdx = PS_VDD_SOC,
-    .idStart = DEV_SM_PERF_ELE,
-    .idEnd = DEV_SM_PERF_CAM,
+    .idStart = 0U,
+    .idEnd = DEV_SM_PERF_LAST,
     .dvsTable = s_perfDvsTableSoc
 };
 
@@ -440,21 +440,22 @@ static dev_sm_perf_desc_t const s_perfDescM7[DEV_SM_NUM_PERF_LVL_SOC] =
     }
 };
 
-/* Setpoint clock root configuration for DRAM (LPDDR5) */
-static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp5 =
+/* Setpoint clock root configuration for DRAM */
+static dev_sm_perf_root_cfg_t const s_perfRootCfgDram =
 {
     .parent = DEV_SM_CLK_OSC24M,            /* root parent */
     .rootDiv = 1U,                          /* root divider */
 };
 
-/* Setpoint PLL configuration for DRAM (LPDDR5) */
-/* coverity[misra_c_2012_rule_8_9_violation] */
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
+/* Setpoint PLL configuration for DRAM (LP5 19x19 default) */
+static dev_sm_perf_pll_cfg_t s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_OUT = PLL_VCO / 8 = 400MHz
+         * 400MHz * 8 = 3200 MTs
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD / 3U,                    /* VCO MFN */
@@ -464,6 +465,8 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
     {
         /*
          * PLL_VCO = 24MHz * (200) = 4800MHz
+         * PLL_OUT = PLL_VCO / 8 = 600MHz
+         * 600MHz * 8 = 4800 MTs
          */
         .mfi = 200U,                            /* VCO MFI */
         .mfn = 0U,                              /* VCO MFN */
@@ -472,86 +475,18 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_VCO = 24MHz * (200) = 4800MHz
+         * PLL_OUT = PLL_VCO / 6 = 800MHz
+         * 800MHz * 8 = 6400 MTs
          */
-        .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
-        .odiv = 4U,                             /* ODIV */
-    }
-};
-
-/* Setpoint descriptions for DRAM (LPDDR5) */
-static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
-{
-    [DEV_SM_PERF_LVL_PRK] =
-    {
-        .value = ES_24000KHZ,                       /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_LOW] =
-    {
-        .value = ES_LOW_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_NOM] =
-    {
-        .value = ES_NOM_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_ODV] =
-    {
-        .value = ES_ODV_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    }
-};
-
-/* Setpoint clock root configuration for DRAM (LPDDR4X) */
-/* coverity[misra_c_2012_rule_8_9_violation] */
-static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
-{
-    .parent = DEV_SM_CLK_OSC24M,            /* root parent */
-    .rootDiv = 1U,                          /* root divider */
-};
-
-/* Setpoint PLL configuration for DRAM (LPDDR4X) */
-/* coverity[misra_c_2012_rule_8_9_violation] */
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
-{
-    [DEV_SM_PERF_LVL_LOW] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
-         */
-        .mfi = 155U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 2U,                    /* VCO MFN */
-        .odiv = 16U,                            /* ODIV */
-    },
-    [DEV_SM_PERF_LVL_NOM] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (120) = 2880MHz
-         */
-        .mfi = 120U,                            /* VCO MFI */
+        .mfi = 200U,                            /* VCO MFI */
         .mfn = 0U,                              /* VCO MFN */
-        .odiv = 8U                              /* ODIV */
-    },
-    [DEV_SM_PERF_LVL_ODV] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
-         */
-        .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
-        .odiv = 6U,                             /* ODIV */
+        .odiv = 6U                              /* ODIV */
     }
 };
 
-/* Setpoint descriptions for DRAM (LPDDR4X) */
-static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
+/* Setpoint descriptions for DRAM (LP5 19x19 default) */
+static dev_sm_perf_desc_t s_perfDescDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
@@ -561,19 +496,19 @@ static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
-        .value = ES_LOW_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_LOW_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
-        .value = ES_NOM_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_NOM_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
-        .value = ES_ODV_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_ODV_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
@@ -1087,7 +1022,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
          * PLL_VCO = 24MHz * 117 = 2808MHz
          */
         .mfi = 117U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
+        .mfn = 0U,                              /* VCO MFN */
         .odiv = 0U                              /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
@@ -1274,8 +1209,8 @@ static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
         .rootClk = CLOCK_ROOT_DRAMALT,
         .srcMixIdx = PWR_MIX_SLICE_IDX_DDR,
         .psCfg = &s_psCfgSoc,
-        .desc = s_perfDescDramLp5,
-        .rootCfg = &s_perfRootCfgDramLp5,
+        .desc = s_perfDescDram,
+        .rootCfg = &s_perfRootCfgDram,
     },
 
     [DEV_SM_PERF_HSIO] =
@@ -1373,6 +1308,8 @@ static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t * perfLevel);
 static uint32_t DEV_SM_PerfDramTypeGet(void);
+static uint32_t DEV_SM_PerfSocPkgTypeGet(void);
+static void DEV_SM_PerfCfgInit(void);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize performance domains                                           */
@@ -1397,42 +1334,8 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
-    /* Query A55 speed grade from fuses */
-    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
-
-    if (speedGrade >= 2000000000U)
-    {
-        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
-    }
-    else if (speedGrade == 1000000000U)
-    {
-        /* 1GHz devices support PRK, LOW, NOM setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
-
-        /* 1GHz devices require updated PERF table entries for NOM setpoint */
-        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
-
-        /*
-         * PLL_VCO = 24MHz * 150 = 3600MHz
-         */
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
-
-        /*
-         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
-         */
-        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
-        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
-        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
-        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
-    }
-    else
-    {
-        /* All other devices support PRK, LOW, NOM, ODV setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
-    }
+    /* Initialize dynamically assigned performance configurations */
+    DEV_SM_PerfCfgInit();
 
     if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
     {
@@ -1569,22 +1472,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
             levelIdx = s_perfNumLevels[psIdx] - 1U;
         }
 
-        if (domainId == DEV_SM_PERF_DRAM)
-        {
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                info->sustainedFreq = s_perfDescDramLp4x[levelIdx].value;
-            }
-            else
-            {
-                info->sustainedFreq = s_perfDescDramLp5[levelIdx].value;
-            }
-        }
-        else
-        {
-            info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
-        }
-
+        info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
         info->sustainedPerfLevel = levelIdx;
     }
 
@@ -1635,21 +1523,7 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
         }
         else
         {
-            if (domainId == DEV_SM_PERF_DRAM)
-            {
-                if (DEV_SM_PerfDramTypeGet() == 4U)
-                {
-                    *desc = s_perfDescDramLp4x[levelIndex];
-                }
-                else
-                {
-                    *desc = s_perfDescDramLp5[levelIndex];
-                }
-            }
-            else
-            {
-                *desc = s_perfCfg[domainId].desc[levelIndex];
-            }
+            *desc = s_perfCfg[domainId].desc[levelIndex];
         }
     }
 
@@ -2354,16 +2228,8 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     }
     if (status == SM_ERR_SUCCESS)
     {
-        if (DEV_SM_PerfDramTypeGet() == 4U)
-        {
-            status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
-                &s_perfRootCfgDramLp4x);
-        }
-        else
-        {
-            status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
-                &s_perfRootCfgDramLp5);
-        }
+        status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
+            &s_perfRootCfgDram);
     }
 
     uint32_t selIdx = g_clockGprSel[CLOCK_GPR_SEL_DRAM].selIdx;
@@ -2380,16 +2246,8 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     {
         if (perfLevel > DEV_SM_PERF_LVL_PRK)
         {
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
-                    &s_perfPllCfgDramLp4x[perfLevel]);
-            }
-            else
-            {
-                status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
-                    &s_perfPllCfgDramLp5[perfLevel]);
-            }
+            status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
+                &s_perfPllCfgDram[perfLevel]);
 
             if (status == SM_ERR_SUCCESS)
             {
@@ -2588,15 +2446,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
     {
         case DEV_SM_PERF_DRAM:
             clockId = DEV_SM_CLK_DRAM_GPR_SEL;
-
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                perfDesc = s_perfDescDramLp4x;
-            }
-            else
-            {
-                perfDesc = s_perfDescDramLp5;
-            }
+            perfDesc = s_perfDescDram;
             break;
 
         default:
@@ -2615,6 +2465,9 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
             uint32_t numLevels = s_perfNumLevels[psIdx];
 
+            /* Convert rate to KHz */
+            uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
+
             /* Default to highest level to handle overclocking case */
             if (numLevels > 0U)
             {
@@ -2626,9 +2479,8 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             bool bSearch = true;
             while (bSearch && (level < numLevels))
             {
-                /* Rate for level stored in value field of PERF description */
-                uint64_t perfRate = ((uint64_t) perfDesc[level].value) * 1000ULL;
-                if (perfRate >= rate)
+                /* Rate in KHz for level stored in value field of PERF description */
+                if (perfDesc[level].value >= rateKHz)
                 {
                     bSearch = false;
                     *perfLevel = level;
@@ -2666,5 +2518,186 @@ static uint32_t DEV_SM_PerfDramTypeGet(void)
     }
 
     return s_perfDramType;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Query SoC package type                                                   */
+/*--------------------------------------------------------------------------*/
+static uint32_t DEV_SM_PerfSocPkgTypeGet(void)
+{
+    static uint32_t s_perfPkgType = 0U;
+
+    /* Check if DRAM type is unknown */
+    if (s_perfPkgType == 0U)
+    {
+        uint32_t partNum = DEV_SM_FuseGet(DEV_SM_FUSE_PART_NUM);
+        s_perfPkgType = DEV_SM_PN_PKG(partNum);
+    }
+
+    return s_perfPkgType;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update performance table entries based on SoC attributes                 */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfCfgInit(void)
+{
+    /* Query A55 speed grade from fuses */
+    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
+
+    /* Check for 2+GHz device */
+    if (speedGrade >= 2000000000U)
+    {
+        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
+    }
+    /* Check for 1GHz device */
+    else if (speedGrade == 1000000000U)
+    {
+        /* 1GHz devices support PRK, LOW, NOM setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
+
+        /* 1GHz devices require updated PERF table entries for NOM setpoint */
+        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
+
+        /*
+         * PLL_VCO = 24MHz * 150 = 3600MHz
+         */
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
+
+        /*
+         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
+         */
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+    }
+    else
+    {
+        /* All other devices support PRK, LOW, NOM, ODV setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
+    }
+
+    /* Check for LPDDR4X */
+    if (DEV_SM_PerfDramTypeGet() == 4U)
+    {
+        /* Check for 15x15 package */
+        if (DEV_SM_PerfSocPkgTypeGet() == DEV_SM_PN_PKG_VT)
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (175) = 4200MHz
+             * PLL_OUT = PLL_VCO / 12 = 350MHz
+             * 350MHz * 8 = 2800 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 175U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 12U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (166+2/3) = 4000MHz
+             * PLL_OUT = PLL_VCO / 8 = 500MHz
+             * 500MHz * 8 = 4000 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 166U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 2U / 3U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 8U;
+        }
+        /* Else 19x19 package */
+        else
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (180) = 4320MHz
+             * PLL_OUT = PLL_VCO / 12 = 360MHz
+             * 360MHz * 8 = 2880 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 180U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 12U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+             * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+             * 533.25MHz * 8 = 4266 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 5U / 16U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 6U;
+        }
+    }
+    /* Else LPDDR5 */
+    else
+    {
+        /* Check for 15x15 package */
+        if (DEV_SM_PerfSocPkgTypeGet() == DEV_SM_PN_PKG_VT)
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+             * PLL_OUT = PLL_VCO / 8 = 400MHz
+             * 400MHz * 8 = 3200 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = VCO_MFD / 3U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 8U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+             * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+             * 533.25MHz * 8 = 4266 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 5U / 16U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 6U;
+        }
+
+        /* Else keep default configuration (LP5 19x19) */
+    }
 }
 

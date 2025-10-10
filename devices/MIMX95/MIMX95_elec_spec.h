@@ -53,14 +53,15 @@
 #define ES_133333KHZ                133333U
 #define ES_166667KHZ                166667U
 #define ES_200000KHZ                200000U
-#define ES_233333KHZ                233333U
+#define ES_233250KHZ                233250U
 #define ES_250000KHZ                250000U
 #define ES_266625KHZ                266625U
 #define ES_333333KHZ                333333U
+#define ES_350000KHZ                350000U
 #define ES_360000KHZ                360000U
 #define ES_375000KHZ                375000U
 #define ES_400000KHZ                400000U
-#define ES_466667KHZ                466667U
+#define ES_466250KHZ                466250U
 #define ES_500000KHZ                500000U
 #define ES_533250KHZ                533250U
 #define ES_533333KHZ                533333U
@@ -153,13 +154,21 @@
 #define ES_ODV_KHZ_A55PER           ES_400000KHZ
 #define ES_SOD_KHZ_A55PER           ES_500000KHZ
 
-#define ES_LOW_KHZ_DRAM_LP4X        ES_233333KHZ /* 1866 MT/s / 8 */
-#define ES_NOM_KHZ_DRAM_LP4X        ES_360000KHZ /* 2880 MT/s / 8 */
-#define ES_ODV_KHZ_DRAM_LP4X        ES_533333KHZ /* 4267 MT/s / 8 */
+#define ES_LOW_KHZ_DRAM_LP4X_19X19  ES_233250KHZ /* 1866 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP4X_19X19  ES_360000KHZ /* 2880 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP4X_19X19  ES_533250KHZ /* 4266 MT/s / 8 */
 
-#define ES_LOW_KHZ_DRAM_LP5         ES_400000KHZ /* 3200 MT/s / 8 */
-#define ES_NOM_KHZ_DRAM_LP5         ES_600000KHZ /* 4800 MT/s / 8 */
-#define ES_ODV_KHZ_DRAM_LP5         ES_800000KHZ /* 6400 MT/s / 8 */
+#define ES_LOW_KHZ_DRAM_LP4X_15X15  ES_233250KHZ /* 1866 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP4X_15X15  ES_350000KHZ /* 2800 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP4X_15X15  ES_500000KHZ /* 4000 MT/s / 8 */
+
+#define ES_LOW_KHZ_DRAM_LP5_19X19   ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP5_19X19   ES_600000KHZ /* 4800 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP5_19X19   ES_800000KHZ /* 6400 MT/s / 8 */
+
+#define ES_LOW_KHZ_DRAM_LP5_15X15   ES_233250KHZ /* 1866 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM_LP5_15X15   ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM_LP5_15X15   ES_533250KHZ /* 4266 MT/s / 8 */
 
 #define ES_LOW_KHZ_HSIO             ES_250000KHZ
 #define ES_NOM_KHZ_HSIO             ES_400000KHZ

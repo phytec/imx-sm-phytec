@@ -170,6 +170,11 @@
 #define SM_NUM_RDC              DEV_SM_NUM_RDC
 #endif
 
+#ifndef SM_SYSTICKENABLE
+/*! Redirector (device/board) to start tick */
+#define SM_SYSTICKENABLE        DEV_SM_SysTickEnable
+#endif
+
 #ifndef SM_ERRORDUMP
 /*! Redirector (device/board) to dump logged errors */
 #define SM_ERRORDUMP            DEV_SM_ErrorDump

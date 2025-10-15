@@ -129,6 +129,11 @@ int main(int argc, const char * const argv[])
         status = LMM_Init(&mSel, LMM_INIT_FLAGS);
     }
 
+#ifndef SIMU
+    /* Start systick, disable boot WDOG */
+    SM_SYSTICKENABLE();
+#endif
+
     if (status == SM_ERR_SUCCESS)
     {
         /* Mark LMM inited */

@@ -351,6 +351,11 @@ void SWI_Trigger(void);
 uint64_t DEV_SM_GetTimerMsec(void);
 
 /*!
+ * Start systick, disable boot WDOG.
+ */
+void DEV_SM_SysTickEnable(void);
+
+/*!
  * Update dynamic IRQ base priority.
  *
  * @param[in]     irq      IRQ index

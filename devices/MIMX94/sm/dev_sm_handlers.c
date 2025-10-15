@@ -88,6 +88,7 @@
 
 /* Local variables */
 
+static bool s_enbTick = false;
 static uint64_t s_smTimeMsec = 0ULL;
 
 static irq_prio_info_t s_irqPrioInfo[DEV_SM_NUM_IRQ_PRIO_IDX] =
@@ -436,23 +437,26 @@ void UsageFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 void SysTick_Handler(void)
 {
-    /*
-     * Intentional: Upon overflow value will rollback to zero.
-     */
-    /* coverity[cert_int30_c_violation] */
-    s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
+    if (s_enbTick)
+    {
+        /*
+         * Intentional: Upon overflow value will rollback to zero.
+         */
+        /* coverity[cert_int30_c_violation] */
+        s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 
-    /* Call system tick */
-    DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
+        /* Call system tick */
+        DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
 
-    /* Call mem tick */
-    DEV_SM_MemTick(BOARD_TICK_PERIOD_MSEC);
+        /* Call mem tick */
+        DEV_SM_MemTick(BOARD_TICK_PERIOD_MSEC);
 
-    /* Call sensor tick */
-    DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
+        /* Call sensor tick */
+        DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
 
-    /* Call board tick */
-    BRD_SM_TimerTick(BOARD_TICK_PERIOD_MSEC);
+        /* Call board tick */
+        BRD_SM_TimerTick(BOARD_TICK_PERIOD_MSEC);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -924,6 +928,15 @@ uint64_t DEV_SM_GetTimerMsec(void)
 {
     /* Return milliseconds */
     return s_smTimeMsec;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enable systick handling                                                  */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SysTickEnable(void)
+{
+    /* Enable systick handling */
+    s_enbTick = true;
 }
 
 /*--------------------------------------------------------------------------*/

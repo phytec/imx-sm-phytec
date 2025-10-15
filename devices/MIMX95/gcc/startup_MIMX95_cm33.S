@@ -423,6 +423,13 @@ __isr_vector:
     .thumb
 
 /* Reset Handler */
+    .equ _AON_BLK_CTRL_BASE, 0x444F0000
+    .equ _WDOGANY,  0x1B8
+    .equ _WDOG_UNLOCK_KEY, 0xD928C520
+    .equ _WDOGBASE, 0x442E0000
+    .equ _WDOGCS,   0x0
+    .equ _WDOGCNT,  0x4
+    .equ _WDOGTOVAL,0x8
 
     .thumb_func
     .align 2
@@ -430,6 +437,45 @@ __isr_vector:
     .weak    Reset_Handler
     .type    Reset_Handler, %function
 Reset_Handler:
+    /* Configure WDOG to drive WDOG_ANY */
+    ldr r0, =_AON_BLK_CTRL_BASE
+    ldr r1, =0x1D
+    str r1, [r0, #_WDOGANY]
+    ldr r0, =_WDOGBASE
+    /* Unlock the WDOG */
+    ldr r1, =_WDOG_UNLOCK_KEY
+    str r1, [r0, #_WDOGCNT]
+
+    /* Write to TOVAL is required before write of configuration register 
+     *
+     *  TOVAL = timeout * clock rate
+     *        = 1000 msec * 32768 Hz
+     *        = 32768
+     *        = 32768
+     */
+    ldr r1, =32768
+    str r1, [r0, #_WDOGTOVAL]
+
+    /* Enable the WDOG 
+     *
+     * Update configuration register (WDOGCS) as follows:
+     *
+     *  WDGW = window mode disabled     = (0 << 15) = 0x0000
+     *  CMD32 = enable 32-bit commands  = (1 << 13) = 0x2000
+     *  PRES = disable 256 prescalar    = (0 << 12) = 0x0000
+     *  CLK = LPOCLK as clock source    = (1 << 8)  = 0x0100
+     *  EN = enable watchdog            = (1 << 7)  = 0x0080
+     *  INT = enable early interrupt    = (1 << 6)  = 0x0040
+     *  UPDATE = allow WDGCS updates    = (1 << 5)  = 0x0020
+     *  TST = test mode disabled        = (0 << 3)  = 0x0000
+     *  DBG = disable watchdog in debug = (0 << 2)  = 0x0000
+     *  WAIT = enable watchdog in wait  = (1 << 1)  = 0x0002
+     *  STOP = disable watchdog in stop = (0 << 0)  = 0x0000
+     *                                              --------
+     *                                                0x21E2
+     */
+    ldr r1, =0x21E2
+    str r1, [r0, #_WDOGCS]
     cpsid   i               /* Mask interrupts */
     .equ    VTOR, 0xE000ED08
     ldr     r0, =VTOR

@@ -845,9 +845,6 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_SOC]
     }
 };
 
-/* Max performance level */
-static uint32_t s_perfNumLevels[PS_NUM_SUPPLY];
-
 static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
 {
     [DEV_SM_PERF_M33] =
@@ -969,6 +966,7 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t * perfLevel);
+static uint32_t DEV_SM_GetNumPerfLevels(uint32_t domainId);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize performance domains                                           */
@@ -989,9 +987,6 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     SYS_PLL1->DFS[0].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
     SYS_PLL1->DFS[1].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
     SYS_PLL1->DFS[2].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
-
-    /* Set number of perf levels */
-    s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
     if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
     {
@@ -1117,13 +1112,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
         /* Assume highest level frequency can be sustained.  Performance
          * level value is same as max sustained frequency.
          */
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        /*
-         * False positive:Max s_perfNumLevels would be 4.
-         */
-        /* coverity[cert_int30_c_violation:FALSE] */
-        uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
-
+        uint32_t levelIdx = DEV_SM_GetNumPerfLevels(domainId) - 1U;
         info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
         info->sustainedPerfLevel = levelIdx;
     }
@@ -1145,8 +1134,7 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
     }
     else
     {
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        *numLevels =  s_perfNumLevels[psIdx];
+        *numLevels = DEV_SM_GetNumPerfLevels(domainId);
     }
 
     /* Return status */
@@ -1168,8 +1156,8 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
     else
     {
         /* Check array bounds */
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        if (levelIndex >= s_perfNumLevels[psIdx])
+        uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
+        if (levelIndex > maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -1197,9 +1185,8 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
     else
     {
         dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
-
-        /* Check array bounds */
-        if (perfLevel >= s_perfNumLevels[psCfg->psIdx])
+        uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
+        if (perfLevel > maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -2007,8 +1994,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
         if (status == SM_ERR_SUCCESS)
         {
-            uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-            uint32_t numLevels = s_perfNumLevels[psIdx];
+            uint32_t numLevels = DEV_SM_GetNumPerfLevels(domainId);
 
             /* Convert rate to KHz */
             uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
@@ -2040,5 +2026,33 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get maximum number of performance levels                                 */
+/*--------------------------------------------------------------------------*/
+static uint32_t DEV_SM_GetNumPerfLevels(uint32_t domainId)
+{
+    uint32_t numLevels = DEV_SM_NUM_PERF_LVL_SOC;
+
+    if (domainId == DEV_SM_PERF_A55)
+    {
+        /* Query A55 speed grade from fuses */
+        static uint32_t speedGrade = 0U;
+
+        if (speedGrade == 0U)
+        {
+            speedGrade = DEV_SM_FuseSpeedGet();
+        }
+
+        /* 1.4GHz support PRK, LOW, NOM */
+        if (speedGrade == 1400000000U)
+        {
+            numLevels = DEV_SM_NUM_PERF_LVL_SOC - 1U;
+        }
+    }
+
+    /* Return number of perf levels */
+    return numLevels;
 }
 

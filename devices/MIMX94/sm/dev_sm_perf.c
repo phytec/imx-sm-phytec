@@ -1157,7 +1157,7 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
     {
         /* Check array bounds */
         uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
-        if (levelIndex > maxPerfLevels)
+        if (levelIndex >= maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -1186,7 +1186,7 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
     {
         dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
         uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
-        if (perfLevel > maxPerfLevels)
+        if (perfLevel >= maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }

@@ -138,7 +138,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     /* Init board hardware */
     BOARD_InitHardware();
 
-#if defined(MONITOR) || defined(RUN_TEST)
+#ifdef INC_LIBC
     /* Send BELL characters as indicator SM is starting */
     int32_t bellChar = (int32_t) '\a';
     /* coverity[misra_c_2012_rule_21_6_violation] */

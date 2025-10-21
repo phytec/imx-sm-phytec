@@ -15,7 +15,7 @@ New Feature {#RN_CL_NEW}
 
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|
-| [SM-240](https://jira.sw.nxp.com/projects/SM/issues/SM-240) | Add support for sending frequency/voltage change messages to ELE |   | Y | Y |
+| [SM-240](https://jira.sw.nxp.com/projects/SM/issues/SM-240) | Add support for sending frequency/voltage change messages to ELE [[detail]](@ref RN_DETAIL_SM_240) |   | Y | Y |
 | [SM-293](https://jira.sw.nxp.com/projects/SM/issues/SM-293) | Implement misc controls for motor control BLK_CTRL register [[detail]](@ref RN_DETAIL_SM_293) |   | | Y |
 | [SM-294](https://jira.sw.nxp.com/projects/SM/issues/SM-294) | Support system reset on DDR ECC multi-bit error [[detail]](@ref RN_DETAIL_SM_294) |   | Y | Y |
 
@@ -25,15 +25,16 @@ Improvement {#RN_CL_IMP}
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|
 | [SM-192](https://jira.sw.nxp.com/projects/SM/issues/SM-192) | Remove support for i.MX95 A0/1 [[detail]](@ref RN_DETAIL_SM_192) |   | | |
-| [SM-286](https://jira.sw.nxp.com/projects/SM/issues/SM-286) | Improve test coverage |   | Y | Y |
-| [SM-295](https://jira.sw.nxp.com/projects/SM/issues/SM-295) | Misc. config file changes |   | Y | Y |
+| [SM-286](https://jira.sw.nxp.com/projects/SM/issues/SM-286) | Improve test coverage [[detail]](@ref RN_DETAIL_SM_286) |   | Y | Y |
+| [SM-295](https://jira.sw.nxp.com/projects/SM/issues/SM-295) | Misc. config file changes [[detail]](@ref RN_DETAIL_SM_295) |   | Y | Y |
 | [SM-296](https://jira.sw.nxp.com/projects/SM/issues/SM-296) | Enable SMCT config tool to replace configtool.pl in 'make cfg' [[detail]](@ref RN_DETAIL_SM_296) |   | Y | Y |
 | [SM-300](https://jira.sw.nxp.com/projects/SM/issues/SM-300) | Change Coverity comments to C style [[detail]](@ref RN_DETAIL_SM_300) |   | Y | Y |
 | [SM-303](https://jira.sw.nxp.com/projects/SM/issues/SM-303) | Extend TRDC_CONFIG with information about MDAC features [[detail]](@ref RN_DETAIL_SM_303) |   | Y | Y |
 | [SM-308](https://jira.sw.nxp.com/projects/SM/issues/SM-308) | Display part number in monitor info command [[detail]](@ref RN_DETAIL_SM_308) |   | Y | Y |
 | [SM-309](https://jira.sw.nxp.com/projects/SM/issues/SM-309) | Update configtool to support DOM name attribute [[detail]](@ref RN_DETAIL_SM_309) |   | Y | Y |
+| [SM-312](https://jira.sw.nxp.com/projects/SM/issues/SM-312) | Assign UART3 to M33-S in the i.MX94 EVK config [[detail]](@ref RN_DETAIL_SM_312) |   | | Y |
 | [SM-313](https://jira.sw.nxp.com/projects/SM/issues/SM-313) | Enable watchdog earlier to protect boot [[detail]](@ref RN_DETAIL_SM_313) |   | Y | Y |
-| [SM-315](https://jira.sw.nxp.com/projects/SM/issues/SM-315) | Limit AP frequency based on fuses on i.MX94 |   | | Y |
+| [SM-315](https://jira.sw.nxp.com/projects/SM/issues/SM-315) | Limit AP frequency based on fuses on i.MX94 [[detail]](@ref RN_DETAIL_SM_315) |   | | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -63,7 +64,7 @@ Documentation {#RN_CL_DOC}
 | Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
 |------------|-------------------------------|-------|---|---|
 | [SM-287](https://jira.sw.nxp.com/projects/SM/issues/SM-287) | SM 2025Q4 documentation updates |   | Y | Y |
-| [SM-302](https://jira.sw.nxp.com/projects/SM/issues/SM-302) | Improve documentation for debugging reset issues |   | Y | Y |
+| [SM-302](https://jira.sw.nxp.com/projects/SM/issues/SM-302) | Improve documentation for debugging reset issues [[detail]](@ref RN_DETAIL_SM_302) |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
@@ -83,6 +84,16 @@ Support removed for i.MX95 A0/1. Functionality removed includes:
 - Run-time skip of ANA sensor init
 
 If a customer needs A0/1 support, the commit can be reverted.
+
+SM-240: Add support for sending frequency/voltage change messages to ELE {#RN_DETAIL_SM_240}
+----------
+
+For devices with security sensors enabled, SM must notify ELE when security-relevant clocks or supplies are being updated.  SM sends voltage/frequency update commands that are available starting with version 2.0.4 of the ELE firmware.
+
+SM-286: Improve test coverage {#RN_DETAIL_SM_286}
+----------
+
+Added test code to increase statement/branch coverage. Areas of added tests include SCMI FuSa, LMM, and Misc. protocols.
 
 SM-293: Implement misc controls for motor control BLK_CTRL register {#RN_DETAIL_SM_293}
 ----------
@@ -125,6 +136,19 @@ Enabled the DDR ECC multi-bit error (MBE) fault in the FCCU config file. Added r
 
 Note if nothing is specified, then the default is to reset the system. If MBE reset is not desired any of the following will disable:  don't enable in the DDR OEI, disable in the FCCU (eMcem) config file, or specify none as the reaction type in the SM cfg file.
 
+SM-295: Misc. config file changes {#RN_DETAIL_SM_295}
+----------
+
+Misc. cfg file changes:
+
+- Removed PERF_DRAM from all agents (DVFS of DDR not supported).
+- Synced the Android cfg file to the EVK cfg file.
+- Changes to support fastboot. In addition, ELE must be made owner of EDMA2_MP, and EDMA2_CH0_1. The last must be removed from the AP-NS agent.
+
+
+
+
+
 SM-296: Enable SMCT config tool to replace configtool.pl in 'make cfg' {#RN_DETAIL_SM_296}
 ----------
 
@@ -154,6 +178,18 @@ SM-300: Change Coverity comments to C style {#RN_DETAIL_SM_300}
 ----------
 
 Updated all Coverity-related comments to follow C-style (/* comment */) format as per coding standards. Verified that the changes do not impact functionality and that Coverity analysis runs successfully post-modification.
+
+SM-302: Improve documentation for debugging reset issues {#RN_DETAIL_SM_302}
+----------
+
+Added a new top-level section to the documentation for SM debug. This section contains info on:
+
+- Reset/shutdown messages and causes
+- Debugging SCMI API and peripheral access issues
+- Errors during boot
+
+A new section was also added to the Configuration section on FCCU config.
+
 
 SM-303: Extend TRDC_CONFIG with information about MDAC features {#RN_DETAIL_SM_303}
 ----------
@@ -210,8 +246,18 @@ SM-311: Align DDR rates to datasheet and OEI-DDR settings {#RN_DETAIL_SM_311}
 
 DDR rates (MT/s) and the corresponding DDR PLL configuration was aligned to the latest datasheet and values programmed by OEI-DDR.  For MX95, the package type is now used to dynamically update the SCMI performance tables for DDR.
 
+SM-312: Assign UART3 to M33-S in the i.MX94 EVK config {#RN_DETAIL_SM_312}
+----------
+
+The UART3 resource and IO30/31 pins moved from AP-NS to the M33-S. This allows for use of the same binary on OrangeBox.
+
 SM-313: Enable watchdog earlier to protect boot {#RN_DETAIL_SM_313}
 ----------
 
 In the startup assembly file, enable WDOG2 (one second timeout) first thing after the reset vector. Disable systick handling (and the resulting WDOG2 servicing) until all boot initialization is complete.
+
+SM-315: Limit AP frequency based on fuses on i.MX94 {#RN_DETAIL_SM_315}
+----------
+
+Limit AP frequency based on speed grade fuses on iMX943. 
 

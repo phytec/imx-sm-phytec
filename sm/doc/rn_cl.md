@@ -47,6 +47,7 @@ Bug {#RN_CL_BUG}
 | [SM-304](https://jira.sw.nxp.com/projects/SM/issues/SM-304) | Fix temp sensor anomalous behaviors [[detail]](@ref RN_DETAIL_SM_304) |   | Y | Y |
 | [SM-306](https://jira.sw.nxp.com/projects/SM/issues/SM-306) | Config tool fails to handle 'size' attribute on MRC resource assignment [[detail]](@ref RN_DETAIL_SM_306) |   | Y | Y |
 | [SM-307](https://jira.sw.nxp.com/projects/SM/issues/SM-307) | Config tool generates invalid config.mak file depending on input comment format [[detail]](@ref RN_DETAIL_SM_307) |   | Y | Y |
+| [SM-316](https://jira.sw.nxp.com/projects/SM/issues/SM-316) | Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_root  [[detail]](@ref RN_DETAIL_SM_316) |   | | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -120,7 +121,7 @@ Implemented the following new controls:
 Some of these get assigned based on ownership of related peripherals. The following must be granted explicitly in the cfg file:
 
 - DIAG_ENC_MUX_CTRL
-- ENDAT_STRETCHCTRL
+- ENDAT_STRCH_CTRL
 - HIPERFACE1_CTRL
 - HIPERFACE2_CTRL
 - HPF_SYNC_OUT_CTRL
@@ -260,4 +261,9 @@ SM-315: Limit AP frequency based on fuses on i.MX94 {#RN_DETAIL_SM_315}
 ----------
 
 Limit AP frequency based on speed grade fuses on iMX943. 
+
+SM-316: Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_root  {#RN_DETAIL_SM_316}
+----------
+
+The source inputs available for the i3c1_slow_clk_root and endat3_1_fast_clk_root were updated to reflect the latest RM.
 

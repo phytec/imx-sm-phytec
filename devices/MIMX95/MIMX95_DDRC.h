@@ -224,15 +224,15 @@ typedef struct {
 /*! @name CS_BNDS_CS_BNDS - Rank 0 Memory Bounds..Rank 1 Memory Bounds */
 /*! @{ */
 
-#define DDRC_CS_BNDS_CS_BNDS_EA_MASK         (0xFFFFU)
-#define DDRC_CS_BNDS_CS_BNDS_EA_SHIFT        (0U)
+#define DDRC_CS_BNDS_EA_MASK         (0xFFFFU)
+#define DDRC_CS_BNDS_EA_SHIFT        (0U)
 /*! EA - Ending Address */
-#define DDRC_CS_BNDS_CS_BNDS_EA(x)           (((uint32_t)(((uint32_t)(x)) << DDRC_CS_BNDS_CS_BNDS_EA_SHIFT)) & DDRC_CS_BNDS_CS_BNDS_EA_MASK)
+#define DDRC_CS_BNDS_EA(x)           (((uint32_t)(((uint32_t)(x)) << DDRC_CS_BNDS_EA_SHIFT)) & DDRC_CS_BNDS_EA_MASK)
 
-#define DDRC_CS_BNDS_CS_BNDS_SA_MASK         (0xFFFF0000U)
-#define DDRC_CS_BNDS_CS_BNDS_SA_SHIFT        (16U)
+#define DDRC_CS_BNDS_SA_MASK         (0xFFFF0000U)
+#define DDRC_CS_BNDS_SA_SHIFT        (16U)
 /*! SA - Starting Address */
-#define DDRC_CS_BNDS_CS_BNDS_SA(x)           (((uint32_t)(((uint32_t)(x)) << DDRC_CS_BNDS_CS_BNDS_SA_SHIFT)) & DDRC_CS_BNDS_CS_BNDS_SA_MASK)
+#define DDRC_CS_BNDS_SA(x)           (((uint32_t)(((uint32_t)(x)) << DDRC_CS_BNDS_SA_SHIFT)) & DDRC_CS_BNDS_SA_MASK)
 /*! @} */
 
 /* The count of DDRC_CS_BNDS_CS_BNDS */

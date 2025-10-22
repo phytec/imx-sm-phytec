@@ -1348,7 +1348,6 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         [DEV_SM_CLK_RESERVED79] = true
     };
 
-
     if (clockId < DEV_SM_NUM_CLOCK)
     {
         rc = s_clockIsReserved[clockId];

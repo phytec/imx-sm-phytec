@@ -1012,10 +1012,12 @@ int32_t DEV_SM_SystemIdle(void)
             else
             {
                 (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
+#ifndef BUILD_EMU
                 __DSB();
                 /* coverity[misra_c_2012_rule_1_2_violation] */
                 __WFI();
                 __ISB();
+#endif
             }
         }
     }

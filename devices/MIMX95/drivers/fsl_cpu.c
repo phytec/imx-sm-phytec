@@ -1484,8 +1484,9 @@ bool CPU_IsActive(uint32_t cpuIdx)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Check if sleep is forced for the CPU */
         bool sleepForce;
+
+        /* Check if sleep is forced for the CPU */
         if (CPU_SleepForceGet(cpuIdx, &sleepForce))
         {
             /* If sleep is not forced, consider the CPU mode */
@@ -2330,7 +2331,6 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
                 /* Get 32-bit vector */
                 *vector = ((uint64_t) *vectorRegLow) << vectorShift;
             }
-
         }
     }
 

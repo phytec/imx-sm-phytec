@@ -64,25 +64,25 @@ void TEST_LmmPower(void)
     /* Test API correct calls per domain */
     for (uint32_t domainId = 0U; domainId < SM_NUM_POWER; domainId++)
     {
-        printf("LMM_PowerDomainNameGet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_PowerDomainNameGet(lmId, domainId, &name, &len));
-        printf("  name=%s\n",  name);
-        printf("  len=%d\n",  len);
-
-        printf("LMM_PowerStateGet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_PowerStateGet(lmId, domainId, &powerState));
-        printf("  powerState=%u\n", powerState);
-
-        printf("LMM_PowerStateSet(%u, %u, %u)\n", lmId, domainId,
-            powerState);
-        if (!DEV_SM_FusePdDisabled(domainId))
+        if (!DEV_SM_PdIsReserved(domainId))
         {
+            printf("LMM_PowerDomainNameGet(%u, %u)\n", lmId, domainId);
+            CHECK(LMM_PowerDomainNameGet(lmId, domainId, &name, &len));
+            printf("  name=%s\n",  name);
+            printf("  len=%d\n",  len);
+
+            printf("LMM_PowerStateGet(%u, %u)\n", lmId, domainId);
+            CHECK(LMM_PowerStateGet(lmId, domainId, &powerState));
+            printf("  powerState=%u\n", powerState);
+
+            printf("LMM_PowerStateSet(%u, %u, %u)\n", lmId, domainId,
+                powerState);
             CHECK(LMM_PowerStateSet(lmId, domainId, powerState));
             LMM_PowerStateReset(lmId, domainId);
         }
         else
         {
-            printf(".. Domain %s fused off \n", name);
+            printf(".. Domain %d fused off \n", domainId);
         }
     }
 

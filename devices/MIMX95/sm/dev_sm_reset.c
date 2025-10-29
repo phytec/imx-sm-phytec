@@ -123,7 +123,7 @@ int32_t DEV_SM_ResetDomainNameGet(uint32_t domainId, string *domainNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_RESET);
 
     /* Check reset */
-    if (domainId >= DEV_SM_NUM_RESET)
+    if (DEV_SM_ResetIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -168,13 +168,17 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
         }
     }
 
-    if (RST_ResetLineRestricted(domainId))
+    /* Perform requested reset action */
+    if (DEV_SM_ResetIsReserved(domainId))
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+    else if (RST_ResetLineRestricted(domainId))
     {
         status = SM_ERR_NOT_SUPPORTED;
     }
     else
     {
-        /* Perform requested reset action */
         if (!SRC_MixSetResetLine(domainId, resetType))
         {
             status = SM_ERR_NOT_FOUND;
@@ -194,9 +198,16 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
     uint32_t resetType;
 
     /* Perform requested reset action */
-    if (!SRC_MixGetResetLine(domainId, &resetType))
+    if (DEV_SM_ResetIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        if (!SRC_MixGetResetLine(domainId, &resetType))
+        {
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     if (status == SM_ERR_SUCCESS)
@@ -215,3 +226,85 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
     return status;
 }
 
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_ResetIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+    uint32_t modDomainId = 0;
+
+    switch (domainId)
+    {
+        case DEV_SM_RST_M7MIX:
+            modDomainId = DEV_SM_PD_M7;
+            break;
+
+        case DEV_SM_RST_NPUMIX:
+            modDomainId = DEV_SM_PD_NPU;
+            break;
+
+        case DEV_SM_RST_GPUMIX:
+            modDomainId = DEV_SM_PD_GPU;
+            break;
+
+        case DEV_SM_RST_VPUMIX:
+            modDomainId = DEV_SM_PD_VPU;
+            break;
+
+        case DEV_SM_RST_DISPLAYMIX:
+            modDomainId = DEV_SM_PD_DISPLAY;
+            break;
+
+        case DEV_SM_RST_NETCMIX:
+            modDomainId = DEV_SM_PD_NETC;
+            break;
+
+        case DEV_SM_RST_A55C2_NCPUPORESET:
+        case DEV_SM_RST_A55C2_NCORERESET:
+        case DEV_SM_RST_CORTEXAMIX_CORE2:
+            modDomainId = DEV_SM_PD_A55C2;
+            break;
+
+        case DEV_SM_RST_A55C3_NCPUPORESET:
+        case DEV_SM_RST_A55C3_NCORERESET:
+        case DEV_SM_RST_CORTEXAMIX_CORE3:
+            modDomainId = DEV_SM_PD_A55C3;
+            break;
+
+        case DEV_SM_RST_A55C4_NCPUPORESET:
+        case DEV_SM_RST_A55C4_NCORERESET:
+        case DEV_SM_RST_CORTEXAMIX_CORE4:
+            modDomainId = DEV_SM_PD_A55C4;
+            break;
+
+        case DEV_SM_RST_A55C5_NCPUPORESET:
+        case DEV_SM_RST_A55C5_NCORERESET:
+        case DEV_SM_RST_CORTEXAMIX_CORE5:
+            modDomainId = DEV_SM_PD_A55C5;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (domainId >= DEV_SM_NUM_RESET)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (modDomainId > 0U)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(modDomainId))
+            {
+                rc = true;
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
+}

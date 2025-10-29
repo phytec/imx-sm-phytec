@@ -335,6 +335,17 @@ int32_t DEV_SM_CpuWakeListGet(uint32_t cpuId, uint32_t *cpuWakeList);
  */
 int32_t DEV_SM_CpuWakeListSet(uint32_t cpuId, uint32_t cpuWakeList);
 
+/*!
+ * Check if CPU is reserved.
+ *
+ * @param[in]     cpuId            Identifier for the CPU
+ *
+ * This function allows the caller to check if a CPU is reserved.
+ *
+ * @return Returns true if reserved.
+ */
+bool DEV_SM_CpuIsReserved(uint32_t cpuId);
+
 #endif /* DEV_SM_CPU_API_H */
 
 /** @} */

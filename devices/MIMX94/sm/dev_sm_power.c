@@ -114,7 +114,7 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER);
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -175,9 +175,7 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
         srcMixIdx = DEV_SM_PD_NETC;
     }
 
-    bool pdDisabled = DEV_SM_FusePdDisabled(srcMixIdx);
-
-    if (pdDisabled || (domainId >= DEV_SM_NUM_POWER))
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -303,7 +301,7 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
     *powerState = DEV_SM_POWER_STATE_OFF;
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -338,7 +336,7 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
     uint32_t modDomainId = domainId;
 
     /* Check fuse state of power domain */
-    if (DEV_SM_FusePdDisabled(modDomainId))
+    if (DEV_SM_PdIsReserved(modDomainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -365,14 +363,33 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
 int32_t DEV_SM_PowerRetMaskGet(uint32_t domainId, uint32_t *retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool pdDisabled = DEV_SM_PdIsReserved(domainId);
+    bool rc = SRC_MemMaskGet(domainId, retMask);
 
     /* Check domain */
-    if (!(SRC_MemMaskGet(domainId, retMask)))
+    if ((!rc) || pdDisabled)
     {
         status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if power domain is disabled in fuses                               */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PdIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+
+    /* Check fuse state of power domain */
+    if (DEV_SM_FusePdDisabled(domainId))
+    {
+        rc = true;
+    }
+
+    /* Return status */
+    return rc;
 }
 

@@ -253,6 +253,17 @@ int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep);
  */
 int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep);
 
+/*!
+ * Check if perf domain is reserved.
+ *
+ * @param[in]     domainId            Identifier for the perf domain
+ *
+ * This function allows the caller to check if a perf domain is reserved.
+ *
+ * @return Returns true if reserved.
+ */
+bool DEV_SM_PerfIsReserved(uint32_t domainId);
+
 #endif /* DEV_SM_PERF_API_H */
 
 /** @} */

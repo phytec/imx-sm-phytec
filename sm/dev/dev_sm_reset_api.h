@@ -107,6 +107,17 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
  */
 int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate);
 
+/*!
+ * Check if device reset is reserved.
+ *
+ * @param[in]     domainId            Identifier for the reset domain
+ *
+ * This function allows the caller to check if a reset domain is reserved.
+ *
+ * @return Returns true if reserved.
+ */
+bool DEV_SM_ResetIsReserved(uint32_t domainId);
+
 #endif /* DEV_SM_RESET_API_H */
 
 /** @} */

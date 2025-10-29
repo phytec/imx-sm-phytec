@@ -1578,6 +1578,12 @@ static int32_t MONITOR_CmdPower(int32_t argc, const char * const argv[],
                     }
                     MONITOR_Yield();
                 }
+
+                /* Handle reserved/fused domains */
+                if (status == SM_ERR_NOT_FOUND)
+                {
+                    status = SM_ERR_SUCCESS;
+                }
             }
             break;
         case WRITE:  /* write */
@@ -1651,6 +1657,12 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
                     {
                         printf("%03u: %*s = %u (%7ukHz)\n", domain, -wName,
                             perfName, perfLevel, desc.value);
+                    }
+
+                    /* Handle reserved/fused domains */
+                    if (status == SM_ERR_NOT_FOUND)
+                    {
+                        status = SM_ERR_SUCCESS;
                     }
                 }
             }
@@ -1778,6 +1790,12 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                             break;
                         }
                         MONITOR_Yield();
+                    }
+
+                    /* Handle reserved clocks. */
+                    if ((startClk != stopClk) && (status == SM_ERR_NOT_FOUND))
+                    {
+                        status = SM_ERR_SUCCESS;
                     }
                 }
                 else
@@ -2302,6 +2320,12 @@ static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
                                 -wName, rstNameAddr);
                         }
                     }
+                }
+
+                /* Handle reserved/fused domains */
+                if (status == SM_ERR_NOT_FOUND)
+                {
+                    status = SM_ERR_SUCCESS;
                 }
             }
             break;

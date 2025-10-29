@@ -1032,6 +1032,12 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
              */
             uint32_t perfLevel = DEV_SM_PERF_LVL_PRK;
 
+            if (DEV_SM_PerfIsReserved(domainId))
+            {
+                domainId++;
+                continue;
+            }
+
             /* Clamp level based on MIX power dependency */
             if (DEV_SM_PerfPowerCheck(runPerfLevel, s_perfCfg[domainId].srcMixIdx)
                 == SM_ERR_SUCCESS)
@@ -1123,7 +1129,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1277,7 +1283,7 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1969,7 +1975,7 @@ static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -2020,7 +2026,7 @@ static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -2251,5 +2257,52 @@ static void DEV_SM_PerfEleDone(bool abortUpdate)
         ELE_StopDvfsChange();
         s_perfEleUpdating = false;
     }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PerfIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+    uint32_t modDomainId = 0;
+
+    switch (domainId)
+    {
+        case DEV_SM_PERF_M70:
+            modDomainId = DEV_SM_PD_M70;
+            break;
+
+        case DEV_SM_PERF_M71:
+            modDomainId = DEV_SM_PD_M71;
+            break;
+
+        case DEV_SM_PERF_NPU:
+            modDomainId = DEV_SM_PD_NPU;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (modDomainId > 0U)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(modDomainId))
+            {
+                rc = true;
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
 }
 

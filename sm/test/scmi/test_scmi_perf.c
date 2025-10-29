@@ -249,6 +249,7 @@ static void TEST_ScmiPerfNone(uint8_t perm, uint32_t channel,
     uint32_t maxSkip = 0U;
 
     /* Describe Levels */
+    if (!DEV_SM_PerfIsReserved(domainId))
     {
         uint32_t skipIndex = 0U;
         uint32_t numLevels = 0U;
@@ -280,74 +281,72 @@ static void TEST_ScmiPerfNone(uint8_t perm, uint32_t channel,
 
         /* Used for Invalid skipIndex */
         maxSkip = skipIndex;
-    }
 
-    /* Describe Level -- Invalid skipIndex */
-    {
-        uint32_t numLevels = 0U;
-        scmi_perf_level_t perfLevels[SCMI_PERF_MAX_PERFLEVELS];
-
-        NECHECK(SCMI_PerformanceDescribeLevels(channel,
-            domainId, maxSkip, &numLevels, perfLevels),
-            SCMI_ERR_OUT_OF_RANGE);
-    }
-
-    /* Domain Attributes */
-    {
-        uint32_t attributes = 0U;
-        uint32_t rateLimit = 0U;
-        uint32_t sustainedFreq = 0U;
-        uint32_t sustainedPerfLevel = 0U;
-        uint8_t name[SCMI_PERF_MAX_NAME] = { 0 };
-        name[0] = 0U;
-
-        printf("SCMI_PerformanceDomainAttributes(%u, %u)\n", channel,
-            domainId);
-        CHECK(SCMI_PerformanceDomainAttributes(channel, domainId,
-            &attributes, &rateLimit, &sustainedFreq, &sustainedPerfLevel,
-            name));
-
-        /* Case 1: Priv Permissions -- all perms */
-        if (perm >= SM_SCMI_PERM_PRIV)
+        /* Describe Level -- Invalid skipIndex */
         {
-            BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 1UL);
-            BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 1UL);
-        }
-        /* Case 2: Set Permissions -- limit perms */
-        else if (perm >= SM_SCMI_PERM_SET)
-        {
-            BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 0UL);
-            BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 1UL);
-        }
-        /* Case 3: No Permissions -- no perms */
-        else
-        {
-            BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 0UL);
-            BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 0UL);
+            numLevels = 0U;
+
+            NECHECK(SCMI_PerformanceDescribeLevels(channel,
+                domainId, maxSkip, &numLevels, perfLevels),
+                SCMI_ERR_OUT_OF_RANGE);
         }
 
-        /* Attribute Extraction */
-        printf("  setLimits=%d\n",
-            SCMI_PERF_ATTR_LIMIT(attributes));
-        printf("  setPerfLevel=%d\n",
-            SCMI_PERF_ATTR_LEVEL(attributes));
-        printf("  limitNotifyEnable=%d\n",
-            SCMI_PERF_ATTR_LIMIT_NOTIFY(attributes));
-        printf("  levelNotifyEnable=%d\n",
-            SCMI_PERF_ATTR_LEVEL_NOTIFY(attributes));
-        printf("  fastChannel=%d\n",
-            SCMI_PERF_ATTR_FAST(attributes));
-        printf("  extendedName=%d\n",
-            SCMI_PERF_ATTR_EXT_NAME(attributes));
-        printf("  levelIndexMode=%d\n",
-            SCMI_PERF_ATTR_IDX_MODE(attributes));
-        printf("  rateLimit=%d\n",
-            SCMI_PERF_RATE_LIMIT_USECONDS(rateLimit));
-        printf("  sustainedFreq=%u\n", sustainedFreq);
-        printf("  sustainedPerfLevel=%u\n", sustainedPerfLevel);
-        printf("  name=%s\n",  name);
-    }
+        /* Domain Attributes */
+        {
+            uint32_t attributes = 0U;
+            uint32_t rateLimit = 0U;
+            uint32_t sustainedFreq = 0U;
+            uint32_t sustainedPerfLevel = 0U;
+            uint8_t name[SCMI_PERF_MAX_NAME] = { 0 };
+            name[0] = 0U;
 
+            printf("SCMI_PerformanceDomainAttributes(%u, %u)\n", channel,
+                domainId);
+            CHECK(SCMI_PerformanceDomainAttributes(channel, domainId,
+                &attributes, &rateLimit, &sustainedFreq, &sustainedPerfLevel,
+                name));
+
+            /* Case 1: Priv Permissions -- all perms */
+            if (perm >= SM_SCMI_PERM_PRIV)
+            {
+                BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 1UL);
+                BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 1UL);
+            }
+            /* Case 2: Set Permissions -- limit perms */
+            else if (perm >= SM_SCMI_PERM_SET)
+            {
+                BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 0UL);
+                BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 1UL);
+            }
+            /* Case 3: No Permissions -- no perms */
+            else
+            {
+                BCHECK(SCMI_PERF_ATTR_LEVEL(attributes) == 0UL);
+                BCHECK(SCMI_PERF_ATTR_LIMIT(attributes) == 0UL);
+            }
+
+            /* Attribute Extraction */
+            printf("  setLimits=%d\n",
+                SCMI_PERF_ATTR_LIMIT(attributes));
+            printf("  setPerfLevel=%d\n",
+                SCMI_PERF_ATTR_LEVEL(attributes));
+            printf("  limitNotifyEnable=%d\n",
+                SCMI_PERF_ATTR_LIMIT_NOTIFY(attributes));
+            printf("  levelNotifyEnable=%d\n",
+                SCMI_PERF_ATTR_LEVEL_NOTIFY(attributes));
+            printf("  fastChannel=%d\n",
+                SCMI_PERF_ATTR_FAST(attributes));
+            printf("  extendedName=%d\n",
+                SCMI_PERF_ATTR_EXT_NAME(attributes));
+            printf("  levelIndexMode=%d\n",
+                SCMI_PERF_ATTR_IDX_MODE(attributes));
+            printf("  rateLimit=%d\n",
+                SCMI_PERF_RATE_LIMIT_USECONDS(rateLimit));
+            printf("  sustainedFreq=%u\n", sustainedFreq);
+            printf("  sustainedPerfLevel=%u\n", sustainedPerfLevel);
+            printf("  name=%s\n",  name);
+        }
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -391,8 +390,9 @@ static void TEST_ScmiPerfPriv(bool pass, uint32_t channel,
     uint32_t domainId, uint32_t lmId)
 {
     uint32_t perfLevel = 0U;
+    bool perfReserved = DEV_SM_PerfIsReserved(domainId);
 
-    if (pass)
+    if (pass && (!perfReserved))
     {
         printf("SCMI_PerformanceLevelGet(%u, %u)\n", channel, domainId);
         CHECK(SCMI_PerformanceLevelGet(channel, domainId, &perfLevel));

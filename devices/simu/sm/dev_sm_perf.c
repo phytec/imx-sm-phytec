@@ -92,7 +92,7 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_PERF);
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -116,7 +116,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -222,5 +222,20 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PerfIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        rc = true;
+    }
+
+    return rc;
 }
 

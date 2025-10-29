@@ -67,19 +67,26 @@ void TEST_DevSmPerf(void)
     /* Test API correct calls per domain */
     for (uint32_t domainId = 0U; domainId < DEV_SM_NUM_PERF; domainId++)
     {
-        printf("DEV_SM_PerfNameGet(%u)\n", domainId);
-        CHECK(DEV_SM_PerfNameGet(domainId, &name, &len));
-        printf("  name=%s\n",  name);
-        printf("  len=%d\n",  len);
+        if (!DEV_SM_PerfIsReserved(domainId))
+        {
+            printf("DEV_SM_PerfNameGet(%u)\n", domainId);
+            CHECK(DEV_SM_PerfNameGet(domainId, &name, &len));
+            printf("  name=%s\n",  name);
+            printf("  len=%d\n",  len);
 
-        uint32_t perfLevel = 0U;
-        CHECK(DEV_SM_PerfLevelGet(domainId, &perfLevel));
-        printf("DEV_SM_PerfLevelGet(dom: %u: level: %u\n",
-            domainId, perfLevel);
+            uint32_t perfLevel = 0U;
+            CHECK(DEV_SM_PerfLevelGet(domainId, &perfLevel));
+            printf("DEV_SM_PerfLevelGet(dom: %u: level: %u\n",
+                domainId, perfLevel);
 
 #ifndef SIMU
-        CHECK(DEV_SM_PerfFreqSet(domainId, perfLevel));
+            CHECK(DEV_SM_PerfFreqSet(domainId, perfLevel));
 #endif
+        }
+        else
+        {
+            printf(".. Domain %d fused off \n", domainId);
+        }
     }
 
     /* Test API correct level set calls */

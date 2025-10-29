@@ -203,6 +203,7 @@ void TEST_ScmiPower(void)
 static void TEST_ScmiPowerNone(uint32_t channel, uint32_t domainId)
 {
     /* Test power attributes */
+    if (!DEV_SM_PdIsReserved(domainId))
     {
         uint32_t attributes = 0U;
         uint8_t name[SCMI_POWER_MAX_NAME];
@@ -222,16 +223,20 @@ static void TEST_ScmiPowerNone(uint32_t channel, uint32_t domainId)
         printf("  domainChangeNote=%u\n",
             SCMI_POWER_ATTR_CHANGE(attributes));
         printf("  name=%s\n",  name);
+
+        /* Test power get */
+        {
+            uint32_t powerState = 0U;
+
+            printf("SCMI_PowerStateGet(%u, %u)\n", channel, domainId);
+            CHECK(SCMI_PowerStateGet(channel, domainId,
+                &powerState));
+            printf("  powerState=0x%08x\n", powerState);
+        }
     }
-
-    /* Test power get */
+    else
     {
-        uint32_t powerState = 0U;
-
-        printf("SCMI_PowerStateGet(%u, %u)\n", channel, domainId);
-        CHECK(SCMI_PowerStateGet(channel, domainId,
-            &powerState));
-        printf("  powerState=0x%08x\n", powerState);
+        printf(".. Domain %d fused off \n", domainId);
     }
 }
 

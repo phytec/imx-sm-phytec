@@ -505,7 +505,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode) {
 /*--------------------------------------------------------------------------*/
 /* Set voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt) {
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt) {
     /* Set voltage level */
     return BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt) + BOARD_PERF_VDROP);
 }
@@ -513,7 +513,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt) {
 /*--------------------------------------------------------------------------*/
 /* Get voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt) {
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt) {
     /* Get voltage level */
     return BRD_SM_VoltageLevelGet(domain, (int32_t*) microVolt);
 }

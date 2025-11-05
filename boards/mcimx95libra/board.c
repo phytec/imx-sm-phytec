@@ -244,23 +244,29 @@ void BOARD_ConfigMPU(void) {
 /*--------------------------------------------------------------------------*/
 void BOARD_InitClocks(void) {
     uint32_t fuseTrim = DEV_SM_FuseGet(DEV_SM_FUSE_FRO_TRIM);
+    bool ret = false;
 
     if (!fuseTrim) {
         /* Enable the FRO clock with default value */
-        (void) FRO_SetEnable(true);
+        ret = FRO_SetEnable(true);
     } else {
         if (FRO_SetTrim(fuseTrim))
             /* Enable the FRO clock with default value */
-            (void) FRO_SetEnable(true);
+            ret = FRO_SetEnable(true);
     }
 
     /* Configure default EXT_CLK1 rate tied to XTAL_OUT/EXT_CLK pin */
-    (void) CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
+    if (ret)
+        ret = CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
 
     /* Configure ADC clock */
-    (void) CCM_RootSetParent(CLOCK_ROOT_ADC, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
-    (void) CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE,
-        CLOCK_ROUND_RULE_CEILING);
+    if (ret)
+        ret = CCM_RootSetParent(CLOCK_ROOT_ADC, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
+    if (ret)
+        ret = CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE,
+                             CLOCK_ROUND_RULE_CEILING);
+    if (!ret)
+        DEV_SM_ErrorLog(DEV_SM_ERR_INITCLOCKS);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -287,7 +293,8 @@ void BOARD_InitDebugConsole(void) {
             FSL_FEATURE_LPUART_FIFO_SIZEn(s_uartConfig.base)) - 1U;
         lpuart_config.enableTx = true;
         lpuart_config.enableRx = true;
-        (void) LPUART_Init(s_uartConfig.base, &lpuart_config, U64_U32(rate));
+        if (LPUART_Init(s_uartConfig.base, &lpuart_config, U64_U32(rate)) != kStatus_Success)
+            DEV_SM_ErrorLog(DEV_SM_ERR_INITCONSOLE);
     }
 }
 

@@ -287,7 +287,7 @@ void BOARD_InitDebugConsole(void) {
             FSL_FEATURE_LPUART_FIFO_SIZEn(s_uartConfig.base)) - 1U;
         lpuart_config.enableTx = true;
         lpuart_config.enableRx = true;
-        (void) LPUART_Init(s_uartConfig.base, &lpuart_config, (uint32_t) rate & 0xFFFFFFFFU);
+        (void) LPUART_Init(s_uartConfig.base, &lpuart_config, U64_U32(rate));
     }
 }
 
@@ -449,7 +449,7 @@ void BOARD_InitSerialBus(void) {
     uint32_t clockId = s_i2cClks[BOARD_I2C_INSTANCE];
 
     /* bug, reduce width from 64 to 32 */
-    uint32_t rate = (uint32_t) CCM_RootGetRate(clockId);
+    uint32_t rate = U64_U32(CCM_RootGetRate(clockId));
 
     LPI2C_MasterGetDefaultConfig(&lpi2cConfig);
 

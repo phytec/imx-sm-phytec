@@ -184,7 +184,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel) {
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_Exit(int32_t status, uint32_t pc) {
+_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc) {
 #if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
 

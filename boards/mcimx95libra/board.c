@@ -117,8 +117,8 @@ static board_uart_config_t const s_uartConfig = {
 void BOARD_ConfigMPU(void) {
 
     /* Disable code cache(ICache) and system cache(DCache) */
-    XCACHE_DisableCache(LPCAC_PC);
-    XCACHE_DisableCache(LPCAC_PS);
+    XCACHE_DisableCache(M33_CACHE_CTRLPC);
+    XCACHE_DisableCache(M33_CACHE_CTRLPS);
 
     /* NOTE: All TCRAM is non-cacheable regardless of MPU setting. */
 
@@ -235,8 +235,8 @@ void BOARD_ConfigMPU(void) {
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 
     /* Enable ICache and DCache */
-    XCACHE_EnableCache(LPCAC_PC);
-    XCACHE_EnableCache(LPCAC_PS);
+    XCACHE_EnableCache(M33_CACHE_CTRLPC);
+    XCACHE_EnableCache(M33_CACHE_CTRLPS);
 }
 
 /*--------------------------------------------------------------------------*/

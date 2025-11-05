@@ -180,8 +180,12 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                         if (!PF09_TempAlarmSet(&g_pf09Dev, 500))
                             status = SM_ERR_HARDWARE_ERROR;
                     } else if (eventControl == DEV_SM_SENSOR_TP_RISING) {
-                        if (!PF09_TempAlarmSet(&g_pf09Dev, value))
-                            status = SM_ERR_HARDWARE_ERROR;
+                        if (CHECK_I64_FIT_I32(value)) {
+                            if (!PF09_TempAlarmSet(&g_pf09Dev, value))
+                                status = SM_ERR_HARDWARE_ERROR;
+                        } else {
+                            status = SM_ERR_INVALID_PARAMETERS;
+                        }
                     } else {
                         status = SM_ERR_INVALID_PARAMETERS;
                     }

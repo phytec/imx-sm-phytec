@@ -140,7 +140,7 @@ bool DEV_SM_ResetIsReserved(uint32_t domainId)
 {
     bool rc = false;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (domainId >= DEV_SM_NUM_RESET)
     {
         rc = true;
     }

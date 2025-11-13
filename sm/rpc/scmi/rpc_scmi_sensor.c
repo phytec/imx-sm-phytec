@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -734,6 +734,12 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                 if (lmmDesc.timestampSupport)
                 {
                     attributes |= SENSOR_ATTR_LOW_TIME_SUPPORT(1UL);
+
+                    /*
+                     * Intentional: The timestamp exponent field is
+                     * represented in two's complement format.
+                     */
+                    // coverity[cert_int31_c_violation:FALSE]
                     attributes |= SENSOR_ATTR_LOW_TIME_EXP(
                         (uint32_t) lmmDesc.timestampExponent);
                 }
@@ -743,6 +749,12 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                 attributes
                     = SENSOR_ATTR_HIGH_SENSOR_TYPE(
                     (uint32_t) lmmDesc.sensorType);
+
+                /*
+                 * Intentional: The timestamp exponent field is
+                 * represented in two's complement format.
+                 */
+                // coverity[cert_int31_c_violation:FALSE]
                 attributes |= SENSOR_ATTR_HIGH_SENSOR_EXP(
                     (uint32_t) lmmDesc.sensorExponent);
 
@@ -921,8 +933,20 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
             = (uint8_t) SENSOR_TP_EV_CTRL_TRIP_ID(in->tripPointEvCtrl);
         uint8_t eventControl
             = (uint8_t) SENSOR_TP_EV_CTRL(in->tripPointEvCtrl);
+
+        /*
+         * Intentional: The trip point value written in two's
+         * complement form into THR_CTRLm registers.
+         */
+        // coverity[cert_int31_c_violation:FALSE]
         uint64_t tp = ((((uint64_t) in->tripPointValHigh)
                 << 32U) | (uint64_t) in->tripPointValLow);
+
+        /*
+         * Intentional: The trip point value written in two's
+         * complement form into THR_CTRLm registers.
+         */
+        // coverity[cert_int31_c_violation:FALSE]
         int64_t tpValue = (int64_t) tp;
 
         status = LMM_SensorTripPointSet(caller->lmId, in->sensorId,
@@ -1018,14 +1042,14 @@ static int32_t SensorReadingGet(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         uint64_t uSensorValue = (uint64_t) sensorValue;
-        uint32_t uSensorValueHigh = SM_UINT64_H(uSensorValue);
-        uint32_t uSensorValueLow = SM_UINT64_L(uSensorValue);
+        uint32_t uSensorValueHigh = UINT64_H(uSensorValue);
+        uint32_t uSensorValueLow = UINT64_L(uSensorValue);
 
         /* Record result */
         out->readings[0].sensorValueHigh = (int32_t) uSensorValueHigh;
         out->readings[0].sensorValueLow = (int32_t) uSensorValueLow;
-        out->readings[0].timestampHigh = SM_UINT64_H(sensorTimestamp);
-        out->readings[0].timestampLow = SM_UINT64_L(sensorTimestamp);
+        out->readings[0].timestampHigh = UINT64_H(sensorTimestamp);
+        out->readings[0].timestampLow = UINT64_L(sensorTimestamp);
 
         /* Update length */
         *len = (2U * sizeof(uint32_t))
@@ -1358,12 +1382,11 @@ static int32_t SensorResetAgentConfig(uint32_t lmId, uint32_t agentId,
 static int32_t SensorConfigUpdate(uint32_t lmId, uint32_t agentId,
     uint32_t sensorId, bool enable, bool timeStamp)
 {
+    int32_t status;
     uint32_t scmiInst = g_scmiAgentConfig[agentId].scmiInst;
     uint32_t firstAgent = g_scmiConfig[scmiInst].firstAgent;
     uint32_t numAgents = g_scmiConfig[scmiInst].numAgents;
     uint32_t mask;
-    uint32_t sensorState;
-    bool sensorEnable;
 
     /* Record state of sensor by agent */
     if (enable)
@@ -1377,12 +1400,24 @@ static int32_t SensorConfigUpdate(uint32_t lmId, uint32_t agentId,
         s_sensorState[sensorId] &= ~(1UL << agentId);
     }
 
-    /* Extract enable */
-    mask = ((1UL << numAgents) - 1UL) << firstAgent;
-    sensorState = s_sensorState[sensorId] & mask;
-    sensorEnable = (sensorState != 0U);
+    /* Check value doesn't wrap */
+    if ((1UL << numAgents) >= 1UL)
+    {
+        /* Extract enable */
+        mask = ((1UL << numAgents) - 1UL) << firstAgent;
+        uint32_t sensorState = s_sensorState[sensorId] & mask;
+        bool sensorEnable = (sensorState != 0U);
 
-    /* Inform LMM of sensor state, LMM will check if changed */
-    return LMM_SensorEnable(lmId, sensorId, sensorEnable, timeStamp);
+        /* Inform LMM of sensor state, LMM will check if changed */
+        status = LMM_SensorEnable(lmId, sensorId, sensorEnable, timeStamp);
+    }
+    else
+    {
+        /* Handling if value wraps */
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+
+    /* Return status */
+    return status;
 }
 

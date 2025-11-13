@@ -1,7 +1,7 @@
 /*
  ** ###################################################################
  **
- **     Copyright 2024 NXP
+ **     Copyright 2024-2025 NXP
  **
  **     Redistribution and use in source and binary forms, with or without modification,
  **     are permitted provided that the following conditions are met:
@@ -97,6 +97,16 @@ struct ddr_info {
     uint32_t ZQCalCodePD;
 };
 
+/* Defines */
+
+/*! Macro to write a DDR phy register. */
+#define DWC_DDRPHY_APB_WR(addr, data) \
+    (*(uint32_t *)(DDR_PHY_BASE + DDR_PhyAddrRemap(addr)) = (data))
+
+/*! Macro to read a DDR phy register. */
+#define DWC_DDRPHY_APB_RD(addr) \
+    *(uint32_t *)(DDR_PHY_BASE + DDR_PhyAddrRemap(addr))
+
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -122,6 +132,15 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp);
  * @return True if successful.
  */
 bool DDR_ExitRetention(const struct ddr_info *ddrp);
+
+/*!
+ * DDR PHY address mapper
+ *
+ * @param[in]     paddr    DDR PHY 16-bit address.
+ *
+ * @return Returns the 32-bit address.
+ */
+uint32_t DDR_PhyAddrRemap(uint32_t paddr);
 
 #if defined(__cplusplus)
 }

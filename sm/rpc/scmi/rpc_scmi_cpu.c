@@ -780,9 +780,11 @@ static int32_t CpuStop(const scmi_caller_t *caller, const msg_rcpu5_t *in,
 /*   Set to 1 to update the reset vector used on resume.                    */
 /*   Bit[30] Boot flag.                                                     */
 /*   Set to 1 to update the reset vector used for boot.                     */
-/*   Bits[29:1] Reserved, must be zero.                                     */
+/*   Bit[29] Start flag.                                                    */
+/*   Set to 1 to update the reset vector used for CPU start.                */
+/*   Bits[28:1] Reserved, must be zero.                                     */
 /*   Bit[0] Table flag.                                                     */
-/*   Set to 1 if vector is the vector table base address.                   */
+/*   Set to 1 if vector is the vector table base address                    */
 /* - in->resetVectorLow: Lower vector:                                      */
 /*   If bit[0] of flags is 0, the lower 32 bits of the physical address     */
 /*   where the CPU should execute from on reset.                            */
@@ -855,7 +857,7 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
             | (uint64_t) in->resetVectorLow;
 
         /* Mark owning agent */
-        s_cpuAgent[in->cpuId] = ((uint8_t) caller->agentId) + 1U;
+        s_cpuAgent[in->cpuId] = U8((caller->agentId) + 1U);
 
         /* Update vector */
         status = LMM_CpuResetVectorSet(caller->lmId, in->cpuId,
@@ -1286,8 +1288,8 @@ static int32_t CpuInfoGet(const scmi_caller_t *caller, const msg_rcpu12_t *in,
             &(out->runMode), &(out->sleepMode), &vector);
 
         /* Return results */
-        out->resetVectorHigh = SM_UINT64_H(vector);
-        out->resetVectorLow = SM_UINT64_L(vector);
+        out->resetVectorHigh = UINT64_H(vector);
+        out->resetVectorLow = UINT64_L(vector);
     }
 
     /* Return status */
@@ -1359,7 +1361,7 @@ static int32_t CpuResetAgentConfig(uint32_t lmId, uint32_t agentId,
     for (uint32_t cpuId = 0U; cpuId < SM_NUM_CPU; cpuId++)
     {
         /* Reset vector */
-        if (s_cpuAgent[cpuId] == (((uint8_t) agentId) + 1U))
+        if (s_cpuAgent[cpuId] == (U32_U8(agentId) + 1U))
         {
             (void) LMM_CpuResetVectorReset(lmId, cpuId, false);
             s_cpuAgent[cpuId] = 0U;

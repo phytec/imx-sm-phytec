@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -378,6 +378,16 @@ int32_t LM_SystemLmStatus(uint32_t lmId, uint32_t stateLm, uint32_t *state,
 int32_t LMM_SystemLmCheck(uint32_t bootLm);
 
 /*!
+ * Check if a CPU is started when an LM boots.
+ *
+ * @param[in]     lmId       LM to check
+ * @param[in]     cpuId      CPU to check
+ *
+ * @return Returns true if CPU is started.
+ */
+bool LM_CpuCheck(uint32_t lmId, uint32_t cpuId);
+
+/*!
  * Power up an LM.
  *
  * @param[in]     lmId         Requesting LM
@@ -503,6 +513,15 @@ int32_t LMM_SystemLmWake(uint32_t lmId, uint32_t agentId, uint32_t wakeLm);
  */
 int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
     lmm_rst_rec_t *bootRec, lmm_rst_rec_t *shutdownRec);
+
+/*!
+ * Report a run mode change for a CPU.
+ *
+ * @param[in]     cpuId        CPU that changed mode
+ *
+ * Sends notifications on suspend/wake changes.
+ */
+void LMM_SystemCpuModeChanged(uint32_t cpuId);
 
 /** @} */
 

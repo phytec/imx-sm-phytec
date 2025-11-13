@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -1454,9 +1454,9 @@ static int32_t MiscSiInfo(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
     const uint8_t *nameAddr = (const uint8_t*) "";
-    uint32_t deviceId;
-    uint32_t siRev;
-    uint32_t partNum;
+    uint32_t deviceId = 0U;
+    uint32_t siRev = 0U;
+    uint32_t partNum = 0U;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1558,7 +1558,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
 /*   by this call                                                           */
 /*                                                                          */
 /* Return errors:                                                           */
-/* - SM_ERR_SUCCESS: if the syslog returned successfully.                    */
+/* - SM_ERR_SUCCESS: if the syslog returned successfully.                   */
 /* - SM_ERR_NOT_SUPPORTED: if the syslog is not available.                  */
 /* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
 /*--------------------------------------------------------------------------*/

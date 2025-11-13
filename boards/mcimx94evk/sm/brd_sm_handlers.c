@@ -272,7 +272,9 @@ int32_t BRD_SM_BusExpMaskSet(uint16_t val, uint16_t mask)
 {
     int32_t status = SM_ERR_SUCCESS;
     static uint16_t cachedMask = PCAL6416A_INITIAL_MASK;
-    uint16_t newMask = (cachedMask & ~mask) | val;
+    uint16_t newMask = (cachedMask & ~mask);
+
+    newMask |= val;
 
     /* Mask changed? */
     if (cachedMask != newMask)
@@ -312,21 +314,21 @@ void GPIO1_INT0_IRQHandler(void)
     RGPIO_ClearPinsInterruptFlags(GPIO1, kRGPIO_InterruptOutput0, flags);
 
     /* Handle PF09 interrupt */
-    if ((status & BIT8(PCAL6416A_INPUT_PF09_INT)) != 0U)
+    if ((status & BIT16(PCAL6416A_INPUT_PF09_INT)) != 0U)
     {
         /* Asserts low */
-        if ((val & BIT8(PCAL6416A_INPUT_PF09_INT)) == 0U)
+        if ((val & BIT16(PCAL6416A_INPUT_PF09_INT)) == 0U)
         {
             BRD_SM_Pf09Handler();
         }
     }
 
     /* Handle PCA2131 interrupt */
-    if (g_pca2131Used && ((status & BIT8(PCAL6416A_INPUT_PCA2131_INTA))
+    if (g_pca2131Used && ((status & BIT16(PCAL6416A_INPUT_PCA2131_INTA))
         != 0U))
     {
         /* Asserts low */
-        if ((val & BIT8(PCAL6416A_INPUT_PCA2131_INTA)) == 0U)
+        if ((val & BIT16(PCAL6416A_INPUT_PCA2131_INTA)) == 0U)
         {
             BRD_SM_BbmHandler();
         }

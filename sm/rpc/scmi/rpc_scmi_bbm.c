@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -973,8 +973,8 @@ static int32_t BbmRtcTimeGet(const scmi_caller_t *caller,
     /* Convert to return format */
     if (status == SM_ERR_SUCCESS)
     {
-        out->val.lower = SM_UINT64_L(lmTime);
-        out->val.upper = SM_UINT64_H(lmTime);
+        out->val.lower = UINT64_L(lmTime);
+        out->val.upper = UINT64_H(lmTime);
     }
 
     /* Return status */

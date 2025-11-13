@@ -69,3 +69,13 @@ int32_t LMM_ResetDomain(uint32_t lmId, uint32_t domainId,
     return SM_RESETDOMAIN(domainId, resetState, toggle, assertNegate);
 }
 
+/*--------------------------------------------------------------------------*/
+/* Get reset domain state                                                   */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_ResetDomainGet(uint32_t lmId, uint32_t domainId,
+    bool *assertNegate)
+{
+    /* Just passthru to board/device */
+    return SM_RESETDOMAINGET(domainId, assertNegate);
+}
+

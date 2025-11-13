@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -837,18 +837,30 @@ static int32_t PerformanceDescribeLevels(const scmi_caller_t *caller,
                 out->perfLevels[index].indicativeFrequency= lmmDesc.value;
                 out->perfLevels[index].levelIndex= index + in->skipIndex;
 
-                /* Increment count */
-                (out->numLevels)++;
+                /* Check value doesn't wrap */
+                if (out->numLevels <= (UINT32_MAX - 1U))
+                {
+                    /* Increment count */
+                    (out->numLevels)++;
+                }
+                else
+                {
+                    /* Handling if value wraps */
+                    status = SM_ERR_INVALID_PARAMETERS;
+                }
             }
         }
 
-        /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numLevels * sizeof(perf_level_t));
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Update length */
+            *len = (3U * sizeof(uint32_t))
+                + (out->numLevels * sizeof(perf_level_t));
 
-        /* Append remaining levels */
-        out->numLevels |= PERF_NUM_LEVELS_REMAING_LEVELS(levels
-            - (index + in->skipIndex));
+            /* Append remaining levels */
+            out->numLevels |= PERF_NUM_LEVELS_REMAING_LEVELS(levels
+                - (index + in->skipIndex));
+        }
     }
 
     /* Return status */

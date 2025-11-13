@@ -94,8 +94,8 @@
         .rpcInst = 1U, \
         .boot[0] = 3U, \
         .safeType = LMM_SAFE_TYPE_SEENV, \
-        .start = 5U, \
-        .stop = 5U, \
+        .start = 6U, \
+        .stop = 6U, \
     }
 
 /*--------------------------------------------------------------------------*/
@@ -143,7 +143,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of start */
-#define SM_LM_NUM_START  7U
+#define SM_LM_NUM_START  10U
 
 /*! LM start list */
 #define SM_LM_START_DATA \
@@ -151,21 +151,32 @@
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_1}, \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_2, \
+     .numArg = 2, .arg[0] = 1U, .arg[1] = 500U,}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_0, \
      .numArg = 1, .arg[0] = 3U,}, \
-    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2},
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CTRL, .rsrc = DEV_SM_CTRL_TEST, \
+     .numArg = 1, .arg[0] = 1U,}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_RST, .rsrc = DEV_SM_RST_2, \
+     .numArg = 2, .arg[0] = 1U, .arg[1] = 0U,},
 
 /*! Config for number of stop */
-#define SM_LM_NUM_STOP  7U
+#define SM_LM_NUM_STOP  10U
 
 /*! LM stop list */
 #define SM_LM_STOP_DATA \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_1}, \
+    {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CLK, .rsrc = DEV_SM_CLK_2}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_VOLT, .rsrc = DEV_SM_VOLT_1}, \
     {.lmId = 1U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_4}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CPU, .rsrc = DEV_SM_CPU_2}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_RST, .rsrc = DEV_SM_RST_2, \
+     .numArg = 2, .arg[0] = 0U, .arg[1] = 0U,}, \
+    {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_CTRL, .rsrc = DEV_SM_CTRL_TEST, \
+     .numArg = 1, .arg[0] = 3U,}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PD, .rsrc = DEV_SM_PD_2}, \
     {.lmId = 2U, .mSel = 0U, .ss = LMM_SS_PERF, .rsrc = DEV_SM_PERF_0},
 

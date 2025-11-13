@@ -251,7 +251,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode);
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_HARDWARE_ERROR: if there is an issue setting the voltage.
  */
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt);
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt);
 
 /*!
  * Get a SoC supply voltage.
@@ -267,7 +267,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt);
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_HARDWARE_ERROR: if there is an issue getting the voltage.
  */
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt);
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt);
 
 /** @} */
 

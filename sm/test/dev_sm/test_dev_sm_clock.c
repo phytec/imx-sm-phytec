@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -81,26 +81,26 @@ void TEST_DevSmClock(void)
         printf("DEV_SM_ClockDescribe(%u)\n", clockId);
         CHECK(DEV_SM_ClockDescribe(clockId, &clockRange));
 
-        if (SM_UINT64_H(clockRange.lowestRate) == 0U)
+        if (UINT64_H(clockRange.lowestRate) == 0U)
         {
             printf("  lowestRate=%u\n",
-                SM_UINT64_L(clockRange.lowestRate));
+                UINT64_L(clockRange.lowestRate));
         }
         else
         {
             printf("  lowestRate=>4GHz\n");
         }
-        if (SM_UINT64_H(clockRange.highestRate) == 0U)
+        if (UINT64_H(clockRange.highestRate) == 0U)
         {
             printf("  highestRate=%u\n",
-                SM_UINT64_L(clockRange.highestRate));
+                UINT64_L(clockRange.highestRate));
         }
         else
         {
             printf("  highestRate=>4GHz\n");
         }
         printf("  stepSize=%u\n",
-            SM_UINT64_L(clockRange.stepSize));
+            UINT64_L(clockRange.stepSize));
 
 #ifdef SIMU
         {
@@ -148,7 +148,7 @@ void TEST_DevSmClock(void)
 
         printf("DEV_SM_ClockRateGet(%u)\n", clockId);
         CHECK(DEV_SM_ClockRateGet(clockId, &rate));
-        printf("  rate=%u\n", SM_UINT64_L(rate));
+        printf("  rate=%u\n", UINT64_L(rate));
 
 #ifdef SIMU
         CHECK(DEV_SM_ClockParentGet(clockId, &parent));

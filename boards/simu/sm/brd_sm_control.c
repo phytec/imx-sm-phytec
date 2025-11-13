@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -149,15 +149,24 @@ int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
         }
         else if (ctrlId == BRD_SM_CTRL_TEST_E)
         {
-            if ((addr + numVal) <= MAX_EXTCTRL_WORDS)
+            /* Check the expression value wrap */
+            if (addr <= (UINT32_MAX - numVal))
             {
-                for (uint32_t idx = 0U; idx < numVal; idx++)
+                if ((addr + numVal) <= MAX_EXTCTRL_WORDS)
                 {
-                    s_brdExtCtrl[addr + idx] = val[idx];
+                    for (uint32_t idx = 0U; idx < numVal; idx++)
+                    {
+                        s_brdExtCtrl[addr + idx] = val[idx];
+                    }
+                }
+                else
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             else
             {
+                /* Return an error status if expression value wraps */
                 status = SM_ERR_INVALID_PARAMETERS;
             }
         }
@@ -193,15 +202,24 @@ int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
         }
         else if (ctrlId == BRD_SM_CTRL_TEST_E)
         {
-            if ((addr + numRtn) <= MAX_EXTCTRL_WORDS)
+            /* Check the expression value wrap */
+            if (addr <= (UINT32_MAX - numRtn))
             {
-                for (uint32_t idx = 0U; idx < numRtn; idx++)
+                if ((addr + numRtn) <= MAX_EXTCTRL_WORDS)
                 {
-                    rtn[idx] = s_brdExtCtrl[addr + idx];
+                    for (uint32_t idx = 0U; idx < numRtn; idx++)
+                    {
+                        rtn[idx] = s_brdExtCtrl[addr + idx];
+                    }
+                }
+                else
+                {
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             else
             {
+                /* Return an error status if expression value wraps */
                 status = SM_ERR_INVALID_PARAMETERS;
             }
         }

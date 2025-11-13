@@ -92,6 +92,21 @@ int32_t DEV_SM_ResetDomainNameGet(uint32_t domainId, string *domainNameAddr,
 int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
     bool toggle, bool assertNegate);
 
+/*!
+ * Get the state of a device reset domain.
+ *
+ * @param[in]     domainId      Identifier for the reset domain
+ * @param[out]    assertNegate  Pointer to return the reset polarity
+ *
+ * This function allows a caller to get a reset state.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the operation was successful.
+ */
+int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate);
+
 #endif /* DEV_SM_RESET_API_H */
 
 /** @} */

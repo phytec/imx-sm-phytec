@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -783,6 +783,7 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     {
         uint32_t mux;
         uint32_t numMuxes;
+        bool extSupported;
 
         /* No notifications */
         out->attributes
@@ -803,6 +804,16 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             < SM_SCMI_PERM_EXCLUSIVE))
         {
             out->attributes |= CLOCK_ATTR_RESTRICTED(1UL);
+        }
+
+        /* Extended controls? */
+        if (LMM_ClockExtendedInfo(caller->lmId, in->clockId,
+            &extSupported) == SM_ERR_SUCCESS)
+        {
+            if (extSupported)
+            {
+                out->attributes |= CLOCK_ATTR_EXT_CONFIG(1UL);
+            }
         }
 
         /* Return enable status */
@@ -909,12 +920,12 @@ static int32_t ClockDescribeRates(const scmi_caller_t *caller,
             | CLOCK_NUM_RATE_FLAGS_NUM_RATES(3UL)
             | CLOCK_NUM_RATE_FLAGS_FORMAT(1UL);
 
-        out->rates[0].upper = SM_UINT64_H(range.lowestRate);
-        out->rates[0].lower = SM_UINT64_L(range.lowestRate);
-        out->rates[1].upper = SM_UINT64_H(range.highestRate);
-        out->rates[1].lower = SM_UINT64_L(range.highestRate);
-        out->rates[2].upper = SM_UINT64_H(range.stepSize);
-        out->rates[2].lower = SM_UINT64_L(range.stepSize);
+        out->rates[0].upper = UINT64_H(range.lowestRate);
+        out->rates[0].lower = UINT64_L(range.lowestRate);
+        out->rates[1].upper = UINT64_H(range.highestRate);
+        out->rates[1].lower = UINT64_L(range.highestRate);
+        out->rates[2].upper = UINT64_H(range.stepSize);
+        out->rates[2].lower = UINT64_L(range.stepSize);
 
         /* Update length */
         *len = (3U * sizeof(uint32_t)) + (3U * sizeof(clock_rate_t));
@@ -1087,8 +1098,8 @@ static int32_t ClockRateGet(const scmi_caller_t *caller,
 
         status = LMM_ClockRateGet(caller->lmId, in->clockId, &lmRate);
 
-        out->rate.upper = SM_UINT64_H(lmRate);
-        out->rate.lower = SM_UINT64_L(lmRate);
+        out->rate.upper = UINT64_H(lmRate);
+        out->rate.lower = UINT64_L(lmRate);
     }
 
     /* Return status */
@@ -1474,7 +1485,7 @@ static int32_t ClockParentSet(const scmi_caller_t *caller,
     if (status == SM_ERR_SUCCESS)
     {
         /* Mark owning agent */
-        s_clockAgent[in->clockId] = ((uint8_t) caller->agentId) + 1U;
+        s_clockAgent[in->clockId] = U8((caller->agentId) + 1U);
 
         /* Set parent */
         status = LMM_ClockParentSet(caller->lmId, in->clockId,

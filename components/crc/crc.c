@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023, 2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -88,7 +88,7 @@ uint8_t CRC_J1850(const uint8_t *addr, uint32_t size)
         for (uint32_t i = 0U; i < 8U; i++)
         {
             crc = ((crc & 0x80U) != 0U) ? ((crc << 1U) ^ CRC_J1850_POLY)
-                : ((uint8_t) (crc << 1U));
+                : (((uint8_t) ((crc << 1U) & 0xFFUL)));
         }
 
         a++;

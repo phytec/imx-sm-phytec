@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -195,7 +195,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_Exit(int32_t status, uint32_t pc)
+_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
 #if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
@@ -392,11 +392,14 @@ void BRD_SM_ShutdownRecordLoad(dev_sm_rst_rec_t *shutdownRec)
 #endif
 
     /* PMIC reset? */
-    if ((g_pmicFaultFlags & ~PF09_XRESET_FLG) != 0U)
+    if ((g_pmicFaultFlags & (PF09_XFAIL_FLG | PF09_WD_FLG
+        | PF09_HFAULT_FLG)) != 0U)
     {
         shutdownRec->valid = true;
         shutdownRec->reset = true;
         shutdownRec->reason = DEV_SM_REASON_PMIC;
+        shutdownRec->validErr = false;
+        shutdownRec->validOrigin = false;
         shutdownRec->extLen = 1U;
         shutdownRec->extInfo[0] = g_pmicFaultFlags;
     }
@@ -621,20 +624,29 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 /* Set voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 {
-    /* Set voltage level */
-    return BRD_SM_VoltageLevelSet(domain, ((int32_t) microVolt)
-        + BOARD_PERF_VDROP);
+    int32_t status = SM_ERR_INVALID_PARAMETERS;
+
+    /* Check for wrap */
+    if (microVolt <= (INT32_MAX - BOARD_PERF_VDROP))
+    {
+        /* Set voltage level */
+        status = BRD_SM_VoltageLevelSet(domain, microVolt
+            + BOARD_PERF_VDROP);
+    }
+
+    /* Return status */
+    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Get voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 {
     /* Get voltage level */
-    return BRD_SM_VoltageLevelGet(domain, (int32_t*) microVolt);
+    return BRD_SM_VoltageLevelGet(domain, microVolt);
 }
 
 /*==========================================================================*/

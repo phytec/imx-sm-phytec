@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -226,6 +226,13 @@ int32_t DEV_SM_HsioTopPowerDownPre(void);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_M7PowerDownPre(void);
+
+/*!
+ * Configure the NOC domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_NocPowerDownPre(void);
 
 #endif /* DEV_SM_CONFIG_H */
 

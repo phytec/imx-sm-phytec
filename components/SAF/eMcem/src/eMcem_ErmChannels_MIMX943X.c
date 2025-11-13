@@ -1,21 +1,21 @@
 /**
-*   @file    eMcem_VfccuFaultList_MIMX95XX.c
-*   @version 0.4.0
+*   @file    eMcem_ErmChannels_MIMX943X.c
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Specific VFCCU faults source.
-*   @details Contains specific VFCCU faults data for eMcem module.
+*   @brief   MIMX9XX_SAF eMcem - Specific ERM channels source.
+*   @details Contains specific ERM error channels data for eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2021-2024 NXP
+*   Copyright 2024-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -27,22 +27,24 @@ extern "C"{
 /**
 * @page misra_violations MISRA-C:2012 violations
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_0410
-* Violates MISRA 2012 Required Rule 4.10, This is not a violation since all header files are protected against multiple inclusions.
+* @section eMcem_ErmChannels_MIMX943X_c_REF_0410
+* Violates MISRA 2012 Required Rule 4.10, Precautions shall be taken in order to prevent the
+* contents of a header file being included twice.
+* This is not a violation since all header files are protected against multiple inclusions.
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_0501
+* @section eMcem_ErmChannels_MIMX943X_c_REF_0501
 * Violates MISRA 2012 Required Rule 5.1, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_0502
+* @section eMcem_ErmChannels_MIMX943X_c_REF_0502
 * Violates MISRA 2012 Required Rule 5.2, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_0504
+* @section eMcem_ErmChannels_MIMX943X_c_REF_0504
 * Violates MISRA 2012 Required Rule 5.4, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_0505
+* @section eMcem_ErmChannels_MIMX943X_c_REF_0505
 * Violates MISRA 2012 Required Rule 5.5, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX95XX_c_REF_2001
+* @section eMcem_ErmChannels_MIMX943X_c_REF_2001
 * Violates MISRA 2012 Advisory Rule 20.1, #include statements are not preceded only by
 * preprocessor directives and comments because it otherwise would not work.
 *
@@ -54,39 +56,40 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
-#include "eMcem_VfccuFaultList_MIMX95XX.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "eMcem_ErmChannels_Ext.h"
+#include "SafetyBase.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0505 */
-#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION_C               0
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0505 */
-#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION_C               4
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0505 */
-#define EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION_C               0
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0505 */
+#define EMCEM_ERMCHANNELS_MIMX943X_SW_MAJOR_VERSION_C               0
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0505 */
+#define EMCEM_ERMCHANNELS_MIMX943X_SW_MINOR_VERSION_C               8
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0505 */
+#define EMCEM_ERMCHANNELS_MIMX943X_SW_PATCH_VERSION_C               4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX95XX_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX95XX.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_ERMCHANNELS_MIMX943X_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_ERMCHANNELS_MIMX943X_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_ERMCHANNELS_MIMX943X_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_ErmChannels_MIMX943X.c and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX95XX)
+#if SAFETY_BASE_MIMX943X
 /*==================================================================================================
 *                          LOCAL TYPEDEFS (STRUCTURES, UNIONS, ENUMS)
 ==================================================================================================*/
@@ -110,13 +113,65 @@ extern "C"{
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
 ==================================================================================================*/
-#define EMCEM_START_SEC_CONST_32
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0410 */
+#define EMCEM_START_SEC_CONST_8
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0410 */
 #include "eMcem_MemMap.h"
 
+/* Channel count per each instance */
+const uint8 au8ChannelsPerInstance[EMCEM_ERM_INSTANCE_COUNT] =
+{
+    10U,  /* AON */
+    8U,   /* CM7_0 */
+    8U,   /* CM7_1 */
+    1U,   /* NPU */
+    10U,  /* Wakeup */
+    16U   /* NETC */
+};
+
+#define EMCEM_STOP_SEC_CONST_8
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0410 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_2001 */
+#include "eMcem_MemMap.h"
+
+#define EMCEM_START_SEC_CONST_32
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0410 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_2001 */
+#include "eMcem_MemMap.h"
+
+/* Array of ERM instance base addresses */
+const uint32 au32InstanceBaseAddr[EMCEM_ERM_INSTANCE_COUNT] = {
+    0x44560000UL, /* AON */
+    0x4A070000UL, /* CM7_0 */
+    0x49C70000UL, /* CM7_1 */
+    0x4A870000UL, /* NPU */
+    0x42790000UL, /* Wakeup */
+    0x4D060000UL  /* NETC */
+};
+
+/* Arrays of provided info per channel */
+const uint32 au32SCStatusProvidedMask[EMCEM_ERM_MASK_SIZE] = {
+    0x0FBFBFFFUL,
+    0x001C7FF0UL
+};
+
+const uint32 au32NCStatusProvidedMask[EMCEM_ERM_MASK_SIZE] = {
+    0x0FBFBFFFUL,
+    0x001C7FF0UL
+};
+
+const uint32 au32AddrProvidedMask[EMCEM_ERM_MASK_SIZE] = {
+    0x0F8383FFUL,
+    0x001C7FF0UL
+};
+
+const uint32 au32SynProvidedMask[EMCEM_ERM_MASK_SIZE] = {
+    0x0F8383FFUL,
+    0x001C7FF0UL
+};
+
 #define EMCEM_STOP_SEC_CONST_32
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_0410 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX95XX_c_REF_2001 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_0410 */
+/* @violates @ref eMcem_ErmChannels_MIMX943X_c_REF_2001 */
 #include "eMcem_MemMap.h"
 
 /*==================================================================================================
@@ -138,7 +193,7 @@ extern "C"{
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
 
-#endif /* defined(SAFETY_BASE_MIMX95XX) */
+#endif /* SAFETY_BASE_MIMX943X */
 
 #ifdef __cplusplus
 }

@@ -72,6 +72,9 @@
 #define PWR_MIX_SLICE_IDX_NPU           17U
 #define PWR_MIX_SLICE_IDX_WAKEUP        18U
 
+#define PWR_NUM_MIX_VSLICE              1UL
+#define PWR_MIX_VSLICE_IDX_M33S         (PWR_NUM_MIX_SLICE+0U)
+
 #define PWR_NUM_MEM_SLICE               17U
 
 #define PWR_MEM_SLICE_IDX_AON           0U
@@ -100,30 +103,30 @@
 
 #define PWR_MIX_FUNC_STAT_MASK                  \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT_MASK |      \
-     SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |    \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |        \
-     SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_RST_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
+    SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |         \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |    \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |        \
+    SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |         \
+    SRC_XSPR_FUNC_STAT_RST_STAT_MASK |         \
+    SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
 
 #define PWR_MIX_FUNC_STAT_PUP                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(0U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
 
 #define PWR_MIX_FUNC_STAT_PDN                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(1U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
 
 #define PWR_MIX_FLAG_SWITCHABLE         (1U << 0U)  /* MIX can be switched OFF */
 #define PWR_MIX_FLAG_LPMSET             (1U << 1U)  /* MIX LPM can be set */
@@ -137,7 +140,9 @@
  *        and LPM voting logic.
  */
 #define CM33_TRDC_ID                2U
-#define CPU2GPC(cpuId)              ((cpuId) + CM33_TRDC_ID)
+#define CPU2GPC(cpuId)                         \
+    (((cpuId) < (UINT32_MAX - CM33_TRDC_ID)) ? \
+    (((cpuId) + CM33_TRDC_ID)) : (0U))
 
 #define WHITELIST_MASK(cpuId)           (1UL << (CPU2GPC(cpuId)))
 #define LPMSETTING_MASK(cpuId)          (0x7ULL << ((CPU2GPC(cpuId) << 2U)))
@@ -233,7 +238,7 @@ typedef struct
 /*!
  * Structure containing SM LP handshake details
  */
-typedef struct 
+typedef struct
 {
     uint32_t srcMixIdx;     /*!< SRX MIX identifier for the active LP request */
     uint32_t req;           /*!< Active LP request */

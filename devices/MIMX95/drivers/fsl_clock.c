@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -840,8 +840,9 @@ const ccm_cgc_attr_t g_clockCgcAttr[CLOCK_NUM_CGC] =
 {
     [CLOCK_CGC_GPU]
     {
-        .lpcgIdx = 24U,
+        .lpcgIdx = CLOCK_LPCG_GPU,
         .rootIdx = CLOCK_ROOT_GPU,
+        .srcMixIdx = PWR_MIX_SLICE_IDX_GPU,
     }
 };
 
@@ -852,7 +853,7 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
 {
     bool pdOn = true;
 
-    switch(sourceIdx)
+    switch (sourceIdx)
     {
         case CLOCK_SRC_ARMPLL_VCO:
         case CLOCK_SRC_ARMPLL_PFD0:
@@ -895,10 +896,10 @@ static bool CLOCK_SourcePdIsOn(uint32_t sourceIdx)
 bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 {
     bool clkEnable = false;
-    
+
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_EXT:
                 clkEnable = true;
@@ -940,7 +941,7 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
                     PLL_NO_OF_DFS_ENABLE_MASK);
                 break;
-            
+
             case CLOCK_SRC_SYSPLL1_PFD1:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
                     PLL_NO_OF_DFS_CLKOUT_EN_MASK);
@@ -960,7 +961,7 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
                     PLL_NO_OF_DFS_CLKOUT_EN_MASK);
                 break;
-            
+
             case CLOCK_SRC_SYSPLL1_PFD2_DIV2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
                     PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK);
@@ -1093,7 +1094,7 @@ bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_OSC32K:
                 updateEnable = true;
@@ -1277,7 +1278,7 @@ bool CLOCK_SourceSetBypass(uint32_t sourceIdx, bool bypass)
     /* Bypass configuration is restricted to PLLs available as CCM clock
      * root inputs.
      */
-    switch(sourceIdx)
+    switch (sourceIdx)
     {
         case CLOCK_SRC_AUDIOPLL1_VCO:
             rc = FRACTPLL_SetBypass(CLOCK_PLL_AUDIO1, bypass);
@@ -1307,8 +1308,8 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
     uint64_t rate = 0UL;
 
     if (CLOCK_SourcePdIsOn(sourceIdx))
-    {        
-        switch(sourceIdx)
+    {
+        switch (sourceIdx)
         {
             case CLOCK_SRC_EXT:
                 /* Refrain from calling CLOCK_GprSelGetRate to avoid
@@ -1327,7 +1328,7 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
             case CLOCK_SRC_FRO:
                 {
                     uint32_t froRate;
-                    
+
                     if (FRO_GetRate(&froRate))
                     {
                         rate = ((uint64_t) froRate) * CLOCK_M_HZ;
@@ -1449,7 +1450,7 @@ uint64_t CLOCK_SourceGetRate(uint32_t sourceIdx)
                 rate = g_clockExt1Rate;
                 break;
 
-                /* EXT2 internally tied to GND, no case needed */
+            /* EXT2 internally tied to GND, no case needed */
 
             default:
                 ; /* Intentional empty default */
@@ -1471,7 +1472,7 @@ bool CLOCK_SourceSetRate(uint32_t sourceIdx, uint64_t rate,
     /* Clock sources in MIXes not always-on require power dependency check. */
     if (CLOCK_SourcePdIsOn(sourceIdx))
     {
-        switch(sourceIdx)
+        switch (sourceIdx)
         {
             case CLOCK_SRC_SYSPLL1_VCO:
                 updateRate = FRACTPLL_SetRate(CLOCK_PLL_SYS1, true, rate);
@@ -1746,5 +1747,38 @@ bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     }
 
     return getSscConfig;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Set CGC enable status                                                    */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_CgcSetEnable(uint32_t cgcIdx, bool enable)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        uint32_t srcMixIdx = g_clockCgcAttr[cgcIdx].srcMixIdx;
+
+        if (!enable)
+        {
+            /* Request MIX-level transaction blocking to protect access
+             * to modules with gated clocks.
+             */
+            PWR_MixSsiBlockingSet(srcMixIdx, true);
+        }
+
+        rc = CCM_CgcSetEnable(cgcIdx, enable);
+
+        if (enable)
+        {
+            /* Release MIX-level transaction blocking to modules with
+             * ungated clocks.
+             */
+            PWR_MixSsiBlockingSet(srcMixIdx, false);
+        }
+    }
+
+    return rc;
 }
 

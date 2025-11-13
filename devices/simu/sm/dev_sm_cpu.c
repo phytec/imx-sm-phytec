@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -40,6 +40,7 @@
 
 #include "sm.h"
 #include "dev_sm.h"
+#include "lmm.h"
 
 /* Local defines */
 
@@ -114,6 +115,15 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if a CPU is active or suspended                                    */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_CpuIsActive(uint32_t cpuId)
+{
+    /* No CPUs suspended */
+    return false;
 }
 
 /*--------------------------------------------------------------------------*/

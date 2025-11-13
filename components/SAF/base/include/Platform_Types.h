@@ -1,7 +1,7 @@
 /**
 *   @file           Platform_Types.h
 *   @implements     Platform_Types.h_Artifact
-*   @version 0.4.0
+*   @version 0.8.4
 *
 *   @brief   AUTOSAR Base - Platform dependend data type definitions.
 *   @details AUTOSAR platform types header file. It contains all platform dependent types
@@ -13,19 +13,19 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
-*   Peripheral           : MIMX9XXM33
+*   Peripheral           : IMX9XXXM33
 *   Dependencies         : none
 *
-*   Autosar Version      : 4.7.0
-*   Autosar Revision     : ASR_REL_4_7_REV_0000
+*   Autosar Version      : 4.6.0
+*   Autosar Revision     : ASR_REL_4_6_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2006-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2019, 2023 NXP
+*   Copyright 2017-2019, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -61,11 +61,11 @@ extern "C"{
 ==================================================================================================*/
 #define PLATFORM_VENDOR_ID                      43
 #define PLATFORM_AR_RELEASE_MAJOR_VERSION       4
-#define PLATFORM_AR_RELEASE_MINOR_VERSION       7
+#define PLATFORM_AR_RELEASE_MINOR_VERSION       6
 #define PLATFORM_AR_RELEASE_REVISION_VERSION    0
 #define PLATFORM_SW_MAJOR_VERSION               0
-#define PLATFORM_SW_MINOR_VERSION               4
-#define PLATFORM_SW_PATCH_VERSION               0
+#define PLATFORM_SW_MINOR_VERSION               8
+#define PLATFORM_SW_PATCH_VERSION               4
 
 /*==================================================================================================
 *                                      FILE VERSION CHECKS

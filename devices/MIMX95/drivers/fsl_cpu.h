@@ -392,6 +392,18 @@ bool CPU_SleepForceSet(uint32_t cpuIdx, bool sleepForce);
 bool CPU_SleepForceGet(uint32_t cpuIdx, bool *sleepForce);
 
 /*!
+ * Query CPU if CPU is active
+ *
+ * @param[in]       cpuIdx          CPU identifier
+ *
+ * This function allows caller to query if a CPU is active.
+ *
+ * @return Returns true if the specified CPU is not forced to sleep
+ *         and not currently suspended.
+ */
+bool CPU_IsActive(uint32_t cpuIdx);
+
+/*!
  * Set system-level sleep control
  *
  * @param[in]       cpuIdx      CPU identifier

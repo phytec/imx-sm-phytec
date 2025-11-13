@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -299,7 +299,7 @@ int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
                     while (cpuWakeListA55 != 0U)
                     {
                         /* Convert mask into index */
-                        uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
+                        uint8_t cpuIdx = U8(31U - __CLZ(cpuWakeListA55));
 
                         (void) CPU_SwWakeup(cpuIdx);
 
@@ -351,6 +351,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
                 break;
             case DEV_SM_PD_M7:
                 status = DEV_SM_M7PowerDownPre();
+                break;
+            case DEV_SM_PD_NOC:
+                status = DEV_SM_NocPowerDownPre();
                 break;
             default:
                 /* Only return error if domain out of range */

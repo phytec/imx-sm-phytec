@@ -46,6 +46,9 @@
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_sysctr.h"
+#ifdef USES_RX_REPLICA
+#include "fsl_ddr_rx_replica.h"
+#endif
 
 /* Local defines */
 
@@ -70,15 +73,23 @@ typedef struct
 static uint32_t s_sysSleepMode = 0U;
 static uint32_t s_sysSleepFlags = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-static BLK_CTRL_DDRMIX_Type ddr_blk_ctrl;
-
+static BLK_CTRL_DDRMIX_Type s_ddrBlkCtrl;
+#ifdef USES_RX_REPLICA
+static ddr_rxclkdelay_wa_data_t s_rxClkDelay;
+static uint32_t s_ddrMseconds = 0U;
+#endif
 #ifdef DEV_SM_MSG_PROF_CNT
-static dev_sm_sys_msg_cur_t curMsgRecord = { 0 };
+static dev_sm_sys_msg_cur_t s_curMsgRecord = { 0 };
 #endif
 
 /* Local functions */
 
-static void CLOCK_SourceBypass(bool bypass, bool preserve);
+static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve);
+#ifdef USES_RX_REPLICA
+static void DEV_SM_RxReplicaInit(void);
+static void DEV_SM_RxReplicaDeinit(void);
+static void DEV_SM_RxReplicaReinit(void);
+#endif
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -106,7 +117,7 @@ int32_t DEV_SM_SystemInit(void)
 #ifdef DEVICE_HAS_ELE
     /* Enable GPC-to-ELE handshake */
     GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
- #endif
+#endif
 
     /* Default to keep M7 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_CFG |=
@@ -116,7 +127,7 @@ int32_t DEV_SM_SystemInit(void)
     /* Default to keep M71 clocks running during sleep modes */
     BLK_CTRL_S_AONMIX->M7_1_CFG |=
         (BLK_CTRL_S_AONMIX_M7_1_CFG_CORECLK_FORCE_ON_MASK |
-        BLK_CTRL_S_AONMIX_M7_1_CFG_HCLK_FORCE_ON_MASK);
+            BLK_CTRL_S_AONMIX_M7_1_CFG_HCLK_FORCE_ON_MASK);
 
     /* Configure PMIC standby timings */
     pmicAckCtrl = GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL;
@@ -126,7 +137,12 @@ int32_t DEV_SM_SystemInit(void)
     GPC_GLOBAL->GPC_PMIC_STBY_ACK_CTRL = pmicAckCtrl;
 
     /* Enable bypass for clock sources */
-    CLOCK_SourceBypass(true, false);
+    DEV_SM_ClockSourceBypass(true, false);
+
+#ifdef USES_RX_REPLICA
+    /* Init RX Replica workaround */
+    DEV_SM_RxReplicaInit();
+#endif
 
     /* Return status */
     return status;
@@ -310,7 +326,7 @@ int32_t DEV_SM_SystemPostBoot(uint32_t mSel, uint32_t initFlags)
     uint32_t priMask;
 
     /* Clear BBM */
-    status = DEV_SM_BbmClear();
+    status = DEV_SM_BbmClear(true);
 
     /* Disable interrupts */
     priMask = DisableGlobalIRQ();
@@ -347,6 +363,11 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
 {
+    /*
+     * Intentional: errId is a generic variable to return both signed and
+     * unsigned data depending on the reason.
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
@@ -503,6 +524,23 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                         }
                     }
                 }
+                /* Disable GPC wakeups for CPUs forced to sleep */
+                else
+                {
+                    /* IRQs enabled at NVIC level become GPC wake sources */
+                    for (uint32_t wakeIdx = 0;
+                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                        wakeIdx++)
+                    {
+                        uint32_t wakeVal;
+                        if (CPU_IrqWakeGet(cpuIdx, wakeIdx, &wakeVal))
+                        {
+                            cpuWakeMask[cpuIdx][wakeIdx] = wakeVal;
+                            (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                                0xFFFFFFFFU);
+                        }
+                    }
+                }
             }
         }
     }
@@ -649,7 +687,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 GPC_GLOBAL_GPC_EFUSE_CTRL_EFUSE_PD_EN_MASK;
 
             /* Disable bypass for clock sources */
-            CLOCK_SourceBypass(false, true);
+            DEV_SM_ClockSourceBypass(false, true);
 
             if (activeSleep)
             {
@@ -783,7 +821,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
 
             /* Enable bypass for clock sources */
-            CLOCK_SourceBypass(true, true);
+            DEV_SM_ClockSourceBypass(true, true);
 
             /* Power up eFUSE */
             GPC_GLOBAL->GPC_EFUSE_CTRL = 0U;
@@ -850,27 +888,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             UINT64_L(sleepExitStart - sleepEntryStart);
     }
 
-    /* Restore GPC wake masks for sleeping CPUs */
+    /* Restore GPC wake sources modified during sleep flow */
     for (uint32_t cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
     {
         if (cpuIdx != CPU_IDX_M33P)
         {
-            /* Check if sleep is forced for the CPU */
-            bool sleepForce;
-            if (CPU_SleepForceGet(cpuIdx, &sleepForce))
+            /* Restore saved GPC wake sources */
+            for (uint32_t wakeIdx = 0U;
+                wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
+                wakeIdx++)
             {
-                /* If sleep is not forced, manage GPC masks */
-                if (!sleepForce)
-                {
-                    /* IRQs enabled at NVIC level become GPC wake sources */
-                    for (uint32_t wakeIdx = 0U;
-                        wakeIdx < GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT;
-                        wakeIdx++)
-                    {
-                        (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
-                            cpuWakeMask[cpuIdx][wakeIdx]);
-                    }
-                }
+                (void) CPU_IrqWakeSet(cpuIdx, wakeIdx,
+                    cpuWakeMask[cpuIdx][wakeIdx]);
             }
         }
     }
@@ -950,20 +979,24 @@ int32_t DEV_SM_SystemDramRetentionEnter(void)
     if (status == SM_ERR_SUCCESS)
     {
         /* Save DDRMIX block control */
-        ddr_blk_ctrl.HWFFC_CTRL = BLK_CTRL_DDRMIX->HWFFC_CTRL;
-        ddr_blk_ctrl.CA55_SEL_CTRL = BLK_CTRL_DDRMIX->CA55_SEL_CTRL;
-        ddr_blk_ctrl.VREF_PSW_CTRL = BLK_CTRL_DDRMIX->VREF_PSW_CTRL;
-        ddr_blk_ctrl.DDRC_STOP_CTRL = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
-        ddr_blk_ctrl.AUTO_CG_CTRL = BLK_CTRL_DDRMIX->AUTO_CG_CTRL;
-        ddr_blk_ctrl.SSI_PWR_CTRL = BLK_CTRL_DDRMIX->SSI_PWR_CTRL;
-        ddr_blk_ctrl.DDRC_EXCLUSIVE_EN = BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN;
-        ddr_blk_ctrl.DDRC_URGENT_EN = BLK_CTRL_DDRMIX->DDRC_URGENT_EN;
-        ddr_blk_ctrl.RT_MASTER_ID_0_1 = BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1;
-        ddr_blk_ctrl.RT_MASTER_ID_2_3 = BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3;
-        ddr_blk_ctrl.AXI_PARITY_ERR_INJECT =
+        s_ddrBlkCtrl.HWFFC_CTRL = BLK_CTRL_DDRMIX->HWFFC_CTRL;
+        s_ddrBlkCtrl.CA55_SEL_CTRL = BLK_CTRL_DDRMIX->CA55_SEL_CTRL;
+        s_ddrBlkCtrl.VREF_PSW_CTRL = BLK_CTRL_DDRMIX->VREF_PSW_CTRL;
+        s_ddrBlkCtrl.DDRC_STOP_CTRL = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
+        s_ddrBlkCtrl.AUTO_CG_CTRL = BLK_CTRL_DDRMIX->AUTO_CG_CTRL;
+        s_ddrBlkCtrl.SSI_PWR_CTRL = BLK_CTRL_DDRMIX->SSI_PWR_CTRL;
+        s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN = BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN;
+        s_ddrBlkCtrl.DDRC_URGENT_EN = BLK_CTRL_DDRMIX->DDRC_URGENT_EN;
+        s_ddrBlkCtrl.RT_MASTER_ID_0_1 = BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1;
+        s_ddrBlkCtrl.RT_MASTER_ID_2_3 = BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3;
+        s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT =
             BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT;
-        ddr_blk_ctrl.RT_MASTER_ID_4_5 = BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5;
-        ddr_blk_ctrl.RT_MASTER_ID_6_7 = BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7;
+        s_ddrBlkCtrl.RT_MASTER_ID_4_5 = BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5;
+        s_ddrBlkCtrl.RT_MASTER_ID_6_7 = BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7;
+
+#ifdef USES_RX_REPLICA
+        DEV_SM_RxReplicaDeinit();
+#endif
 
         /* Enter retention */
         if (!DDR_EnterRetention(ddr))
@@ -1096,20 +1129,26 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
         }
 
         /* Restore DDRMIX block control */
-        BLK_CTRL_DDRMIX->HWFFC_CTRL = ddr_blk_ctrl.HWFFC_CTRL;
-        BLK_CTRL_DDRMIX->CA55_SEL_CTRL = ddr_blk_ctrl.CA55_SEL_CTRL;
-        BLK_CTRL_DDRMIX->VREF_PSW_CTRL = ddr_blk_ctrl.VREF_PSW_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_STOP_CTRL = ddr_blk_ctrl.DDRC_STOP_CTRL;
-        BLK_CTRL_DDRMIX->AUTO_CG_CTRL = ddr_blk_ctrl.AUTO_CG_CTRL;
-        BLK_CTRL_DDRMIX->SSI_PWR_CTRL = ddr_blk_ctrl.SSI_PWR_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN = ddr_blk_ctrl.DDRC_EXCLUSIVE_EN;
-        BLK_CTRL_DDRMIX->DDRC_URGENT_EN = ddr_blk_ctrl.DDRC_URGENT_EN;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1 = ddr_blk_ctrl.RT_MASTER_ID_0_1;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3 = ddr_blk_ctrl.RT_MASTER_ID_2_3;
+        BLK_CTRL_DDRMIX->HWFFC_CTRL = s_ddrBlkCtrl.HWFFC_CTRL;
+        BLK_CTRL_DDRMIX->CA55_SEL_CTRL = s_ddrBlkCtrl.CA55_SEL_CTRL;
+        BLK_CTRL_DDRMIX->VREF_PSW_CTRL = s_ddrBlkCtrl.VREF_PSW_CTRL;
+        BLK_CTRL_DDRMIX->DDRC_STOP_CTRL = s_ddrBlkCtrl.DDRC_STOP_CTRL;
+        BLK_CTRL_DDRMIX->AUTO_CG_CTRL = s_ddrBlkCtrl.AUTO_CG_CTRL;
+        BLK_CTRL_DDRMIX->SSI_PWR_CTRL = s_ddrBlkCtrl.SSI_PWR_CTRL;
+        BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN = s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN;
+        BLK_CTRL_DDRMIX->DDRC_URGENT_EN = s_ddrBlkCtrl.DDRC_URGENT_EN;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1 = s_ddrBlkCtrl.RT_MASTER_ID_0_1;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3 = s_ddrBlkCtrl.RT_MASTER_ID_2_3;
         BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT =
-            ddr_blk_ctrl.AXI_PARITY_ERR_INJECT;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5 = ddr_blk_ctrl.RT_MASTER_ID_4_5;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7 = ddr_blk_ctrl.RT_MASTER_ID_6_7;
+            s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5 = s_ddrBlkCtrl.RT_MASTER_ID_4_5;
+        BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7 = s_ddrBlkCtrl.RT_MASTER_ID_6_7;
+
+#ifdef USES_RX_REPLICA
+        /* Perform one-time RxReplica work-around prior to DDR accesses and
+         * before enabling periodic operation */
+        DEV_SM_RxReplicaReinit();
+#endif
     }
 
     /* Return status */
@@ -1117,9 +1156,35 @@ int32_t DEV_SM_SystemDramRetentionExit(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* System timer tick                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SystemTick(uint32_t msec)
+{
+    /* Poll for CPU state changes */
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P0);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P1);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_M33S);
+    LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
+
+#ifdef USES_RX_REPLICA
+    /* Tick DDR */
+    s_ddrMseconds += msec;
+
+    /* Handle DDR periodic tick */
+    if (s_ddrMseconds >= 1000U)
+    {
+        s_ddrMseconds = 0U;
+        DDR_RxReplicaWa(&s_rxClkDelay, 16U);
+    }
+#endif
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
 /* Configure bypass for clock sources                                       */
 /*--------------------------------------------------------------------------*/
-static void CLOCK_SourceBypass(bool bypass, bool preserve)
+static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve)
 {
     if (preserve)
     {
@@ -1150,6 +1215,46 @@ static void CLOCK_SourceBypass(bool bypass, bool preserve)
     }
 }
 
+#ifdef USES_RX_REPLICA
+/*--------------------------------------------------------------------------*/
+/* DDR RX Replica workaround Init                                           */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_RxReplicaInit(void)
+{
+    uint64_t rate;
+    int32_t status = SM_ERR_SUCCESS;
+
+    status = DEV_SM_ClockRateGet(DEV_SM_CLK_DRAMPLL, &rate);
+
+    if (status == SM_ERR_SUCCESS)
+    {
+        s_rxClkDelay.dramFreqMhz = U64_U32(rate / 1000000U);
+        s_rxClkDelay.pmro = DEV_SM_FuseGet(DEV_SM_FUSE_PMRO);
+
+        (void) DDR_RxClkDelayInit(&s_rxClkDelay, DDR_RXCLK_DELAY_CNT);
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR RX Replica workaround Deinit                                         */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_RxReplicaDeinit(void)
+{
+    s_rxClkDelay.initComplete = false;
+    s_ddrMseconds = 0U;
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR RX Replica workaround Reinit                                         */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_RxReplicaReinit(void)
+{
+    s_ddrMseconds = 0U;
+    s_rxClkDelay.initComplete = true;
+    DDR_RxReplicaWa(&s_rxClkDelay, 128U);
+}
+#endif
+
 #ifdef DEV_SM_MSG_PROF_CNT
 /*--------------------------------------------------------------------------*/
 /* Message profile start notification                                       */
@@ -1157,7 +1262,7 @@ static void CLOCK_SourceBypass(bool bypass, bool preserve)
 void DEV_SM_SystemMsgProfStart(uint32_t mu)
 {
     /* Capture timestamp of message start */
-    curMsgRecord.msgStartUsec = DEV_SM_Usec64Get();
+    s_curMsgRecord.msgStartUsec = DEV_SM_Usec64Get();
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1167,10 +1272,10 @@ void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
     uint32_t protocolId, uint32_t messageId)
 {
     /* Capture message attributes */
-    curMsgRecord.msgProf.scmiChannel = scmiChannel;
-    curMsgRecord.msgProf.chanType = chanType;
-    curMsgRecord.msgProf.protocolId = protocolId;
-    curMsgRecord.msgProf.msgId = messageId;
+    s_curMsgRecord.msgProf.scmiChannel = scmiChannel;
+    s_curMsgRecord.msgProf.chanType = chanType;
+    s_curMsgRecord.msgProf.protocolId = protocolId;
+    s_curMsgRecord.msgProf.msgId = messageId;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1179,16 +1284,16 @@ void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
 void DEV_SM_SystemMsgProfEnd(uint32_t mu)
 {
     /* Capture timestamp of message end */
-    curMsgRecord.msgEndUsec = DEV_SM_Usec64Get();
-    uint32_t curMsgLatUsec = (uint32_t) (curMsgRecord.msgEndUsec
-        - curMsgRecord.msgStartUsec);
-    curMsgRecord.msgProf.msgLatUsec = curMsgLatUsec;
+    s_curMsgRecord.msgEndUsec = DEV_SM_Usec64Get();
+    uint32_t curMsgLatUsec = (uint32_t) (s_curMsgRecord.msgEndUsec
+        - s_curMsgRecord.msgStartUsec);
+    s_curMsgRecord.msgProf.msgLatUsec = curMsgLatUsec;
 
     /* Begin processing of message profile results */
     bool bDone = false;
     bool bExisting = false;
     const dev_sm_sys_msg_prof_t *pCurMsgProf =
-        &curMsgRecord.msgProf;
+        &s_curMsgRecord.msgProf;
 
     /* Search profile log for an exiting entry of this message */
     uint32_t idx = 0U;

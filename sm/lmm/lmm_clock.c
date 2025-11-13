@@ -237,6 +237,16 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Return info on extended clock support                                    */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_ClockExtendedInfo(uint32_t lmId, uint32_t clockId,
+    bool *supported)
+{
+    /* Not shared, just passthru to device */
+    return SM_CLOCKEXTENDEDINFO(clockId, supported);
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set an LM extended clock data value                                      */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,

@@ -29,6 +29,7 @@
 
 /* Includes */
 
+#include "fsl_def.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
@@ -233,7 +234,7 @@ static bool SRC_MemRetentionModeInit(uint32_t srcMixIdx)
         while (retainMask != 0U)
         {
             /* Convert mask into index */
-            uint8_t memIdx = 31U - __CLZ(retainMask);
+            uint8_t memIdx = U8(31U - __CLZ(retainMask));
 
             src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
             srcMem->MEM_CTRL |= SRC_MEM_MEM_CTRL_MEM_LP_MODE_MASK;
@@ -267,7 +268,7 @@ bool SRC_MemRetentionModeSet(uint32_t srcMixIdx, uint32_t memRetMask)
         while (memMask != 0U)
         {
             /* Convert mask into index */
-            uint8_t memIdx = 31U - __CLZ(memMask);
+            uint8_t memIdx = U8(31U - __CLZ(memMask));
 
             src_mem_slice_t *srcMem = s_srcMemPtrs[memIdx];
             if ((memRetMask & (1UL << memIdx)) != 0U)
@@ -351,7 +352,7 @@ static void SRC_MixSetCpuWait(uint32_t srcMixIdx, bool enableCpuWait)
         while (cpuMask != 0U)
         {
             /* Convert mask into index */
-            uint8_t cpuIdx = 31U - __CLZ(cpuMask);
+            uint8_t cpuIdx = U8(31U - __CLZ(cpuMask));
 
             (void) CPU_WaitSet(cpuIdx, enableCpuWait);
 
@@ -374,7 +375,7 @@ static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx, uint32_t sleepMode)
         while (cpuMask != 0U)
         {
             /* Convert mask into index */
-            uint8_t cpuIdx = 31U - __CLZ(cpuMask);
+            uint8_t cpuIdx = U8(31U - __CLZ(cpuMask));
 
             (void) CPU_SleepModeSet(cpuIdx, sleepMode);
 

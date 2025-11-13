@@ -1,19 +1,19 @@
 /**
-*   @file    eMcem_Vfccu_MIMX94XX.c
-*   @version 0.4.0
+*   @file    eMcem_Vfccu_MIMX943X.c
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Specific VFCCU IP source.
+*   @brief   MIMX9XX_SAF eMcem - Specific VFCCU IP source.
 *   @details This file implements specific VFCCU IP functions eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -30,41 +30,41 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "eMcem_Types_Ext.h"
 #include "SafetyBase.h"
-#include "eMcem_Vfccu_MIMX94XX.h"
+#include "eMcem_Vfccu_MIMX9.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0501 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0502 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0504 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0505 */
-#define EMCEM_VFCCU_MIMX94XX_SW_MAJOR_VERSION_C               0
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0501 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0502 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0504 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0505 */
-#define EMCEM_VFCCU_MIMX94XX_SW_MINOR_VERSION_C               4
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0501 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0502 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0504 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0505 */
-#define EMCEM_VFCCU_MIMX94XX_SW_PATCH_VERSION_C               0
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0505 */
+#define EMCEM_VFCCU_MIMX943X_SW_MAJOR_VERSION_C               0
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0505 */
+#define EMCEM_VFCCU_MIMX943X_SW_MINOR_VERSION_C               8
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0501 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0502 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0504 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0505 */
+#define EMCEM_VFCCU_MIMX943X_SW_PATCH_VERSION_C               4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCU_MIMX94XX_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCU_MIMX94XX_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCU_MIMX94XX_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Vfccu_MIMX94XX.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_VFCCU_MIMX943X_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX943X_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX943X_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu_MIMX943X.c and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX94XX)
+#if SAFETY_BASE_MIMX943X
 /*==================================================================================================
 *                          LOCAL TYPEDEFS (STRUCTURES, UNIONS, ENUMS)
 ==================================================================================================*/
@@ -99,7 +99,7 @@ extern "C"{
 *                                   LOCAL FUNCTION PROTOTYPES
 ==================================================================================================*/
 #define EMCEM_START_SEC_CODE
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0410 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*==================================================================================================
@@ -130,7 +130,7 @@ void eMcem_Vfccu_Specific_AssertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx )
     else if( u8SWRegIdx == 1U )
     {
         /* Assert SW fault in M7_0 */
-        M7__A7_APB_MCM1.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
+        M7__A7_MCM1.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
     }
     else if( u8SWRegIdx == 2U )
     {
@@ -140,7 +140,7 @@ void eMcem_Vfccu_Specific_AssertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx )
     else
     {
         /* Assert SW fault in M7_1 */
-        M7_1__A7_APB_MCM1.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
+        M7_1__A7_MCM1.FCCU_SW_FAULTS.R |= ( 1UL << u8BitIdx );
     }
 }
 
@@ -165,7 +165,7 @@ void eMcem_Vfccu_Specific_DeassertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx )
     else if( u8SWRegIdx == 1U )
     {
         /* Deassert SW fault in M7_0 */
-        M7__A7_APB_MCM1.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
+        M7__A7_MCM1.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
     }
     else if( u8SWRegIdx == 2U )
     {
@@ -175,16 +175,16 @@ void eMcem_Vfccu_Specific_DeassertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx )
     else
     {
         /* Deassert SW fault in M7_1 */
-        M7_1__A7_APB_MCM1.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
+        M7_1__A7_MCM1.FCCU_SW_FAULTS.R &= ~( 1UL << u8BitIdx );
     }
 }
 
 #define EMCEM_STOP_SEC_CODE
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_0410 */
-/* @violates @ref eMcem_Vfccu_MIMX94XX_c_REF_2001 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_0410 */
+/* @violates @ref eMcem_Vfccu_MIMX943X_c_REF_2001 */
 #include "eMcem_MemMap.h"
 
-#endif /* defined(SAFETY_BASE_MIMX94XX) */
+#endif /* SAFETY_BASE_MIMX943X */
 
 #ifdef __cplusplus
 }

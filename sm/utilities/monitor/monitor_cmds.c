@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <errno.h>
+#include <inttypes.h>
 #include "sm.h"
 #include "monitor.h"
 #include "monitor_cmds.h"
@@ -81,7 +82,6 @@ static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
-static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 #endif
 #ifdef DEVICE_HAS_V2X
 static int32_t MONITOR_CmdV2x(int32_t argc, const char * const argv[]);
@@ -113,6 +113,8 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
 static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
     int32_t rw);
 static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
+    int32_t rw);
+static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
     int32_t rw);
 static int32_t MONITOR_CmdVolt(int32_t argc, const char * const argv[],
     int32_t rw);
@@ -147,6 +149,8 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
+
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 
 /* Local Variables */
 
@@ -193,6 +197,8 @@ int32_t MONITOR_Dispatch(char *line)
         "clock.w",
         "sensor.r",
         "sensor.w",
+        "rst.r",
+        "rst.w",
         "volt.r",
         "volt.w",
         "bb.r",
@@ -329,94 +335,100 @@ int32_t MONITOR_Dispatch(char *line)
             case 28:  /* sensor.w */
                 status = MONITOR_CmdSensor(argc - 1, &argv[1], WRITE);
                 break;
-            case 29:  /* volt.r */
+            case 29:  /* rst.r */
+                status = MONITOR_CmdRst(argc - 1, &argv[1], READ);
+                break;
+            case 30:  /* rst.w */
+                status = MONITOR_CmdRst(argc - 1, &argv[1], WRITE);
+                break;
+            case 31:  /* volt.r */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], READ);
                 break;
-            case 30:  /* volt.w */
+            case 32:  /* volt.w */
                 status = MONITOR_CmdVolt(argc - 1, &argv[1], WRITE);
                 break;
-            case 31:  /* bb.r */
+            case 33:  /* bb.r */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], READ);
                 break;
-            case 32:  /* bb.w */
+            case 34:  /* bb.w */
                 status = MONITOR_CmdBb(argc - 1, &argv[1], WRITE);
                 break;
-            case 33:  /* cpu.r */
+            case 35:  /* cpu.r */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], READ);
                 break;
-            case 34:  /* cpu.w */
+            case 36:  /* cpu.w */
                 status = MONITOR_CmdCpu(argc - 1, &argv[1], WRITE);
                 break;
-            case 35:  /* ctrl.r */
+            case 37:  /* ctrl.r */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 36:  /* ctrl.w */
+            case 38:  /* ctrl.w */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 37:  /* ctrl.notify */
+            case 39:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 38:  /* extctrl.r */
+            case 40:  /* extctrl.r */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 39:  /* extctrl.w */
+            case 41:  /* extctrl.w */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 40:  /* md.b */
+            case 42:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 41:  /* md.w */
+            case 43:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 42:  /* md.l */
+            case 44:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 43:  /* mm.b */
+            case 45:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 44:  /* mm.w */
+            case 46:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 45:  /* mm.l */
+            case 47:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 46:  /* fuse.r */
+            case 48:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 47:  /* fuse.w */
+            case 49:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 48:  /* pmic.r */
+            case 50:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 49:  /* pmic.w */
+            case 51:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 50:  /* idle */
+            case 52:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 51:  /* assert */
+            case 53:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 52:  /* syslog */
+            case 54:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 53:  /* group */
+            case 55:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 54:  /* ssm */
+            case 56:  /* ssm */
                 status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
-            case 55:  /* custom */
+            case 57:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
-            case 56:  /* test */
+            case 58:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
 #if defined(GCOV) && !defined(SIMU)
-            case 57:  /* gcov */
+            case 59:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -446,6 +458,7 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t partNum;
     string cfgName;
     uint32_t mSel = 0U;
+    uint32_t ecidFuseVal[4] = { 0 };
 
     printf("SM Version    = Build %u", buildNum);
     printf(", Commit %08x\n", buildCommit);
@@ -521,6 +534,17 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
         /* Display container */
         printf("Boot set      = %d\n", passover->imgSetSel + 1U);
     }
+
+#ifdef DEV_SM_FUSE_ECID3
+    /* Get ECID from fuses */
+    for (uint8_t i = 0U; i < 4U; i++)
+    {
+        ecidFuseVal[i] = DEV_SM_FuseGet(i + DEV_SM_FUSE_ECID3);
+    }
+#endif
+
+    /* Display ECID */
+    MONITOR_DumpLongHex("ECID          = 0x", &ecidFuseVal[0], 4U);
 
 #ifdef BOARD_HAS_PMIC
     uint8_t dev;
@@ -776,35 +800,6 @@ static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[])
     }
 
     return SM_ERR_SUCCESS;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Dump a long array of words as one big hex number                         */
-/*--------------------------------------------------------------------------*/
-static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt)
-{
-    printf("%s", str);
-
-    for (uint32_t idx = 0U; idx < cnt; idx++)
-    {
-        if ((idx != 0U) && ((idx % 8U) == 0U))
-        {
-            const char *p = str;
-
-            printf("\n");
-
-            /* Loop over string */
-            while (*p != EOL)
-            {
-                printf(" ");
-                p++;
-            }
-        }
-
-        printf("%08X", ptr[idx]);
-    }
-
-    printf("\n");
 }
 #endif
 
@@ -1409,7 +1404,7 @@ static int32_t MONITOR_CmdLmInfo(int32_t argc, const char * const argv[])
             {
                 "off",
                 "on",
-                "suspend",
+                "suspended",
                 "powered"
             };
 
@@ -1711,12 +1706,12 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                 "on"
                             };
 
-                            if (SM_UINT64_H(rate) == 0U)
+                            if (UINT64_H(rate) == 0U)
                             {
                                 printf("%03u: %*s = %3s, %10uHz\n", clockId,
                                     -wName, clockNameAddr,
                                     displayModes[enb],
-                                    SM_UINT64_L(rate));
+                                    UINT64_L(rate));
                             }
                             else
                             {
@@ -1770,9 +1765,9 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
 
                                         if (status == SM_ERR_SUCCESS)
                                         {
-                                            uint32_t maxKHz = SM_UINT64_L(
+                                            uint32_t maxKHz = UINT64_L(
                                                 range.highestRate/1000UL);
-                                            uint32_t minKHz = SM_UINT64_L(
+                                            uint32_t minKHz = UINT64_L(
                                                 range.lowestRate/1000UL);
                                             printf("%03u: %*s MAX = %7uKHz,"
                                                 " MIN = %7uKHz\n", clockId,
@@ -2165,6 +2160,105 @@ static int32_t MONITOR_CmdSensor(int32_t argc, const char * const argv[],
 }
 
 /*--------------------------------------------------------------------------*/
+/* Rst command                                                              */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
+    int32_t rw)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    switch (rw)
+    {
+        default:  /* read */
+            {
+                for (uint32_t domain = 0U; domain < SM_NUM_RESET;
+                    domain++)
+                {
+                    string rstNameAddr;
+                    int32_t wName = 0;
+                    bool assertNegate = false;
+
+                    status = LMM_ResetDomainNameGet(s_lm, domain,
+                        &rstNameAddr, &wName);
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = LMM_ResetDomainGet(s_lm, domain,
+                            &assertNegate);
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        if (assertNegate)
+                        {
+                            printf("%03u: %*s = asserted\n", domain,
+                                -wName, rstNameAddr);
+                        }
+                        else
+                        {
+                            printf("%03u: %*s = negated\n", domain,
+                                -wName, rstNameAddr);
+                        }
+                    }
+                }
+            }
+            break;
+        case WRITE:  /* write */
+            {
+                uint32_t domain = 0U;
+
+                string const rstModes[] =
+                {
+                    "assert",
+                    "negate",
+                    "auto"
+                };
+
+                if (argc < 2)
+                {
+                    status = SM_ERR_MISSING_PARAMETERS;
+                }
+                else
+                {
+                    status = MONITOR_NameToId(argv[0], &domain,
+                        LMM_ResetDomainNameGet, SM_NUM_RESET);
+                }
+
+                if (status == SM_ERR_SUCCESS)
+                {
+                    uint8_t rstMode = (uint8_t) MONITOR_Find(rstModes,
+                        (int32_t) ARRAY_SIZE(rstModes), argv[1]);
+
+                    switch (rstMode)
+                    {
+                        /* assert */
+                        case 0:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, false, true);
+                            break;
+                        /* negate (aka de-assert) */
+                        case 1:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, false, false);
+                            break;
+                        /* auto (aka toggle) */
+                        case 2:
+                            status = LMM_ResetDomain(s_lm, domain,
+                                0U, true, false);
+                            break;
+                        default:
+                            status = SM_ERR_INVALID_PARAMETERS;
+                            break;
+                    }
+                }
+            }
+            break;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Volt command                                                             */
 /*--------------------------------------------------------------------------*/
 static int32_t MONITOR_CmdVolt(int32_t argc, const char * const argv[],
@@ -2335,7 +2429,7 @@ static int32_t MONITOR_CmdBbRtc(int32_t argc, const char * const argv[],
                 uint32_t state = 0U;
 
                 printf("%03u: %*s = %u seconds", rtcId, -wName,
-                    rtcName, SM_UINT64_L(sec));
+                    rtcName, UINT64_L(sec));
 
                 status = LMM_BbmRtcStateGet(s_lm, rtcId, &state);
 
@@ -2412,7 +2506,7 @@ static int32_t MONITOR_CmdBbTicks(int32_t argc, const char * const argv[],
             if (status == SM_ERR_SUCCESS)
             {
                 printf("%03u: %*s = %u ticks\n", rtcId, -wName,
-                    rtcName, SM_UINT64_L(ticks));
+                    rtcName, UINT64_L(ticks));
             }
             status = SM_ERR_SUCCESS;
         }
@@ -2544,7 +2638,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                         string const runModes[] =
                         {
                             "RUN",
-                            "WAIT",
+                            "HOLD",
                             "STOP",
                             "SLEEP"
                         };
@@ -2560,7 +2654,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                         printf("%03u: %*s => run-mode = %5s, slp-mode = %4s, vector = 0x%08X_%08X\n",
                             cpuId, -wName, cpuNameAddr,
                             runModes[runMode], sleepModes[sleepMode],
-                            SM_UINT64_H(vector), SM_UINT64_L(vector));
+                            UINT64_H(vector), UINT64_L(vector));
                     }
                     else
                     {
@@ -2624,7 +2718,7 @@ static int32_t MONITOR_CmdCpu(int32_t argc, const char * const argv[],
                                 {
                                     status = LMM_CpuResetVectorSet(s_lm,
                                         cpuId, resetVector, true, true,
-                                        true,false);
+                                        true, false);
                                 }
                             }
                             break;
@@ -2866,131 +2960,133 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
     if (argc != 0)
     {
         errno = 0;
-        uint32_t addr = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
+        uintptr_t addr = strtoul(argv[0], NULL, 0);
+        if (errno == 0)
         {
-            addr = 0x80000000UL;
-        }
-
-        /* Parse second argument */
-        if (argc > 1)
-        {
-            errno = 0;
-            count = strtoul(argv[1], NULL, 0);
-            if (errno != 0)
+            /* Parse second argument */
+            if (argc > 1)
             {
-                count = 64U / (uint32_t) len;
+                errno = 0;
+                count = strtoul(argv[1], NULL, 0);
+                if (errno != 0)
+                {
+                    count = 64U / (uint32_t) len;
+                }
+            }
+
+            switch (len)
+            {
+                case BYTE:
+                    {
+                        uint8_t *x = (uint8_t*) addr;
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 16U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint8_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 8U) == 0U)
+                            {
+                                printf("%02x ", v);
+                            }
+                            else
+                            {
+                                printf("?? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 16U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+                case WORD:
+                    {
+                        uint16_t *x = (uint16_t*) (addr & ~0x1U);
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 8U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint16_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 16U) == 0U)
+                            {
+                                printf("%04x ", v);
+                            }
+                            else
+                            {
+                                printf("???? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 8U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+                default:  /* LONG */
+                    {
+                        uint32_t *x = (uint32_t*) (addr & ~0x3U);
+
+                        for (uint32_t i = 0U; i < count; i++)
+                        {
+                            if ((i % 4U) == 0U)
+                            {
+                                printf("%08" PRIxPTR ": ", (uintptr_t) x);
+                            }
+
+                            uint32_t v = 0U;
+                            if (SystemMemoryProbe(x, &v, 32U) == 0U)
+                            {
+                                printf("%08x ", v);
+                            }
+                            else
+                            {
+                                printf("???????? ");
+                            }
+                            x++;
+
+                            if (((i+1U) % 4U) == 0U)
+                            {
+                                printf("\n");
+                                if (MONITOR_CharPending())
+                                {
+                                    break;
+                                }
+                                MONITOR_Yield();
+                            }
+                        }
+                    }
+                    break;
+            }
+            if ((count % (16U / ((uint32_t) len))) != 0U)
+            {
+                printf("\n");
             }
         }
-
-        switch (len)
+        else
         {
-            case BYTE:
-                {
-                    uint8_t *x = (uint8_t*) addr;
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 16U) == 0U)
-                        {
-                            printf("%08x: ", (uint32_t) x);
-                        }
-
-                        uint8_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 8U) == 0U)
-                        {
-                            printf("%02x ", v);
-                        }
-                        else
-                        {
-                            printf("?? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 16U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-            case WORD:
-                {
-                    uint16_t *x = (uint16_t*) (addr & ~0x1U);
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 8U) == 0U)
-                        {
-                            printf("%08x: ", (uint32_t) x);
-                        }
-
-                        uint16_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 16U) == 0U)
-                        {
-                            printf("%04x ", v);
-                        }
-                        else
-                        {
-                            printf("???? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 8U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-            default:  /* LONG */
-                {
-                    uint32_t *x = (uint32_t*) (addr & ~0x3U);
-
-                    for (uint32_t i = 0U; i < count; i++)
-                    {
-                        if ((i % 4U) == 0U)
-                        {
-                            printf("%08x: ", (uint32_t) x);
-                        }
-
-                        uint32_t v = 0U;
-                        if (SystemMemoryProbe(x, &v, 32U) == 0U)
-                        {
-                            printf("%08x ", v);
-                        }
-                        else
-                        {
-                            printf("???????? ");
-                        }
-                        x++;
-
-                        if (((i+1U) % 4U) == 0U)
-                        {
-                            printf("\n");
-                            if (MONITOR_CharPending())
-                            {
-                                break;
-                            }
-                            MONITOR_Yield();
-                        }
-                    }
-                }
-                break;
-        }
-        if ((count % (16U / ((uint32_t) len))) != 0U)
-        {
-            printf("\n");
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else
@@ -3015,59 +3111,66 @@ static int32_t MONITOR_CmdMm(int32_t argc, const char * const argv[],
     {
         errno = 0;
         uint32_t addr = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
-        {
-            addr = 0x80000000UL;
-        }
 
-        errno = 0;
-        uint32_t data = strtoul(argv[1], NULL, 0);
-        if (errno != 0)
+        if (errno == 0)
         {
-            data = 0UL;
+            uint32_t data = strtoul(argv[1], NULL, 0);
+            if (errno == 0)
+            {
+                switch (len)
+                {
+                    case BYTE:
+                        {
+                            uint8_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 8U)
+                                == 0U)
+                            {
+                                *((uint8_t*) addr) = (uint8_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                    case WORD:
+                        {
+                            uint16_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 16U)
+                                == 0U)
+                            {
+                                *((uint16_t*) addr) = (uint16_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                    default:  /* LONG */
+                        {
+                            uint32_t v = 0U;
+                            if (SystemMemoryProbe((void *) addr, &v, 32U)
+                                == 0U)
+                            {
+                                *((uint32_t*) addr) = (uint32_t)(data);
+                            }
+                            else
+                            {
+                                status = SM_ERR_DENIED;
+                            }
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                status = SM_ERR_INVALID_PARAMETERS;
+            }
         }
-
-        switch (len)
+        else
         {
-            case BYTE:
-                {
-                    uint8_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 8U) == 0U)
-                    {
-                        *((uint8_t*) addr) = (uint8_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
-            case WORD:
-                {
-                    uint16_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 16U) == 0U)
-                    {
-                        *((uint16_t*) addr) = (uint16_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
-            default:  /* LONG */
-                {
-                    uint32_t v = 0U;
-                    if (SystemMemoryProbe((void *) addr, &v, 32U) == 0U)
-                    {
-                        *((uint32_t*) addr) = (uint32_t)(data);
-                    }
-                    else
-                    {
-                        status = SM_ERR_DENIED;
-                    }
-                }
-                break;
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else
@@ -3097,61 +3200,73 @@ static int32_t MONITOR_CmdFuse(int32_t argc, const char * const argv[],
         /* Parse parameters */
         errno = 0;
         word = strtoul(argv[0], NULL, 0);
-        if (errno != 0)
+        if (errno == 0)
         {
-            word = 0U;
-        }
 
-        /* Get fuse word address */
-        status = DEV_SM_FuseInfoGet(word, &addr);
+            /* Get fuse word address */
+            status = DEV_SM_FuseInfoGet(word, &addr);
 
-        if (status == SM_ERR_SUCCESS)
-        {
-            switch (rw)
+            if (status == SM_ERR_SUCCESS)
             {
-                default:  /* read */
-                    {
-                        /* Read fuse word directly */
-                        if (SystemMemoryProbe((const void *) addr, &data, 32U) != 0U)
+                switch (rw)
+                {
+                    default:  /* read */
+                        {
+                            /* Read fuse word directly */
+                            if (SystemMemoryProbe((const void *) addr, &data,
+                                32U) != 0U)
+                            {
+#ifdef DEVICE_HAS_ELE
+                                /* Read fuse word via ELE */
+                                ELE_FuseRead(word, &data);
+                                status = g_eleStatus;
+#else
+                                status = SM_ERR_INVALID_PARAMETERS;
+#endif
+                            }
+
+                            if (status == SM_ERR_SUCCESS)
+                            {
+                                printf("Fuse[%u] = 0x%08x\n", word, data);
+                            }
+                        }
+                        break;
+                    case WRITE:  /* write */
                         {
 #ifdef DEVICE_HAS_ELE
-                            /* Read fuse word via ELE */
-                            ELE_FuseRead(word, &data);
-                            status = g_eleStatus;
+                            /* Check arguments */
+                            if (argc >= 2)
+                            {
+                                errno = 0;
+                                /* Parse data */
+                                data = strtoul(argv[1], NULL, 0);
+
+                                if (errno == 0)
+                                {
+                                    /* Write fuse */
+                                    ELE_FuseWrite(word, data, false);
+                                    status = g_eleStatus;
+                                }
+                                else
+                                {
+                                    status = SM_ERR_INVALID_PARAMETERS;
+                                }
+                            }
+                            else
+                            {
+                                status = SM_ERR_MISSING_PARAMETERS;
+                            }
 #else
-                            status = SM_ERR_INVALID_PARAMETERS;
+                            status = SM_ERR_NOT_SUPPORTED;
 #endif
                         }
-
-                        if (status == SM_ERR_SUCCESS)
-                        {
-                            printf("Fuse[%u] = 0x%08x\n", word, data);
-                        }
-                    }
-                    break;
-                case WRITE:  /* write */
-                    {
-#ifdef DEVICE_HAS_ELE
-                        /* Check arguments */
-                        if (argc >= 2)
-                        {
-                            /* Parse data */
-                            data = strtoul(argv[1], NULL, 0);
-
-                            /* Write fuse */
-                            ELE_FuseWrite(word, data, false);
-                            status = g_eleStatus;
-                        }
-                        else
-                        {
-                            status = SM_ERR_MISSING_PARAMETERS;
-                        }
-#else
-                        status = SM_ERR_NOT_SUPPORTED;
-#endif
-                    }
-                    break;
+                        break;
+                }
             }
+        }
+        else
+        {
+            status = SM_ERR_INVALID_PARAMETERS;
         }
     }
     else
@@ -3193,11 +3308,15 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
 
                 if (argc < 2)
                 {
-                    while (BRD_SM_PmicRead(dev, reg, &val)
-                        == SM_ERR_SUCCESS)
+                    status = BRD_SM_PmicRead(dev, reg, &val);
+                    while (status == SM_ERR_SUCCESS)
                     {
                         printf("   REG[0x%02x] = 0x%02x\n", reg, val);
                         reg++;
+                        if (BRD_SM_PmicRead(dev, reg, &val) != SM_ERR_SUCCESS)
+                        {
+                            break;
+                        }
                     }
                 }
                 else
@@ -3224,14 +3343,26 @@ static int32_t MONITOR_CmdPmic(int32_t argc, const char * const argv[],
             }
             else
             {
-                uint8_t addr = strtoul(argv[0], NULL, 0);
-                uint8_t reg  = strtoul(argv[1], NULL, 0);
-                uint8_t data = strtoul(argv[2], NULL, 0);
-                status = BRD_SM_PmicWrite(addr, reg, data, 0xFFU);
-                if (status == SM_ERR_SUCCESS)
+                uint32_t addr = strtoul(argv[0], NULL, 0);
+                uint32_t reg  = strtoul(argv[1], NULL, 0);
+                uint32_t data = strtoul(argv[2], NULL, 0);
+                /* Check variables fit within uint8_t range */
+                if (CHECK_U32_FIT_U8(addr) &&
+                    CHECK_U32_FIT_U8(reg) &&
+                    CHECK_U32_FIT_U8(data))
                 {
-                    printf("PMIC 0x%02x write register 0x%02x: 0x%02x\n",
-                        addr, reg, data);
+                    status = BRD_SM_PmicWrite(U32_U8(addr),
+                        U32_U8(reg), U32_U8(data), 0xFFU);
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        printf("PMIC 0x%02x write register 0x%02x: 0x%02x\n",
+                            addr, reg, data);
+                    }
+                }
+                else
+                {
+                    /* Set the status if variables are out of range */
+                    status = SM_ERR_INVALID_PARAMETERS;
                 }
             }
             break;
@@ -3485,5 +3616,34 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Dump a long array of words as one big hex number                         */
+/*--------------------------------------------------------------------------*/
+static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt)
+{
+    printf("%s", str);
+
+    for (uint32_t idx = 0U; idx < cnt; idx++)
+    {
+        if ((idx != 0U) && ((idx % 8U) == 0U))
+        {
+            const char *p = str;
+
+            printf("\n");
+
+            /* Loop over string */
+            while (*p != EOL)
+            {
+                printf(" ");
+                p++;
+            }
+        }
+
+        printf("%08X", ptr[idx]);
+    }
+
+    printf("\n");
 }
 

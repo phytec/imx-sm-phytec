@@ -62,7 +62,7 @@
 #define ELE_GRP1_IRQ_HANDLER        ELE_Group1_IRQn
 #define ELE_GRP2_IRQ_HANDLER        ELE_Group2_IRQn
 #define ELE_GRP3_IRQ_HANDLER        ELE_Group3_IRQn
-#define CM7_LOOKUP_IRQ_HANDLER      CM7_LOCKUP_IRQn
+#define CM7_LOCKUP_IRQ_HANDLER      CM7_LOCKUP_IRQn
 #define MU1_A_IRQ_HANDLER           MU1_A_IRQn
 #define MU2_A_IRQ_HANDLER           MU2_A_IRQn
 #define MU3_A_IRQ_HANDLER           MU3_A_IRQn

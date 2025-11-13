@@ -56,7 +56,7 @@
 /* Defines */
 
 /*! Number of device power domains */
-#define DEV_SM_NUM_POWER        PWR_NUM_MIX_SLICE
+#define DEV_SM_NUM_POWER        (PWR_NUM_MIX_SLICE+PWR_NUM_MIX_VSLICE)
 
 /*! Number of device power states */
 #define DEV_SM_NUM_POWER_STATE  2U
@@ -87,6 +87,7 @@
 #define DEV_SM_PD_NOC         PWR_MIX_SLICE_IDX_NOC        /*!< 16: NOC domain */
 #define DEV_SM_PD_NPU         PWR_MIX_SLICE_IDX_NPU        /*!< 17: NPU domain */
 #define DEV_SM_PD_WAKEUP      PWR_MIX_SLICE_IDX_WAKEUP     /*!< 18: Wakeup domain */
+#define DEV_SM_PD_M33S        PWR_MIX_VSLICE_IDX_M33S      /*!< 19: M33S domain (virtual) */
 /** @} */
 
 /*!

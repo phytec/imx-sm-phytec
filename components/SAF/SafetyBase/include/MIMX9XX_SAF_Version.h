@@ -1,28 +1,28 @@
 /**
-*   @file    MIMX_SAF_Version.h
-*   @version 0.4.0
+*   @file    MIMX9XX_SAF_Version.h
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - Defines the software version of the MIMX_SAF.
+*   @brief   MIMX9XX_SAF SafetyBase - Defines the software version of the MIMX9XX_SAF.
 *   @details The software version defined in this module is used as a reference value for
-*            file version checks within the MIMX_SAF.
+*            file version checks within the MIMX9XX_SAF.
 *
 *   @addtogroup SAFETY_BASE_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2023 NXP
+*   Copyright 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
 
-#ifndef MIMX_SAF_VERSION_H
-#define MIMX_SAF_VERSION_H
+#ifndef MIMX9XX_SAF_VERSION_H
+#define MIMX9XX_SAF_VERSION_H
 
 #ifdef __cplusplus
 extern "C"{
@@ -30,11 +30,11 @@ extern "C"{
 
 
 /*==================================================================================================
-*               MIMX_SAF SOFTWARE VERSION INFORMATION
+*               MIMX9XX_SAF SOFTWARE VERSION INFORMATION
 ==================================================================================================*/
-#define MIMX_SAF_SW_MAJOR_VERSION             0
-#define MIMX_SAF_SW_MINOR_VERSION             4
-#define MIMX_SAF_SW_PATCH_VERSION             0
+#define MIMX9XX_SAF_SW_MAJOR_VERSION             0
+#define MIMX9XX_SAF_SW_MINOR_VERSION             8
+#define MIMX9XX_SAF_SW_PATCH_VERSION             4
 
 /* Pragma message helper macro. To be removed for RFP software. */
 #define DO_PRAGMA(x) _Pragma (#x)
@@ -44,6 +44,6 @@ extern "C"{
 }
 #endif
 
-#endif /*MIMX_SAF_VERSION_H*/
+#endif /*MIMX9XX_SAF_VERSION_H*/
 
 /** @} */

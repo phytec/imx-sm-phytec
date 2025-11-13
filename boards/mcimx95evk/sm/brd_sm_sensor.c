@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -69,7 +69,7 @@ int32_t BRD_SM_SensorNameGet(uint32_t sensorId, string *sensorNameAddr,
     /* Get max string width */
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, BRD_SM_NUM_SENSOR);
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         /* Check if device or board */
@@ -102,7 +102,7 @@ int32_t BRD_SM_SensorDescribe(uint32_t sensorId,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         /* Check if device or board */
@@ -142,7 +142,7 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         /* Check if device or board */
@@ -208,7 +208,7 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         /* Check if device or board */
@@ -237,11 +237,19 @@ int32_t BRD_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
                     }
                     else if (eventControl == DEV_SM_SENSOR_TP_RISING)
                     {
-                        int32_t temp = (int32_t) value;
-
-                        if (!PF09_TempAlarmSet(&g_pf09Dev, temp))
+                        /* Check value is within int32_t range */
+                        if (CHECK_I64_FIT_I32(value))
                         {
-                            status = SM_ERR_HARDWARE_ERROR;
+                            int32_t temp = (int32_t) value;
+
+                            if (!PF09_TempAlarmSet(&g_pf09Dev, temp))
+                            {
+                                status = SM_ERR_HARDWARE_ERROR;
+                            }
+                        }
+                        else
+                        {
+                            status = SM_ERR_INVALID_PARAMETERS;
                         }
                     }
                     else
@@ -277,7 +285,7 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         /* Check if device or board */
@@ -329,7 +337,7 @@ int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check to see if sensorId is within bounds*/
+    /* Check to see if sensorId is within bounds */
     if (sensorId < SM_NUM_SENSOR)
     {
         uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;

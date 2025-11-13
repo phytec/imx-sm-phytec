@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_Vfccu.c
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - VFCCU IP source.
-*   @details This file implements VVFCCU IP functions for eMcem module.
+*   @brief   MIMX9XX_SAF eMcem - VFCCU IP source.
+*   @details This file implements VFCCU IP functions for eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2022-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -77,33 +77,35 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "eMcem_Types_Ext.h"
 #include "eMcem.h"
 #include "eMcem_Vfccu.h"
 #include "eMcem_Cfg.h"
 #include "eMcem_ExtDiagApi.h"
+#include "eMcem_Vfccu_MIMX9.h"
+#if SAFETY_BASE_MIMX95XX
 #include "eMcem_VfccuFaultList_MIMX95XX.h"
-#include "eMcem_Vfccu_MIMX95XX.h"
-#include "eMcem_VfccuFaultList_MIMX94XX.h"
-#include "eMcem_Vfccu_MIMX94XX.h"
+#elif SAFETY_BASE_MIMX943X
+#include "eMcem_VfccuFaultList_MIMX943X.h"
+#endif /* SAFETY_BASE_MIMX9XXX */
 #include "SafetyBase.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define EMCEM_VFCCU_SW_MAJOR_VERSION_C               0
-#define EMCEM_VFCCU_SW_MINOR_VERSION_C               4
-#define EMCEM_VFCCU_SW_PATCH_VERSION_C               0
+#define EMCEM_VFCCU_SW_MINOR_VERSION_C               8
+#define EMCEM_VFCCU_SW_PATCH_VERSION_C               4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCU_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCU_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCU_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Vfccu.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_VFCCU_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu.c and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -145,7 +147,6 @@ extern "C"{
 
 static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType *pVfccuCfg );
 static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVal );
-static boolean eMcem_Vfccu_AccessToCVfccuFhid( void );
 Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u32RegVal );
 
 /*==================================================================================================
@@ -165,11 +166,36 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
 static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType *pVfccuCfg )
 {
     Std_ReturnType nReturnValue = EMCEM_E_OK;
-    uint32 u32RegVal = 0UL;
     uint8 u8i = 0U;
+    uint32 exitLoop = 10UL;
 
-    /* Check if configuration of the global VFCCU parameters is enabled */
-    if( (boolean)TRUE == pVfccuCfg->bConfigEnabled )
+    /* Configure local VFCCU parameters (FHIDs) */
+    do
+    {
+        /* Need to clear status flags and disable FH to be able to reconfigure it */
+        for( u8i = 0U; u8i < EMCEM_VFCCU_FHFLTS_REG_COUNT; u8i++ )
+        {
+            /* Need to clear status flags and disable FH to be able to reconfigure it */
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.FHFLTS[u8i].R = 0xFFFFFFFFUL;
+        }
+
+        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+        AON_VFCCU.FHCFG0.B.FHIDEN = 0U;
+
+        /* Decrement counter for exiting possible never-ending loop */
+        exitLoop--;
+    }
+    while ((AON_VFCCU.FHCFG0.B.FHIDEN != 0U) && ( exitLoop != 0UL ));
+
+    /* Check if Fault Handler operation was disabled, if not return EMCEM_E_NOT_OK */
+    if (exitLoop == 0UL)
+    {
+        nReturnValue = EMCEM_E_NOT_OK;
+    }
+    else
     {
         /* Configure Fault Line Recovery */
         for( u8i = 0U; u8i < EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT; u8i++ )
@@ -189,6 +215,7 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
             /* @violates @ref eMcem_Vfccu_c_REF_1106 */
             AON_VFCCU.GLB_EOUT[u8i].GEOUTMC.R = ( (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutOperatingMode[u8i] & EMCEM_EOUT_GEOUTMC_MASK );
         }
+
         /* Configure Global Reaction Timer */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
@@ -201,77 +228,41 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
         AON_VFCCU.GEOUTTCT.R = (uint32)pVfccuCfg->eMcem_EoutCfg.u32EoutTimerDisabled;
-    }
 
-    /* Configure local VFCCU parameters (FHIDs)
-       Check if configuration of the VFCCU FHID parameters is enabled */
-    if( (boolean)TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
-    {
-        for( u8i = 0U; u8i < EMCEM_VFCCU_FHFLTS_REG_COUNT; u8i++ )
-        {
-            /* Need to clear status flags and disable FH to be able to reconfigure it */
-            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON_VFCCU.FHFLTS[u8i].R = 0xFFFFFFFFUL;
-
-            /* Prepare one variable to check for any fault present */
-            u32RegVal |= AON_VFCCU.FHFLTS[u8i].R;
-        }
-
-        /* Check if Fault Lines were cleared, if not return EMCEM_E_NOT_OK */
-        if( 0UL < u32RegVal )
-        {
-            nReturnValue = EMCEM_E_NOT_OK;
-        }
-        else
+        /* Enable faults */
+        for( u8i = 0U; u8i < EMCEM_CVFCCU_FAULT_ENABLE_REG_COUNT; u8i++ )
         {
             /* @violates @ref eMcem_Vfccu_c_REF_1104 */
             /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-            AON_VFCCU.FHCFG0.B.FHIDEN = 0U;
-
-            /* Enable faults */
-            for( u8i = 0U; u8i < EMCEM_CVFCCU_FAULT_ENABLE_REG_COUNT; u8i++ )
-            {
-                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-                AON_VFCCU.FHFLTENC[u8i].R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[u8i];
-            }
-
-            /* Configure reaction sets */
-            for( u8i = 0U; u8i < EMCEM_CVFCCU_REACTION_SET_REG_COUNT; u8i++ )
-            {
-                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-                AON_VFCCU.FHFLTRKC[u8i].R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[u8i];
-            }
-
-            /* Configure immediate and delayed reactions */
-            for( u8i = 0U; u8i < EMCEM_REACTION_SET_COUNT; u8i++ )
-            {
-                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-                AON_VFCCU.FHRKC[u8i].FHIMRKC.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[u8i];
-
-                /* @violates @ref eMcem_Vfccu_c_REF_1104 */
-                /* @violates @ref eMcem_Vfccu_c_REF_1106 */
-                AON_VFCCU.FHRKC[u8i].FHDLRKC.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[u8i];
-            }
+            AON_VFCCU.FHFLTENC[u8i].R = pVfccuCfg->eMcem_FhidCfg.u32FaultEnabled[u8i];
         }
-    }
 
-    /* Check if configuration of the global VFCCU parameters is enabled */
-    if( ( (boolean)TRUE == pVfccuCfg->bConfigEnabled ) && ( EMCEM_E_OK == nReturnValue ) )
-    {
+        /* Configure reaction sets */
+        for( u8i = 0U; u8i < EMCEM_CVFCCU_REACTION_SET_REG_COUNT; u8i++ )
+        {
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.FHFLTRKC[u8i].R = (uint32)pVfccuCfg->eMcem_FhidCfg.u32FaultReactionSet[u8i];
+        }
+
+        /* Configure immediate and delayed reactions */
+        for( u8i = 0U; u8i < EMCEM_REACTION_SET_COUNT; u8i++ )
+        {
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.FHRKC[u8i].FHIMRKC.R = pVfccuCfg->eMcem_FhidCfg.u32ImmReaction[u8i];
+
+            /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+            /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+            AON_VFCCU.FHRKC[u8i].FHDLRKC.R = pVfccuCfg->eMcem_FhidCfg.u32DelReaction[u8i];
+        }
+
         /* Configure Global Debug */
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
         /* @violates @ref eMcem_Vfccu_c_REF_1106 */
         AON_VFCCU.GDBGCFG.B.FRZ = (pVfccuCfg->bDebugEnabled == TRUE) ? 1U : 0U;
-    }
 
-    /* Check if configuration of the VFCCU FHID parameters is enabled */
-    if( ((boolean)TRUE == pVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled ) && ( EMCEM_E_OK == nReturnValue) )
-    {
         /* Enable/disable FHID */
         /* @violates @ref eMcem_Vfccu_c_REF_1003 */
         /* @violates @ref eMcem_Vfccu_c_REF_1104 */
@@ -283,41 +274,6 @@ static Std_ReturnType eMcem_Vfccu_InitCVfccu( const eMcem_CVfccuInstanceCfgType 
     EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_INIT_CVFCCU, 0U )
 
     return nReturnValue;
-}
-
-/**
-* @brief      Checks Access to CVFCCU FHID
-* @details    Returns if this EENV has full access to CVFCCU FHID
-*
-* @return     boolean
-* @retval           EMCEM_E_TRUE    EENV has access to CVFCCU Fhid
-* @retval           EMCEM_E_FALSE   EENV doesn't have access to CVFCCU Fhid
-*
-*/
-static boolean eMcem_Vfccu_AccessToCVfccuFhid( void )
-{
-    boolean bReturnValue = (boolean)FALSE;
-
-    if( NULL_PTR != eMcem_pConfigPtr->eMcem_CVfccuCfg )
-    {
-        /* Check if write access to FH is enabled */
-        if( (boolean)TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->eMcem_FhidCfg.bWriteAccessEnabled )
-        {
-            bReturnValue = (boolean)TRUE;
-        }
-        else
-        {
-            /* Log extended diagnostic data */
-            EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_1, 0U )
-        }
-    }
-    else
-    {
-        /* Log extended diagnostic data */
-        EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_FHID_2, 0U )
-    }
-
-    return bReturnValue;
 }
 
 /**
@@ -352,41 +308,6 @@ static boolean eMcem_Vfccu_SWRecovery( eMcem_FaultType nFaultId, uint32 u32RegVa
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
 /**
-* @brief      Checks Access to CVFCCU
-* @details    Returns if this EENV has full access to CVFCCU global registers
-*
-* @return     boolean
-* @retval           EMCEM_E_TRUE    EENV has access to CVFCCU
-* @retval           EMCEM_E_FALSE   EENV doesn't have access to CVFCCU
-*
-*/
-boolean eMcem_Vfccu_AccessToCVfccu( void )
-{
-    boolean bReturnValue = (boolean)FALSE;
-
-    if( eMcem_pConfigPtr->eMcem_CVfccuCfg != NULL_PTR )
-    {
-        /* Check if write access to FH is enabled */
-        if( (boolean)TRUE == eMcem_pConfigPtr->eMcem_CVfccuCfg->bConfigEnabled )
-        {
-            bReturnValue = (boolean)TRUE;
-        }
-        else
-        {
-            /* Log extended diagnostic data */
-            EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_1, 0U )
-        }
-    }
-    else
-    {
-        /* Log extended diagnostic data */
-        EMCEM_DIAG_STORE_FAILURE_POINT( EMCEM_E_NOT_OK, EMCEM_FP_VFCCU_ACCESS_TO_CVFCCU_2, 0U )
-    }
-
-    return bReturnValue;
-}
-
-/**
 * @brief      Clear CVFCCU faults function
 * @details    Function clears fault line flags in CVFCCU
 *
@@ -409,8 +330,6 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
     /* Check if fault is SW recoverable */
     bClearFault = eMcem_Vfccu_SWRecovery( nFaultId, u32RegVal );
 
-    /* Check access to CVFCCU */
-    bClearFault = bClearFault && eMcem_Vfccu_AccessToCVfccuFhid();
 
     if( (boolean)TRUE == bClearFault )
     {
@@ -440,10 +359,6 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
         /* report EMCEM_E_OK, which is set as default - do nothing */
     }
 
-    /* Log extended diagnostic data */
-    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_CLEAR_CVFCCU_FAULTS, 0U )
-    EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nFaultId )
-
     return nReturnValue;
 }
 
@@ -460,7 +375,7 @@ Std_ReturnType eMcem_Vfccu_ClearCVfccuFaults( eMcem_FaultType nFaultId, uint32 u
 */
 Std_ReturnType eMcem_Vfccu_Init( const eMcem_ConfigType *pConfigPtr )
 {
-    volatile Std_ReturnType nReturnValue = EMCEM_E_OK;
+    volatile Std_ReturnType nReturnValue = EMCEM_E_NOT_OK;
 
     /* Configure CVFCCU */
     if( pConfigPtr->eMcem_CVfccuCfg != NULL_PTR )
@@ -491,7 +406,7 @@ Std_ReturnType eMcem_Vfccu_ClearFaults( eMcem_FaultType nFaultId )
     nReturnValue = eMcem_Vfccu_ClearCVfccuFaults( nFaultId, 1UL );
 
     /* Log extended diagnostic data */
-    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_CLEAR_FAULTS_1, 0U )
+    EMCEM_DIAG_STORE_FAILURE_POINT( nReturnValue, EMCEM_FP_VFCCU_CLEAR_FAULT, 0U )
     EMCEM_DIAG_STORE_FAILURE_POINT_REGISTER_DATA( nReturnValue, (uint32)nFaultId)
 
     return nReturnValue;
@@ -524,6 +439,64 @@ void eMcem_Vfccu_GetErrors( uint32 pFaultContainer[], uint32 *pFaultAccumulator 
             /* Accumulate all faults */
             *pFaultAccumulator |= pFaultContainer[u8RegIdx];
         }
+    }
+}
+
+/**
+* @brief      Read EOUT signal
+* @details    A function to read one of the EOUT signals from EINOUT register. For testing.
+*
+* @param[in]  errorOutput    ID of EOUT signal to read.
+*
+* @return     EOUT signal value
+*
+*/
+uint8 eMcem_Vfccu_ReadErrorOutput( eMcem_ErrorOutputType errorOutput )
+{
+    uint8 u8ReturnValue = 0U;
+
+    /* Read the state of the EOUT pin */
+    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+    u8ReturnValue = (uint8)(AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.DO_STAT);
+
+    return u8ReturnValue;
+}
+
+/**
+* @brief      Write EOUT signal
+* @details    A function to write one of the EOUT signals to GEOUTPNC register.
+*
+* @param[in]  errorOutput    ID of EOUT signal to write.
+* @param[in]  value          EOUT signal value to write.
+*
+* @return     void
+*
+*/
+void eMcem_Vfccu_WriteErrorOutput( eMcem_ErrorOutputType errorOutput, uint8 u8Value )
+{
+    /* Set EOUT mode to output mode push pull */
+    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+    AON_VFCCU.GLB_EOUT[errorOutput].GEOUTMC.B.EOUTM = (uint32)EMCEM_FCCU_EOUT_OUTPUT_PUSH_PULL;
+
+    /* Set output buffer enable control value to be valid */
+    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+    AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.OBE_VALID = (uint32)EMCEM_FCCU_EOUT_ACTIVATE;
+
+    /* Check if value is higher than one, then write HIGH signal */
+    if( 0U < u8Value )
+    {
+        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+        AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.VAL_CTRL = (uint32)EMCEM_FCCU_EOUT_HIGH;
+    }
+    else
+    {
+        /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+        /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+        AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.VAL_CTRL = (uint32)EMCEM_FCCU_EOUT_LOW;
     }
 }
 
@@ -561,6 +534,76 @@ void eMcem_Vfccu_DeassertSWFault( uint8 u8SwFaultId )
     uint8 u8SWRegIdx = u8SwFaultId / EMCEM_VFCCU_SW_FAULT_COUNT;
 
     eMcem_Vfccu_Specific_DeassertSWFault( u8SWRegIdx, u8BitIdx );
+}
+
+/**
+* @brief      Activate or deactivate EOUT signaling.
+* @details    A function to activate or deactivate the signaling of EOUT pins. Sets output buffer enable control
+*             to either valid state (cannot be overridden) or invalid state (can be overridden)
+*
+* @param[in]  errorOutput   ID of EOUT pin to de/activate.
+* @param[in]  state         State to set. Activate or deactivate EOUT signals.
+*
+* @return     EMCEM_E_OK    State has been changed
+*
+*/
+Std_ReturnType eMcem_Vfccu_SetEOUTSignaling( eMcem_ErrorOutputType errorOutput, eMcem_EOUTStateType state )
+{
+    Std_ReturnType nReturnValue = EMCEM_E_NOT_OK;
+
+    /* Set output buffer enable control value */
+    /* @violates @ref eMcem_Vfccu_c_REF_1003 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+    AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.OBE_VALID = (uint32)state;
+    nReturnValue = EMCEM_E_OK;
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Control EOUT signaling mode.
+* @details    A function to set the controlling mode of EOUT pins.
+*
+* @param[in]  errorOutput   ID of EOUT pin to de/activate.
+* @param[in]  mode          Controlling mode to set. EOUT signals to be driven by FSM, LOW, or HIGH.
+*
+* @return     EMCEM_E_OK    Controlling mode has been changed
+*
+*/
+Std_ReturnType eMcem_Vfccu_SetEOUTControlMode( eMcem_ErrorOutputType errorOutput, eMcem_EOUTModeType mode )
+{
+    Std_ReturnType nReturnValue = EMCEM_E_NOT_OK;
+
+    /* Set EOUT control mode */
+    /* @violates @ref eMcem_Vfccu_c_REF_1003 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1104 */
+    /* @violates @ref eMcem_Vfccu_c_REF_1106 */
+    AON_VFCCU.GLB_EOUT[errorOutput].GEOUTPNC.B.VAL_CTRL = (uint32)mode;
+    nReturnValue = EMCEM_E_OK;
+
+    return nReturnValue;
+}
+
+/**
+* @brief      Obtain status of Svr1 fault reaction from VFCCU
+* @details    A function for filling given container of eMcem_ReactionStatusType type with values of VFCCU Global DID FSM Status,
+*             Global Reaction Timer and Status registers.
+*
+* @param[out] pReactionStatus    Pointer to the structure to be filled with current values of VFCCU Global Reaction Timer
+*                                Period, VFCCU Global Reaction Timer Status, and VFCCU Global DID FSM Status registers.
+*
+*/
+void eMcem_Vfccu_GetReactionStatus( eMcem_ReactionStatusType *pReactionStatus )
+{
+    /* Fill the container with Global Reaction Timer Period */
+    pReactionStatus->u32GlobalReactionTimerPeriod = AON_VFCCU.GRKNTIMC[0].R;
+
+    /* Fill the container with Global Reaction Timer Status */
+    pReactionStatus->u32GlobalReactionTimerStatus = AON_VFCCU.GRKNTIMS.R;
+
+    /* Fill the container with Global DID FMS Status */
+    pReactionStatus->u32GlobalDidFsmStatus = AON_VFCCU.GINTOVFS.R;
 }
 
 #define EMCEM_STOP_SEC_CODE

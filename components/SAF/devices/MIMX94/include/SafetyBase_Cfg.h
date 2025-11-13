@@ -1,19 +1,19 @@
 /**
 *   @file    SafetyBase_Cfg.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - Module configuration interface for MIMX_SAF.
-*   @details Contains the module configuration interface for MIMX_SAF.
+*   @brief   MIMX9XX_SAF SafetyBase - Module configuration interface for MIMX9XX_SAF.
+*   @details Contains the module configuration interface for MIMX9XX_SAF.
 *
 *   @addtogroup SAFETY_BASE_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -39,22 +39,22 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define SAFETY_BASE_CFG_SW_MAJOR_VERSION          0
-#define SAFETY_BASE_CFG_SW_MINOR_VERSION          4
-#define SAFETY_BASE_CFG_SW_PATCH_VERSION          0
+#define SAFETY_BASE_CFG_SW_MINOR_VERSION          8
+#define SAFETY_BASE_CFG_SW_PATCH_VERSION          4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((SAFETY_BASE_CFG_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (SAFETY_BASE_CFG_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (SAFETY_BASE_CFG_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of SafetyBase_Cfg.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((SAFETY_BASE_CFG_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (SAFETY_BASE_CFG_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (SAFETY_BASE_CFG_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of SafetyBase_Cfg.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -72,48 +72,51 @@ extern "C"{
 /**
 * @brief           Specifies the target platform.
 */
-#define SAFETY_BASE_MIMX94XX                1
+#define SAFETY_BASE_MIMX9486                1
 
 /**
  * @brief Specifies PMIC type used together with the device.
  */
 #define SAFETY_BASE_PMIC_PF09               1
 
-#ifndef SAFETY_BASE_PMIC_VR55XX
-#define SAFETY_BASE_PMIC_VR55XX             0
-#endif
-
-#ifndef SAFETY_BASE_PMIC_FS8X
-#define SAFETY_BASE_PMIC_FS8X               0
-#endif
-
-#ifndef SAFETY_BASE_PMIC_FS86
-#define SAFETY_BASE_PMIC_FS86               0
-#endif
-
-#ifndef SAFETY_BASE_PMIC_FS26XX
-#define SAFETY_BASE_PMIC_FS26XX             0
-#endif
-
 #ifndef SAFETY_BASE_PMIC_PF09
 #define SAFETY_BASE_PMIC_PF09               0
 #endif
 
+#ifndef SAFETY_BASE_MIMX9596
+#define SAFETY_BASE_MIMX9596                0
+#endif
+
+#ifndef SAFETY_BASE_MIMX9486
+#define SAFETY_BASE_MIMX9486                0
+#endif
+
+#define SAFETY_BASE_MIMX95XX               (SAFETY_BASE_MIMX9596 != 0)
+
+#define SAFETY_BASE_MIMX943X               (SAFETY_BASE_MIMX9486 != 0)
+
+#define SAFETY_BASE_MIMX9                 ((SAFETY_BASE_MIMX9596 != 0) || \
+                                           (SAFETY_BASE_MIMX9486 != 0))
+
 /**
 * @brief Define to specify the ARM architecture
 */
-#define SAFETY_BASE_PLATFORM_ARM            (SAFETY_BASE_ARMV8_MARCH)
+#define SAFETY_BASE_PLATFORM_ARM           (SAFETY_BASE_ARMV8_MARCH)
 
 /**
 * @brief           Processor type
 */
-#define SAFETY_BASE_CPU_TYPE                (CPU_TYPE_32)
+#define SAFETY_BASE_CPU_TYPE               (CPU_TYPE_32)
+
+/**
+* @brief           Index of currently used CPU core representing the respective EENV.
+*/
+#define SAFETY_BASE_CORE_ID                 (0UL)
 
 /**
  * @brief          Specifies availability of the HSE wrapper interface
  */
 #define SAFETY_BASE_HSE_WRAPPER_SUPPORT     (STD_OFF)
-
 
 /*==================================================================================================
 *                                             ENUMS

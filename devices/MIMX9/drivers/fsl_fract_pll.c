@@ -29,6 +29,7 @@
 
 /* Includes */
 
+#include "fsl_def.h"
 #include "fsl_clock.h"
 #include "fsl_fract_pll.h"
 #include "fsl_device_registers.h"
@@ -394,7 +395,7 @@ bool FRACTPLL_SetRate(uint32_t pllIdx, bool vcoOp, uint64_t rate)
                     if (g_pllAttrs[pllIdx].isFrac)
                     {
                         /* Calculate MFN */
-                        mfn = (uint32_t) ((rate - (mfi * CLOCK_PLL_FREF_HZ))
+                        mfn = U64_U32((rate - (mfi * CLOCK_PLL_FREF_HZ))
                             / ((uint64_t) CLOCK_PLL_CALC_ACCURACY_HZ));
                     }
 
@@ -533,11 +534,20 @@ uint64_t FRACTPLL_GetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
 
             rate = FRACTPLL_GetRate(pllIdx, true);
 
-            rate = (rate * 5U) / ((mfi * 5U) + mfn);
-
-            if (div2)
+            /* Check the multiplication doesn't wrap */
+            if (rate <= (UINT64_MAX / 5U))
             {
-                rate = rate >> 1U;
+                rate = (rate * 5U) / ((mfi * 5U) + mfn);
+
+                if (div2)
+                {
+                    rate = rate >> 1U;
+                }
+            }
+            else
+            {
+                /* Handling if multiplication value wraps */
+                rate = 0UL;
             }
         }
     }
@@ -649,14 +659,15 @@ bool FRACTPLL_SetDfsRate(uint32_t pllIdx, uint8_t dfsIdx,
             uint64_t newRate = rate + 1ULL;
 
             /* Calculate MFI */
-            uint32_t mfi = (uint32_t) ((uint64_t) (vcoRate / newRate));
+            uint32_t mfi = U64_U32((uint64_t) (vcoRate / newRate));
 
             /* Calculate MFN */
-            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate * 5UL);
+            uint64_t num = (vcoRate * 5UL) - (((uint64_t) mfi) * newRate
+                * 5UL);
             uint64_t quotient = num / newRate;
             uint64_t remain = num % newRate;
 
-            uint32_t mfn = ((uint32_t) quotient);
+            uint32_t mfn = U64_U32(quotient);
 
             /* Round up MFN to avoid overclocking */
             if  ((remain != 0U) && (quotient < 5U))
@@ -852,20 +863,30 @@ bool FRACTPLL_CalcSscParams(const fracpll_ssc_t *pllSsc, uint64_t rate,
          * STEP = (Modulation_freq * STOP) / (Fref / 2)
          *
          */
-        *step = (uint32_t)(((*stop) * pllSsc->modFreq) /
-            (uint32_t)(CLOCK_PLL_FREF_HZ / 2U));
 
-        /* Check for stop overflow */
-        if ((*stop & (PLL_SPREAD_SPECTRUM_STOP_MASK >>
-            PLL_SPREAD_SPECTRUM_STOP_SHIFT)) != *stop)
+        /* Check for the product of ((*stop) * pllSsc->modFreq) doesn't wrap */
+        if ((*stop) <= (UINT32_MAX / pllSsc->modFreq))
         {
-            updateSsc = false;
+            *step = (uint32_t)(((*stop) * pllSsc->modFreq) /
+                (uint32_t)(CLOCK_PLL_FREF_HZ / 2U));
+
+            /* Check for stop overflow */
+            if ((*stop & (PLL_SPREAD_SPECTRUM_STOP_MASK >>
+                PLL_SPREAD_SPECTRUM_STOP_SHIFT)) != *stop)
+            {
+                updateSsc = false;
+            }
+
+            /* Check for step overflow */
+            if (updateSsc && ((*step & (PLL_SPREAD_SPECTRUM_STEP_MASK >>
+                PLL_SPREAD_SPECTRUM_STEP_SHIFT)) != *step))
+            {
+                updateSsc = false;
+            }
         }
-
-        /* Check for step overflow */
-        if (updateSsc && ((*step & (PLL_SPREAD_SPECTRUM_STEP_MASK >>
-            PLL_SPREAD_SPECTRUM_STEP_SHIFT)) != *step))
+        else
         {
+            /* Handling of the wrap case */
             updateSsc = false;
         }
     }

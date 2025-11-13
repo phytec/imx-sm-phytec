@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -29,8 +29,9 @@
 
 /* Includes */
 
-#include "fsl_pf09.h"
+#include "sm.h"
 #include "crc.h"
+#include "fsl_pf09.h"
 
 /* Local Defines */
 
@@ -272,7 +273,9 @@ bool PF09_PmicWrite(const PF09_Type *dev, uint8_t regAddr, uint8_t val,
                 rc = PF09_PmicRead(dev, regAddr, &rxBuf);
                 if (rc)
                 {
-                    data[0] = (val & mask) | (rxBuf & (~mask));
+                    uint8_t mask_b = (uint8_t) ~mask;
+
+                    data[0] = (val & mask) | (rxBuf & mask_b);
                 }
             }
 
@@ -337,7 +340,7 @@ bool PF09_PmicRead(const PF09_Type *dev, uint8_t regAddr, uint8_t *val)
                     uint8_t crc;
 
                     /* Get CRC */
-                    crcBuf[0] = (dev->devAddr << 1U) | 0x1U;
+                    crcBuf[0] = U8((dev->devAddr << 1U) | 0x1U);
                     crcBuf[1] = regAddr;
                     crcBuf[2] = data[0];
                     crc = CRC_J1850(crcBuf, 3U);
@@ -379,13 +382,13 @@ bool PF09_IntEnable(const PF09_Type *dev, const uint8_t *mask,
             {
                 if (enable)
                 {
-                    rc = PF09_PmicWrite(dev, maskInfo[idx].addr +
-                        1U, 0x00U, mask[idx]);
+                    rc = PF09_PmicWrite(dev, U8(maskInfo[idx].addr +
+                        1U), 0x00U, mask[idx]);
                 }
                 else
                 {
-                    rc = PF09_PmicWrite(dev, maskInfo[idx].addr +
-                        1U, 0xFFU, mask[idx]);
+                    rc = PF09_PmicWrite(dev, U8(maskInfo[idx].addr +
+                        1U), 0xFFU, mask[idx]);
                 }
             }
 
@@ -564,8 +567,9 @@ bool PF09_SwModeSet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
         /* Check regulator index */
         if ((regulator >= PF09_REG_SW1) && (regulator <= PF09_REG_SW5))
         {
-            uint8_t modeVal = mode << (state * 2U);
-            uint8_t modeMask = 3U << (state * 2U);
+            uint8_t shft = state * 2U;
+            uint8_t modeVal = mode << shft;
+            uint8_t modeMask = U8(3U << shft);
 
             rc = PF09_PmicWrite(dev,
                 PF09_REG_SW1_MODE + ((regulator - 1U) * 5U),
@@ -598,14 +602,25 @@ bool PF09_SwModeGet(const PF09_Type *dev, uint8_t regulator, uint8_t state,
         /* Check regulator index */
         if ((regulator >= PF09_REG_SW1) && (regulator <= PF09_REG_SW5))
         {
+            uint8_t shft = state * 2U;
+
             /* 0x3 or 0xC for mode bits depending on state */
-            uint8_t modeMask = 3U << (state * 2U);
+            uint8_t modeMask = U8(3U << shft);
 
             rc = PF09_PmicRead(dev,
                 PF09_REG_SW1_MODE + ((regulator - 1U) * 5U), mode);
 
             /* Mask and shift the mode bits */
-            *mode = ((*mode) & modeMask) >> (state * 2U);
+            uint8_t modeVal = U8(*mode & modeMask);
+
+            /*
+             * False positive: Marking the issue below as a false positive
+             * because the data type of modeVal is uint8_t, and right shifting
+             * a uint8_t type variable cannot be automatically converted to an
+             * int.
+             */
+            // coverity[cert_int31_c_violation:FALSE]
+            *mode = modeVal >> shft;
         }
         else
         {
@@ -718,10 +733,18 @@ bool PF09_GpioCtrlSet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
     }
     else
     {
-        uint8_t ctrlVal = ctrl ? 0xFFU : 0x00U;
-        uint8_t ctrlMask = 1U << ((state * 4U) + gpio);
+        /* Check the expression is within uint8_t range */
+        if ((1U << ((state * 4U) + gpio)) <= U8_MAX)
+        {
+            uint8_t ctrlVal = ctrl ? 0xFFU : 0x00U;
+            uint8_t ctrlMask = U8(1U << ((state * 4U) + gpio));
 
-        rc = PF09_PmicWrite(dev, PF09_REG_GPO_CTRL, ctrlVal, ctrlMask);
+            rc = PF09_PmicWrite(dev, PF09_REG_GPO_CTRL, ctrlVal, ctrlMask);
+        }
+        else
+        {
+            rc = false;
+        }
     }
 
     /* Return status */
@@ -748,7 +771,7 @@ bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
 
         if (rc)
         {
-            uint8_t ctrlMask = 1U << ((state * 4U) + gpio);
+            uint8_t ctrlMask = U8((1U << (state * 4U)) + gpio);
 
             *ctrl = ((ctrlVal & ctrlMask) != 0U);
         }
@@ -1041,16 +1064,32 @@ bool PF09_MonitorSet(const PF09_Type *dev, uint8_t monitor, uint8_t state,
         {
             case PF09_VMON1:
                 {
-                    /* Write 8-bits */
-                    rc = PF09_PmicWrite(dev, PF09_REG_VMON1_RUN_CFG + state,
-                        (uint8_t) code, 0x1FU);
+                    /* Check the expression is with in uint8_t range */
+                    if ((PF09_REG_VMON1_RUN_CFG + state) <= U8_MAX)
+                    {
+                        /* Write 8-bits */
+                        rc = PF09_PmicWrite(dev, ((uint8_t)PF09_REG_VMON1_RUN_CFG +
+                            state), (uint8_t) code, 0x1FU);
+                    }
+                    else
+                    {
+                        rc = false;
+                    }
                 }
                 break;
             case PF09_VMON2:
                 {
-                    /* Write 8-bits */
-                    rc = PF09_PmicWrite(dev, PF09_REG_VMON2_RUN_CFG + state,
-                        (uint8_t) code, 0x1FU);
+                    /* Check the expression is with in uint8_t range */
+                    if ((PF09_REG_VMON2_RUN_CFG + state) <= U8_MAX)
+                    {
+                        /* Write 8-bits */
+                        rc = PF09_PmicWrite(dev, (PF09_REG_VMON2_RUN_CFG +
+                            state), (uint8_t) code, 0x1FU);
+                    }
+                    else
+                    {
+                        rc = false;
+                    }
                 }
                 break;
             default:

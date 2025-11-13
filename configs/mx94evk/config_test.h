@@ -214,7 +214,7 @@
 /*--------------------------------------------------------------------------*/
 
 /*! Config for number of tests */
-#define SM_SCMI_NUM_TEST  27U
+#define SM_SCMI_NUM_TEST  28U
 
 /*! Config data array for tests */
 #define SM_SCMI_TEST_CONFIG_DATA \
@@ -244,6 +244,7 @@
     {.testId = TEST_PERLPI, .channel = 12U, .rsrc = DEV_SM_PERLPI_LPUART3}, \
     {.testId = TEST_PERLPI, .channel = 4U, .rsrc = DEV_SM_PERLPI_LPUART11}, \
     {.testId = TEST_PERLPI, .channel = 7U, .rsrc = DEV_SM_PERLPI_LPUART12}, \
+    {.testId = TEST_PIN, .channel = 12U, .rsrc = DEV_SM_PIN_UART1_RXD}, \
     {.testId = TEST_RTC, .channel = 12U, .rsrc = DEV_SM_RTC_BBNSM}
 
 /*! Default channel for non-agent specific tests */

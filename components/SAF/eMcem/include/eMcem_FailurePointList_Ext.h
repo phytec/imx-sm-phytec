@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_FailurePointList_Ext.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Extended diagnostics types.
+*   @brief   MIMX9XX_SAF eMcem - Extended diagnostics types.
 *   @details Contains declarations of types for eMcem extended diagnostics.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2019-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -50,9 +50,8 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
-#include "eMcem_FailurePointList_MIMX95XX.h"
-#include "eMcem_FailurePointList_MIMX94XX.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "eMcem_FailurePointList_MIMX9.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -66,17 +65,17 @@ extern "C"{
 /* @violates @ref eMcem_FailurePointList_Ext_h_REF_0502 */
 /* @violates @ref eMcem_FailurePointList_Ext_h_REF_0504 */
 /* @violates @ref eMcem_FailurePointList_Ext_h_REF_0505 */
-#define EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION             4
-#define EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION             0
+#define EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION             8
+#define EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_FAILUREPOINTLIST_EXT_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_FailurePointList_Ext.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_FAILUREPOINTLIST_EXT_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_FAILUREPOINTLIST_EXT_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_FAILUREPOINTLIST_EXT_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_FailurePointList_Ext.h and MIMX9XX_SAF version are different"
 #endif
 
 #if( STD_ON == EMCEM_EXT_DIAG_ENABLED )

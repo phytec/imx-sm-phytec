@@ -30,8 +30,7 @@
 ##
 ## ###################################################################
 
-GEN_CONFIG_VER ?= 1U
-
+GEN_CONFIG_VER ?= 2U
 BOARD ?= mcimx95evk
 
 include ./devices/MIMX95/sm/Makefile

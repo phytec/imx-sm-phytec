@@ -1,19 +1,19 @@
 /**
 *   @file    eMcem_Vfccu_Types.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - VFCCU IP Types
+*   @brief   MIMX9XX_SAF eMcem - VFCCU IP Types
 *   @details Internal types used in the VFCCU IP layer of the eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2022-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
@@ -38,7 +38,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "Std_Types.h"
 
 /*==================================================================================================
@@ -56,21 +56,21 @@ extern "C"{
 /*!
 * @brief    eMCEM VFCCU data type definitions - SW minor version
 */
-#define EMCEM_VFCCU_TYPES_SW_MINOR_VERSION             4
+#define EMCEM_VFCCU_TYPES_SW_MINOR_VERSION             8
 /*!
 * @brief    eMCEM VFCCU data type definitions - SW patch version
 */
-#define EMCEM_VFCCU_TYPES_SW_PATCH_VERSION             0
+#define EMCEM_VFCCU_TYPES_SW_PATCH_VERSION             4
 /** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCU_TYPES_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCU_TYPES_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Vfccu_Types.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_VFCCU_TYPES_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_TYPES_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_TYPES_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu_Types.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -111,8 +111,9 @@ typedef uint16 eMcem_FaultType;
 */
 typedef enum
 {
-    EMCEM_ERR_RECOVERED     = 0,    /**< @brief VFCCU error has been recovered. */
-    EMCEM_ERR_NOT_RECOVERED = 1     /**< @brief VFCCU error has not been recovered. */
+    EMCEM_ERR_RECOVERED      = 0,   /**< @brief VFCCU error has been recovered. */
+    EMCEM_ERR_NOT_RECOVERED  = 1,   /**< @brief VFCCU error has not been recovered. */
+    EMCEM_ERR_MASK_VFCCU_ISR = 2   /**< @brief VFCCU error handling was postponed. */
 } eMcem_ErrRecoveryType;
 
 /*!
@@ -178,6 +179,17 @@ typedef enum
 */
 typedef eMcem_ErrRecoveryType (*eMcem_FccuHandlerType)( eMcem_FaultType nFaultId );
 
+/*!
+* @brief      Reaction Timer container struct type.
+* @details    Container for storing values of VFCCU Global Timer Period, Global Timer Status and Global DID FSM Status registers.
+*
+*/
+typedef struct
+{
+    uint32 u32GlobalReactionTimerPeriod;    /**< @brief VFCCU Global Reaction Timer Period */
+    uint32 u32GlobalReactionTimerStatus;    /**< @brief VFCCU Global Reaction Timer Status */
+    uint32 u32GlobalDidFsmStatus;           /**< @brief VFCCU Global DID FSM Status */
+} eMcem_ReactionStatusType;
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/

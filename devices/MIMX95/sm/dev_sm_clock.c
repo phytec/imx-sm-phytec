@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -957,9 +957,20 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    if (!CCM_CgcSetEnable(clockIndex, enable))
+                    /* Skip MIX-level transaction blocking on Rev A  */
+                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
                     {
-                        status = SM_ERR_INVALID_PARAMETERS;
+                        if (!CCM_CgcSetEnable(clockIndex, enable))
+                        {
+                            status = SM_ERR_INVALID_PARAMETERS;
+                        }
+                    }
+                    else
+                    {
+                        if (!CLOCK_CgcSetEnable(clockIndex, enable))
+                        {
+                            status = SM_ERR_INVALID_PARAMETERS;
+                        }
                     }
                 }
                 else
@@ -1142,6 +1153,23 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get extended clock info                                                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedInfo(uint32_t clockId, bool *supported)
+{
+    uint32_t spreadPercent = 0U;
+    uint32_t modFreq = 0U;
+    uint32_t enable = 0U;
+
+    /* Check if SCC is supported */
+    *supported = CLOCK_SourceGetSsc(clockId, &spreadPercent, &modFreq,
+        &enable);
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set a device extended clock data value                                   */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
@@ -1208,7 +1236,6 @@ int32_t DEV_SM_ClockExtendedGet(uint32_t clockId, uint32_t extId,
         /* Spread spectrum */
         case DEV_SM_CLOCK_EXT_SSC:
             {
-
                 uint32_t spreadPercent = 0U;
                 uint32_t modFreq = 0U;
                 uint32_t enable = 0U;

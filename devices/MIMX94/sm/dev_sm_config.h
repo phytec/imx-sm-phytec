@@ -213,6 +213,13 @@ int32_t DEV_SM_HsioTopPowerDownPre(void);
  */
 int32_t DEV_SM_WkupPowerDownPre(void);
 
+/*!
+ * Configure the NETC domain for power down.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ */
+int32_t DEV_SM_NetcPowerDownPre(void);
+
 #endif /* DEV_SM_CONFIG_H */
 
 /** @} */

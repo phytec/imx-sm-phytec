@@ -51,7 +51,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_A55C0_NCPUPORESET].statMask =
         SRC_XSPR_IRST_REQ_CTRL_RSTR_0_IRST_0_MASK,
     [RST_LINE_A55C0_NCPUPORESET].statReg =
-            &SRC_XSPR_CORTEXMIX_CORE0->IRST_REQ_CTRL,
+        &SRC_XSPR_CORTEXMIX_CORE0->IRST_REQ_CTRL,
     [RST_LINE_A55C0_NCPUPORESET].assertLow = false,
     [RST_LINE_A55C0_NCPUPORESET].toggleUsec = 10U,
 
@@ -237,7 +237,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
         &SRC_XSPR_DISPLAYMIX->IRST_REQ_CTRL,
     [RST_LINE_DISP1_RESETN].assertLow = false,
     [RST_LINE_DISP1_RESETN].toggleUsec = 10U,
-        
+
     [RST_LINE_LVDS_RESETN].lineMask =
         SRC_XSPR_IRST_REQ_CTRL_RSTR_0_IRST_2_MASK,
     [RST_LINE_LVDS_RESETN].lineReg =
@@ -380,15 +380,17 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_ANAMIX].assertLow = false,
     [RST_LINE_ANAMIX].toggleUsec = 10U,
 
+    [RST_LINE_AONMIX_TOP].flags = RST_LINE_FLAG_RESTRICTED,
     [RST_LINE_AONMIX_TOP].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
     [RST_LINE_AONMIX_TOP].lineReg = &SRC_XSPR_AONMIX->SLICE_SW_CTRL,
     [RST_LINE_AONMIX_TOP].statMask =
         SRC_XSPR_RSTR_STAT_RSTR_0_RST_STAT_MASK,
-        [RST_LINE_AONMIX_TOP].statReg = &SRC_XSPR_AONMIX->RSTR_STAT,
+    [RST_LINE_AONMIX_TOP].statReg = &SRC_XSPR_AONMIX->RSTR_STAT,
     [RST_LINE_AONMIX_TOP].assertLow = false,
     [RST_LINE_AONMIX_TOP].toggleUsec = 10U,
 
+    [RST_LINE_AONMIX_M33].flags = RST_LINE_FLAG_RESTRICTED,
     [RST_LINE_AONMIX_M33].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_1_MASK,
     [RST_LINE_AONMIX_M33].lineReg = &SRC_XSPR_AONMIX->SLICE_SW_CTRL,
@@ -433,7 +435,7 @@ rst_line_info_t const g_rstLineInfo[RST_NUM_LINE] =
     [RST_LINE_CCMSRCGPCMIX].statReg = &SRC_XSPR_CCMSRCGPCMIX->RSTR_STAT,
     [RST_LINE_CCMSRCGPCMIX].assertLow = false,
     [RST_LINE_CCMSRCGPCMIX].toggleUsec = 10U,
-        
+
     [RST_LINE_CORTEXAMIX_CORE0].lineMask =
         SRC_XSPR_SLICE_SW_CTRL_RST_RSTR_0_MASK,
     [RST_LINE_CORTEXAMIX_CORE0].lineReg = &SRC_XSPR_CORTEXMIX_CORE0->SLICE_SW_CTRL,
@@ -640,7 +642,7 @@ uint32_t RST_SystemGetResetReason(void)
         resetReason = 31UL - ((uint32_t) __CLZ(srsReason));
     }
 
-    return resetReason; 
+    return resetReason;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -656,11 +658,26 @@ void RST_SystemClearResetReason(uint32_t resetReason)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Query if reset line management is restricted.                            */
+/*--------------------------------------------------------------------------*/
+bool RST_ResetLineRestricted(uint32_t lineIdx)
+{
+    bool rc = false;
+
+    if (lineIdx < RST_NUM_LINE)
+    {
+        rc = (g_rstLineInfo[lineIdx].flags & RST_LINE_FLAG_RESTRICTED) != 0U;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Request system reset                                                     */
 /*--------------------------------------------------------------------------*/
-void RST_SystemRequestReset(void)
+_Noreturn void RST_SystemRequestReset(void)
 {
-    /* Assert CM33 SYSRESETREQ */ 
+    /* Assert CM33 SYSRESETREQ */
     NVIC_SystemReset();
 }
 

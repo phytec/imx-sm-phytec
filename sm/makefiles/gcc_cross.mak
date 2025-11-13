@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023, 2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -44,25 +44,43 @@ ifeq ($(BUILD_ROM),1)
 	ROM_TARGET = $(ROM_IMG).hex
 endif
 
+ifneq ($(GCOV),0)
+	LFLAGS = -lgcov --coverage
+else
+	LFLAGS =
+endif
+
 ifeq ($(INC_LIBC),1)
-LFLAGS = -lc
+LFLAGS += -lc
 # Include libs
 include $(ROOT_DIR)/utilities/newlib/Makefile
 else
-LFLAGS =
 FLAGS += -DNDEBUG
 OBJS += \
 	$(OUT)/aeabi_memset-thumb2.o \
 	$(OUT)/memcpy-armv7m.o
 endif
 
+include $(ROOT_DIR)/sm/makefiles/common.mak
+
 # Configure toolchain
 ARCHFLAGS = -mcpu=cortex-$(cpu) -mthumb -mfloat-abi=softfp
 cc = gcc
+
+# Check Toolchain Version
+ifeq ($(shell `realpath $(CROSS_COMPILE)$(cc) 2>/dev/null | grep $(TC_VERSION) > /dev/null`; echo $$?),1)
+	TC_VER_CHECK := "WARNING: Toolchain version $(TC_VERSION) not found."
+endif
+
 CC = $(CROSS_COMPILE)$(cc)
 LD = $(CROSS_COMPILE)$(cc)
 OBJCOPY = $(CROSS_COMPILE)objcopy
 SIZE = $(CROSS_COMPILE)size
+ifeq ($(wildcard $(TOOLS)/srec/srec_cat),)
+    SREC_CAT = srec_cat
+else
+    SREC_CAT = $(TOOLS)/srec/srec_cat
+endif
 FLAGS += -D__STARTUP_CLEAR_BSS -DCPU_$(SOCFULL)_c$(cpu) -D$(SOC) -Dlink_$(mem)
 GCOV ?= 0
 
@@ -130,8 +148,5 @@ CFLAGS += -O3
 #
 #################################
 LFLAGS 	+= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(IMG).map -specs=nano.specs -lgcc $(LIB) -nodefaultlibs -Wl,--no-warn-rwx-segments -T$(SOC_DEVICE_DIR)/gcc/$(LCF).ld
-ifneq ($(GCOV),0)
-	LFLAGS += -lgcov --coverage
-endif
 ROM_LFLAGS 	= $(ARCHFLAGS) -Wl,--gc-sections -Wl,-Map=$(OUT)/$(ROM_IMG).map -specs=nosys.specs -nostdlib -T$(SOC_DEVICE_DIR)/gcc/$(ROM_LCF).ld
 

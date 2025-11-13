@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -108,30 +108,30 @@
 
 #define PWR_MIX_FUNC_STAT_MASK                  \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT_MASK |      \
-     SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |    \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |        \
-     SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_RST_STAT_MASK |         \
-     SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
+    SRC_XSPR_FUNC_STAT_MEM_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT_MASK |     \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT_MASK |         \
+    SRC_XSPR_FUNC_STAT_ISO_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_RST_STAT_MASK |          \
+    SRC_XSPR_FUNC_STAT_PSW_STAT_MASK)
 
 #define PWR_MIX_FUNC_STAT_PUP                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(0U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(0U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(0U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(0U))
 
 #define PWR_MIX_FUNC_STAT_PDN                   \
     (SRC_XSPR_FUNC_STAT_SYSMAN_STAT(1U) |       \
-     SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |     \
-     SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |         \
-     SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |          \
-     SRC_XSPR_FUNC_STAT_RST_STAT(0U) |          \
-     SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
+    SRC_XSPR_FUNC_STAT_MEM_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_A55_HDSK_STAT(1U) |      \
+    SRC_XSPR_FUNC_STAT_SSAR_STAT(1U) |          \
+    SRC_XSPR_FUNC_STAT_ISO_STAT(1U) |           \
+    SRC_XSPR_FUNC_STAT_RST_STAT(0U) |           \
+    SRC_XSPR_FUNC_STAT_PSW_STAT(1U))
 
 #define PWR_MIX_FLAG_SWITCHABLE         (1U << 0U)  /* MIX can be switched OFF */
 #define PWR_MIX_FLAG_LPMSET             (1U << 1U)  /* MIX LPM can be set */
@@ -145,7 +145,10 @@
  *        and LPM voting logic.
  */
 #define CM33_TRDC_ID                2U
-#define CPU2GPC(cpuId)              ((cpuId) + CM33_TRDC_ID)
+
+#define CPU2GPC(cpuId)                         \
+    (((cpuId) < (UINT32_MAX - CM33_TRDC_ID)) ? \
+    (((cpuId) + CM33_TRDC_ID)) : (0U))
 
 #define WHITELIST_MASK(cpuId)           (1UL << (CPU2GPC(cpuId)))
 #define LPMSETTING_MASK(cpuId)          (0x7ULL << ((CPU2GPC(cpuId) << 2U)))
@@ -246,7 +249,7 @@ typedef struct
 /*!
  * Structure containing SM LP handshake details
  */
-typedef struct 
+typedef struct
 {
     uint32_t srcMixIdx;     /*!< SRX MIX identifier for the active LP request */
     uint32_t req;           /*!< Active LP request */
@@ -341,6 +344,33 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode);
  * Acknowledge LP handshake
  */
 void PWR_LpHandshakeAck(void);
+
+#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
+/*!
+ * Acknowledge LP handshake for Rev A silicon
+ */
+void PWR_LpHandshakeAckRevA(void);
+#endif
+
+/*!
+ * Configure MIX-level transaction blocking.
+ *
+ * @param[in]       srcMixIdx           SRC MIX identifier
+ * @param[in]       blockAccess         MIX-level access setting
+ *
+ * This function configures MIX-level transaction blocking.
+ */
+void PWR_MixSsiBlockingSet(uint32_t srcMixIdx, bool blockAccess);
+
+/*!
+ * Update MIX-level conditions for transaction blocking.
+ *
+ * @param[in]       srcMixIdx           SRC MIX identifier
+ *
+ * This function evaluates MIX-level conditions that require transaction
+ * blocking and configures the blocking accordingly.
+ */
+void PWR_MixSsiBlockingUpdate(uint32_t srcMixIdx);
 
 /** @} */
 

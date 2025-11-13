@@ -1,27 +1,27 @@
 /**
-*   @file    eMcem_VfccuFaultList_MIMX94XX.h
-*   @version 0.4.0
+*   @file    eMcem_VfccuFaultList_MIMX943X.h
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Specific VFCCU fault list header.
+*   @brief   MIMX9XX_SAF eMcem - Specific VFCCU fault list header.
 *   @details Contains list of specific VFCCU fault lines for eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2025 NXP
+*   Copyright 2024-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
 
-#ifndef EMCEM_VFCCUFAULTLIST_MIMX94XX_H
-#define EMCEM_VFCCUFAULTLIST_MIMX94XX_H
+#ifndef EMCEM_VFCCUFAULTLIST_MIMX943X_H
+#define EMCEM_VFCCUFAULTLIST_MIMX943X_H
 
 #ifdef __cplusplus
 extern "C"{
@@ -30,16 +30,16 @@ extern "C"{
 /**
 * @page misra_violations MISRA-C:2012 violations
 *
-* @section eMcem_VfccuFaultList_MIMX94XX_h_REF_0501
+* @section eMcem_VfccuFaultList_MIMX943X_h_REF_0501
 * Violates MISRA 2012 Required Rule 5.1, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX94XX_h_REF_0502
+* @section eMcem_VfccuFaultList_MIMX943X_h_REF_0502
 * Violates MISRA 2012 Required Rule 5.2, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX94XX_h_REF_0504
+* @section eMcem_VfccuFaultList_MIMX943X_h_REF_0504
 * Violates MISRA 2012 Required Rule 5.4, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
-* @section eMcem_VfccuFaultList_MIMX94XX_h_REF_0505
+* @section eMcem_VfccuFaultList_MIMX943X_h_REF_0505
 * Violates MISRA 2012 Required Rule 5.5, Supported compilers don't enforce maximum symbol length to be less than 32 characters.
 *
 */
@@ -50,7 +50,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "SafetyBase_Cfg.h"
 
 /*==================================================================================================
@@ -61,42 +61,42 @@ extern "C"{
  */
 /** @{ */
 
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0505 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0501 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0502 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0504 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0505 */
 /*!
-* @brief    eMCEM VFCCU fault list for MIMX94XX - SW major version
+* @brief    eMCEM VFCCU fault list for MIMX943X - SW major version
 */
-#define EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_MAJOR_VERSION             0
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0505 */
+#define EMCEM_VFCCUFAULTLIST_MIMX943X_SW_MAJOR_VERSION             0
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0501 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0502 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0504 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0505 */
 /*!
-* @brief    eMCEM VFCCU fault list for MIMX94XX - SW minor version
+* @brief    eMCEM VFCCU fault list for MIMX943X - SW minor version
 */
-#define EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_MINOR_VERSION             4
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0501 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0502 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0504 */
-/* @violates @ref eMcem_VfccuFaultList_MIMX94XX_h_REF_0505 */
+#define EMCEM_VFCCUFAULTLIST_MIMX943X_SW_MINOR_VERSION             8
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0501 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0502 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0504 */
+/* @violates @ref eMcem_VfccuFaultList_MIMX943X_h_REF_0505 */
 /*!
-* @brief    eMCEM VFCCU fault list for MIMX94XX - SW patch version
+* @brief    eMCEM VFCCU fault list for MIMX943X - SW patch version
 */
-#define EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_PATCH_VERSION             0
+#define EMCEM_VFCCUFAULTLIST_MIMX943X_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
 /* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCUFAULTLIST_MIMX94XX_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX94XX.h and MIMX_SAF version are different"
+#if ((EMCEM_VFCCUFAULTLIST_MIMX943X_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCUFAULTLIST_MIMX943X_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCUFAULTLIST_MIMX943X_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_VfccuFaultList_MIMX943X.h and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX94XX)
+#if SAFETY_BASE_MIMX943X
 /*==================================================================================================
 *                                          CONSTANTS
 ==================================================================================================*/
@@ -627,7 +627,7 @@ extern "C"{
 /*!
 * @brief    Total VFCCU fault lines count
 */
-#define EMCEM_CVFCCU_FAULT_LINES_COUNT                   (128U)
+#define EMCEM_VFCCU_FAULT_LINES_COUNT                    (128U)
 /** @} */
 
 /*==================================================================================================
@@ -649,12 +649,12 @@ extern "C"{
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 
-#endif /* defined(SAFETY_BASE_MIMX94XX) */
+#endif /* SAFETY_BASE_MIMX943X */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* EMCEM_VFCCUFAULTLIST_MIMX94XX_H */
+#endif /* EMCEM_VFCCUFAULTLIST_MIMX943X_H */
 
 /** @} */

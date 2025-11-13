@@ -189,9 +189,26 @@ It is also important to note which MIX and power domain specific IP modules are 
 is the only GPIO module in the AON MIX (all others are in the WAKEUPMIX) and therefore the only GPIO
 module that can be used to wake from power modes where the WAKEUPMIX is turned off.
 
-In summary, it is important in the board design that IP modules be assigned to cores first and then
-pads be connected based on which LM (and associated CPU) has each module. The power domain of such
-modules will also determine which can wakeup from various power modes.
+When using bus expanders, all the signals on a specific bus expander need to be associated with an LM
+and the I2C it is connected to owned by that LM. The interrupt signal from a bus expander needs to also
+be connected to a GPIO owned by that LM.
+
+In summary, it is **important in the board design that IP modules be assigned to cores first and then
+pads be connected based on which LM (and associated CPU) uses each module**. The power domain of such
+modules will also determine which can wakeup from various power modes. Modules such as GPIO and I2C
+must be allocated to CPUs and then that info used to connect board resources. Ideally, board designers
+should consult with SW leads and create a table of I2C, SPI, and GPIO (modules, not pins) and assign
+them to CPUs. Then list all the board devices (PMICs, audio CODECS, BT, WiFi, buttons, wake signals,
+etc.) and which CPU will own them. Then connect those to the interfaces owned by the same CPU.
+
+As a specific note on the SM (LM0). It needs to own an I2C for communication to the PMIC(s). Those
+PMIC(s) have interrupts that need to somehow make it to the SM. This should be done via an I2C and
+GPIO module in the AON domain. If other wakeups are required, in order to be able to turn of the
+WAKEUP MIX, those need to also come in via GPIO1. That usually means a bus expander **on the same
+AON I2C as the PMIC(s)**. The PMIC interrupts (and other wakeups) are then usually run to the bus
+expander and the interrupt from the bus expander run to GPIO1. See the design of the NXP EVK below.
+Customers should follow this design to minimize board porting work and to ensure the the SM can
+get interrupts for PMIC temp and safety events.
 
 NXP Reference Board Ports  {#PORT_NXP}
 =========================
@@ -677,4 +694,22 @@ The following lock guidelines apply:
 - Any SCMI API call that can be made from both an interrupt and non-interrupt contexts will need to have
   the associate lock implementation check the CPU state and not acquire a lock or disable any interrupts
   when called while in an interrupt context.
+
+The following apply when porting to a Cortex-M client:
+
+- The compiler "-mno-unaligned-access" option must be enabled. This option controls how the compiler handles
+  data alignment. When enabled, it instructs the compiler to generate code that assumes strict data
+  alignment and that is required when accessing the MU SRAM. It is okay to apply this option only to
+  the rules for compiling the SCMI client files so long as the core is configured to support unaligned
+  accessed for other memories.
+
+The following apply when porting to a Cortex-A (64-bit) client:
+
+- The MU memory region (MU registers address space and MU SRAM) must both be configured as device memory
+  in the MMU page tables. Otherwise, it may lead to a hang if MUA side and MUB side try to access the
+  same memory region.
+- The compiler "-mstrict-align" option must be enabled. This option controls how the compiler handles
+  data alignment. When enabled, it instructs the compiler to generate code that assumes strict data
+  alignment and that is required when accessing the MU SRAM. It is okay to apply this option only to
+  the rules for compiling the SCMI client files.
 

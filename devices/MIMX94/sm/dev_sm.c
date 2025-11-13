@@ -305,7 +305,7 @@ int32_t DEV_SM_PowerUpAckComplete(uint32_t domainId)
                     while (cpuWakeListA55 != 0U)
                     {
                         /* Convert mask into index */
-                        uint8_t cpuIdx = 31U - __CLZ(cpuWakeListA55);
+                        uint8_t cpuIdx = U8(31U - __CLZ(cpuWakeListA55));
 
                         (void) CPU_SwWakeup(cpuIdx);
 
@@ -357,6 +357,9 @@ int32_t DEV_SM_PowerDownPre(uint32_t domainId)
                 break;
             case DEV_SM_PD_WAKEUP:
                 status = DEV_SM_WkupPowerDownPre();
+                break;
+            case DEV_SM_PD_NETC:
+                status = DEV_SM_NetcPowerDownPre();
                 break;
             default:
                 /* Only return error if domain out of range */

@@ -1,22 +1,22 @@
 /**
 *   @file    SafetyBase.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - SWS Compiler abstraction specific for MIMX_SAF.
-*   @details The file SafetyBase.h provides MIMX_SAF specific macros used for compiler abstraction.
+*   @brief   MIMX9XX_SAF SafetyBase - SWS Compiler abstraction specific for MIMX9XX_SAF.
+*   @details The file SafetyBase.h provides MIMX9XX_SAF specific macros used for compiler abstraction.
 *
 *   @addtogroup SAFETY_BASE_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2023 NXP
+*   Copyright 2017-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -41,32 +41,37 @@ extern "C"{
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
 #include "SafetyBase_Cfg.h"
-#include "CompilerDefinition.h"
+#include "SafetyBase_CompilerDefinition.h"
 #include "Std_Types.h"
 #include "SafetyBase_StdRegMacros.h"
 #include "SafetyBase_PmicWrapper.h"
 #include "SafetyBase_HseWrapper.h"
 
 /* Include platform header file */
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
+#if (SAFETY_BASE_MIMX95XX)
 #include "SafetyBase_MIMX95XX_SAF.h"
-#include "SafetyBase_MIMX94XX_SAF.h"
+#elif (SAFETY_BASE_MIMX943X)
+#include "SafetyBase_MIMX943X_SAF.h"
+#endif
+#include "SafetyBase_IrqInterface.h"
+#include "SafetyBase_ErrorInterface.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define SBASE_SW_MAJOR_VERSION             0
-#define SBASE_SW_MINOR_VERSION             4
-#define SBASE_SW_PATCH_VERSION             0
+#define SBASE_SW_MINOR_VERSION             8
+#define SBASE_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((SBASE_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (SBASE_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (SBASE_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of SafetyBase.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((SBASE_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (SBASE_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (SBASE_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of SafetyBase.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -79,7 +84,7 @@ extern "C"{
 ==================================================================================================*/
 
 /**************************************** Green Hills *********************************************/
-#ifdef _GREENHILLS_C_MIMX95XX_
+#ifdef _GREENHILLS_C_MIMX9_
     /**
     * @brief Compiler abstraction for the asm keyword.
     */
@@ -91,7 +96,7 @@ extern "C"{
     #define SBASE_NAKED
 
     /**
-    * @brief Compiler abstraction for MIMX_SAF Fault Injection tests
+    * @brief Compiler abstraction for MIMX9XX_SAF Fault Injection tests
     */
     #ifdef SBASE_ENABLE_FAULT_INJECTION
     #define SBASE_PUT_IN_QUOTES(x) #x
@@ -100,10 +105,10 @@ extern "C"{
     #define SBASE_FAULT_INJECTION_POINT(label)
     #endif
 
-#endif /* #ifdef _GREENHILLS_C_MIMX95XX_ */
+#endif /* #ifdef _GREENHILLS_C_MIMX9_ */
 
 /**************************************** Wind River Diab *****************************************/
-#ifdef _DIABDATA_C_MIMX95XX_
+#ifdef _DIABDATA_C_MIMX9_
     /**
     * @brief Compiler abstraction for the asm keyword.
     */
@@ -115,7 +120,7 @@ extern "C"{
     #define SBASE_NAKED __attribute__((naked))
 
     /**
-     * @brief Compiler abstraction for MIMX_SAF Fault Injection tests
+     * @brief Compiler abstraction for MIMX9XX_SAF Fault Injection tests
     */
     #ifdef SBASE_ENABLE_FAULT_INJECTION
     #define SBASE_PUT_IN_QUOTES(x) #x
@@ -124,10 +129,10 @@ extern "C"{
     #define SBASE_FAULT_INJECTION_POINT(label)
     #endif
 
-#endif /* #ifdef _DIABDATA_C_MIMX95XX_ */
+#endif /* #ifdef _DIABDATA_C_MIMX9_ */
 
 /**************************************** Linaro **************************************************/
-#ifdef _LINARO_C_MIMX95XX_
+#ifdef _LINARO_C_MIMX9_
     /**
     * @brief Compiler abstraction for the asm keyword.
     */
@@ -143,7 +148,7 @@ extern "C"{
 #endif
 
     /**
-     * @brief Compiler abstraction for MIMX_SAF Fault Injection tests
+     * @brief Compiler abstraction for MIMX9XX_SAF Fault Injection tests
     */
     #ifdef SBASE_ENABLE_FAULT_INJECTION
     #define SBASE_PUT_IN_QUOTES(x) #x
@@ -152,10 +157,10 @@ extern "C"{
     #define SBASE_FAULT_INJECTION_POINT(label)
     #endif
 
-#endif /* #ifdef _LINARO_C_MIMX95XX_ */
+#endif /* #ifdef _LINARO_C_MIMX9_ */
 
 /**************************************** IAR *****************************************************/
-#ifdef _IAR_C_MIMX95XX_
+#ifdef _IAR_C_MIMX9_
     /**
     * @brief Compiler abstraction for the asm keyword.
     */
@@ -167,7 +172,7 @@ extern "C"{
     #define SBASE_NAKED __attribute__((naked))
 
     /**
-     * @brief Compiler abstraction for MIMX_SAF Fault Injection tests
+     * @brief Compiler abstraction for MIMX9XX_SAF Fault Injection tests
     */
     #ifdef SBASE_ENABLE_FAULT_INJECTION
     #define SBASE_PUT_IN_QUOTES(x) #x
@@ -176,17 +181,17 @@ extern "C"{
     #define SBASE_FAULT_INJECTION_POINT(label)
     #endif
 
-#endif /* #ifdef _IAR_C_MIMX95XX_ */
+#endif /* #ifdef _IAR_C_MIMX9_ */
 
 /* check that the compiler used is supported (otherwise some defines might not exist) */
-#ifndef _GREENHILLS_C_MIMX95XX_
-  #ifndef _DIABDATA_C_MIMX95XX_
-    #ifndef _LINARO_C_MIMX95XX_
-      #ifndef _IAR_C_MIMX95XX_
+#ifndef _GREENHILLS_C_MIMX9_
+  #ifndef _DIABDATA_C_MIMX9_
+    #ifndef _LINARO_C_MIMX9_
+      #ifndef _IAR_C_MIMX9_
         #error "Unsupported compiler. Compiler abstraction needs to be updated to use this compiler."
 
         /**
-         * @brief Compiler abstraction for MIMX_SAF Fault Injection tests
+         * @brief Compiler abstraction for MIMX9XX_SAF Fault Injection tests
         */
         #ifdef SBASE_ENABLE_FAULT_INJECTION
         #define SBASE_PUT_IN_QUOTES(x) #x
@@ -200,57 +205,6 @@ extern "C"{
   #endif
 #endif
 
-#define AUTOSAR_OS_NOT_USED 1
-#if defined(AUTOSAR_OS_NOT_USED)
-    #if defined (USE_SW_VECTOR_MODE)
-        /**
-        * @brief Compiler abstraction for creating an interrupt handler if no OS is present.
-        */
-        #define SBASE_ISR(IsrName)       void IsrName(void)
-    #else
-        /**
-        * @brief Compiler abstraction for creating an interrupt handler if no OS is present.
-        */
-        #define SBASE_ISR(IsrName)       INTERRUPT_FUNC void IsrName(void)
-
-    #endif /*USE_SW_VECTOR_MODE*/
-
-    /**
-    * @brief Compiler abstraction for returning from an ISR if no OS is present.
-    */
-    #define SBASE_EXIT_INTERRUPT()
-
-    #if (SAFETY_BASE_PLATFORM_ARM == SAFETY_BASE_ARMV8_AARCH64)
-        /* for AARCH64 bit */
-        #define sBase_SuspendAllInterrupts() SBASE_ASM_KEYWORD(" msr DAIFSet,#0xf")
-        /* for AARCH64 bit */
-        #define sBase_ResumeAllInterrupts() SBASE_ASM_KEYWORD(" msr DAIFClr,#0xf")
-    #else
-        /* for AARCH32 bit ARM/THUMB instructions */
-        #define sBase_SuspendAllInterrupts() SBASE_ASM_KEYWORD(" cpsid i")
-
-        /* for AARCH32 bit ARM/THUMB instructions */
-        #define sBase_ResumeAllInterrupts() SBASE_ASM_KEYWORD(" cpsie i")
-    #endif
-#else
-    #include "Os.h"
-
-    /**
-    * @brief Compiler abstraction for creating an interrupt handler if OS is present.
-    */
-    #define SBASE_ISR                   ISR
-
-    /**
-    * @brief Compiler abstraction for returning from an ISR if OS is present.
-    */
-    #define SBASE_EXIT_INTERRUPT()
-
-    /* Suspend interrupts */
-    #define sBase_SuspendAllInterrupts() SuspendAllInterrupts()
-
-    /* Resume interrupts */
-    #define sBase_ResumeAllInterrupts() ResumeAllInterrupts()
-#endif
 
 
 /*==================================================================================================

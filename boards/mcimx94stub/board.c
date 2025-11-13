@@ -249,7 +249,7 @@ void BOARD_InitClocks(void)
     if (fuseTrim == 0U)
     {
         /* Enable the FRO clock with default value */
-        (void)FRO_SetEnable(true);
+        (void) FRO_SetEnable(true);
     }
     else
     {
@@ -300,7 +300,7 @@ void BOARD_InitDebugConsole(void)
         lpuart_config.enableTx = true;
         lpuart_config.enableRx = true;
         (void) LPUART_Init(s_uartConfig.base, &lpuart_config,
-            (uint32_t) rate & 0xFFFFFFFFU);
+            U64_U32(rate));
     }
 }
 
@@ -506,10 +506,10 @@ void BOARD_SystemSleepEnter(uint32_t sleepMode, uint32_t sleepFlags)
         /* Disable WDOG */
         WDOG32_Deinit(BOARD_WDOG_BASE_PTR);
 
-        /* Waits until for new configuration to take effect. */
+        /* Waits for new configuration to take effect. */
         while (0U == ((BOARD_WDOG_BASE_PTR->CS) & WDOG_CS_RCS_MASK))
         {
-            ;
+            ; /* Intentional empty while */
         }
     }
 }

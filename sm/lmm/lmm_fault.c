@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -84,11 +84,11 @@ int32_t LMM_FaultComplete(dev_sm_rst_rec_t resetRec)
                 break;
             case LMM_REACT_GRP_RESET:
                 status = LMM_SystemGrpReset(0U, 0U, false, &resetRec,
-                    (uint8_t) lm, &noReturn);
+                    U32_U8(lm), &noReturn);
                 break;
             case LMM_REACT_GRP_SHUTDOWN:
                 status = LMM_SystemGrpShutdown(0U, 0U, false, &resetRec,
-                    (uint8_t) lm, &noReturn);
+                    U32_U8(lm), &noReturn);
                 break;
             case LMM_REACT_LM_RESET:
                 status = LMM_SystemLmReset(0U, 0U, lm, false, false,

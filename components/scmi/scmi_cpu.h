@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -338,10 +338,13 @@ int32_t SCMI_CpuStop(uint32_t channel, uint32_t cpuId);
  *                                 Bit[30] Boot flag.<BR>
  *                                 Set to 1 to update the reset vector used for
  *                                 boot.<BR>
- *                                 Bits[29:1] Reserved, must be zero.<BR>
+ *                                 Bit[29] Start flag.<BR>
+ *                                 Set to 1 to update the reset vector used for
+ *                                 CPU start.<BR>
+ *                                 Bits[28:1] Reserved, must be zero.<BR>
  *                                 Bit[0] Table flag.<BR>
  *                                 Set to 1 if vector is the vector table base
- *                                 address.<BR>
+ *                                 address
  * @param[in]     resetVectorLow   Lower vector:<BR>
  *                                 If bit[0] of flags is 0, the lower 32 bits
  *                                 of the physical address where the CPU should

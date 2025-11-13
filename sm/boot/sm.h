@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -54,6 +54,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdio.h>
+#include "fsl_def.h"
 #include "build_info.h"
 #include "sm_test_mode.h"
 
@@ -129,20 +130,8 @@
 #define SM_BT_SUB    1U  /*!< Time to subtract */
 /** @} */
 
-/*! Macro to get upper 32 bits of an unsigned 64-bit value */
-#define SM_UINT64_H(X)  ((uint32_t)((((uint64_t) (X)) >> 32U) & 0x0FFFFFFFFULL))
-
-/*! Macro to get lower 32 bits of an unsigned 64-bit value */
-#define SM_UINT64_L(X)  ((uint32_t)(((uint64_t) (X)) & 0x0FFFFFFFFULL))
-
-/*! Macro to get upper 32 bits of a signed 64-bit value */
-#define SM_INT64_H(X)  ((int32_t)((((uint64_t) (X)) >> 32U) & 0x0FFFFFFFFULL))
-
-/*! Macro to get lower 32 bits of a signed 64-bit value */
-#define SM_INT64_L(X)  ((int32_t)(((uint64_t) (X)) & 0x0FFFFFFFFULL))
-
 /*! Macro to create bit field */
-#define BIT8(X)   (((uint8_t) 1U) << (((uint32_t) (X)) % 8UL))
+#define BIT8(X)   ((1U) << (uint8_t)((((uint32_t) (X)) % 8UL) & 0xFU))
 
 /*! Macro to create bit field */
 #define BIT16(X)  (((uint16_t) 1U) << (((uint32_t) (X)) % 16UL))
@@ -163,10 +152,10 @@
 #define BITARRAY_DEC(X, Y)  uint8_t (X)[BITARRAY_SIZE(Y)]
 
 /*! Macro to set a bit in a bit array */
-#define BITARRAY_SET(X, Y)  (X)[WORD8(Y)] |= BIT8(Y)
+#define BITARRAY_SET(X, Y)  (X)[WORD8(Y)] |= ((uint8_t)(BIT8(Y) & 0xFFU))
 
 /*! Macro to clear a bit in a bit array */
-#define BITARRAY_CLR(X, Y)  (X)[WORD8(Y)] &= ~BIT8(Y)
+#define BITARRAY_CLR(X, Y)  (X)[WORD8(Y)] &= ~((uint8_t)(BIT8(Y) & 0xFFU))
 
 /*! Macro to get a bit in a bit array */
 #define BITARRAY_GET(X, Y)  ((X)[WORD8(Y)] & BIT8(Y))

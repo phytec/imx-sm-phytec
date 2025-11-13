@@ -47,6 +47,8 @@
 
 /* Local variables */
 
+static bool s_resetState[DEV_SM_NUM_RESET];
+
 /*--------------------------------------------------------------------------*/
 /* Return reset domain name                                                 */
 /*--------------------------------------------------------------------------*/
@@ -91,7 +93,38 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId > DEV_SM_NUM_RESET)
+    if (domainId < DEV_SM_NUM_RESET)
+    {
+        if (assertNegate && !toggle)
+        {
+            s_resetState[domainId] = true;
+        }
+        else
+        {
+            s_resetState[domainId] = false;
+        }
+    }
+    else
+    {
+        status = SM_ERR_NOT_FOUND;
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get reset domain status                                                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (domainId < DEV_SM_NUM_RESET)
+    {
+        *assertNegate = s_resetState[domainId];
+    }
+    else
     {
         status = SM_ERR_NOT_FOUND;
     }

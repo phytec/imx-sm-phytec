@@ -75,7 +75,7 @@ sub error_line;
 sub get_define;
 
 # Config version
-my $configVer = 1;
+my $configVer = 2;
 
 my @protocols = ('base', 'pd', 'sys', 'perf', 'clk', 'sensor',
     'rst', 'volt', 'lmm', 'gpr', 'rtc', 'button', 'cpu', 'perlpi',
@@ -257,6 +257,7 @@ sub load_config_files
 	}	    
 
     # Replace standard perms
+    s/perm=0\b/perm=0x0000/g for @cfg;
     s/perm=none\b/perm=0x0000/g for @cfg;
     s/perm=sec_r\b/perm=0x4400/g for @cfg;
     s/perm=secpriv_rx\b/perm=0x5000/g for @cfg;
@@ -2296,19 +2297,34 @@ sub generate_make
     print $out $cr;
 
 	# Output config version
-    print $out 'GEN_CONFIG_VER ?= ' . $configVer . "U\n\n";
+    print $out 'GEN_CONFIG_VER ?= ' . $configVer . "U\n";
 
 	# Output board define
     if ((my $parm = &param($make[0], 'board')) ne '!')
     {
-	    print $out 'BOARD ?= ' . $parm . "\n\n";
+	    print $out 'BOARD ?= ' . $parm . "\n";
     }		
 
 	# Output FuSa define
     if ($seenvid != 0)
     {
-	    print $out 'USES_FUSA ?= 1' . "\n\n";
+	    print $out 'USES_FUSA ?= 1' . "\n";
     }		
+
+    # Output any other defines
+    my @words = split(/ /, $make[0]);    
+    foreach my $w (@words)
+    {
+        if ($w =~ /var=(\w+)\|(\w+)/)
+        {
+    	    print $out uc $1 . ' ?= ' . $2 . "\n";
+        }
+        elsif ($w =~ /var=(\w+)/)
+        {
+    	    print $out uc $1 . ' ?= 1' . "\n";
+        }
+    }
+    print $out "\n";
 
 	# Output SoC/board includes
     if ((my $parm = &param($make[0], 'soc')) ne '!')
@@ -2969,6 +2985,16 @@ sub get_trdc
                 $e .= ' nodbg=0';
             }
 
+            # Extract regions to clear
+            if ($line =~ /\bclr=(\d+) /)
+            {
+                $e .= ' clr=' . $1;
+            }
+            else
+            {
+                $e .= ' clr=' . 4;
+            }
+
             push @rdc, $e . ' ';
         }
     }
@@ -2983,11 +3009,12 @@ sub get_trdc
         foreach my $m (@rdc)
         {
             if (($m =~ /\bM[BR]C_\w+=/)
-                && ($m =~ /\bdid=\d+ /)
-                && !($m =~ /nodbg=1/))
+                && ($m =~ /\bdid=[\d-]+/)
+                && !($m =~ /\bnodbg=1/)
+                && !($m =~ /\bperm=0x0000/))
             {
                 my $a = $m;
-                $a =~ s/\bdid=\d+/did=$debugDid/g;
+                $a =~ s/\bdid=[\d-]+/did=$debugDid/g;
                 $a =~ s/\bperm=\w+/perm=0x6666/g;
                 push @debugLines, $a;            
             }
@@ -3192,7 +3219,7 @@ sub get_trdc
 	    }
 
         # Handle MRC
-        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+)/)
+        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
         {
             my $w0;
             my $w1;
@@ -3210,8 +3237,8 @@ sub get_trdc
 
 			my $perm = $8;
 		
-			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d",
-				$1, $2, $4, $3, $w0, $w1, $perm, $7);
+			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d, %d",
+				$1, $2, $4, $3, $w0, $w1, $perm, $7, $11);
             next;
         }
 		
@@ -3331,29 +3358,36 @@ sub get_trdc
 	my $curr_rgd = '';
 	my $old_elm = '';
 	my $old_rgn = 4;
+	my $maxClr = 0;
     foreach my $m (@rdc)
     {
         # Handle MRC region
-        if ($m =~ /(TRDC[A-Z]+_MRC\d+_DOM\d+_RGD)\d+ (\d+), (\d+) = (\d+), (\d+)/)
+        if ($m =~ /(TRDC[A-Z]+_MRC\d+_DOM\d+_RGD)\d+ (\d+), (\d+) = (\d+), (\d+), (\d+)/)
         {
 			my $elm = $1;
 			my $w0 = $2;
 			my $w1 = $3;
 			my $perm = $4;
 			my $rgn = $5;
+			my $clr = $6;
+
+            if ($maxClr == 0)
+            {
+                $maxClr = $clr;
+            }
 
             if ($w1 != 0)
             {
     			# New MRC
     			if ($curr_rgd ne $elm)
     			{
-					my $clr = 4;
-					if ($old_rgn < $clr)
+					my $nClr = $maxClr;
+					if ($old_rgn < $nClr)
 					{
-						$clr = $old_rgn;
+						$nClr = $old_rgn;
 					}
 
-                    while (($old_elm ne '') && ($rgd < $clr))
+                    while (($old_elm ne '') && ($rgd < $nClr))
                     {
                         my $new_m = sprintf("%s%02d %d, %d = %d", $old_elm, $rgd,
                             0, 0, 0);
@@ -3364,6 +3398,7 @@ sub get_trdc
 
     				$rgd = 0;
     				$curr_rgd = $elm;
+    				$maxClr = $clr;
     			}
 
     			# Check for overflow
@@ -3384,6 +3419,10 @@ sub get_trdc
 
                 $old_elm = $elm;
                 $old_rgn = $rgn;
+    			if ($clr > $maxClr)
+    			{
+    			    $maxClr = $clr;
+    			}
     		}
         }
 
@@ -3457,6 +3496,25 @@ sub get_trdc
     	    $m = sprintf("%s = 0x%08X, 0x%08X", $elm, $w0, $w1);
 	    }
 	}	
+
+	# Finalize last MRC
+	if ($curr_rgd ne '')
+	{
+		my $clr = $maxClr;
+		if ($old_rgn < $clr)
+		{
+			$clr = $old_rgn;
+		}
+
+        while (($old_elm ne '') && ($rgd < $clr))
+        {
+            my $new_m = sprintf("%s%02d = 0x%08X, 0x%08X",
+                $old_elm, $rgd, 0, 0);
+
+            push @rdc, $new_m;
+            $rgd++;
+        }
+	}
 
 	# Save last MRC GLBAC
 	if ($curr_mrc ne '')
@@ -3613,6 +3671,7 @@ sub convert_trdc
 		}
 		else
 		{
+            print $t . "\n";
            	error_line('unknown TRDC register', $t);
 		}
 	}

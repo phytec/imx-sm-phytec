@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -124,13 +124,19 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
 uint64_t DEV_SM_Usec64Get(void)
 {
     struct timeval tv = { 0 };
-    int64_t tm;
+    int64_t tm = 0LL;
 
     /* Get time */
     (void) gettimeofday(&tv, NULL);
 
     /* Convert to microseconds */
     tm = (tv.tv_sec * 1000000LL) + tv.tv_usec;
+
+    /* Check for signed bit of the tm */
+    if (!CHECK_I64_POSITIVE(tm))
+    {
+        tm = 0LL;
+    }
 
     return (uint64_t) tm;
 }

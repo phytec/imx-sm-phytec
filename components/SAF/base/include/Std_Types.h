@@ -1,7 +1,7 @@
 /**
 *   @file    Std_Types.h
 *   @implements     Std_Types.h_Artifact
-*   @version 0.4.0
+*   @version 0.8.4
 *
 *   @brief   AUTOSAR Base - Standard types definition.
 *   @details AUTOSAR standard types header file. It contains all types that are used across several
@@ -12,19 +12,19 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
-*   Peripheral           : MIMX9XXM33
+*   Peripheral           : IMX9XXXM33
 *   Dependencies         : none
 *
-*   Autosar Version      : 4.7.0
-*   Autosar Revision     : ASR_REL_4_7_REV_0000
+*   Autosar Version      : 4.6.0
+*   Autosar Revision     : ASR_REL_4_6_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2006-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2019, 2023 NXP
+*   Copyright 2017-2019, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -65,7 +65,7 @@ extern "C"{
 * order to prevent the contents of a header being included twice.
 */
 #include "Compiler.h"
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 
 /*==================================================================================================
                                SOURCE FILE VERSION INFORMATION
@@ -76,20 +76,20 @@ extern "C"{
 */
 #define STD_VENDOR_ID                     43
 #define STD_AR_RELEASE_MAJOR_VERSION      4
-#define STD_AR_RELEASE_MINOR_VERSION      7
+#define STD_AR_RELEASE_MINOR_VERSION      6
 #define STD_AR_RELEASE_REVISION_VERSION   0
 #define STD_SW_MAJOR_VERSION              0
-#define STD_SW_MINOR_VERSION              4
-#define STD_SW_PATCH_VERSION              0
+#define STD_SW_MINOR_VERSION              8
+#define STD_SW_PATCH_VERSION              4
 
 /*==================================================================================================
                                       FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((STD_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (STD_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (STD_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of Std_types.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((STD_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (STD_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (STD_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of Std_types.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -279,7 +279,9 @@ int32_t BRD_SM_BusExpMaskSet(uint8_t val, uint8_t mask)
 {
     int32_t status = SM_ERR_SUCCESS;
     static uint8_t cachedMask = PCAL6408A_INITIAL_MASK;
-    uint8_t newMask = (cachedMask & ~mask) | val;
+    uint8_t newMask = (cachedMask & ~mask);
+
+    newMask |= val;
 
     /* Mask changed? */
     if (cachedMask != newMask)

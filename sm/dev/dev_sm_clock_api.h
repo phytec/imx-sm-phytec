@@ -225,6 +225,23 @@ int32_t DEV_SM_ClockParentSet(uint32_t clockId, uint32_t parent);
 int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent);
 
 /*!
+ * Get info on extended clock support.
+ *
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[out]    supported          Pointer to return true if supported
+ *
+ * This function allows the caller to get info about clock extended data
+ * support.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the clock info was read successfully.
+ * - ::SM_ERR_INVALID_PARAMETERS: if \a clockId is invalid
+ */
+int32_t DEV_SM_ClockExtendedInfo(uint32_t clockId, bool *supported);
+
+/*!
  * Set a device extended clock data value.
  *
  * @param[in]     clockId            Identifier for the clock device
@@ -236,7 +253,7 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock ext was set successfully.
  * - ::SM_ERR_NOT_FOUND: if \a supported extId not found.
  * - ::SM_ERR_INVALID_PARAMETERS: if \a clockId is invalid
  */
@@ -255,7 +272,7 @@ int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock ext was read successfully.
  * - ::SM_ERR_NOT_FOUND: if \a supported extId not found.
  * - ::SM_ERR_INVALID_PARAMETERS: if \a clockId is invalid
  */

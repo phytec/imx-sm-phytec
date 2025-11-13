@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -53,8 +53,8 @@
 
 /* Defines */
 
-/*! Number of device faults */
-#define DEV_SM_NUM_FUSE  25U
+/*! Number of device fuse */
+#define DEV_SM_NUM_FUSE  30U
 
 /*!
  * @name Device fuse indexes
@@ -85,6 +85,11 @@
 #define DEV_SM_FUSE_TSENSOR1_TRIM2     22U  /*!< A55 sensor trim 2 */
 #define DEV_SM_FUSE_FRO_TRIM           23U  /*!< FRO trim */
 #define DEV_SM_FUSE_M33_ROM_PATCH_VER  24U  /*!< M33 ROM patch version */
+#define DEV_SM_FUSE_ECID3              25U  /*!< ECID 3 */
+#define DEV_SM_FUSE_ECID2              26U  /*!< ECID 2 */
+#define DEV_SM_FUSE_ECID1              27U  /*!< ECID 1 */
+#define DEV_SM_FUSE_ECID0              28U  /*!< ECID 0 */
+#define DEV_SM_FUSE_PMRO               29U  /*!< PMRO */
 /** @} */
 
 /* Types */

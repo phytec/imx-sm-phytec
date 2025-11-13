@@ -1,21 +1,21 @@
 /**
 *   @file    SafetyBase_HseWrapper.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - HSE wrapper.
+*   @brief   MIMX9XX_SAF SafetyBase - HSE wrapper.
 *   @details This file provides wrapper functions to access HSE driver.
 *
 *   @addtogroup SAFETY_BASE_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2020, 2023 NXP
+*   Copyright 2020, 2023-2024 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -42,7 +42,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "SafetyBase_Cfg.h"
 #include "Std_Types.h"
 #if (STD_ON == SAFETY_BASE_HSE_WRAPPER_SUPPORT)
@@ -53,17 +53,17 @@ extern "C"{
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
 #define SBASE_HSE_SW_MAJOR_VERSION             0
-#define SBASE_HSE_SW_MINOR_VERSION             4
-#define SBASE_HSE_SW_PATCH_VERSION             0
+#define SBASE_HSE_SW_MINOR_VERSION             8
+#define SBASE_HSE_SW_PATCH_VERSION             4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((SBASE_HSE_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (SBASE_HSE_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (SBASE_HSE_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of SafetyBase_HseWrapper.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((SBASE_HSE_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (SBASE_HSE_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (SBASE_HSE_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of SafetyBase_HseWrapper.h and MIMX9XX_SAF version are different"
 #endif
 
 #if (STD_ON == SAFETY_BASE_HSE_WRAPPER_SUPPORT)

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -159,7 +159,7 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
 
-        maskIdx = 12U /*GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT*/;
+        maskIdx = 500U /* >= GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT */;
         /* Invalid maskId */
         printf("DEV_SM_CpuIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,

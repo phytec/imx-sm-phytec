@@ -55,12 +55,17 @@
 #define ES_200000KHZ                200000U
 #define ES_233333KHZ                233333U
 #define ES_250000KHZ                250000U
+#define ES_266625KHZ                266625U
 #define ES_333333KHZ                333333U
 #define ES_360000KHZ                360000U
+#define ES_375000KHZ                375000U
 #define ES_400000KHZ                400000U
 #define ES_466667KHZ                466667U
 #define ES_500000KHZ                500000U
+#define ES_533250KHZ                533250U
 #define ES_533333KHZ                533333U
+#define ES_540540KHZ                540540U
+#define ES_562500KHZ                562500U
 #define ES_600000KHZ                600000U
 #define ES_666667KHZ                666667U
 #define ES_750000KHZ                750000U
@@ -72,6 +77,7 @@
 #define ES_1404000KHZ               1404000U
 #define ES_1500000KHZ               1500000U
 #define ES_1670000KHZ               1670000U
+#define ES_1704000KHZ               1704000U
 #define ES_1800000KHZ               1800000U
 #define ES_2004000KHZ               2004000U
 
@@ -92,21 +98,27 @@
 #define ES_400MHZ                   400000000ULL
 #define ES_480MHZ                   480000000ULL
 #define ES_500MHZ                   500000000ULL
+#define ES_540MHZ                   540540000ULL
 #define ES_667MHZ                   666666667ULL
 #define ES_700MHZ                   700000000ULL
 #define ES_800MHZ                   800000000ULL
 #define ES_1000MHZ                  1000000000ULL
 
 /* Supply voltage setpoints */
-#define ES_SUSPEND_UV_VDD_SOC       650000U
-#define ES_LOW_UV_VDD_SOC           800000U
-#define ES_NOM_UV_VDD_SOC           850000U
-#define ES_ODV_UV_VDD_SOC           900000U
+#define ES_SUSPEND_UV_VDD_SOC       650000
+#define ES_LOW_UV_VDD_SOC           800000
+#define ES_NOM_UV_VDD_SOC           850000
+#define ES_ODV_UV_VDD_SOC           900000
 
-#define ES_LOW_UV_VDD_ARM           800000U
-#define ES_NOM_UV_VDD_ARM           850000U
-#define ES_ODV_UV_VDD_ARM           900000U
-#define ES_SOD_UV_VDD_ARM           1000000U
+#define ES_LOW_UV_VDD_ARM           800000
+#define ES_NOM_UV_VDD_ARM           850000
+#define ES_ODV_UV_VDD_ARM           900000
+#define ES_SOD_UV_VDD_ARM           1000000
+
+/* Speed grade frequencies */
+#define ES_SPEED_GRADE_HZ_DEFAULT   1800000000UL        /* Unprogrammed SPEED_GRADE default */
+#define ES_SPEED_GRADE_HZ_MAX       2300000000UL
+#define ES_SPEED_GRADE_HZ_STEP      100000000UL
 
 /* Clock frequency setpoints */
 #define ES_LOW_KHZ_ELE              ES_133333KHZ

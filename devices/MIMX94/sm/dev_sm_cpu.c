@@ -146,6 +146,15 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Check if a CPU is active or suspended                                    */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_CpuIsActive(uint32_t cpuId)
+{
+    /* Return CPU state */
+    return CPU_IsActive(cpuId);
+}
+
+/*--------------------------------------------------------------------------*/
 /* CPU start                                                                */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_CpuStart(uint32_t cpuId)
@@ -210,7 +219,7 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
     {
         if (cpuId == DEV_SM_CPU_A55P)
         {
-             (void) DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
+            (void) DEV_SM_PerfLevelSet(DEV_SM_PERF_A55, DEV_SM_PERF_LVL_PRK);
         }
         /* Set CPU run mode to STOP */
         if (!CPU_RunModeSet(cpuId, CPU_RUN_MODE_STOP))
@@ -286,26 +295,34 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
     }
     else
     {
-        /* Set CPU target sleep mode on next WFI entry */
-        if (!(CPU_SleepModeSet(cpuId, sleepMode)))
+        bool irqMuxGic = (sleepFlags & DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX)
+            != 0U;
+
+        /* GIC wakeup is disallowed with SUSPEND sleep mode */
+        if ((sleepMode == CPU_SLEEP_MODE_SUSPEND) && (irqMuxGic))
         {
-            status = SM_ERR_NOT_FOUND;
+            status = SM_ERR_INVALID_PARAMETERS;
         }
         else
         {
-            bool irqMuxGic = (sleepFlags & DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX)
-                != 0U;
-
-            /* Set wake mux to GPC/GIC */
-            if (!CPU_WakeMuxSet(cpuId, irqMuxGic))
+            /* Set CPU target sleep mode on next WFI entry */
+            if (!(CPU_SleepModeSet(cpuId, sleepMode)))
             {
                 status = SM_ERR_NOT_FOUND;
             }
             else
             {
-                if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
+                /* Set wake mux to GPC/GIC */
+                if (!CPU_WakeMuxSet(cpuId, irqMuxGic))
                 {
-                    s_cpuWakeListA55 |= (1UL << cpuId);
+                    status = SM_ERR_NOT_FOUND;
+                }
+                else
+                {
+                    if ((sleepFlags & DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE) != 0U)
+                    {
+                        s_cpuWakeListA55 |= (1UL << cpuId);
+                    }
                 }
             }
         }

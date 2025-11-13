@@ -57,6 +57,8 @@ void TEST_BrdSm(void)
         dev_sm_rst_rec_t resetRec = {0};
         uint32_t reaction = LMM_REACT_NONE + 1U;
         uint32_t LmId = 0U;
+        uint8_t voltMode;
+        int32_t microVolt;
 
         CHECK(BRD_SM_Custom(argc, &argv[0]));
 
@@ -70,15 +72,15 @@ void TEST_BrdSm(void)
             SM_ERR_HARDWARE_ERROR);
 
         /* BRD_SM_SupplyModeGet: Invalid domain Id */
-        NECHECK(BRD_SM_SupplyModeGet(DEV_SM_NUM_VOLT, NULL),
+        NECHECK(BRD_SM_SupplyModeGet(DEV_SM_NUM_VOLT, &voltMode),
             SM_ERR_HARDWARE_ERROR);
 
         /* BRD_SM_SupplyLevelSet: Invalid domain Id */
-        NECHECK(BRD_SM_SupplyLevelSet(DEV_SM_NUM_VOLT, 0U),
+        NECHECK(BRD_SM_SupplyLevelSet(DEV_SM_NUM_VOLT, 0),
             SM_ERR_HARDWARE_ERROR);
 
         /* BRD_SM_SupplyLevelGet: Invalid domain Id */
-        NECHECK(BRD_SM_SupplyLevelGet(DEV_SM_NUM_VOLT, NULL),
+        NECHECK(BRD_SM_SupplyLevelGet(DEV_SM_NUM_VOLT, &microVolt),
             SM_ERR_HARDWARE_ERROR);
     }
 }

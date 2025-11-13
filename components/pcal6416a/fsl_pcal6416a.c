@@ -288,7 +288,8 @@ static status_t PCAL6416A_Receive16(LPI2C_Type *base, uint8_t deviceAddress,
     rtn = LPI2C_MasterTransferBlocking(base, &xfer);
 
     /* Convert to 16-bit */
-    *rxBuff = (((uint16_t) data[1]) << 8U) | ((uint16_t) data[0]);
+    *rxBuff = (uint16_t) (((((uint16_t) data[1]) << (uint8_t) 8U)
+        | ((uint16_t) data[0])) & 0xFFFFU);
 
     /* Return status */
     return rtn;

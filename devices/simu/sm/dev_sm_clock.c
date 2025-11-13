@@ -290,6 +290,18 @@ int32_t DEV_SM_ClockParentGet(uint32_t clockId, uint32_t *parent)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Get extended clock info                                                  */
+/*--------------------------------------------------------------------------*/
+int32_t DEV_SM_ClockExtendedInfo(uint32_t clockId, bool *supported)
+{
+    /* Check if SCC is supported */
+    *supported = (clockId < DEV_SM_NUM_CLOCK);
+
+    /* Return status */
+    return SM_ERR_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Set a device extended clock data value                                   */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ClockExtendedSet(uint32_t clockId, uint32_t extId,

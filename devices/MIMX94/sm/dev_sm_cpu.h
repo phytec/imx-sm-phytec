@@ -79,6 +79,20 @@
 /** @} */
 
 /*!
+ * @name CPU run modes
+ */
+/** @{ */
+/*! On */
+#define DEV_SM_CPU_RUN_MODE_RUN        CPU_RUN_MODE_START
+/*! Wait mode */
+#define DEV_SM_CPU_RUN_MODE_HOLD       CPU_RUN_MODE_HOLD
+/*! Stop mode */
+#define DEV_SM_CPU_RUN_MODE_STOP       CPU_RUN_MODE_STOP
+/*! Suspend mode */
+#define DEV_SM_CPU_RUN_MODE_SLEEP      CPU_RUN_MODE_SLEEP
+/** @} */
+
+/*!
  * @name CPU sleep modes
  */
 /** @{ */

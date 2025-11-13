@@ -108,7 +108,7 @@
 
 /* Local variables */
 
-static uint32_t s_voltLevel[DEV_SM_NUM_VOLT];
+static int32_t s_voltLevel[DEV_SM_NUM_VOLT];
 static uint8_t s_voltMode[DEV_SM_NUM_VOLT] =
 {
     DEV_SM_VOLT_MODE_ON,
@@ -194,7 +194,7 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 /*--------------------------------------------------------------------------*/
 /* Exit function                                                            */
 /*--------------------------------------------------------------------------*/
-void BRD_SM_Exit(int32_t status, uint32_t pc)
+_Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
 {
 #if defined(MONITOR) || defined(RUN_TEST)
     printf("exit %d, 0x%08X\n", status, pc);
@@ -442,29 +442,23 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 /*--------------------------------------------------------------------------*/
 /* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 int32_t BRD_SM_SystemReset(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     printf("Reset - spinning...");
     // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
     }
-
-    /* Return status */
-    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
-    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Reset device to a specific stage                                         */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     printf("  Reset to stage %u, container %u - spinning...\n", stage,
         container);
     // coverity[infinite_loop:FALSE]
@@ -472,29 +466,20 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
     {
         ; /* Intentional empty while */
     }
-
-    /* Return status */
-    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
-    return status;
 }
 
 /*--------------------------------------------------------------------------*/
 /* Shutdown device                                                          */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation:FALSE]
 int32_t BRD_SM_SystemShutdown(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
-
     printf("Shutdown - spinning...\n");
     // coverity[infinite_loop:FALSE]
     while (true)
     {
         ; /* Intentional empty while */
     }
-
-    /* Return status */
-    // coverity[misra_c_2012_rule_2_1_violation:FALSE]
-    return status;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -542,7 +527,7 @@ int32_t BRD_SM_SupplyModeGet(uint32_t domain, uint8_t *voltMode)
 /*--------------------------------------------------------------------------*/
 /* Set voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
+int32_t BRD_SM_SupplyLevelSet(uint32_t domain, int32_t microVolt)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -563,7 +548,7 @@ int32_t BRD_SM_SupplyLevelSet(uint32_t domain, uint32_t microVolt)
 /*--------------------------------------------------------------------------*/
 /* Get voltage of specified SoC supply                                      */
 /*--------------------------------------------------------------------------*/
-int32_t BRD_SM_SupplyLevelGet(uint32_t domain, uint32_t *microVolt)
+int32_t BRD_SM_SupplyLevelGet(uint32_t domain, int32_t *microVolt)
 {
     int32_t status = SM_ERR_SUCCESS;
 

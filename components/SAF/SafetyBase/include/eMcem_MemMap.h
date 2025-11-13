@@ -1,8 +1,8 @@
 /**
 *   @file    eMcem_MemMap.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF SafetyBase - Memory mapping specification.
+*   @brief   MIMX9XX_SAF SafetyBase - Memory mapping specification.
 *   @details This document specifies mechanisms for the mapping of code and data to specific
 *            memory sections via memory mapping file. For many ECUs and microcontroller platforms
 *            it is of utmost necessity to be able to map code, variables and constants module
@@ -12,21 +12,17 @@
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
 *   Copyright 2011-2016 Freescale Semiconductor, Inc.
-*   Copyright 2017-2024 NXP
+*   Copyright 2017-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
-
-#ifndef EMCEM_MEMMAP_H
-#define EMCEM_MEMMAP_H
-
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -65,8 +61,8 @@ extern "C"{
 * @violates @ref eMcem_MemMap_h_REF_2
 * @violates @ref eMcem_MemMap_h_REF_3
 */
-#include "MIMX_SAF_Version.h"
-#include "CompilerDefinition.h"
+#include "MIMX9XX_SAF_Version.h"
+#include "SafetyBase_CompilerDefinition.h"
 
 /*==================================================================================================
 *                               SOURCE FILE VERSION INFORMATION
@@ -77,17 +73,17 @@ extern "C"{
 *       module's description file
 */
 #define EMCEM_MEMMAP_SW_MAJOR_VERSION             0
-#define EMCEM_MEMMAP_SW_MINOR_VERSION             4
-#define EMCEM_MEMMAP_SW_PATCH_VERSION             0
+#define EMCEM_MEMMAP_SW_MINOR_VERSION             8
+#define EMCEM_MEMMAP_SW_PATCH_VERSION             4
 /**@}*/
 /*==================================================================================================
                                       FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_MEMMAP_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_MEMMAP_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_MEMMAP_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-#error "Software Version Numbers of eMcem_MemMap.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_MEMMAP_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_MEMMAP_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_MEMMAP_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+#error "Software Version Numbers of eMcem_MemMap.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -108,7 +104,7 @@ extern "C"{
 /**************************************************************************************************/
 /********************************************* GREENHILLS *****************************************/
 /**************************************************************************************************/
-#ifdef _GREENHILLS_C_MIMX95XX_
+#ifdef _GREENHILLS_C_MIMX9_
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -121,7 +117,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -149,7 +145,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -177,7 +173,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -205,7 +201,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_cfg"
+    #pragma ghs section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -233,7 +229,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -261,7 +257,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -289,7 +285,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -317,7 +313,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -345,7 +341,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const"
+    #pragma ghs section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -373,7 +369,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_0"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -401,7 +397,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_1"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -429,7 +425,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_2"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -457,7 +453,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_3"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -485,7 +481,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_4"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -513,7 +509,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section rodata=".mimx_saf_const_flash_5"
+    #pragma ghs section rodata=".mimx9xx_saf_const_flash_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -541,7 +537,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section text=".mimx_saf_text"
+    #pragma ghs section text=".mimx9xx_saf_text"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -695,7 +691,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -723,7 +719,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -751,7 +747,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -779,7 +775,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -807,7 +803,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -835,7 +831,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_full_access"
+    #pragma ghs section bss=".mimx9xx_saf_bss_full_access"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -863,7 +859,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_64k_0"
+    #pragma ghs section bss=".mimx9xx_saf_bss_64k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -891,7 +887,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_64k_1"
+    #pragma ghs section bss=".mimx9xx_saf_bss_64k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -919,7 +915,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -947,7 +943,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -975,7 +971,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -1003,7 +999,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -1031,7 +1027,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_16k_0"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_16k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -1059,7 +1055,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_16k_1"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_16k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -1087,7 +1083,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_8k_0"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_8k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -1115,7 +1111,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_8k_1"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_8k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -1143,7 +1139,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_8k_2"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_8k_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -1171,7 +1167,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_exec_8k_3"
+    #pragma ghs section data=".mimx9xx_saf_data_exec_8k_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -1199,7 +1195,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data"
+    #pragma ghs section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -1227,7 +1223,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -1255,7 +1251,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -1283,7 +1279,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -1311,7 +1307,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -1339,7 +1335,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -1367,7 +1363,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -1395,7 +1391,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -1423,7 +1419,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -1451,7 +1447,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -1479,7 +1475,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section data=".mimx_saf_data_no_cacheable"
+    #pragma ghs section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -1507,7 +1503,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_shared_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_shared_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -1535,7 +1531,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_persist_reset"
+    #pragma ghs section bss=".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -1563,7 +1559,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_scheck_faults_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -1591,7 +1587,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_scheck_requests_no_cacheable"
+    #pragma ghs section bss=".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -1619,7 +1615,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_tcm_0"
+    #pragma ghs section bss=".mimx9xx_saf_bss_tcm_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -1647,7 +1643,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_tcm_1"
+    #pragma ghs section bss=".mimx9xx_saf_bss_tcm_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -1675,7 +1671,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_tcm_2"
+    #pragma ghs section bss=".mimx9xx_saf_bss_tcm_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -1703,7 +1699,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_0"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -1731,7 +1727,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_1"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -1759,7 +1755,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_2"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -1787,7 +1783,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_3"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -1815,7 +1811,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_4"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -1843,7 +1839,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_5"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -1871,7 +1867,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_6"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_6"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -1899,7 +1895,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_7"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_7"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -1927,7 +1923,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_8"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_8"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -1955,7 +1951,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_9"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_9"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -1983,7 +1979,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_10"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_10"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -2011,7 +2007,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_11"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_11"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -2039,7 +2035,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_12"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_12"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -2067,7 +2063,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_13"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_13"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -2095,7 +2091,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_14"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_14"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -2123,7 +2119,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_15"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_15"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -2151,7 +2147,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_16"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_16"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -2179,7 +2175,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_17"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_17"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -2207,7 +2203,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_18"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_18"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -2235,7 +2231,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_19"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_19"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -2263,7 +2259,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_20"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_20"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -2291,7 +2287,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_21"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_21"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -2319,7 +2315,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_22"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_22"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -2347,7 +2343,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_23"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_23"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -2375,7 +2371,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_24"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_24"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -2403,7 +2399,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_25"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_25"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -2431,7 +2427,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_26"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_26"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -2459,7 +2455,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_27"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_27"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -2487,7 +2483,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_sram_28"
+    #pragma ghs section bss=".mimx9xx_saf_bss_sram_28"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -2515,7 +2511,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss_dram_0"
+    #pragma ghs section bss=".mimx9xx_saf_bss_dram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -2543,7 +2539,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -2571,7 +2567,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -2599,7 +2595,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -2627,7 +2623,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -2655,7 +2651,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma ghs section bss=".mimx_saf_bss"
+    #pragma ghs section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -2671,10 +2667,150 @@ extern "C"{
     #undef MEMMAP_ERROR
     #pragma ghs section
 #endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma ghs section
+#endif
 /**************************************************************************************************/
 /********************************************* DIAB ***********************************************/
 /**************************************************************************************************/
-#elif defined(_DIABDATA_C_MIMX95XX_)
+#elif defined(_DIABDATA_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -2687,7 +2823,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -2715,7 +2851,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -2743,7 +2879,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -2771,7 +2907,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_cfg"
+    #pragma clang section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -2799,7 +2935,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -2827,7 +2963,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -2855,7 +2991,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -2883,7 +3019,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -2911,7 +3047,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const"
+    #pragma clang section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -2939,7 +3075,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_0"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -2967,7 +3103,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_1"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -2995,7 +3131,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_2"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -3023,7 +3159,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_3"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -3051,7 +3187,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_4"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -3079,7 +3215,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section rodata=".mimx_saf_const_flash_5"
+    #pragma clang section rodata=".mimx9xx_saf_const_flash_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -3107,7 +3243,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section text=".mimx_saf_text"
+    #pragma clang section text=".mimx9xx_saf_text"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -3252,7 +3388,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -3280,7 +3416,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -3308,7 +3444,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -3336,7 +3472,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -3364,7 +3500,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -3392,7 +3528,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_full_access"
+    #pragma clang section bss=".mimx9xx_saf_bss_full_access"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -3420,7 +3556,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_64k_0"
+    #pragma clang section bss=".mimx9xx_saf_bss_64k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -3448,7 +3584,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_64k_1"
+    #pragma clang section bss=".mimx9xx_saf_bss_64k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -3476,7 +3612,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -3504,7 +3640,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -3532,7 +3668,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -3560,7 +3696,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -3588,7 +3724,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_16k_0"
+    #pragma clang section data=".mimx9xx_saf_data_exec_16k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -3616,7 +3752,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_16k_1"
+    #pragma clang section data=".mimx9xx_saf_data_exec_16k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -3644,7 +3780,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_8k_0"
+    #pragma clang section data=".mimx9xx_saf_data_exec_8k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -3672,7 +3808,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_8k_1"
+    #pragma clang section data=".mimx9xx_saf_data_exec_8k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -3700,7 +3836,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_8k_2"
+    #pragma clang section data=".mimx9xx_saf_data_exec_8k_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -3728,7 +3864,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_exec_8k_3"
+    #pragma clang section data=".mimx9xx_saf_data_exec_8k_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -3756,7 +3892,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data"
+    #pragma clang section data=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -3784,7 +3920,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -3812,7 +3948,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -3840,7 +3976,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -3868,7 +4004,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -3896,7 +4032,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -3924,7 +4060,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -3952,7 +4088,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -3980,7 +4116,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -4008,7 +4144,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -4036,7 +4172,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section data=".mimx_saf_data_no_cacheable"
+    #pragma clang section data=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -4064,7 +4200,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_shared_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_shared_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -4092,7 +4228,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_persist_reset"
+    #pragma clang section bss=".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -4120,7 +4256,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_scheck_faults_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -4148,7 +4284,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_scheck_requests_no_cacheable"
+    #pragma clang section bss=".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -4176,7 +4312,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_tcm_0"
+    #pragma clang section bss=".mimx9xx_saf_bss_tcm_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -4204,7 +4340,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_tcm_1"
+    #pragma clang section bss=".mimx9xx_saf_bss_tcm_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -4232,7 +4368,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_tcm_2"
+    #pragma clang section bss=".mimx9xx_saf_bss_tcm_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -4260,7 +4396,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_0"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -4288,7 +4424,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_1"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -4316,7 +4452,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_2"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -4344,7 +4480,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_3"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -4372,7 +4508,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_4"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -4400,7 +4536,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_5"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -4428,7 +4564,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_6"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_6"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -4456,7 +4592,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_7"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_7"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -4484,7 +4620,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_8"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_8"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -4512,7 +4648,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_9"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_9"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -4540,7 +4676,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_10"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_10"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -4568,7 +4704,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_11"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_11"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -4596,7 +4732,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_12"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_12"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -4624,7 +4760,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_13"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_13"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -4652,7 +4788,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_14"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_14"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -4680,7 +4816,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_15"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_15"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -4708,7 +4844,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_16"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_16"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -4736,7 +4872,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_17"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_17"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -4764,7 +4900,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_18"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_18"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -4792,7 +4928,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_19"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_19"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -4820,7 +4956,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_20"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_20"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -4848,7 +4984,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_21"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_21"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -4876,7 +5012,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_22"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_22"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -4904,7 +5040,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_23"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_23"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -4932,7 +5068,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_24"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_24"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -4960,7 +5096,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_25"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_25"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -4988,7 +5124,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_26"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_26"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -5016,7 +5152,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_27"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_27"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -5044,7 +5180,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_sram_28"
+    #pragma clang section bss=".mimx9xx_saf_bss_sram_28"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -5072,7 +5208,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss_dram_0"
+    #pragma clang section bss=".mimx9xx_saf_bss_dram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -5100,7 +5236,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -5128,7 +5264,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -5156,7 +5292,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -5184,7 +5320,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -5212,7 +5348,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma clang section bss=".mimx_saf_bss"
+    #pragma clang section bss=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -5226,12 +5362,150 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
+#endif
 
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma clang section bss=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
 #endif
 /**************************************************************************************************/
 /********************************************* CODEWARRIOR ****************************************/
 /**************************************************************************************************/
-#elif defined(_CODEWARRIOR_C_MIMX95XX_)
+#elif defined(_CODEWARRIOR_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -5244,7 +5518,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -5272,7 +5546,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -5300,7 +5574,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -5328,7 +5602,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_cfg
+    #pragma CONST_SEG mimx9xx_saf_const_cfg
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -5356,7 +5630,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -5384,7 +5658,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -5412,7 +5686,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -5440,7 +5714,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -5468,7 +5742,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const
+    #pragma CONST_SEG mimx9xx_saf_const
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -5496,7 +5770,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_0
+    #pragma CONST_SEG mimx9xx_saf_const_flash_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -5524,7 +5798,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_1
+    #pragma CONST_SEG mimx9xx_saf_const_flash_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -5552,7 +5826,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_2
+    #pragma CONST_SEG mimx9xx_saf_const_flash_2
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -5580,7 +5854,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_3
+    #pragma CONST_SEG mimx9xx_saf_const_flash_3
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -5608,7 +5882,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_4
+    #pragma CONST_SEG mimx9xx_saf_const_flash_4
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -5636,7 +5910,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CONST_SEG mimx_saf_const_flash_5
+    #pragma CONST_SEG mimx9xx_saf_const_flash_5
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -5664,7 +5938,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma CODE_SEG mimx_saf_text
+    #pragma CODE_SEG mimx9xx_saf_text
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -5804,7 +6078,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -5832,7 +6106,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -5860,7 +6134,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -5888,7 +6162,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -5916,7 +6190,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -5944,7 +6218,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_full_access
+    #pragma DATA_SEG mimx9xx_saf_bss_full_access
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -5972,7 +6246,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_64k_0
+    #pragma DATA_SEG mimx9xx_saf_bss_64k_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -6000,7 +6274,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_64k_1
+    #pragma DATA_SEG mimx9xx_saf_bss_64k_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -6028,7 +6302,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -6056,7 +6330,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -6084,7 +6358,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -6112,7 +6386,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -6140,7 +6414,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_16k_0
+    #pragma DATA_SEG mimx9xx_saf_data_exec_16k_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -6168,7 +6442,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_16k_1
+    #pragma DATA_SEG mimx9xx_saf_data_exec_16k_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -6196,7 +6470,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_8k_0
+    #pragma DATA_SEG mimx9xx_saf_data_exec_8k_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -6224,7 +6498,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_8k_1
+    #pragma DATA_SEG mimx9xx_saf_data_exec_8k_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -6252,7 +6526,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_8k_2
+    #pragma DATA_SEG mimx9xx_saf_data_exec_8k_2
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -6280,7 +6554,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_exec_8k_3
+    #pragma DATA_SEG mimx9xx_saf_data_exec_8k_3
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -6308,7 +6582,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data
+    #pragma DATA_SEG mimx9xx_saf_data
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -6336,7 +6610,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -6364,7 +6638,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -6392,7 +6666,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -6420,7 +6694,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -6448,7 +6722,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -6476,7 +6750,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_data_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -6504,7 +6778,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_data_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -6532,7 +6806,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_data_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -6560,7 +6834,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_data_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -6588,7 +6862,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_data_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_data_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -6616,7 +6890,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_shared_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_shared_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -6644,7 +6918,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_persist_reset
+    #pragma DATA_SEG mimx9xx_saf_bss_persist_reset
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -6672,7 +6946,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_scheck_faults_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_scheck_faults_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -6700,7 +6974,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_scheck_requests_no_cacheable
+    #pragma DATA_SEG mimx9xx_saf_scheck_requests_no_cacheable
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -6728,7 +7002,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_tcm_0
+    #pragma DATA_SEG mimx9xx_saf_bss_tcm_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -6756,7 +7030,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_tcm_1
+    #pragma DATA_SEG mimx9xx_saf_bss_tcm_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -6784,7 +7058,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_tcm_2
+    #pragma DATA_SEG mimx9xx_saf_bss_tcm_2
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -6812,7 +7086,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_0
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -6840,7 +7114,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_1
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_1
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -6868,7 +7142,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_2
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_2
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -6896,7 +7170,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_3
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_3
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -6924,7 +7198,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_4
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_4
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -6952,7 +7226,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_5
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_5
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -6980,7 +7254,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_6
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_6
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -7008,7 +7282,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_7
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_7
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -7036,7 +7310,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_8
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_8
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -7064,7 +7338,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_9
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_9
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -7092,7 +7366,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_10
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_10
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -7120,7 +7394,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_11
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_11
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -7148,7 +7422,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_12
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_12
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -7176,7 +7450,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_13
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_13
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -7204,7 +7478,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_14
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_14
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -7232,7 +7506,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_15
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_15
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -7260,7 +7534,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_16
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_16
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -7288,7 +7562,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_17
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_17
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -7316,7 +7590,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_18
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_18
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -7344,7 +7618,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_19
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_19
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -7372,7 +7646,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_20
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_20
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -7400,7 +7674,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_21
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_21
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -7428,7 +7702,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_22
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_22
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -7456,7 +7730,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_23
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_23
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -7484,7 +7758,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_24
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_24
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -7512,7 +7786,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_25
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_25
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -7540,7 +7814,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_26
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_26
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -7568,7 +7842,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_27
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_27
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -7596,7 +7870,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_sram_28
+    #pragma DATA_SEG mimx9xx_saf_bss_sram_28
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -7624,7 +7898,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss_dram_0
+    #pragma DATA_SEG mimx9xx_saf_bss_dram_0
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -7652,7 +7926,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -7680,7 +7954,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -7708,7 +7982,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -7736,7 +8010,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -7764,7 +8038,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma DATA_SEG mimx_saf_bss
+    #pragma DATA_SEG mimx9xx_saf_bss
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -7778,12 +8052,150 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
+#endif
 
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma DATA_SEG mimx9xx_saf_bss_no_cacheable
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
 #endif
 /**************************************************************************************************/
 /********************************************* COSMIC *********************************************/
 /**************************************************************************************************/
-#elif defined(_COSMIC_C_MIMX95XX_)
+#elif defined(_COSMIC_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -7796,7 +8208,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_cfg}
+    #pragma section const {mimx9xx_saf_const_cfg}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -7824,7 +8236,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_cfg}
+    #pragma section const {mimx9xx_saf_const_cfg}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -7852,7 +8264,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_cfg}
+    #pragma section const {mimx9xx_saf_const_cfg}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -7880,7 +8292,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_cfg}
+    #pragma section const {mimx9xx_saf_const_cfg}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -7908,7 +8320,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -7936,7 +8348,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -7964,7 +8376,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -7992,7 +8404,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -8020,7 +8432,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const}
+    #pragma section const {mimx9xx_saf_const}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -8048,7 +8460,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_0}
+    #pragma section const {mimx9xx_saf_const_flash_0}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -8076,7 +8488,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_1}
+    #pragma section const {mimx9xx_saf_const_flash_1}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -8104,7 +8516,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_2}
+    #pragma section const {mimx9xx_saf_const_flash_2}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -8132,7 +8544,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_3}
+    #pragma section const {mimx9xx_saf_const_flash_3}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -8160,7 +8572,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_4}
+    #pragma section const {mimx9xx_saf_const_flash_4}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -8188,7 +8600,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section const {mimx_saf_const_flash_5}
+    #pragma section const {mimx9xx_saf_const_flash_5}
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -8216,7 +8628,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section (mimx_saf_text)
+    #pragma section (mimx9xx_saf_text)
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -8356,7 +8768,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -8384,7 +8796,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -8412,7 +8824,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -8440,7 +8852,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -8468,7 +8880,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -8496,7 +8908,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_full_access]
+    #pragma section [mimx9xx_saf_bss_full_access]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -8524,7 +8936,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_64k_0]
+    #pragma section [mimx9xx_saf_bss_64k_0]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -8552,7 +8964,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_64k_1]
+    #pragma section [mimx9xx_saf_bss_64k_1]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -8580,7 +8992,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -8608,7 +9020,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -8636,7 +9048,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -8664,7 +9076,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -8692,7 +9104,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_16k_0}
+    #pragma section {mimx9xx_saf_data_exec_16k_0}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -8720,7 +9132,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_16k_1}
+    #pragma section {mimx9xx_saf_data_exec_16k_1}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -8748,7 +9160,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_8k_0}
+    #pragma section {mimx9xx_saf_data_exec_8k_0}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -8776,7 +9188,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_8k_1}
+    #pragma section {mimx9xx_saf_data_exec_8k_1}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -8804,7 +9216,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_8k_2}
+    #pragma section {mimx9xx_saf_data_exec_8k_2}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -8832,7 +9244,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_exec_8k_3}
+    #pragma section {mimx9xx_saf_data_exec_8k_3}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -8860,7 +9272,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data}
+    #pragma section {mimx9xx_saf_data}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -8888,7 +9300,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_no_cacheable]
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -8916,7 +9328,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_no_cacheable]
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -8944,7 +9356,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_no_cacheable]
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -8972,7 +9384,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_no_cacheable]
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -9000,7 +9412,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_no_cacheable]
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -9028,7 +9440,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_no_cacheable}
+    #pragma section {mimx9xx_saf_data_no_cacheable}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -9056,7 +9468,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_no_cacheable}
+    #pragma section {mimx9xx_saf_data_no_cacheable}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -9084,7 +9496,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_no_cacheable}
+    #pragma section {mimx9xx_saf_data_no_cacheable}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -9112,7 +9524,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_no_cacheable}
+    #pragma section {mimx9xx_saf_data_no_cacheable}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -9140,7 +9552,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section {mimx_saf_data_no_cacheable}
+    #pragma section {mimx9xx_saf_data_no_cacheable}
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -9168,7 +9580,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_shared_no_cacheable]
+    #pragma section [mimx9xx_saf_shared_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -9196,7 +9608,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_persist_reset]
+    #pragma section [mimx9xx_saf_bss_persist_reset]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -9224,7 +9636,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_scheck_faults_no_cacheable]
+    #pragma section [mimx9xx_saf_scheck_faults_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -9252,7 +9664,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_scheck_requests_no_cacheable]
+    #pragma section [mimx9xx_saf_scheck_requests_no_cacheable]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -9280,7 +9692,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_tcm_0]
+    #pragma section [mimx9xx_saf_bss_tcm_0]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -9308,7 +9720,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_tcm_1]
+    #pragma section [mimx9xx_saf_bss_tcm_1]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -9336,7 +9748,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_tcm_2]
+    #pragma section [mimx9xx_saf_bss_tcm_2]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -9364,7 +9776,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_0]
+    #pragma section [mimx9xx_saf_bss_sram_0]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -9392,7 +9804,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_1]
+    #pragma section [mimx9xx_saf_bss_sram_1]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -9420,7 +9832,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_2]
+    #pragma section [mimx9xx_saf_bss_sram_2]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -9448,7 +9860,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_3]
+    #pragma section [mimx9xx_saf_bss_sram_3]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -9476,7 +9888,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_4]
+    #pragma section [mimx9xx_saf_bss_sram_4]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -9504,7 +9916,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_5]
+    #pragma section [mimx9xx_saf_bss_sram_5]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -9532,7 +9944,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_6]
+    #pragma section [mimx9xx_saf_bss_sram_6]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -9560,7 +9972,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_7]
+    #pragma section [mimx9xx_saf_bss_sram_7]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -9588,7 +10000,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_8]
+    #pragma section [mimx9xx_saf_bss_sram_8]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -9616,7 +10028,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_9]
+    #pragma section [mimx9xx_saf_bss_sram_9]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -9644,7 +10056,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_10]
+    #pragma section [mimx9xx_saf_bss_sram_10]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -9672,7 +10084,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_11]
+    #pragma section [mimx9xx_saf_bss_sram_11]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -9700,7 +10112,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_12]
+    #pragma section [mimx9xx_saf_bss_sram_12]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -9728,7 +10140,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_13]
+    #pragma section [mimx9xx_saf_bss_sram_13]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -9756,7 +10168,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_14]
+    #pragma section [mimx9xx_saf_bss_sram_14]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -9784,7 +10196,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_15]
+    #pragma section [mimx9xx_saf_bss_sram_15]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -9812,7 +10224,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_16]
+    #pragma section [mimx9xx_saf_bss_sram_16]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -9840,7 +10252,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_17]
+    #pragma section [mimx9xx_saf_bss_sram_17]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -9868,7 +10280,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_18]
+    #pragma section [mimx9xx_saf_bss_sram_18]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -9896,7 +10308,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_19]
+    #pragma section [mimx9xx_saf_bss_sram_19]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -9924,7 +10336,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_20]
+    #pragma section [mimx9xx_saf_bss_sram_20]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -9952,7 +10364,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_21]
+    #pragma section [mimx9xx_saf_bss_sram_21]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -9980,7 +10392,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_22]
+    #pragma section [mimx9xx_saf_bss_sram_22]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -10008,7 +10420,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_23]
+    #pragma section [mimx9xx_saf_bss_sram_23]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -10036,7 +10448,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_24]
+    #pragma section [mimx9xx_saf_bss_sram_24]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -10064,7 +10476,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_25]
+    #pragma section [mimx9xx_saf_bss_sram_25]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -10092,7 +10504,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_26]
+    #pragma section [mimx9xx_saf_bss_sram_26]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -10120,7 +10532,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_27]
+    #pragma section [mimx9xx_saf_bss_sram_27]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -10148,7 +10560,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_sram_28]
+    #pragma section [mimx9xx_saf_bss_sram_28]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -10176,7 +10588,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss_dram_0]
+    #pragma section [mimx9xx_saf_bss_dram_0]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -10204,7 +10616,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -10232,7 +10644,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -10260,7 +10672,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -10288,7 +10700,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -10316,7 +10728,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section [mimx_saf_bss]
+    #pragma section [mimx9xx_saf_bss]
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -10330,12 +10742,150 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
+#endif
 
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section [mimx9xx_saf_bss_no_cacheable]
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
 #endif
 /**************************************************************************************************/
 /********************************************* HighTec ********************************************/
 /**************************************************************************************************/
-#elif defined(_HITECH_C_MIMX95XX_)
+#elif defined(_HITECH_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -10348,7 +10898,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -10376,7 +10926,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -10404,7 +10954,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -10432,7 +10982,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_cfg" a
+    #pragma section ".mimx9xx_saf_const_cfg" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -10460,7 +11010,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -10488,7 +11038,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -10516,7 +11066,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -10544,7 +11094,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -10572,7 +11122,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const" a
+    #pragma section ".mimx9xx_saf_const" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -10600,7 +11150,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_0" a
+    #pragma section ".mimx9xx_saf_const_flash_0" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -10628,7 +11178,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_1" a
+    #pragma section ".mimx9xx_saf_const_flash_1" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -10656,7 +11206,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_2" a
+    #pragma section ".mimx9xx_saf_const_flash_2" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -10684,7 +11234,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_3" a
+    #pragma section ".mimx9xx_saf_const_flash_3" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -10712,7 +11262,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_4" a
+    #pragma section ".mimx9xx_saf_const_flash_4" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -10740,7 +11290,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_const_flash_5" a
+    #pragma section ".mimx9xx_saf_const_flash_5" a
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -10768,7 +11318,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_text" avx
+    #pragma section ".mimx9xx_saf_text" avx
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -10908,7 +11458,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -10936,7 +11486,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -10964,7 +11514,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -10992,7 +11542,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -11020,7 +11570,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -11048,7 +11598,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_full_access" awsB
+    #pragma section ".mimx9xx_saf_bss_full_access" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -11076,7 +11626,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_64k_0" awsB
+    #pragma section ".mimx9xx_saf_bss_64k_0" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -11104,7 +11654,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_64k_1" awsB
+    #pragma section ".mimx9xx_saf_bss_64k_1" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -11132,7 +11682,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -11160,7 +11710,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -11188,7 +11738,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -11216,7 +11766,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -11244,7 +11794,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_16k_0" aws
+    #pragma section ".mimx9xx_saf_data_exec_16k_0" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -11272,7 +11822,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_16k_1" aws
+    #pragma section ".mimx9xx_saf_data_exec_16k_1" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -11300,7 +11850,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_8k_0" aws
+    #pragma section ".mimx9xx_saf_data_exec_8k_0" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -11328,7 +11878,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_8k_1" aws
+    #pragma section ".mimx9xx_saf_data_exec_8k_1" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -11356,7 +11906,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_8k_2" aws
+    #pragma section ".mimx9xx_saf_data_exec_8k_2" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -11384,7 +11934,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_exec_8k_3" aws
+    #pragma section ".mimx9xx_saf_data_exec_8k_3" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -11412,7 +11962,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data" aws
+    #pragma section ".mimx9xx_saf_data" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -11440,7 +11990,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -11468,7 +12018,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -11496,7 +12046,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -11524,7 +12074,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -11552,7 +12102,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -11580,7 +12130,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_no_cacheable" aws
+    #pragma section ".mimx9xx_saf_data_no_cacheable" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -11608,7 +12158,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_no_cacheable" aws
+    #pragma section ".mimx9xx_saf_data_no_cacheable" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -11636,7 +12186,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_no_cacheable" aws
+    #pragma section ".mimx9xx_saf_data_no_cacheable" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -11664,7 +12214,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_no_cacheable" aws
+    #pragma section ".mimx9xx_saf_data_no_cacheable" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -11692,7 +12242,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_data_no_cacheable" aws
+    #pragma section ".mimx9xx_saf_data_no_cacheable" aws
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -11720,7 +12270,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_shared_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_shared_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -11748,7 +12298,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_persist_reset" awsB
+    #pragma section ".mimx9xx_saf_bss_persist_reset" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -11776,7 +12326,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_scheck_faults_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_scheck_faults_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -11804,7 +12354,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_scheck_requests_no_cacheable" awsB
+    #pragma section ".mimx9xx_saf_scheck_requests_no_cacheable" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -11832,7 +12382,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_tcm_0" awsB
+    #pragma section ".mimx9xx_saf_bss_tcm_0" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -11860,7 +12410,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_tcm_1" awsB
+    #pragma section ".mimx9xx_saf_bss_tcm_1" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -11888,7 +12438,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_tcm_2" awsB
+    #pragma section ".mimx9xx_saf_bss_tcm_2" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -11916,7 +12466,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_0" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_0" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -11944,7 +12494,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_1" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_1" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -11972,7 +12522,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_2" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_2" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -12000,7 +12550,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_3" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_3" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -12028,7 +12578,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_4" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_4" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -12056,7 +12606,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_5" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_5" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -12084,7 +12634,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_6" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_6" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -12112,7 +12662,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_7" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_7" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -12140,7 +12690,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_8" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_8" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -12168,7 +12718,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_9" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_9" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -12196,7 +12746,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_10" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_10" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -12224,7 +12774,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_11" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_11" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -12252,7 +12802,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_12" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_12" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -12280,7 +12830,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_13" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_13" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -12308,7 +12858,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_14" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_14" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -12336,7 +12886,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_15" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_15" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -12364,7 +12914,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_16" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_16" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -12392,7 +12942,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_17" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_17" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -12420,7 +12970,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_18" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_18" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -12448,7 +12998,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_19" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_19" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -12476,7 +13026,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_20" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_20" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -12504,7 +13054,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_21" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_21" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -12532,7 +13082,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_22" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_22" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -12560,7 +13110,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_23" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_23" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -12588,7 +13138,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_24" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_24" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -12616,7 +13166,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_25" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_25" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -12644,7 +13194,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_26" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_26" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -12672,7 +13222,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_27" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_27" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -12700,7 +13250,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_sram_28" awsB
+    #pragma section ".mimx9xx_saf_bss_sram_28" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -12728,7 +13278,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss_dram_0" awsB
+    #pragma section ".mimx9xx_saf_bss_dram_0" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -12756,7 +13306,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -12784,7 +13334,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -12812,7 +13362,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -12840,7 +13390,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -12868,7 +13418,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma section ".mimx_saf_bss" awsB
+    #pragma section ".mimx9xx_saf_bss" awsB
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -12884,10 +13434,150 @@ extern "C"{
     #undef MEMMAP_ERROR
     #pragma section
 #endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section ".mimx9xx_saf_bss_no_cacheable" awsB
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma section
+#endif
 /**************************************************************************************************/
 /********************************************* Linaro *********************************************/
 /**************************************************************************************************/
-#elif defined(_LINARO_C_MIMX95XX_)
+#elif defined(_LINARO_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -12900,7 +13590,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -12928,7 +13618,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -12956,7 +13646,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -12984,7 +13674,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_cfg"
+    #pragma GCC section rodata ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -13012,7 +13702,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -13040,7 +13730,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -13068,7 +13758,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -13096,7 +13786,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -13124,7 +13814,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const"
+    #pragma GCC section rodata ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -13152,7 +13842,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_0"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -13180,7 +13870,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_1"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -13208,7 +13898,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_2"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -13236,7 +13926,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_3"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -13264,7 +13954,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_4"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -13292,7 +13982,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section rodata ".mimx_saf_const_flash_5"
+    #pragma GCC section rodata ".mimx9xx_saf_const_flash_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -13320,7 +14010,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section text ".mimx_saf_text"
+    #pragma GCC section text ".mimx9xx_saf_text"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -13460,7 +14150,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -13488,7 +14178,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -13516,7 +14206,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -13544,7 +14234,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -13572,7 +14262,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -13600,7 +14290,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_full_access"
+    #pragma GCC section bss ".mimx9xx_saf_bss_full_access"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -13628,7 +14318,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_64k_0"
+    #pragma GCC section bss ".mimx9xx_saf_bss_64k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -13656,7 +14346,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_64k_1"
+    #pragma GCC section bss ".mimx9xx_saf_bss_64k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -13684,7 +14374,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -13712,7 +14402,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -13740,7 +14430,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -13768,7 +14458,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -13796,7 +14486,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_16k_0"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_16k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -13824,7 +14514,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_16k_1"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_16k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -13852,7 +14542,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_8k_0"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_8k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -13880,7 +14570,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_8k_1"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_8k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -13908,7 +14598,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_8k_2"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_8k_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -13936,7 +14626,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_exec_8k_3"
+    #pragma GCC section data ".mimx9xx_saf_data_exec_8k_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -13964,7 +14654,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data"
+    #pragma GCC section data ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -13992,7 +14682,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -14020,7 +14710,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -14048,7 +14738,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -14076,7 +14766,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -14104,7 +14794,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -14132,7 +14822,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -14160,7 +14850,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -14188,7 +14878,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -14216,7 +14906,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -14244,7 +14934,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section data ".mimx_saf_data_no_cacheable"
+    #pragma GCC section data ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -14272,7 +14962,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_shared_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_shared_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -14300,7 +14990,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_persist_reset"
+    #pragma GCC section bss ".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -14328,7 +15018,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_scheck_faults_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -14356,7 +15046,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_scheck_requests_no_cacheable"
+    #pragma GCC section bss ".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -14384,7 +15074,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_tcm_0"
+    #pragma GCC section bss ".mimx9xx_saf_bss_tcm_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -14412,7 +15102,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_tcm_1"
+    #pragma GCC section bss ".mimx9xx_saf_bss_tcm_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -14440,7 +15130,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_tcm_2"
+    #pragma GCC section bss ".mimx9xx_saf_bss_tcm_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -14468,7 +15158,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_0"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -14496,7 +15186,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_1"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -14524,7 +15214,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_2"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -14552,7 +15242,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_3"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -14580,7 +15270,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_4"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -14608,7 +15298,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_5"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -14636,7 +15326,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_6"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_6"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -14664,7 +15354,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_7"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_7"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -14692,7 +15382,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_8"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_8"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -14720,7 +15410,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_9"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_9"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -14748,7 +15438,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_10"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_10"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -14776,7 +15466,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_11"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_11"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -14804,7 +15494,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_12"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_12"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -14832,7 +15522,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_13"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_13"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -14860,7 +15550,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_14"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_14"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -14888,7 +15578,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_15"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_15"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -14916,7 +15606,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_16"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_16"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -14944,7 +15634,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_17"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_17"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -14972,7 +15662,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_18"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_18"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -15000,7 +15690,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_19"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_19"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -15028,7 +15718,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_20"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_20"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -15056,7 +15746,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_21"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_21"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -15084,7 +15774,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_22"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_22"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -15112,7 +15802,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_23"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_23"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -15140,7 +15830,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_24"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_24"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -15168,7 +15858,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_25"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_25"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -15196,7 +15886,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_26"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_26"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -15224,7 +15914,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_27"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_27"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -15252,7 +15942,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_sram_28"
+    #pragma GCC section bss ".mimx9xx_saf_bss_sram_28"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -15280,7 +15970,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss_dram_0"
+    #pragma GCC section bss ".mimx9xx_saf_bss_dram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -15308,7 +15998,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -15336,7 +16026,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -15364,7 +16054,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -15392,7 +16082,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -15420,7 +16110,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma GCC section bss ".mimx_saf_bss"
+    #pragma GCC section bss ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -15434,12 +16124,150 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
+#endif
 
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma GCC section bss ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
 #endif
 /**************************************************************************************************/
 /********************************************* DS5 ************************************************/
 /**************************************************************************************************/
-#elif defined(_ARM_DS5_C_MIMX95XX_)
+#elif defined(_ARM_DS5_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -15452,7 +16280,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -15480,7 +16308,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -15508,7 +16336,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -15536,7 +16364,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_cfg"
+    #pragma arm section rodata=".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -15564,7 +16392,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -15592,7 +16420,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -15620,7 +16448,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -15648,7 +16476,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -15676,7 +16504,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const"
+    #pragma arm section rodata=".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -15704,7 +16532,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_0"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -15732,7 +16560,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_1"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -15760,7 +16588,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_2"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -15788,7 +16616,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_3"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -15816,7 +16644,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_4"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -15844,7 +16672,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rodata=".mimx_saf_const_flash_5"
+    #pragma arm section rodata=".mimx9xx_saf_const_flash_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -15872,7 +16700,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section code=".mimx_saf_text"
+    #pragma arm section code=".mimx9xx_saf_text"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -16012,7 +16840,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -16040,7 +16868,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -16068,7 +16896,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -16096,7 +16924,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -16124,7 +16952,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -16152,7 +16980,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_full_access"
+    #pragma arm section zidata=".mimx9xx_saf_bss_full_access"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -16180,7 +17008,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_64k_0"
+    #pragma arm section zidata=".mimx9xx_saf_bss_64k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -16208,7 +17036,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_64k_1"
+    #pragma arm section zidata=".mimx9xx_saf_bss_64k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -16236,7 +17064,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -16264,7 +17092,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -16292,7 +17120,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -16320,7 +17148,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -16348,7 +17176,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_16k_0"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_16k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -16376,7 +17204,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_16k_1"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_16k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -16404,7 +17232,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_8k_0"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_8k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -16432,7 +17260,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_8k_1"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_8k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -16460,7 +17288,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_8k_2"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_8k_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -16488,7 +17316,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_exec_8k_3"
+    #pragma arm section rwdata=".mimx9xx_saf_data_exec_8k_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -16516,7 +17344,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data"
+    #pragma arm section rwdata=".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -16544,7 +17372,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -16572,7 +17400,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -16600,7 +17428,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -16628,7 +17456,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -16656,7 +17484,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -16684,7 +17512,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_no_cacheable"
+    #pragma arm section rwdata=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -16712,7 +17540,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_no_cacheable"
+    #pragma arm section rwdata=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -16740,7 +17568,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_no_cacheable"
+    #pragma arm section rwdata=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -16768,7 +17596,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_no_cacheable"
+    #pragma arm section rwdata=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -16796,7 +17624,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section rwdata=".mimx_saf_data_no_cacheable"
+    #pragma arm section rwdata=".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -16824,7 +17652,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_shared_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_shared_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -16852,7 +17680,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_persist_reset"
+    #pragma arm section zidata=".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -16880,7 +17708,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_scheck_faults_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -16908,7 +17736,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_scheck_requests_no_cacheable"
+    #pragma arm section zidata=".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -16936,7 +17764,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_tcm_0"
+    #pragma arm section zidata=".mimx9xx_saf_bss_tcm_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -16964,7 +17792,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_tcm_1"
+    #pragma arm section zidata=".mimx9xx_saf_bss_tcm_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -16992,7 +17820,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_tcm_2"
+    #pragma arm section zidata=".mimx9xx_saf_bss_tcm_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -17020,7 +17848,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_0"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -17048,7 +17876,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_1"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -17076,7 +17904,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_2"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -17104,7 +17932,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_3"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -17132,7 +17960,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_4"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -17160,7 +17988,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_5"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -17188,7 +18016,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_6"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_6"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -17216,7 +18044,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_7"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_7"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -17244,7 +18072,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_8"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_8"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -17272,7 +18100,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_9"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_9"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -17300,7 +18128,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_10"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_10"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -17328,7 +18156,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_11"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_11"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -17356,7 +18184,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_12"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_12"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -17384,7 +18212,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_13"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_13"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -17412,7 +18240,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_14"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_14"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -17440,7 +18268,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_15"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_15"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -17468,7 +18296,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_16"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_16"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -17496,7 +18324,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_17"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_17"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -17524,7 +18352,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_18"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_18"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -17552,7 +18380,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_19"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_19"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -17580,7 +18408,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_20"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_20"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -17608,7 +18436,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_21"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_21"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -17636,7 +18464,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_22"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_22"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -17664,7 +18492,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_23"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_23"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -17692,7 +18520,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_24"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_24"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -17720,7 +18548,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_25"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_25"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -17748,7 +18576,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_26"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_26"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -17776,7 +18604,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_27"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_27"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -17804,7 +18632,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_sram_28"
+    #pragma arm section zidata=".mimx9xx_saf_bss_sram_28"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -17832,7 +18660,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss_dram_0"
+    #pragma arm section zidata=".mimx9xx_saf_bss_dram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -17860,7 +18688,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -17888,7 +18716,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -17916,7 +18744,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -17944,7 +18772,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -17972,7 +18800,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma arm section zidata=".mimx_saf_bss"
+    #pragma arm section zidata=".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -17988,10 +18816,150 @@ extern "C"{
     #undef MEMMAP_ERROR
     /* no definition -> default compiler settings are used */
 #endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    /* no definition -> default compiler settings are used */
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    /* no definition -> default compiler settings are used */
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    /* no definition -> default compiler settings are used */
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    /* no definition -> default compiler settings are used */
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma arm section zidata=".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    /* no definition -> default compiler settings are used */
+#endif
 /**************************************************************************************************/
 /********************************************* IAR ************************************************/
 /**************************************************************************************************/
-#elif defined(_IAR_C_MIMX95XX_)
+#elif defined(_IAR_C_MIMX9_)
 /**************************************** EMCEM *******************************/
 #ifdef EMCEM_START_SEC_CONFIG_DATA_8
     /**
@@ -18004,7 +18972,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_8
@@ -18032,7 +19000,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_16
@@ -18060,7 +19028,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_32
@@ -18088,7 +19056,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_cfg"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_cfg"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
@@ -18116,7 +19084,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_BOOLEAN
@@ -18144,7 +19112,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_8
@@ -18172,7 +19140,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_16
@@ -18200,7 +19168,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_32
@@ -18228,7 +19196,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED
@@ -18256,7 +19224,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_0
@@ -18284,7 +19252,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_1
@@ -18312,7 +19280,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_2"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_2
@@ -18340,7 +19308,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_3"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_3
@@ -18368,7 +19336,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_4"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_4
@@ -18396,7 +19364,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_const_flash_5"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_const_flash_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CONST_UNSPECIFIED_FLASH_5
@@ -18424,7 +19392,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_function_attributes = @ ".mimx_saf_text"
+    #pragma default_function_attributes = @ ".mimx9xx_saf_text"
 #endif
 
 #ifdef EMCEM_STOP_SEC_CODE
@@ -18564,7 +19532,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN
@@ -18592,7 +19560,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8
@@ -18620,7 +19588,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16
@@ -18648,7 +19616,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32
@@ -18676,7 +19644,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED
@@ -18704,7 +19672,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_full_access"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_full_access"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_FULL_ACCESS
@@ -18732,7 +19700,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_64k_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_64k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_0
@@ -18760,7 +19728,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_64k_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_64k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_65536_1
@@ -18788,7 +19756,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN
@@ -18816,7 +19784,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8
@@ -18844,7 +19812,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16
@@ -18872,7 +19840,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32
@@ -18900,7 +19868,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_16k_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_16k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_0
@@ -18928,7 +19896,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_16k_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_16k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16384_EXEC_1
@@ -18956,7 +19924,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_8k_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_8k_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_0
@@ -18984,7 +19952,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_8k_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_8k_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_1
@@ -19012,7 +19980,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_8k_2"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_8k_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_2
@@ -19040,7 +20008,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_exec_8k_3"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_exec_8k_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8192_EXEC_3
@@ -19068,7 +20036,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED
@@ -19096,7 +20064,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_BOOLEAN_NO_CACHEABLE
@@ -19124,7 +20092,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_8_NO_CACHEABLE
@@ -19152,7 +20120,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_16_NO_CACHEABLE
@@ -19180,7 +20148,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_32_NO_CACHEABLE
@@ -19208,7 +20176,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -19236,7 +20204,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_BOOLEAN_NO_CACHEABLE
@@ -19264,7 +20232,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_8_NO_CACHEABLE
@@ -19292,7 +20260,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_16_NO_CACHEABLE
@@ -19320,7 +20288,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_32_NO_CACHEABLE
@@ -19348,7 +20316,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_data_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_data_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_INIT_UNSPECIFIED_NO_CACHEABLE
@@ -19376,7 +20344,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_shared_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_shared_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_SHARED_NO_CACHEABLE
@@ -19404,7 +20372,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_persist_reset"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_persist_reset"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_PERSIST_RESET
@@ -19432,7 +20400,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_scheck_faults_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_scheck_faults_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_FAULTS_NO_CACHEABLE
@@ -19460,7 +20428,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_scheck_requests_no_cacheable"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_scheck_requests_no_cacheable"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_REQUESTS_NO_CACHEABLE
@@ -19488,7 +20456,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_tcm_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_tcm_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_0
@@ -19516,7 +20484,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_tcm_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_tcm_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_1
@@ -19544,7 +20512,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_tcm_2"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_tcm_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_TCM_2
@@ -19572,7 +20540,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_0
@@ -19600,7 +20568,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_1"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_1"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_1
@@ -19628,7 +20596,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_2"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_2"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_2
@@ -19656,7 +20624,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_3"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_3"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_3
@@ -19684,7 +20652,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_4"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_4"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_4
@@ -19712,7 +20680,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_5"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_5"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_5
@@ -19740,7 +20708,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_6"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_6"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_6
@@ -19768,7 +20736,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_7"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_7"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_7
@@ -19796,7 +20764,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_8"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_8"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_8
@@ -19824,7 +20792,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_9"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_9"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_9
@@ -19852,7 +20820,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_10"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_10"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_10
@@ -19880,7 +20848,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_11"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_11"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_11
@@ -19908,7 +20876,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_12"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_12"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_12
@@ -19936,7 +20904,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_13"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_13"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_13
@@ -19964,7 +20932,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_14"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_14"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_14
@@ -19992,7 +20960,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_15"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_15"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_15
@@ -20020,7 +20988,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_16"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_16"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_16
@@ -20048,7 +21016,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_17"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_17"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_17
@@ -20076,7 +21044,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_18"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_18"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_18
@@ -20104,7 +21072,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_19"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_19"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_19
@@ -20132,7 +21100,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_20"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_20"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_20
@@ -20160,7 +21128,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_21"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_21"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_21
@@ -20188,7 +21156,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_22"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_22"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_22
@@ -20216,7 +21184,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_23"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_23"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_23
@@ -20244,7 +21212,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_24"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_24"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_24
@@ -20272,7 +21240,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_25"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_25"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_25
@@ -20300,7 +21268,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_26"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_26"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_26
@@ -20328,7 +21296,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_27"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_27"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_27
@@ -20356,7 +21324,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_sram_28"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_sram_28"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_SRAM_28
@@ -20384,7 +21352,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss_dram_0"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_dram_0"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_DRAM_0
@@ -20412,7 +21380,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN
@@ -20440,7 +21408,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8
@@ -20468,7 +21436,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16
@@ -20496,7 +21464,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32
@@ -20524,7 +21492,7 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef MEMMAP_ERROR
-    #pragma default_variable_attributes = @ ".mimx_saf_bss"
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss"
 #endif
 
 #ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
@@ -20533,6 +21501,146 @@ extern "C"{
     * @violates @ref eMcem_MemMap_h_REF_1
     */
     #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes =
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_BOOLEAN_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes =
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_8_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes =
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_16_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes =
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_32_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes =
+#endif
+
+#ifdef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_START_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef MEMMAP_ERROR
+    #pragma default_variable_attributes = @ ".mimx9xx_saf_bss_no_cacheable"
+#endif
+
+#ifdef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
+    /**
+    * @file eMcem_MemMap.h
+    * @violates @ref eMcem_MemMap_h_REF_1
+    */
+    #undef EMCEM_STOP_SEC_VAR_ZERO_INIT_UNSPECIFIED_NO_CACHEABLE
     /**
     * @file eMcem_MemMap.h
     * @violates @ref eMcem_MemMap_h_REF_1
@@ -20568,4 +21676,3 @@ extern "C"{
 }
 #endif
 
-#endif /* EMCEM_MEMMAP_H */

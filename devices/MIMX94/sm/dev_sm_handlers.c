@@ -409,10 +409,16 @@ void UsageFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 void SysTick_Handler(void)
 {
+    s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
+
+    /* Call system tick */
+    DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
+
+    /* Call sensor tick */
+    DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
+
     /* Call board tick */
     BRD_SM_TimerTick(BOARD_TICK_PERIOD_MSEC);
-
-    s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1033,6 +1039,11 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
 {
     int32_t status = SM_ERR_SUCCESS;
 
+    /*
+     * Intentional: errId is a generic variable to return both signed and
+     * unsigned data depending on the reason.
+     */
+    // coverity[cert_int31_c_violation:FALSE]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,

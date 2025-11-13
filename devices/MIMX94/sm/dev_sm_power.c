@@ -46,6 +46,7 @@
 /* Local types */
 
 /* Local variables */
+static uint8_t s_powerStateM33S = DEV_SM_POWER_STATE_OFF;
 
 /*--------------------------------------------------------------------------*/
 /* Initialize CPU domains                                                   */
@@ -55,7 +56,7 @@ int32_t DEV_SM_PowerInit(void)
     int32_t status = SM_ERR_SUCCESS;
 
     /* Init power states */
-    for (uint32_t pwrId = 0U; pwrId < DEV_SM_NUM_POWER; pwrId++)
+    for (uint32_t pwrId = 0U; pwrId < PWR_NUM_MIX_SLICE; pwrId++)
     {
         /* Initialize PWR interfaces */
         if (!PWR_Init(pwrId))
@@ -105,7 +106,8 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
         [DEV_SM_PD_NETC] =      "netc",
         [DEV_SM_PD_NOC] =       "noc",
         [DEV_SM_PD_NPU] =       "npu",
-        [DEV_SM_PD_WAKEUP] =    "wakeup"
+        [DEV_SM_PD_WAKEUP] =    "wakeup",
+        [DEV_SM_PD_M33S] =      "m33s"
     };
 
     /* Get max string width */
@@ -165,7 +167,15 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
 int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
 {
     int32_t status = SM_ERR_SUCCESS;
-    bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
+    uint32_t srcMixIdx = domainId;
+    static uint8_t s_powerStateNETC = DEV_SM_POWER_STATE_OFF;
+
+    if (domainId == DEV_SM_PD_M33S)
+    {
+        srcMixIdx = DEV_SM_PD_NETC;
+    }
+
+    bool pdDisabled = DEV_SM_FusePdDisabled(srcMixIdx);
 
     if (pdDisabled || (domainId >= DEV_SM_NUM_POWER))
     {
@@ -173,10 +183,19 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
     }
     else
     {
+        if (domainId == DEV_SM_PD_NETC)
+        {
+            s_powerStateNETC = powerState;
+        }
+        if (domainId == DEV_SM_PD_M33S)
+        {
+            s_powerStateM33S = powerState;
+        }
+
         switch (powerState)
         {
             case DEV_SM_POWER_STATE_ON:
-                if (PWR_IsParentPowered(domainId))
+                if (PWR_IsParentPowered(srcMixIdx))
                 {
 #if (defined(FSL_FEATURE_V2X_HAS_ERRATA_052682) && FSL_FEATURE_V2X_HAS_ERRATA_052682)
                     uint32_t rootCtrl;
@@ -194,7 +213,7 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
                             CCM_CLOCK_ROOT_DIV_MASK;
                     }
 #endif
-                    if (SRC_MixSoftPowerUp(domainId))
+                    if (SRC_MixSoftPowerUp(srcMixIdx))
                     {
 #if (defined(FSL_FEATURE_V2X_HAS_ERRATA_052682) && FSL_FEATURE_V2X_HAS_ERRATA_052682)
                         /* Restore V2X clock root after WAKEUPMIX power up */
@@ -209,7 +228,7 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
                                 rootCtrl & CCM_CLOCK_ROOT_MUX_MASK;
                         }
 #endif
-                        status = DEV_SM_PowerUpPost(domainId);
+                        status = DEV_SM_PowerUpPost(srcMixIdx);
                     }
                 }
                 else
@@ -218,11 +237,27 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
                 }
                 break;
             case DEV_SM_POWER_STATE_OFF:
-                if (!PWR_AnyChildPowered(domainId))
+                if (!PWR_AnyChildPowered(srcMixIdx))
                 {
-                    if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
+                    /* Apply special power state management for NETCMIX */
+                    if (srcMixIdx == DEV_SM_PD_NETC)
                     {
-                        SRC_MixSoftPowerDown(domainId);
+                        /* Only switch off NETCMIX if both virtual domains are off */
+                        if ((s_powerStateNETC == DEV_SM_POWER_STATE_OFF) &&
+                            (s_powerStateM33S == DEV_SM_POWER_STATE_OFF))
+                        {
+                            if (DEV_SM_PowerDownPre(srcMixIdx) == SM_ERR_SUCCESS)
+                            {
+                                SRC_MixSoftPowerDown(srcMixIdx);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (DEV_SM_PowerDownPre(srcMixIdx) == SM_ERR_SUCCESS)
+                        {
+                            SRC_MixSoftPowerDown(srcMixIdx);
+                        }
                     }
                 }
                 else
@@ -235,6 +270,25 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
                 break;
         }
     }
+
+    /* Apply special power state management for NETCMIX */
+    if ((status == SM_ERR_SUCCESS) && (srcMixIdx == DEV_SM_PD_NETC))
+    {
+        /* Switch to HW-control of NETCMIX based on status of NETC virtual
+         * domains.  When only M33S virtual domain remains active, switch
+         * to GPC HW-control.
+         */
+        if ((s_powerStateNETC == DEV_SM_POWER_STATE_OFF) &&
+            (s_powerStateM33S == DEV_SM_POWER_STATE_ON))
+        {
+            /* Switch NETCMIX to GPC HW-control */
+            (void) SRC_MixLpmModeSet(DEV_SM_PD_NETC, true);
+
+            /* Ensure M33S is awakened to evaluate NETCMIX GPC HW-control */
+            (void) CPU_SwWakeup(CPU_IDX_M33P_S);
+        }
+    }
+
 
     /* Return status */
     return status;
@@ -255,9 +309,19 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
     }
     else
     {
-        if (SRC_MixIsPwrReady(domainId))
+        if (domainId == DEV_SM_PD_M33S)
         {
-            *powerState = DEV_SM_POWER_STATE_ON;
+            if (SRC_MixIsPwrReady(DEV_SM_PD_NETC))
+            {
+                *powerState = s_powerStateM33S;
+            }
+        }
+        else
+        {
+            if (SRC_MixIsPwrReady(domainId))
+            {
+                *powerState = DEV_SM_POWER_STATE_ON;
+            }
         }
     }
 

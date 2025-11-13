@@ -1,21 +1,21 @@
 /**
 *   @file    eMcem_Cfg.h
-*   @version 0.4.0
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Configuration Header.
+*   @brief   MIMX9XX_SAF eMcem - Configuration Header.
 *   @details Contains declarations of the eMcem configuration.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2023-2024 NXP
+*   Copyright 2023-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -54,42 +54,39 @@ extern "C" {
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-/* Includes */
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "eMcem_Types_Ext.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-
-/* Defines */
-
 /*!
- * @name EMCEM config software version
+ * @name eMCEM configuration SW version
  */
+
 /** @{ */
 /*!
-* @brief    eMCEM config SW major version
-*/
+ * @brief    eMCEM configuration - SW major version
+ */
 #define EMCEM_CFG_SW_MAJOR_VERSION             0
 /*!
-* @brief    eMCEM config SW minor version
-*/
-#define EMCEM_CFG_SW_MINOR_VERSION             4
+ * @brief    eMCEM configuration - SW minor version
+ */
+#define EMCEM_CFG_SW_MINOR_VERSION             8
 /*!
-* @brief    eMCEM SW patch version
-*/
-#define EMCEM_CFG_SW_PATCH_VERSION             0
+ * @brief    eMCEM configuration - SW patch version
+ */
+#define EMCEM_CFG_SW_PATCH_VERSION             4
 /** @} */
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/*!< Check if current file and MIMX_SAF version header file are of the same Software version */
-#if ((EMCEM_CFG_SW_MAJOR_VERSION != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_CFG_SW_MINOR_VERSION != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_CFG_SW_PATCH_VERSION != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Cfg.h and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_CFG_SW_MAJOR_VERSION != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_CFG_SW_MINOR_VERSION != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_CFG_SW_PATCH_VERSION != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Cfg.h and MIMX9XX_SAF version are different"
 #endif
 
 /*==================================================================================================
@@ -101,23 +98,36 @@ extern "C" {
 *                                      DEFINES AND MACROS
 =================================================================================================*/
 /*!
- * @name EMCEM configuration events
+ * @name EMCEM feature configuration
  */
 /** @{ */
 /*!
-* @brief    Availability of test API for sCheck module. sCheck module needs to be present in configuration to enable this option.
-*/
+ * @brief    Availability of test API for sCheck module.
+ *           sCheck module needs to be present in configuration to enable this option.
+ */
 #define EMCEM_TEST_API_AVAILABLE        (STD_OFF)
 
 /*!
-* @brief    Enable/Disable fault statistics. Mode Selector module needs to be present in configuration to allow enabling of this option.
-*/
+ * @brief    Enable/Disable fault statistics.
+ *           Mode Selector module needs to be present in configuration to allow enabling of this option.
+ */
 #define EMCEM_FAULT_STATISTICS_ENABLED  (STD_OFF)
 
 /*!
-* @brief    Enable/Disable extended diagnostics.
-*/
+ * @brief    Enable/Disable fault NVM backup functionality.
+ *           Mode Selector module needs to be present in configuration and the NVM Storage must be enabled to allow enabling of this option.
+ */
+#define EMCEM_FAULT_NVM_BACKUP_ENABLED  (STD_OFF)
+
+/*!
+ * @brief    Enable/Disable extended diagnostics.
+ */
 #define EMCEM_EXT_DIAG_ENABLED          (STD_OFF)
+
+/*!
+ * @brief    Array size for static fault masks.
+ */
+#define EMCEM_FAULT_MASK_ARRAY_SIZE     (4U)
 /** @} */
 
 /*=================================================================================================
@@ -128,8 +138,6 @@ extern "C" {
 /*=================================================================================================
 *                                STRUCTURES AND OTHER TYPEDEFS
 =================================================================================================*/
-
-/* Types */
 /*!
  * EMCEM FCCU configuration structure type
  *
@@ -138,8 +146,7 @@ extern "C" {
 typedef struct
 {
     const uint8                             u8FaultHandlerId; /*!< Fault handler Id */
-    const boolean                           bEnabled;         /*!< Fault config enabled */
-    const boolean                           bWriteAccessEnabled; /*!< Write access Enabled */
+    const boolean                           bEnabled; /*!< Fault config enabled */
     const uint32                            u32ImmReaction[EMCEM_REACTION_SET_COUNT]; /*!< Immediate reaction */
     const uint32                            u32DelReaction[EMCEM_REACTION_SET_COUNT]; /*!< Delayed reaction */
     const uint32                            u32FaultEnabled[EMCEM_CVFCCU_FAULT_ENABLE_REG_COUNT]; /*!< Fault enabled */
@@ -150,7 +157,7 @@ typedef struct
 /*!
  * EMCEM EOUT configuration type
  *
- * Type to configure the Eout.
+ * Type to configure the EOUT.
  */
 typedef struct
 {
@@ -160,82 +167,76 @@ typedef struct
 } eMcem_EoutCfgType;
 
 /*!
- * EMCEM FCCU Instance configuration type
+ * EMCEM FCCU Instace configuration type
  *
- * Type to configure the Eout.
+ * Type to configure FCCU instance.
  */
 typedef struct
 {
-    const boolean                           bDebugEnabled;     /*!< Enable debug */
-    const boolean                           bConfigEnabled;    /*!< Cfg enabled */
-    const uint32                            u32GlobalReactionTimerPeriod;     /*!< Global reaction timer period cfg */
-    const uint32                            u32MinEoutDuration;    /*!< Eout duration cfg */
-    const eMcem_EoutCfgType                 eMcem_EoutCfg;         /*!< EOUT cfg */
-    const uint32                            au32Recovery[EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT];     /*!< Fault lines cfg */
-    const eMcem_CVfccuFhidCfgType           eMcem_FhidCfg;     /*!< Fault lines cfg */
+    const boolean                           bDebugEnabled; /*!< Enable debug */
+    const uint32                            u32GlobalReactionTimerPeriod; /*!< Global reaction timer period cfg */
+    const uint32                            u32MinEoutDuration; /*!< Eout duration cfg */
+    const eMcem_EoutCfgType                 eMcem_EoutCfg; /*!< EOUT cfg */
+    const uint32                            au32Recovery[EMCEM_CVFCCU_FAULT_RECOVERY_REG_COUNT]; /*!< Fault lines cfg */
+    const eMcem_CVfccuFhidCfgType           eMcem_FhidCfg; /*!< FHID cfg */
 } eMcem_CVfccuInstanceCfgType;
 
 /*!
-* Configuration struct type.
-* eMCEM Driver configuration structure type.
-*/
+ * Configuration struct type.
+ *
+ * eMCEM driver configuration structure type.
+ */
 typedef struct
 {
-    const eMcem_CVfccuInstanceCfgType       *eMcem_CVfccuCfg;     /*!< EMCEM FCCU Instance */
+    const uint32                            u32ControlledEimInstances; /*!< Bitfield representing EIM instances controlled by current eMCEM instance */
+    const uint32                            u32ControlledSramcInstances; /*!< Bitfield representing SRAMC instances controlled by current eMCEM instance */
+    const uint32                            u32ControlledDdrcInstances; /*!< Bitfield representing DDRC instances controlled by current eMCEM instance */
+    const uint32                            u32ControlledErmInstances; /*!< Bitfield representing ERM instances controlled by current eMCEM instance */
+    const eMcem_CVfccuInstanceCfgType       *eMcem_CVfccuCfg; /*!< EMCEM VFCCU configuration */
 } eMcem_ConfigType;
 
 /*=================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 =================================================================================================*/
 /*!
-* @brief    eMCEM start sec config data
-*/
+ * @brief    Macro marking the beginnning of CONFIG_DATA_UNSPECIFIED section. The memory section for configuration data with undefined size.
+ */
 #define EMCEM_START_SEC_CONFIG_DATA_UNSPECIFIED
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief      eMCEM FCCU Instance configuration struct type.
-*/
+ * @brief    eMCEM VFCCU Instance configuration struct type.
+ */
 /* @violates @ref eMcem_Cfg_h_REF_0809 */
 extern const eMcem_CVfccuInstanceCfgType CVfccuCfg;
 
 /*!
-* @brief      eMCEM configuration structures.
-*/
+ * @brief    eMCEM configuration structures.
+ */
 /* @violates @ref eMcem_Cfg_h_REF_0809 */
 extern const eMcem_ConfigType eMcem_Config;
 
 /*!
-* @brief      eMCEM stop sec configuration data.
-*/
+ * @brief    Macro marking the end of CONFIG_DATA_UNSPECIFIED section.
+ */
 #define EMCEM_STOP_SEC_CONFIG_DATA_UNSPECIFIED
 #include "eMcem_MemMap.h"
 
-/* @violates @ref eMcem_Cfg_h_REF_0501 */
-/* @violates @ref eMcem_Cfg_h_REF_0502 */
-/* @violates @ref eMcem_Cfg_h_REF_0504 */
-/* @violates @ref eMcem_Cfg_h_REF_0505 */
 /*!
-* @brief    eMCEM start sec no initializied variable
-*/
-#define EMCEM_START_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
-#include "eMcem_MemMap.h"
-
-/*!
-* @brief    eMCEM start sec u32 constant
-*/
+ * @brief    Macro marking the beginnning of CONST_32 section. The memory section for constants of type uint32.
+ */
 #define EMCEM_START_SEC_CONST_32
 #include "eMcem_MemMap.h"
 
 /*!
-* @brief      Array for masking out FCCU reserved faults.
-*/
+ * @brief    Array for masking out of the VFCCU, EIM and SRAMC reserved faults.
+ */
 /* @violates @ref eMcem_Cfg_h_REF_0809 */
-extern const uint32 eMcem_au32StaticFaultMasks[3U];
+extern const uint32 eMcem_au32StaticFaultMasks[EMCEM_FAULT_MASK_ARRAY_SIZE];
 
 /*!
-* @brief    eMCEM stop sec u32 constant
-*/
+ * @brief    Macro marking the end of CONST_32 section.
+ */
 #define EMCEM_STOP_SEC_CONST_32
 #include "eMcem_MemMap.h"
 
@@ -244,14 +245,15 @@ extern const uint32 eMcem_au32StaticFaultMasks[3U];
 /* @violates @ref eMcem_Cfg_h_REF_0504 */
 /* @violates @ref eMcem_Cfg_h_REF_0505 */
 /*!
-* @brief    eMCEM start sec no initializied variable
-*/
+ * @brief    Macro marking the beginnning of VAR_NO_INIT_UNSPECIFIED section. This is Memory Section
+ *           for variables, structures, arrays, when the SIZE (alignment) does not fit the criteria
+ *           of 8, 16 or 32 bit. These variables are not initialized with values after every reset.
+ */
 #define EMCEM_START_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
 #include "eMcem_MemMap.h"
-
-/**
-* @brief      eMCEM pointer to configuration structure.
-*/
+/*!
+ * @brief    eMCEM pointer to configuration structure.
+ */
 extern const eMcem_ConfigType *eMcem_pConfigPtr;
 
 /* @violates @ref eMcem_Cfg_h_REF_0501 */
@@ -259,8 +261,8 @@ extern const eMcem_ConfigType *eMcem_pConfigPtr;
 /* @violates @ref eMcem_Cfg_h_REF_0504 */
 /* @violates @ref eMcem_Cfg_h_REF_0505 */
 /*!
-* @brief    eMCEM stop sec no initializied variable
-*/
+ * @brief    Macro marking the end of VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE section.
+ */
 #define EMCEM_STOP_SEC_VAR_NO_INIT_UNSPECIFIED_NO_CACHEABLE
 #include "eMcem_MemMap.h"
 
@@ -268,14 +270,25 @@ extern const eMcem_ConfigType *eMcem_pConfigPtr;
 *                                    FUNCTION PROTOTYPES
 ==================================================================================================*/
 /*!
-* @brief    eMCEM start sec code
-*/
+ * @brief    Macro marking the beginnning of CODE section. The memory section for code.
+ */
 #define EMCEM_START_SEC_CODE
 /* @violates @ref eMcem_Cfg_c_REF_0410 */
 #include "eMcem_MemMap.h"
 
 /*!
- * Alarm Handler function.
+ * @brief    Default Alarm Handler function.
+ *
+ * @param[in]     nFaultId      Id of the fault
+ *
+ * @return     eMcem_ErrRecoveryType
+ * @retval           EMCEM_ERR_RECOVERED      fault has been recovered successfully.
+ * @retval           EMCEM_ERR_NOT_RECOVERED  fault has not been recovered.
+ */
+extern eMcem_ErrRecoveryType eMcemCVfccuDefaultAlarmHandler( eMcem_FaultType nFaultId );
+
+/*!
+ * @brief   Alarm Handler function.
  *
  * @param[in]     nFaultId      Id of the fault
  *
@@ -286,8 +299,8 @@ extern const eMcem_ConfigType *eMcem_pConfigPtr;
 extern eMcem_ErrRecoveryType eMcemCVfccuAlarmHandler( eMcem_FaultType nFaultId );
 
 /*!
-* @brief    eMCEM stop sec code
-*/
+ * @brief    Macro marking the end of CODE section.
+ */
 #define EMCEM_STOP_SEC_CODE
 /* @violates @ref eMcem_Cfg_c_REF_0410 */
 /* @violates @ref eMcem_Cfg_c_REF_2001 */

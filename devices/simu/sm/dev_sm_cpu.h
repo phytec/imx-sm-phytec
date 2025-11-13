@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -75,24 +75,38 @@
 /** @} */
 
 /*!
+ * @name CPU run modes
+ */
+/** @{ */
+/*! On */
+#define DEV_SM_CPU_RUN_MODE_RUN    0U
+/*! Wait mode */
+#define DEV_SM_CPU_RUN_MODE_HOLD   1U
+/*! Stop mode */
+#define DEV_SM_CPU_RUN_MODE_STOP   2U
+/*! Suspend mode */
+#define DEV_SM_CPU_RUN_MODE_SLEEP  3U
+/** @} */
+
+/*!
  * @name CPU sleep modes
  */
 /** @{ */
 /*! On */
-#define DEV_SM_CPU_SLEEP_MODE_RUN        0U
+#define DEV_SM_CPU_SLEEP_MODE_RUN      0U
 /*! Wait mode */
-#define DEV_SM_CPU_SLEEP_MODE_WAIT       1U
+#define DEV_SM_CPU_SLEEP_MODE_WAIT     1U
 /*! Stop mode */
-#define DEV_SM_CPU_SLEEP_MODE_STOP       2U
+#define DEV_SM_CPU_SLEEP_MODE_STOP     2U
 /*! Suspend mode */
-#define DEV_SM_CPU_SLEEP_MODE_SUSPEND    3U
+#define DEV_SM_CPU_SLEEP_MODE_SUSPEND  3U
 /** @} */
 
 /*!
  * @name Device peripheral LPI indexes
  */
 /** @{ */
-#define DEV_SM_PERLPI_RESV      0U   /*!< 0: Test */
+#define DEV_SM_PERLPI_RESV  0U   /*!< 0: Test */
 /** @} */
 
 /* Types */

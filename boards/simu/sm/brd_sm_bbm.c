@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -259,26 +259,35 @@ int32_t BRD_SM_BbmRtcRollover(uint32_t rtcId)
 /*--------------------------------------------------------------------------*/
 void BRD_SM_BbmHandler(void)
 {
-    /* Increment time by 1 second */
-    s_ticks += (1ULL << 15U);
-
-    /* Roll over */
-    if (s_ticks > (0xFFFFFFFFULL << 15U))
+    /* Check the expression value wrap */
+    if (s_ticks <= (UINT64_MAX - (1ULL << 15U)))
     {
-        s_ticks = 0ULL;
+        /* Increment time by 1 second */
+        s_ticks += (1ULL << 15U);
 
-        /* Check rollover */
-        if (s_rolloverEnable)
+        /* Roll over */
+        if (s_ticks > (0xFFFFFFFFULL << 15U))
         {
-            s_rolloverEnable = false;
-            LMM_BbmRtcRolloverEvent(BRD_SM_RTC_PMIC);
+            s_ticks = 0ULL;
+
+            /* Check rollover */
+            if (s_rolloverEnable)
+            {
+                s_rolloverEnable = false;
+                LMM_BbmRtcRolloverEvent(BRD_SM_RTC_PMIC);
+            }
+        }
+
+        /* Check alarm */
+        if (s_alarmEnable && (s_ticks >= s_alarm))
+        {
+            LMM_BbmRtcAlarmEvent(BRD_SM_RTC_PMIC);
         }
     }
-
-    /* Check alarm */
-    if (s_alarmEnable && (s_ticks >= s_alarm))
+    else
     {
-        LMM_BbmRtcAlarmEvent(BRD_SM_RTC_PMIC);
+        /* Return an error status if expression value wraps */
+        SM_Error(SM_ERR_GENERIC_ERROR);
     }
 }
 

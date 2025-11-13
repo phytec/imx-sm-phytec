@@ -129,7 +129,7 @@ int32_t LMM_ClockDescribe(uint32_t lmId, uint32_t clockId,
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the range is returned.
+ * - ::SM_ERR_SUCCESS: if the mux is returned.
  * - others returned by ::SM_CLOCKMUXGET
  */
 int32_t LMM_ClockMuxGet(uint32_t lmId, uint32_t clockId, uint32_t idx,
@@ -246,7 +246,7 @@ int32_t LMM_ClockIsEnabled(uint32_t lmId, uint32_t clockId, bool *enabled);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock parent was set successfully.
  * - others returned by ::SM_CLOCKPARENTSET
  */
 int32_t LMM_ClockParentSet(uint32_t lmId, uint32_t clockId, uint32_t parent);
@@ -264,10 +264,29 @@ int32_t LMM_ClockParentSet(uint32_t lmId, uint32_t clockId, uint32_t parent);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock parent was read successfully.
  * - others returned by ::SM_CLOCKPARENTGET
  */
 int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent);
+
+/*!
+ * Get info on extended clock support.
+ *
+ * @param[in]     lmId               LM call is for
+ * @param[in]     clockId            Identifier for the clock device
+ * @param[out]    supported          Pointer to return true if supported
+ *
+ * This function allows the caller to get info about clock extended data
+ * support.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the clock info was read successfully.
+ * - others returned by ::SM_CLOCKEXTENDEDINFO
+ */
+int32_t LMM_ClockExtendedInfo(uint32_t lmId, uint32_t clockId,
+    bool *supported);
 
 /*!
  * Set an LM extended clock data value.
@@ -283,7 +302,7 @@ int32_t LMM_ClockParentGet(uint32_t lmId, uint32_t clockId, uint32_t *parent);
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock ext was set successfully.
  * - others returned by ::SM_CLOCKEXTENDEDSET
  */
 int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
@@ -302,7 +321,7 @@ int32_t LMM_ClockExtendedSet(uint32_t lmId, uint32_t clockId, uint32_t extId,
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
- * - ::SM_ERR_SUCCESS: if the clock rate was set successfully.
+ * - ::SM_ERR_SUCCESS: if the clock ext was read successfully.
  * - others returned by ::SM_CLOCKEXTENDEDGET
  */
 int32_t LMM_ClockExtendedGet(uint32_t lmId, uint32_t clockId, uint32_t extId,

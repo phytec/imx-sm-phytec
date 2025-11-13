@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -226,6 +226,7 @@ void TEST_ScmiSensor(void)
     }
 
     /* Test running past end of descriptors */
+    if (numSensors > 0U)
     {
         uint32_t numSensorFlags = 0U;
         uint32_t descIndex = 0U;
@@ -535,10 +536,10 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
-            tripPointEvCtrl, SM_INT64_L(tp), SM_INT64_H(tp)));
+            tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
 
         NECHECK(SCMI_SensorTripPointConfig(SM_SCMI_NUM_CHN, sensorId,
-            tripPointEvCtrl, SM_INT64_L(tp), SM_INT64_H(tp)),
+            tripPointEvCtrl, INT64_L(tp), INT64_H(tp)),
             SCMI_ERR_INVALID_PARAMETERS);
 
     }
@@ -599,7 +600,7 @@ static void TEST_ScmiSensorExclusive(bool pass, uint32_t channel,
         printf("SCMI_SensorTripPointConfig(%u, %u)\n",
             channel, sensorId);
         XCHECK(pass, SCMI_SensorTripPointConfig(channel, sensorId,
-            tripPointEvCtrl, SM_INT64_L(tp), SM_INT64_H(tp)));
+            tripPointEvCtrl, INT64_L(tp), INT64_H(tp)));
     }
 
     if (pass)

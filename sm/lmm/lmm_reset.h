@@ -98,6 +98,23 @@ int32_t LMM_ResetDomainNameGet(uint32_t lmId, uint32_t domainId,
 int32_t LMM_ResetDomain(uint32_t lmId, uint32_t domainId,
     uint32_t resetState, bool toggle, bool assertNegate);
 
+/*!
+ * Get the state of an LM reset domain.
+ *
+ * @param[in]     lmId          LM call is for
+ * @param[in]     domainId      Identifier for the reset domain
+ * @param[out]    assertNegate  Pointer to return the reset polarity
+ *
+ * This function allows a caller to get a reset state.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_SUCCESS: if the operation was successful.
+ */
+int32_t LMM_ResetDomainGet(uint32_t lmId, uint32_t domainId,
+    bool *assertNegate);
+
 #endif /* LMM_RESET_H */
 
 /** @} */

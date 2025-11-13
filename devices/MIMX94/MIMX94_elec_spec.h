@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -43,8 +43,8 @@
  */
 /*==========================================================================*/
 
-#ifndef MIMX95_ELEC_SPEC_H
-#define MIMX95_ELEC_SPEC_H
+#ifndef MIMX94_ELEC_SPEC_H
+#define MIMX94_ELEC_SPEC_H
 
 /* Defines */
 
@@ -57,12 +57,14 @@
 #define ES_200000KHZ                200000U
 #define ES_233333KHZ                233333U
 #define ES_250000KHZ                250000U
+#define ES_266625KHZ                266625U
 #define ES_266667KHZ                266667U
 #define ES_333333KHZ                333333U
 #define ES_360000KHZ                360000U
 #define ES_400000KHZ                400000U
 #define ES_466667KHZ                466667U
 #define ES_500000KHZ                500000U
+#define ES_533250KHZ                533250U
 #define ES_533333KHZ                533333U
 #define ES_600000KHZ                600000U
 #define ES_666667KHZ                666667U
@@ -107,10 +109,10 @@
 #define ES_1000MHZ                  1000000000ULL
 
 /* Supply voltage setpoints */
-#define ES_SUSPEND_UV_VDD_SOC       650000U
-#define ES_LOW_UV_VDD_SOC           750000U
-#define ES_NOM_UV_VDD_SOC           800000U
-#define ES_ODV_UV_VDD_SOC           900000U
+#define ES_SUSPEND_UV_VDD_SOC       650000
+#define ES_LOW_UV_VDD_SOC           800000
+#define ES_NOM_UV_VDD_SOC           850000
+#define ES_ODV_UV_VDD_SOC           900000
 
 
 /* Speed grade frequencies */
@@ -148,9 +150,9 @@
 #define ES_NOM_KHZ_A55PER           ES_333333KHZ
 #define ES_ODV_KHZ_A55PER           ES_400000KHZ
 
-#define ES_LOW_KHZ_DRAM             ES_233333KHZ
-#define ES_NOM_KHZ_DRAM             ES_400000KHZ
-#define ES_ODV_KHZ_DRAM             ES_533333KHZ
+#define ES_LOW_KHZ_DRAM             ES_266625KHZ /* 2133 MT/s / 8 */
+#define ES_NOM_KHZ_DRAM             ES_400000KHZ /* 3200 MT/s / 8 */
+#define ES_ODV_KHZ_DRAM             ES_533250KHZ /* 4266 MT/s / 8 */
 
 #define ES_LOW_KHZ_HSIO             ES_250000KHZ
 #define ES_NOM_KHZ_HSIO             ES_400000KHZ
@@ -501,7 +503,7 @@
 #define ES_MAX_HZ_XSPI1             ES_800MHZ
 #define ES_MAX_HZ_XSPI2             ES_800MHZ
 
-#endif /* MIMX95_ELEC_SPEC_H */
+#endif /* MIMX94_ELEC_SPEC_H */
 
 /** @} */
 

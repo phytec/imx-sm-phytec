@@ -1,21 +1,21 @@
 /**
-*   @file    eMcem_Vfccu_MIMX94XX.c
-*   @version 0.4.0
+*   @file    eMcem_Vfccu_MIMX95XX.c
+*   @version 0.8.4
 *
-*   @brief   MIMX_SAF eMcem - Specific VFCCU IP source.
+*   @brief   MIMX9XX_SAF eMcem - Specific VFCCU IP source.
 *   @details This file implements specific VFCCU IP functions eMcem module.
 *
 *   @addtogroup EMCEM_COMPONENT
 *   @{
 */
 /*==================================================================================================
-*   Project              : MIMX_SAF
+*   Project              : MIMX9XX_SAF
 *   Platform             : CORTEXM
 *
-*   SW Version           : 0.4.0
-*   Build Version        : MIMX9X_SAF_0_4_0
+*   SW Version           : 0.8.4
+*   Build Version        : MIMX9_SAF_0_8_4_20250110
 *
-*   Copyright 2024 NXP
+*   Copyright 2024-2025 NXP
 *   Detailed license terms of software usage can be found in the license.txt
 *   file located in the root folder of this package.
 ==================================================================================================*/
@@ -30,10 +30,10 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MIMX_SAF_Version.h"
+#include "MIMX9XX_SAF_Version.h"
 #include "eMcem_Types_Ext.h"
 #include "SafetyBase.h"
-#include "eMcem_Vfccu_MIMX95XX.h"
+#include "eMcem_Vfccu_MIMX9.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -47,24 +47,24 @@ extern "C"{
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0502 */
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0504 */
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0505 */
-#define EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION_C               4
+#define EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION_C               8
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0501 */
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0502 */
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0504 */
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_0505 */
-#define EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION_C               0
+#define EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION_C               4
 
 /*==================================================================================================
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
-/* Check if current file and MIMX_SAF version header file are of the same software version */
-#if ((EMCEM_VFCCU_MIMX95XX_SW_MAJOR_VERSION_C != MIMX_SAF_SW_MAJOR_VERSION) || \
-     (EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION_C != MIMX_SAF_SW_MINOR_VERSION) || \
-     (EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION_C != MIMX_SAF_SW_PATCH_VERSION))
-    #error "Software Version Numbers of eMcem_Vfccu_MIMX95XX.c and MIMX_SAF version are different"
+/* Check if current file and MIMX9XX_SAF version header file are of the same software version */
+#if ((EMCEM_VFCCU_MIMX95XX_SW_MAJOR_VERSION_C != MIMX9XX_SAF_SW_MAJOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX95XX_SW_MINOR_VERSION_C != MIMX9XX_SAF_SW_MINOR_VERSION) || \
+     (EMCEM_VFCCU_MIMX95XX_SW_PATCH_VERSION_C != MIMX9XX_SAF_SW_PATCH_VERSION))
+    #error "Software Version Numbers of eMcem_Vfccu_MIMX95XX.c and MIMX9XX_SAF version are different"
 #endif
 
-#if defined(SAFETY_BASE_MIMX95XX)
+#if SAFETY_BASE_MIMX95XX
 /*==================================================================================================
 *                          LOCAL TYPEDEFS (STRUCTURES, UNIONS, ENUMS)
 ==================================================================================================*/
@@ -164,7 +164,7 @@ void eMcem_Vfccu_Specific_DeassertSWFault( uint8 u8SWRegIdx, uint8 u8BitIdx )
 /* @violates @ref eMcem_Vfccu_MIMX95XX_c_REF_2001 */
 #include "eMcem_MemMap.h"
 
-#endif /* defined(SAFETY_BASE_MIMX95XX) */
+#endif /* SAFETY_BASE_MIMX95XX */
 
 #ifdef __cplusplus
 }

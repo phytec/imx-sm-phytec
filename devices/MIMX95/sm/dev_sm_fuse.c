@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2024 NXP
+**     Copyright 2024-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -60,6 +60,10 @@ typedef struct
 // coverity[misra_c_2012_rule_8_9_violation:FALSE]
 static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
 {
+    [DEV_SM_FUSE_ECID3]              = {384U,   32U},
+    [DEV_SM_FUSE_ECID2]              = {416U,   32U},
+    [DEV_SM_FUSE_ECID1]              = {448U,   32U},
+    [DEV_SM_FUSE_ECID0]              = {480U,   32U},
     [DEV_SM_FUSE_SI_REV]             = {544U,   4U},
     [DEV_SM_FUSE_PART_NUM]           = {548U,   8U},
     [DEV_SM_FUSE_MARKET_SEGMENT]     = {556U,   2U},
@@ -84,6 +88,7 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_TSENSOR1_TRIM1]     = {1280U,  32U},
     [DEV_SM_FUSE_TSENSOR1_TRIM2]     = {1312U,  32U},
     [DEV_SM_FUSE_FRO_TRIM]           = {1344U,  18U},
+    [DEV_SM_FUSE_PMRO]               = {10240U, 32U},
     [DEV_SM_FUSE_M33_ROM_PATCH_VER]  = {10496U, 32U}
 };
 
@@ -123,7 +128,17 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 
     /* Calculate shift and mask */
     shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
-    mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U)) - 1U;
+
+    /* Check the mask value not exceeding the max shift value */
+    if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
+    {
+        mask = (2UL << (((uint32_t) s_fuseMap[fuseId].bitWidth) - 1U)) - 1U;
+    }
+    else
+    {
+        /* If exceeded, wrap to max range */
+        mask = 0U;
+    }
 
     /* Return result */
     return (fuse >> shift) & mask;
@@ -135,7 +150,7 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
 uint32_t DEV_SM_FuseSpeedGet(void)
 {
     uint32_t speed;
-    uint32_t freq = 1800000000UL;
+    uint32_t freq = ES_SPEED_GRADE_HZ_DEFAULT;
 
     /* Get speed */
     speed = DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING) & 0xFU;
@@ -143,7 +158,7 @@ uint32_t DEV_SM_FuseSpeedGet(void)
     if (speed != 0U)
     {
         /* Calculate freq */
-        freq = 2300000000UL - (speed * 100000000UL);
+        freq = ES_SPEED_GRADE_HZ_MAX - (speed * ES_SPEED_GRADE_HZ_STEP);
     }
 
     /* Return frequency */

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -660,8 +660,17 @@ static int32_t BaseDiscoverListProtocols(const scmi_caller_t *caller,
             newLen = (((newLen - 1U) / 4U) + 1U) * 4U;
         }
 
-        /* Array plus size of header, status, and numProtocols */
-        *len = newLen + (3U * sizeof(uint32_t));
+        /* Check value doesn't wrap */
+        if (newLen <= (UINT32_MAX - (3U * sizeof(uint32_t))))
+        {
+            /* Array plus size of header, status, and numProtocols */
+            *len = newLen + (3U * sizeof(uint32_t));
+        }
+        else
+        {
+            /* Handling if value wraps */
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
     /* Return status */

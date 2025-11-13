@@ -45,6 +45,8 @@
 
 /* Local defines */
 
+#define SM_NUM_THRESHOLDS  3U
+
 /* Local types */
 
 /* Device sensor map structure */
@@ -91,6 +93,7 @@ static TMPSNS_Type *const s_tmpsnsBases[] = TMPSNS_BASE_PTRS;
 static bool s_tmpsnsOwn[DEV_SM_NUM_SENSOR];
 static bool s_tmpsnsEnb[DEV_SM_NUM_SENSOR];
 static uint8_t s_tmpsnsDir[DEV_SM_NUM_SENSOR];
+static uint32_t s_thresholdEnb[DEV_SM_NUM_SENSOR];
 
 /* Local functions */
 
@@ -102,7 +105,10 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SensorInit(void)
 {
-    int32_t status = SM_ERR_SUCCESS;
+    int32_t status;
+
+    /* Power on ANA sensor */
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, false);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -117,7 +123,7 @@ int32_t DEV_SM_SensorInit(void)
 /*--------------------------------------------------------------------------*/
 /* Configure and start a sensor                                             */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
+int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -135,7 +141,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         const int64_t panicTemp[4] =
         {
             9700,   /* 00 - Consumer 0C to 95C */
-            10700,  /* 01 - Ext. Consumer -20C to 105C */
+            12700,  /* 01 - Ext. Industrial -40C to 125C */
             10700,  /* 10 - Industrial -40C to 105C */
             12700   /* 11 - Automotive -40C to 125C */
         };
@@ -147,6 +153,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
         config.measMode = 2U;
         config.measFreq = 100000U;
         config.pud = 236U;
+        config.nFilt= 5U;
 
         /* Apply trim */
         uint32_t trim1 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim1);
@@ -155,8 +162,9 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId)
             config.trim1 = trim1;
             config.trim2 = DEV_SM_FuseGet(s_tmpsns[sensorId].fuseTrim2);
         }
+
         /* Check if ELE enabled */
-        if (!TMPSNS_Enabled(base))
+        if (secAccess && !TMPSNS_Enabled(base))
         {
             /* Note we enabled */
             s_tmpsnsOwn[sensorId] = true;
@@ -311,14 +319,9 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             static int64_t s_tmpsnsValue[DEV_SM_NUM_SENSOR];
             static bool s_tmpsnsValid[DEV_SM_NUM_SENSOR];
@@ -382,14 +385,9 @@ int32_t DEV_SM_SensorTripPointSet(uint32_t sensorId, uint8_t tripPoint,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
-        /* Check if enabled */
-        if (s_tmpsnsEnb[sensorId])
+        /* Check if enabled and power on */
+        if (s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
         {
             /* Check trip point */
             if (tripPoint >= (uint32_t) s_tmpsns[sensorId].numThresholds)
@@ -470,14 +468,9 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
     }
     else
     {
-        /* Check if PD is on */
-        if (!SRC_MixIsPwrSwitchOn(s_tmpsns[sensorId].pd))
-        {
-            s_tmpsnsEnb[sensorId] = false;
-        }
-
         /* Return sensor enable */
-        *enabled = s_tmpsnsEnb[sensorId];
+        *enabled = s_tmpsnsEnb[sensorId]
+            && SRC_MixIsPwrReady(s_tmpsns[sensorId].pd);
         *timestampReporting = false;
     }
 
@@ -491,7 +484,6 @@ int32_t DEV_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled,
 void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
 {
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[idx].idx];
-    uint8_t tripPoint = threshold - s_tmpsns[idx].firstThreshold;
 
     /* Workaround ERR052128 */
     SystemTimeDelay(1U);
@@ -500,8 +492,47 @@ void DEV_SM_SensorHandler(uint32_t idx, uint8_t threshold)
     TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
             << threshold);
 
-    /* Send sensor event */
-    LMM_SensorEvent(idx, tripPoint, s_tmpsnsDir[idx]);
+    /* Check trip point will not underflow */
+    if (threshold >= s_tmpsns[idx].firstThreshold)
+    {
+        /* Send sensor event */
+        LMM_SensorEvent(idx, threshold - s_tmpsns[idx].firstThreshold,
+            s_tmpsnsDir[idx]);
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Sensor timer tick                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_SensorTick(uint32_t msec)
+{
+    /* Loop over sensors */
+    for (uint32_t sensorId = 0U; sensorId < DEV_SM_NUM_SENSOR; sensorId++)
+    {
+        /* Check if PD is on */
+        if (SRC_MixIsPwrReady(s_tmpsns[sensorId].pd))
+        {
+            TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
+            uint32_t filt = TMPSNS_GetFilterBusy(base);
+            uint32_t mask = s_thresholdEnb[sensorId] & ~filt;
+
+            /* Loop over thresholds */
+            for (uint8_t threshold = 0U; threshold < SM_NUM_THRESHOLDS;
+                threshold++)
+            {
+                /* Threshold enabled and filter clear? */
+                if ((mask & BIT32(threshold)) != 0U)
+                {
+                    /* Clear interrupt */
+                    TMPSNS_ClearStatusFlags(base, ((uint32_t) kTMPSNS_Thr0If)
+                            << threshold);
+
+                    TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
+                            << threshold);
+                }
+            }
+        }
+    }
 }
 
 /*==========================================================================*/
@@ -514,57 +545,69 @@ static int32_t TMPSNS_ThresholdSet(uint32_t sensorId, uint8_t threshold,
 {
     int32_t status = SM_ERR_SUCCESS;
     int64_t raw64 = (value * 64) / 100;
-    int16_t raw16 = (int16_t) raw64;
     TMPSNS_Type *base = s_tmpsnsBases[s_tmpsns[sensorId].idx];
 
-    if (eventControl == DEV_SM_SENSOR_TP_NONE)
+    /* Check raw64 fit in int16_t */
+    if (CHECK_I64_FIT_I16(raw64))
     {
-        /* Disable interrupt */
-        TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
-                << threshold);
-    }
-    else
-    {
-        uint8_t mode;
+        int16_t raw16 = (int16_t) raw64;
+        uint32_t mask = BIT32(threshold);
 
-        /* Convert event control to mode */
-        switch (eventControl)
+        if (eventControl == DEV_SM_SENSOR_TP_NONE)
         {
-            case DEV_SM_SENSOR_TP_RISING:
-                mode = (uint8_t) kTMPSNS_ThrModeRisingEdge;
-                s_tmpsnsDir[sensorId] = 1U;
-                break;
-            case DEV_SM_SENSOR_TP_FALLING:
-                mode = (uint8_t) kTMPSNS_ThrModeFallingEdge;
-                s_tmpsnsDir[sensorId] = 0U;
-                break;
-            case DEV_SM_SENSOR_TP_HIGH:
-                mode = (uint8_t) kTMPSNS_ThrModeHigh;
-                s_tmpsnsDir[sensorId] = 1U;
-                break;
-            case DEV_SM_SENSOR_TP_LOW:
-                mode = (uint8_t) kTMPSNS_ThrModeLow;
-                s_tmpsnsDir[sensorId] = 0U;
-                break;
-            default:
-                status = SM_ERR_INVALID_PARAMETERS;
-                break;
-        }
+            s_thresholdEnb[sensorId] &= ~mask;
 
-        /* Valid mode? */
-        if (status == SM_ERR_SUCCESS)
-        {
             /* Disable interrupt */
             TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
                     << threshold);
-
-            /* Configure sensor threshold */
-            TMPSNS_SetThreshold(base, threshold, raw16, mode);
-
-            /* Enable interrupt */
-            TMPSNS_EnableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
-                    << threshold);
         }
+        else
+        {
+            uint8_t mode;
+
+            /* Convert event control to mode */
+            switch (eventControl)
+            {
+                case DEV_SM_SENSOR_TP_RISING:
+                    mode = (uint8_t) kTMPSNS_ThrModeRisingEdge;
+                    s_tmpsnsDir[sensorId] = 1U;
+                    break;
+                case DEV_SM_SENSOR_TP_FALLING:
+                    mode = (uint8_t) kTMPSNS_ThrModeFallingEdge;
+                    s_tmpsnsDir[sensorId] = 0U;
+                    break;
+                case DEV_SM_SENSOR_TP_HIGH:
+                    mode = (uint8_t) kTMPSNS_ThrModeHigh;
+                    s_tmpsnsDir[sensorId] = 1U;
+                    break;
+                case DEV_SM_SENSOR_TP_LOW:
+                    mode = (uint8_t) kTMPSNS_ThrModeLow;
+                    s_tmpsnsDir[sensorId] = 0U;
+                    break;
+                default:
+                    status = SM_ERR_INVALID_PARAMETERS;
+                    break;
+            }
+
+            /* Valid mode? */
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Disable interrupt */
+                TMPSNS_DisableInterrupts(base, ((uint32_t) kTMPSNS_Thr0IE)
+                        << threshold);
+
+                /* Configure sensor threshold */
+                TMPSNS_SetThreshold(base, threshold, raw16, mode);
+
+                /* Enable interrupt (delayed) */
+                s_thresholdEnb[sensorId] |= mask;
+            }
+        }
+    }
+    else
+    {
+        /* Set the status if value is greater than int16_t max range */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Return status */

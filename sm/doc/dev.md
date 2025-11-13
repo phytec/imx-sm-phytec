@@ -62,7 +62,7 @@ If using bash, then set the TOOLS environment variable as follows:
     export TOOLS=<directory contain the GCC compiler directory>
 
 So for example if the GCC toolchain is installed in
-~/tools/arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-eabi then set *TOOLS=~/tools*.
+~/tools/arm-gnu-toolchain-$TC_VER-x86_64-arm-none-eabi then set *TOOLS=~/tools*.
 
 Compiling the SM {#GUIDE_COMPILE}
 ==================

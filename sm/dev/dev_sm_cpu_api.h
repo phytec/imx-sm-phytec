@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -103,6 +103,18 @@ int32_t DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
  */
 int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
     uint32_t *sleepMode, uint64_t *vector);
+
+/*!
+ * Query if CPU is active.
+ *
+ * @param[in]     cpuId         CPU identifier
+ *
+ * This function allows caller to query if a CPU is active.
+ *
+ * @return Returns true if the specified CPU is not forced to sleep
+ *         and not currently suspended.
+ */
+bool DEV_SM_CpuIsActive(uint32_t cpuId);
 
 /*!
  * Start a CPU.

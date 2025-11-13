@@ -1,7 +1,7 @@
 /*
  ** ###################################################################
  **
- **     Copyright 2024 NXP
+ **     Copyright 2024-2025 NXP
  **
  **     Redistribution and use in source and binary forms, with or without modification,
  **     are permitted provided that the following conditions are met:
@@ -43,13 +43,7 @@
 
 /* Local Defines */
 
-#define DEBUG_26        (DDRC_BASE + 0xF64U)
-
-#define Dwc_Ddrphy_Apb_Wr(addr, data) \
-    (*(uint32_t *)(DDR_PHY_BASE + Ddrphy_AddrRemap(addr)) = (data))
-
-#define Dwc_Ddrphy_Apb_Rd(addr) \
-    *(uint32_t *)(DDR_PHY_BASE + Ddrphy_AddrRemap(addr))
+#define DEBUG_26  (DDRC_BASE + 0xF64U)
 
 /* Local Variables */
 
@@ -57,94 +51,12 @@ static bool s_srFastWakeEn = false;
 
 /* Local Functions */
 
-static uint32_t Ddrphy_AddrRemap(uint32_t paddr);
-static bool Check_DdrcIdle(uint32_t flag);
-static bool Ddrc_Mrs(uint32_t csSel, uint32_t opcode, uint32_t mr);
-static bool Mr_Write(uint32_t mr_Rank, uint32_t mr_Addr, uint32_t mr_Data);
-static bool Ddr_PhyInit(const struct ddr_info *ddrp);
-static bool Check_Dfi_Init_Complete(void);
-static bool Ddrc_Init(const struct ddr_info *ddrp);
-
-/*--------------------------------------------------------------------------*/
-/* DDR PHY address remap to 32-bit addressing                               */
-/*--------------------------------------------------------------------------*/
-static uint32_t Ddrphy_AddrRemap(uint32_t paddr)
-{
-    return (paddr << 2U);
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR Controller Idle status                                               */
-/*--------------------------------------------------------------------------*/
-static bool Check_DdrcIdle(uint32_t flag)
-{
-    while ((DDRC_CTRL->DDRDSR_2 & flag) != flag)
-    {
-        ; /* Intentional empty while */
-    }
-
-    /* Return status */
-    return true;
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR MR write                                                             */
-/*--------------------------------------------------------------------------*/
-static bool Ddrc_Mrs(uint32_t csSel, uint32_t opcode, uint32_t mr)
-{
-    uint32_t val;
-    uint8_t caShift = 6U;
-    bool rc;
-
-    /* LP4x or LP5 */
-    if ((DDRC_CTRL->DDR_SDRAM_CFG &
-            DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_MASK) != 0U)
-    {
-        caShift = 7U;
-    }
-
-    val = DDRC_DDR_SDRAM_MD_CNTL_MD_SEL(csSel) | (opcode << caShift) | (mr);
-    DDRC_CTRL->DDR_SDRAM_MD_CNTL = val;
-    DDRC_CTRL->DDR_SDRAM_MD_CNTL |= DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK;
-
-    while ((DDRC_CTRL->DDR_SDRAM_MD_CNTL & DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
-        == DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
-    {
-        ; /* Intentional empty while */
-    }
-
-    rc = Check_DdrcIdle(DDRC_DDRDSR_2_IDLE_MASK);
-
-    /* Return status */
-    return rc;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Mode register write                                                      */
-/*--------------------------------------------------------------------------*/
-static bool Mr_Write(uint32_t mr_Rank, uint32_t mr_Addr, uint32_t mr_Data)
-{
-    uint32_t chip_Select;
-    bool rc;
-
-    if (mr_Rank == 1U)
-    {
-        chip_Select = 0U; /* CS0 */
-    }
-    else if (mr_Rank == 2U)
-    {
-        chip_Select = 1U; /* CS1 */
-    }
-    else
-    {
-        chip_Select = 4U; /* CS0 & CS1 */
-    }
-
-    rc = Ddrc_Mrs(chip_Select, mr_Data, mr_Addr);
-
-    /* Return status */
-    return rc;
-}
+static bool DDR_CheckDdrcIdle(uint32_t flag);
+static bool DDR_DdrcMrs(uint32_t csSel, uint32_t opcode, uint32_t mr);
+static bool DDR_MrWrite(uint32_t mrRank, uint32_t mrAddr, uint32_t mrData);
+static bool DDR_PhyInit(const struct ddr_info *ddrp);
+static bool DDR_CheckDfiInitComplete(void);
+static bool DDR_DdrcInit(const struct ddr_info *ddrp);
 
 /*--------------------------------------------------------------------------*/
 /* DDR Enter Retention                                                      */
@@ -186,19 +98,20 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
         }
 
         /* Polling for DDRDSR_2[IDLE] & ECC complete to be set */
-        rc  = Check_DdrcIdle(waitFlag);
+        rc  = DDR_CheckDdrcIdle(waitFlag);
 
         if (rc != false)
         {
             /* MEM HALT */
-            DDRC_CTRL->DDR_SDRAM_CFG |= (1U << DDRC_DDR_SDRAM_CFG_MEM_HALT_SHIFT);
+            DDRC_CTRL->DDR_SDRAM_CFG
+                |= (1U << DDRC_DDR_SDRAM_CFG_MEM_HALT_SHIFT);
 
             /* Check if LPDDR5 */
             if ((Read32(&DDRC_CTRL->DDR_SDRAM_CFG) &
                 (1UL << DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_SHIFT)) != 0U)
             {
                 /* STOP ZQCAL for two ranks */
-                rc = Mr_Write(3U, 28U, 2U);
+                rc = DDR_MrWrite(3U, 28U, 2U);
                 /* Wait tZQSTOP(30ns) */
                 SystemTimeDelay(1U);
             }
@@ -271,9 +184,112 @@ bool DDR_EnterRetention(const struct ddr_info *ddrp)
 }
 
 /*--------------------------------------------------------------------------*/
+/* DDR Exit Retention                                                       */
+/*--------------------------------------------------------------------------*/
+bool DDR_ExitRetention(const struct ddr_info *ddrp)
+{
+    bool rc;
+
+    /* Reload the DDRPHY config */
+    rc = DDR_PhyInit(ddrp);
+
+    if (rc != false)
+    {
+        /* Reload the ddrc config */
+        rc = DDR_DdrcInit(ddrp);
+    }
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR PHY address remap to 32-bit addressing                               */
+/*--------------------------------------------------------------------------*/
+uint32_t DDR_PhyAddrRemap(uint32_t paddr)
+{
+    return (paddr << 2U);
+}
+
+/*==========================================================================*/
+
+/*--------------------------------------------------------------------------*/
+/* DDR Controller Idle status                                               */
+/*--------------------------------------------------------------------------*/
+static bool DDR_CheckDdrcIdle(uint32_t flag)
+{
+    while ((DDRC_CTRL->DDRDSR_2 & flag) != flag)
+    {
+        ; /* Intentional empty while */
+    }
+
+    /* Return status */
+    return true;
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR MR write                                                             */
+/*--------------------------------------------------------------------------*/
+static bool DDR_DdrcMrs(uint32_t csSel, uint32_t opcode, uint32_t mr)
+{
+    uint32_t val;
+    uint8_t caShift = 6U;
+    bool rc;
+
+    /* LP4x or LP5 */
+    if ((DDRC_CTRL->DDR_SDRAM_CFG &
+            DDRC_DDR_SDRAM_CFG_SDRAM_TYPE_MASK) != 0U)
+    {
+        caShift = 7U;
+    }
+
+    val = DDRC_DDR_SDRAM_MD_CNTL_MD_SEL(csSel) | (opcode << caShift) | (mr);
+    DDRC_CTRL->DDR_SDRAM_MD_CNTL = val;
+    DDRC_CTRL->DDR_SDRAM_MD_CNTL |= DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK;
+
+    while ((DDRC_CTRL->DDR_SDRAM_MD_CNTL & DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
+        == DDRC_DDR_SDRAM_MD_CNTL_MD_EN_MASK)
+    {
+        ; /* Intentional empty while */
+    }
+
+    rc = DDR_CheckDdrcIdle(DDRC_DDRDSR_2_IDLE_MASK);
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Mode register write                                                      */
+/*--------------------------------------------------------------------------*/
+static bool DDR_MrWrite(uint32_t mrRank, uint32_t mrAddr, uint32_t mrData)
+{
+    uint32_t chip_Select;
+    bool rc;
+
+    if (mrRank == 1U)
+    {
+        chip_Select = 0U; /* CS0 */
+    }
+    else if (mrRank == 2U)
+    {
+        chip_Select = 1U; /* CS1 */
+    }
+    else
+    {
+        chip_Select = 4U; /* CS0 & CS1 */
+    }
+
+    rc = DDR_DdrcMrs(chip_Select, mrData, mrAddr);
+
+    /* Return status */
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Restore the DDR PHY config                                               */
 /*--------------------------------------------------------------------------*/
-static bool Ddr_PhyInit(const struct ddr_info *ddrp)
+static bool DDR_PhyInit(const struct ddr_info *ddrp)
 {
     const struct ddrphy *cfg;
     bool rc = true;
@@ -283,51 +299,57 @@ static bool Ddr_PhyInit(const struct ddr_info *ddrp)
         uint32_t i;
 
         /* APB access enable of CSR bus */
-        Dwc_Ddrphy_Apb_Wr(0xd0000U, 0x0U);
+        DWC_DDRPHY_APB_WR(0xd0000U, 0x0U);
         /* HclkEn and UcclkEn set enable */
-        Dwc_Ddrphy_Apb_Wr(0xc0080U, 0x3U);
+        DWC_DDRPHY_APB_WR(0xc0080U, 0x3U);
 
         /* Steps to restore Impedance Calibration values.
-         * Restore Pull-up impedance calibration code by overriding csr_ZQCalCodeOvrPU with saved initial value.
+         * Restore Pull-up impedance calibration code by overriding
+         * csr_ZQCalCodeOvrPU with saved initial value.
          * user must replace Subfield: ZQCalCodeOvrEnPU 0:0 with 0x1,
          * user must replace Subfield: ReservedZQCalCodeOvrEnPU 7:1 with 0x0,
-         * user must replace Subfield: ZQCalCodeOvrValPU 15:8 with the actual saved initial ZQCalCodePU value,
-         * Restore Pull-down impedance calibration code by overriding csr_ZQCalCodeOvrPD with saved initial value
+         * user must replace Subfield: ZQCalCodeOvrValPU 15:8 with the actual
+         * saved initial ZQCalCodePU value,
+         * Restore Pull-down impedance calibration code by overriding
+         * csr_ZQCalCodeOvrPD with saved initial value
          * user must replace Subfield: ZQCalCodeOvrEnPD 0:0 with 0x1,
          * user must replace Subfield: ReservedZQCalCodeOvrEnPD 7:1 with 0x0,
-         * user must replace Subfield: ZQCalCodeOvrValPD 15:8 with the actual saved initial ZQCalCodePD value,
+         * user must replace Subfield: ZQCalCodeOvrValPD 15:8 with the actual
+         * saved initial ZQCalCodePD value,
          */
-        Dwc_Ddrphy_Apb_Wr(0x20326U, 0x1U | (ddrp->ZQCalCodePU & 0xFF00U));
-        Dwc_Ddrphy_Apb_Wr(0x20327U, 0x1U | (ddrp->ZQCalCodePD & 0xFF00U));
+        DWC_DDRPHY_APB_WR(0x20326U, 0x1U | (ddrp->ZQCalCodePU & 0xFF00U));
+        DWC_DDRPHY_APB_WR(0x20327U, 0x1U | (ddrp->ZQCalCodePD & 0xFF00U));
 
         /* Assert ZCalReset to force impedance calibration FSM to idle. */
         /* DWC_DDRPHYA_MASTER0_p0_ZCalReset */
-        Dwc_Ddrphy_Apb_Wr(0x20310U, 0x1U);
+        DWC_DDRPHY_APB_WR(0x20310U, 0x1U);
         /* DWC_DDRPHYA_MASTER0_p0_ZQCalCodeOvrPU, Clear ZQCalCodeOvrPU */
-        Dwc_Ddrphy_Apb_Wr(0x20326U, 0x0U);
+        DWC_DDRPHY_APB_WR(0x20326U, 0x0U);
         /* DWC_DDRPHYA_MASTER0_p0_ZQCalCodeOvrPD, Clear ZQCalCodeOvrPD */
-        Dwc_Ddrphy_Apb_Wr(0x20327U, 0x0U);
+        DWC_DDRPHY_APB_WR(0x20327U, 0x0U);
 
         /* Restore the DDR PHY CSRs */
         cfg = ddrp->trained_csr;
         for (i = 0U; i < ddrp->ddrphy_trained_csr_num; i++)
         {
-            Dwc_Ddrphy_Apb_Wr(cfg->reg, cfg->val);
+            DWC_DDRPHY_APB_WR(cfg->reg, cfg->val);
             cfg++;
         }
 
         /* Step 'D' - Wait for full ZQ calibration sequence */
         /* write csrPwrOkDlyCtrl = 1*/
-        Dwc_Ddrphy_Apb_Wr(0x20090U, 0x1U);
+        DWC_DDRPHY_APB_WR(0x20090U, 0x1U);
         /* write csrPstate that corresponds to DfiClk frequency */
-        Dwc_Ddrphy_Apb_Wr(0x2008bU, 0x0U);
+        DWC_DDRPHY_APB_WR(0x2008bU, 0x0U);
 
         if (ddrp->pstate_num > 2U)
         {
             uint32_t dficycle;
 
-            /* In case NumPState > 2, Host writes csrZcalDfiClkTicksPer1uS_p0[10:0] = DfiClk cycle
-             * count to make 1us at the PState during LP3 exit and csrPState = 0 should be kept */
+            /* In case NumPState > 2, Host writes
+             * csrZcalDfiClkTicksPer1uS_p0[10:0] = DfiClk cycle
+             * count to make 1us at the PState during LP3 exit and csrPState
+             * = 0 should be kept */
             dficycle = (ddrp->pstate_freq[0U] / 8U);
             if ((ddrp->pstate_freq[0U] % 8U) != 0U)
             {
@@ -335,21 +357,21 @@ static bool Ddr_PhyInit(const struct ddr_info *ddrp)
             }
 
             /* number of DfiClks in 1us */
-            Dwc_Ddrphy_Apb_Wr(0x20004U, dficycle);
+            DWC_DDRPHY_APB_WR(0x20004U, dficycle);
         }
 
         /* Reset the calibrator to its idle state */
-        Dwc_Ddrphy_Apb_Wr(0x20310U, 0x0U);
+        DWC_DDRPHY_APB_WR(0x20310U, 0x0U);
         /* triggers the impedance calibration sequence */
-        Dwc_Ddrphy_Apb_Wr(0x20311U, 0x1U);
+        DWC_DDRPHY_APB_WR(0x20311U, 0x1U);
 
         /* Host waits for completions of ZQ Calibration (35us) */
         SystemTimeDelay(35U);
 
         /* UcclkEn disable, HclkEn enable */
-        Dwc_Ddrphy_Apb_Wr(0xc0080U, 0x2U);
+        DWC_DDRPHY_APB_WR(0xc0080U, 0x2U);
         /* disable APB access to csr bus */
-        Dwc_Ddrphy_Apb_Wr(0xd0000U, 0x1U);
+        DWC_DDRPHY_APB_WR(0xd0000U, 0x1U);
     }
     else
     {
@@ -363,7 +385,7 @@ static bool Ddr_PhyInit(const struct ddr_info *ddrp)
 /*--------------------------------------------------------------------------*/
 /* Check status of DFI Init                                                 */
 /*--------------------------------------------------------------------------*/
-static bool Check_Dfi_Init_Complete(void)
+static bool DDR_CheckDfiInitComplete(void)
 {
     do
     {
@@ -384,7 +406,7 @@ static bool Check_Dfi_Init_Complete(void)
 /*--------------------------------------------------------------------------*/
 /* Restore the DDR Controller config                                        */
 /*--------------------------------------------------------------------------*/
-static bool Ddrc_Init(const struct ddr_info *ddrp)
+static bool DDR_DdrcInit(const struct ddr_info *ddrp)
 {
     bool rc;
 
@@ -431,7 +453,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
         }
 
         /* Check dfi init status */
-        rc = Check_Dfi_Init_Complete();
+        rc = DDR_CheckDfiInitComplete();
 
         if (rc != false)
         {
@@ -440,7 +462,7 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
                 Read32(&DDRC_CTRL->DDR_SDRAM_CFG) |
                         DDRC_DDR_SDRAM_CFG_MEM_EN_MASK);
 
-            rc = Check_DdrcIdle(DDRC_DDRDSR_2_IDLE_MASK);
+            rc = DDR_CheckDdrcIdle(DDRC_DDRDSR_2_IDLE_MASK);
         }
     }
     else
@@ -450,27 +472,8 @@ static bool Ddrc_Init(const struct ddr_info *ddrp)
 
     if (s_srFastWakeEn)
     {
-        DDRC_CTRL->DDR_SDRAM_CFG_3 |= DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN(1U);
-    }
-
-    /* Return status */
-    return rc;
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR Exit Retention                                                       */
-/*--------------------------------------------------------------------------*/
-bool DDR_ExitRetention(const struct ddr_info *ddrp)
-{
-    bool rc;
-
-    /* Reload the DDRPHY config */
-    rc = Ddr_PhyInit(ddrp);
-
-    if (rc != false)
-    {
-        /* Reload the ddrc config */
-        rc = Ddrc_Init(ddrp);
+        DDRC_CTRL->DDR_SDRAM_CFG_3
+            |= DDRC_DDR_SDRAM_CFG_3_SR_FAST_WK_EN(1U);
     }
 
     /* Return status */

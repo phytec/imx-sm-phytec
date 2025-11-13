@@ -101,7 +101,7 @@ void TEST_DevSmSensor(void)
 
         /* Sensor config start */
         printf("DEV_SM_SensorConfigStart(%u)\n", sensorId);
-        CHECK(DEV_SM_SensorConfigStart(sensorId));
+        CHECK(DEV_SM_SensorConfigStart(sensorId, true));
 
         /* Sensor power down */
         printf("DEV_SM_SensorPowerDown(%u)\n", sensorId);
@@ -178,7 +178,7 @@ void TEST_DevSmSensor(void)
         SM_ERR_NOT_FOUND);
 
     printf("DEV_SM_SensorConfigStart(%lu)\n", DEV_SM_NUM_SENSOR);
-    NECHECK(DEV_SM_SensorConfigStart(DEV_SM_NUM_SENSOR),
+    NECHECK(DEV_SM_SensorConfigStart(DEV_SM_NUM_SENSOR, true),
         SM_ERR_NOT_FOUND);
 
     printf("DEV_SM_SensorEnable(%lu)\n", DEV_SM_NUM_SENSOR);

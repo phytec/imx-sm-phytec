@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -829,7 +829,7 @@ static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
             uint8_t pos = 1U;
 
             /* Get message size */
-            size = MIN(msg->hdr.size - 1U, maxLen - 1U);
+            size = U8(MIN(msg->hdr.size - 1U, maxLen - 1U));
 
             /* Get message body */
             while (size > 0U)

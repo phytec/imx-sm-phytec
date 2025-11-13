@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -986,7 +986,7 @@ static int32_t FusaFaultGet(const scmi_caller_t *caller,
 
     /* Check fault */
     if ((status == SM_ERR_SUCCESS)
-        && (((int32_t) in->faultId) >=  ((int32_t) SM_NUM_FAULT)))
+        && ((in->faultId) >=  SM_NUM_FAULT))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1072,7 +1072,7 @@ static int32_t FusaFaultSet(const scmi_caller_t *caller,
 
     /* Check fault */
     if ((status == SM_ERR_SUCCESS)
-        && (((int32_t) in->faultId) >=  ((int32_t) SM_NUM_FAULT)))
+        && ((in->faultId) >=  SM_NUM_FAULT))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1155,7 +1155,7 @@ static int32_t FusaFaultGroupNotify(const scmi_caller_t *caller,
 
     /* Check fault */
     if ((status == SM_ERR_SUCCESS)
-        && (((int32_t) in->faultIdFirst) >=  ((int32_t) SM_NUM_FAULT)))
+        && ((in->faultIdFirst) >=  SM_NUM_FAULT))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1175,7 +1175,7 @@ static int32_t FusaFaultGroupNotify(const scmi_caller_t *caller,
             uint32_t faultId = idx + in->faultIdFirst;
 
             /* Check fault */
-            if (((int32_t) faultId) >=  ((int32_t) SM_NUM_FAULT))
+            if ((faultId) >=  SM_NUM_FAULT)
             {
                 break;
             }

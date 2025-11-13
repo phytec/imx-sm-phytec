@@ -54,6 +54,7 @@ static uint8_t s_lmState[SM_NUM_LM];
 static int32_t s_lmError[SM_NUM_LM];
 static lmm_rst_rec_t s_lmBootReason[SM_NUM_LM];
 static lmm_rst_rec_t s_lmShutdownReason[SM_NUM_LM];
+static uint32_t s_cpuLm[SM_NUM_CPU];
 
 /* Global variables */
 
@@ -61,6 +62,10 @@ const lmm_rst_rec_t g_swReason = DEV_SM_RST_REC_SW;
 static const lmm_startstop_t s_lmmStart[SM_LM_NUM_START] =
 {
     SM_LM_START_DATA
+};
+static const lmm_startstop_t s_lmmStop[SM_LM_NUM_STOP] =
+{
+    SM_LM_STOP_DATA
 };
 
 /* Local functions */
@@ -110,6 +115,16 @@ int32_t LMM_SystemModeSelSet(uint32_t mSel)
     if (mSel < SM_LM_NUM_MSEL)
     {
         s_modeSel = mSel;
+
+        /* Loop over stop list to map CPUs to LM */
+        for (uint32_t idx = 0U; idx < SM_LM_NUM_STOP; idx++)
+        {
+            if ((s_lmmStop[idx].mSel == s_modeSel)
+                && (s_lmmStop[idx].ss == LMM_SS_CPU))
+            {
+                s_cpuLm[s_lmmStop[idx].rsrc] = s_lmmStop[idx].lmId;
+            }
+        }
     }
     else
     {
@@ -473,6 +488,43 @@ int32_t LMM_SystemLmCheck(uint32_t bootLm)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Check if a CPU is started when an LM boots                               */
+/*--------------------------------------------------------------------------*/
+bool LM_CpuCheck(uint32_t lmId, uint32_t cpuId)
+{
+    bool rtn = false;
+    uint32_t idx = g_lmmConfig[lmId].start - 1U;
+
+    /* Loop over start list to check for CPU */
+    while ((!rtn) && (idx < SM_LM_NUM_START))
+    {
+        const lmm_startstop_t *ptr = &s_lmmStart[idx];
+
+        /* End for this LM? */
+        if (ptr->lmId != lmId)
+        {
+            break;
+        }
+
+        /* For this mode? */
+        if (ptr->mSel == s_modeSel)
+        {
+            /* Process start command */
+            if ((ptr->ss == LMM_SS_CPU) && (ptr->rsrc == cpuId))
+            {
+                rtn = true;
+            }
+        }
+
+        /* Next entry */
+        idx++;
+    }
+
+    /* Return state */
+    return rtn;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Power on LM                                                              */
 /*--------------------------------------------------------------------------*/
 int32_t LMM_SystemLmPowerOn(uint32_t lmId, uint32_t agentId, uint32_t pwrLm)
@@ -748,6 +800,72 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
 }
 
 /*--------------------------------------------------------------------------*/
+/* Report a change in CPU run mode                                          */
+/*--------------------------------------------------------------------------*/
+void LMM_SystemCpuModeChanged(uint32_t cpuId)
+{
+    /* Check CPU */
+    if (cpuId < DEV_SM_NUM_CPU)
+    {
+        uint32_t lmId = s_cpuLm[cpuId];
+        bool activeCpus = false;
+        lmm_rpc_trigger_t trigger =
+        {
+            .event = LMM_TRIGGER_LM,
+            .parm[1] = lmId,
+            .parm[2] = lmId
+        };
+
+        /* Count active CPUs for this LM */
+        for (uint32_t idx = 0U; idx < SM_NUM_CPU; idx++)
+        {
+            /* This LM? */
+            if (s_cpuLm[idx] == lmId)
+            {
+                /* Get CPU info */
+                if (SM_CPUISACTIVE(idx))
+                {
+                    activeCpus = true;
+                    break;
+                }
+            }
+        }
+
+        /* Run to suspend? */
+        if ((s_lmState[lmId] == LMM_STATE_LM_ON) && !activeCpus)
+        {
+            s_lmState[lmId] = LMM_STATE_LM_SUSPEND;
+
+            /* Notify all LMs via LM */
+            trigger.parm[0] = LMM_TRIGGER_PARM_LM_SUSPEND;
+            for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
+            {
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
+            }
+        }
+
+        /* Suspend to run? */
+        else if ((s_lmState[lmId] == LMM_STATE_LM_SUSPEND) && activeCpus)
+        {
+            s_lmState[lmId] = LMM_STATE_LM_ON;
+
+            /* Notify all LMs via LM */
+            trigger.parm[0] = LMM_TRIGGER_PARM_LM_WAKE;
+            for (uint32_t dstLm = 0U; dstLm < SM_NUM_LM; dstLm++)
+            {
+                (void) LMM_RpcNotificationTrigger(dstLm, &trigger);
+            }
+        }
+
+        /* Else */
+        else
+        {
+            ; /* Intentional empty else */
+        }
+    }
+}
+
+/*--------------------------------------------------------------------------*/
 /* Group boot                                                               */
 /*--------------------------------------------------------------------------*/
 // coverity[misra_c_2012_rule_17_2_violation:FALSE]
@@ -1007,7 +1125,6 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
     uint32_t idx = start;
 
     /* Loop over start list to load reset vectors */
-
     while ((status == SM_ERR_SUCCESS) && (idx < SM_LM_NUM_START))
     {
         const lmm_startstop_t *ptr = &s_lmmStart[idx];
@@ -1057,7 +1174,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_PERF:
                     status = LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0], true);
+                        U64_U32(ptr->arg[0]), true);
                     break;
                 case LMM_SS_CLK:
                     status = LM_ClockStart(ptr->lmId, ptr->rsrc,
@@ -1071,7 +1188,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                     break;
                 case LMM_SS_VOLT:
                     status = LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
-                        (uint8_t) ptr->arg[0]);
+                        U64_U8(ptr->arg[0]));
                     break;
                 case LMM_SS_RST:
                     {
@@ -1079,7 +1196,7 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                         bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
 
                         status = LMM_ResetDomain(ptr->lmId, ptr->rsrc,
-                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                            UINT64_L(ptr->arg[1]), toggle, assertNegate);
                     }
                     break;
                 case LMM_SS_CTRL:
@@ -1087,9 +1204,9 @@ static int32_t LM_ProcessStart(uint32_t lmId, uint32_t start, bool cpu)
                         uint32_t val[LMM_MAX_ARG];
 
                         /* Copy array */
-                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        for (uint32_t etr = 0U; etr < LMM_MAX_ARG; etr++)
                         {
-                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                            val[etr] = UINT64_L(ptr->arg[etr]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,
@@ -1117,10 +1234,6 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t idx = stop;
-    static const lmm_startstop_t s_lmmStop[SM_LM_NUM_STOP] =
-    {
-        SM_LM_STOP_DATA
-    };
 
     /* Loop over stop list to load reset vectors */
     while (idx < SM_LM_NUM_STOP)
@@ -1172,7 +1285,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_PERF:
                     (void) LMM_PerfLevelSet(ptr->lmId, ptr->rsrc,
-                        (uint32_t) ptr->arg[0], true);
+                        U64_U32(ptr->arg[0]), true);
                     break;
                 case LMM_SS_CLK:
                     (void) LMM_ClockEnable(ptr->lmId, ptr->rsrc, false);
@@ -1182,7 +1295,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                     break;
                 case LMM_SS_VOLT:
                     (void) LMM_VoltageModeSet(ptr->lmId, ptr->rsrc,
-                        (uint8_t) ptr->arg[0]);
+                        U64_U8(ptr->arg[0]));
                     break;
                 case LMM_SS_RST:
                     {
@@ -1190,7 +1303,7 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         bool toggle = ((ptr->arg[0] & 0x2U) != 0U);
 
                         (void) LMM_ResetDomain(ptr->lmId, ptr->rsrc,
-                            SM_UINT64_L(ptr->arg[1]), toggle, assertNegate);
+                            UINT64_L(ptr->arg[1]), toggle, assertNegate);
                     }
                     break;
                 case LMM_SS_CTRL:
@@ -1198,9 +1311,9 @@ static int32_t LM_ProcessStop(uint32_t lmId, uint32_t stop)
                         uint32_t val[LMM_MAX_ARG];
 
                         /* Copy array */
-                        for (idx = 0U; idx < LMM_MAX_ARG; idx++)
+                        for (uint32_t etr = 0U; etr < LMM_MAX_ARG; etr++)
                         {
-                            val[idx] = SM_UINT64_L(ptr->arg[idx]);
+                            val[etr] = UINT64_L(ptr->arg[etr]);
                         }
 
                         status = LMM_MiscControlSet(ptr->lmId, ptr->rsrc,

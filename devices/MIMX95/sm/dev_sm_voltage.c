@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023, 2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -222,8 +222,7 @@ int32_t DEV_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
             && (voltageLevel <= range->highestVolt))
         {
             /* Change level */
-            status = BRD_SM_SupplyLevelSet(domainId,
-                (uint32_t) voltageLevel);
+            status = BRD_SM_SupplyLevelSet(domainId, voltageLevel);
         }
         else
         {
@@ -245,7 +244,7 @@ int32_t DEV_SM_VoltageLevelSet(uint32_t domainId, int32_t voltageLevel)
 int32_t DEV_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t microVolt = 0U;
+    int32_t microVolt = 0;
 
     /* Check domain */
     if (domainId < DEV_SM_NUM_VOLT)
@@ -261,7 +260,7 @@ int32_t DEV_SM_VoltageLevelGet(uint32_t domainId, int32_t *voltageLevel)
     /* Return voltage */
     if (status == SM_ERR_SUCCESS)
     {
-        *voltageLevel = (int32_t) microVolt;
+        *voltageLevel = microVolt;
     }
 
     /* Return status */

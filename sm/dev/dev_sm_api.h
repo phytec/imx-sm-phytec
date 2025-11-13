@@ -330,6 +330,11 @@
 #define SM_CLOCKPARENTGET       DEV_SM_ClockParentGet
 #endif
 
+#ifndef SM_CLOCKEXTENDEDINFO
+/*! Redirector (device/board) to get extended clock info */
+#define SM_CLOCKEXTENDEDINFO    DEV_SM_ClockExtendedInfo
+#endif
+
 #ifndef SM_CLOCKEXTENDEDSET
 /*! Redirector (device/board) to set extended clock data */
 #define SM_CLOCKEXTENDEDSET     DEV_SM_ClockExtendedSet
@@ -376,8 +381,13 @@
 #endif
 
 #ifndef SM_RESETDOMAIN
-/*! Redirector (device/board) to reset a reset domain name */
+/*! Redirector (device/board) to set reset domain state */
 #define SM_RESETDOMAIN          DEV_SM_ResetDomain
+#endif
+
+#ifndef SM_RESETDOMAINGET
+/*! Redirector (device/board) to get reset domain state */
+#define SM_RESETDOMAINGET       DEV_SM_ResetDomainGet
 #endif
 
 #ifndef SM_VOLTAGENAMEGET
@@ -493,6 +503,11 @@
 #ifndef SM_CPUINFOGET
 /*! Redirector (device/board) to get CPU info */
 #define SM_CPUINFOGET           DEV_SM_CpuInfoGet
+#endif
+
+#ifndef SM_CPUISACTIVE
+/*! Redirector (device/board) to get CPU state */
+#define SM_CPUISACTIVE          DEV_SM_CpuIsActive
 #endif
 
 #ifndef SM_CPUSTART

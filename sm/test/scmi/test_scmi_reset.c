@@ -239,7 +239,7 @@ static void TEST_ScmiResetExclusive(bool pass, uint32_t channel,
         /* Non-Arch */
         printf("SCMI_Reset(%u, %u)\n", channel, domainId);
         CHECK(SCMI_Reset(channel, domainId,
-            flags, 0X80000000));
+            flags, 0X80000000U));
 
         /* Reset functionality with different flag inputs */
         flags = SCMI_RESET_FLAGS_ASYNC(0U) | SCMI_RESET_FLAGS_SIGNAL(0U)

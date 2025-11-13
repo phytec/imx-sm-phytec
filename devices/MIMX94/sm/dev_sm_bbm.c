@@ -76,7 +76,7 @@ int32_t DEV_SM_BbmInit(void)
 /*--------------------------------------------------------------------------*/
 /* Clear BBM                                                                */
 /*--------------------------------------------------------------------------*/
-int32_t DEV_SM_BbmClear(void)
+int32_t DEV_SM_BbmClear(bool disableAlarm)
 {
     int32_t status = SM_ERR_SUCCESS;
 
@@ -87,11 +87,14 @@ int32_t DEV_SM_BbmClear(void)
             ((uint32_t) kBBNSM_RTC_AlarmInterrupt)
             | ((uint32_t) kBBNSM_RTC_RolloverInterrupt));
 
-        /* Clear pending alarm */
-        (void) BBNSM_RTC_SetAlarm(BBNSM, (uint32_t) -1);
-
         /* Clear status flags */
         BBNSM_ClearStatusFlags(BBNSM, s_statusFlags);
+
+        if (disableAlarm)
+        {
+            /* Disable alarm */
+            BBNSM_RTC_DisableAlarm(BBNSM);
+        }
 
         /* Mark as cleared */
         s_cleared = true;
@@ -260,7 +263,7 @@ int32_t DEV_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
     else
     {
         /* Set seconds */
-        BBNSM_RTC_SetSeconds(BBNSM, SM_UINT64_L(val));
+        BBNSM_RTC_SetSeconds(BBNSM, UINT64_L(val));
     }
 
     /* Return status */
@@ -312,15 +315,15 @@ int32_t DEV_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
     int32_t status;
 
     /* Clear before allowing alarm set */
-    status = DEV_SM_BbmClear();
+    status = DEV_SM_BbmClear(false);
 
-    /* Enable? */
+    /* Enabled? */
     if (enable)
     {
         status_t kstat;
 
         /* Set alarm, enable, and enable interrupt */
-        kstat = BBNSM_RTC_SetAlarm(BBNSM, SM_UINT64_L(val));
+        kstat = BBNSM_RTC_SetAlarm(BBNSM, UINT64_L(val));
 
         /* Check driver error */
         if (kstat != kStatus_Success)
@@ -334,8 +337,8 @@ int32_t DEV_SM_BbmRtcAlarmSet(uint32_t rtcId, bool enable, uint64_t val)
         BBNSM_DisableInterrupts(BBNSM, ((uint32_t)
             kBBNSM_RTC_AlarmInterrupt));
 
-        /* Clear pending alarm */
-        (void) BBNSM_RTC_SetAlarm(BBNSM, (uint32_t) -1);
+        /* Disable alarm */
+        BBNSM_RTC_DisableAlarm(BBNSM);
     }
 
     /* Return status */
@@ -350,7 +353,7 @@ int32_t DEV_SM_BbmRtcRollover(uint32_t rtcId)
     int32_t status;
 
     /* Clear before allowing alarm enable */
-    status = DEV_SM_BbmClear();
+    status = DEV_SM_BbmClear(true);
 
     /* Enable RTC rollover interrupt */
     BBNSM_EnableInterrupts(BBNSM, ((uint32_t) kBBNSM_RTC_RolloverInterrupt));

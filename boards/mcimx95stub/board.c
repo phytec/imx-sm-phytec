@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -300,7 +300,7 @@ void BOARD_InitDebugConsole(void)
         lpuart_config.enableTx = true;
         lpuart_config.enableRx = true;
         (void) LPUART_Init(s_uartConfig.base, &lpuart_config,
-            (uint32_t) rate & 0xFFFFFFFFU);
+            U64_U32(rate));
     }
 }
 

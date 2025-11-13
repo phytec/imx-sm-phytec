@@ -112,7 +112,7 @@ typedef struct
     uint32_t psIdx;
     uint32_t idStart;
     uint32_t idEnd;
-    uint32_t const *dvsTable;
+    int32_t const *dvsTable;
 } dev_sm_perf_ps_cfg_t;
 
 /* Overall performance setpoint configuration */
@@ -157,7 +157,7 @@ static uint32_t const s_perfSleepDomain[DEV_SM_NUM_PERF_SLEEP] =
 };
 
 /* Voltage setpoints for VDD_SOC */
-static uint32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
+static int32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] = ES_LOW_UV_VDD_SOC,
     [DEV_SM_PERF_LVL_LOW] = ES_LOW_UV_VDD_SOC,
@@ -431,11 +431,11 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+2/3) = 4264MHz
+         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*2U/3U,                   /* VCO MFN */
-        .odiv = 8U,                             /* ODIV */
+        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
+        .odiv = 16U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
@@ -444,16 +444,16 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD/3U,                      /* VCO MFN */
-        .odiv = 4U                              /* ODIV */
+        .odiv = 8U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+2/3) = 4264MHz
+         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
          */
         .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD*2U/3U,                   /* VCO MFN */
-        .odiv = 4U,                             /* ODIV */
+        .mfn = VCO_MFD*3U/4U,                   /* VCO MFN */
+        .odiv = 8U,                             /* ODIV */
     }
 };
 
@@ -2001,7 +2001,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             uint32_t numLevels = s_perfNumLevels[psIdx];
 
             /* Convert rate to KHz */
-            uint32_t rateKHz =  SM_UINT64_L(rate / 1000ULL);
+            uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
 
             /* Default to highest level to handle overclocking case */
             if (numLevels > 0U)

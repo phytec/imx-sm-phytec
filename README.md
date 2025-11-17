@@ -76,6 +76,7 @@ repository and then compile the SM for the target configuration.
 
 For example, in the top directory of the code base (e.g. imx-sm):
 
+    make config=mx95evk cfg  (optional if the associated mx95evk.cfg file has been changed)
     make config=mx95evk all
 
 Then copy the resulting binary image file, *build/mx95evk/m33_image.bin*, to the iMX95 directory of the

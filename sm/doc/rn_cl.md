@@ -35,6 +35,7 @@ Improvement {#RN_CL_IMP}
 | [SM-312](https://jira.sw.nxp.com/projects/SM/issues/SM-312) | Assign UART3 to M33-S in the i.MX94 EVK config [[detail]](@ref RN_DETAIL_SM_312) |   | | Y |
 | [SM-313](https://jira.sw.nxp.com/projects/SM/issues/SM-313) | Enable watchdog earlier to protect boot [[detail]](@ref RN_DETAIL_SM_313) |   | Y | Y |
 | [SM-315](https://jira.sw.nxp.com/projects/SM/issues/SM-315) | Limit AP frequency based on fuses on i.MX94 [[detail]](@ref RN_DETAIL_SM_315) |   | | Y |
+| [SM-318](https://jira.sw.nxp.com/projects/SM/issues/SM-318) | Sync cfg changes to other cfgs files [[detail]](@ref RN_DETAIL_SM_318) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
@@ -48,6 +49,8 @@ Bug {#RN_CL_BUG}
 | [SM-306](https://jira.sw.nxp.com/projects/SM/issues/SM-306) | Config tool fails to handle 'size' attribute on MRC resource assignment [[detail]](@ref RN_DETAIL_SM_306) |   | Y | Y |
 | [SM-307](https://jira.sw.nxp.com/projects/SM/issues/SM-307) | Config tool generates invalid config.mak file depending on input comment format [[detail]](@ref RN_DETAIL_SM_307) |   | Y | Y |
 | [SM-316](https://jira.sw.nxp.com/projects/SM/issues/SM-316) | Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_root  [[detail]](@ref RN_DETAIL_SM_316) |   | | Y |
+| [SM-319](https://jira.sw.nxp.com/projects/SM/issues/SM-319) | DRAM info not working properly when one chip select DRAMs are used [[detail]](@ref RN_DETAIL_SM_319) |   | Y | Y |
+| [SM-320](https://jira.sw.nxp.com/projects/SM/issues/SM-320) | Incorrect info returned for power and CPU domains disabled in fuses [[detail]](@ref RN_DETAIL_SM_320) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
@@ -66,6 +69,7 @@ Documentation {#RN_CL_DOC}
 |------------|-------------------------------|-------|---|---|
 | [SM-287](https://jira.sw.nxp.com/projects/SM/issues/SM-287) | SM 2025Q4 documentation updates |   | Y | Y |
 | [SM-302](https://jira.sw.nxp.com/projects/SM/issues/SM-302) | Improve documentation for debugging reset issues [[detail]](@ref RN_DETAIL_SM_302) |   | Y | Y |
+| [SM-325](https://jira.sw.nxp.com/projects/SM/issues/SM-325) | Remind user build cfg if cfg file changed |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
@@ -266,4 +270,19 @@ SM-316: Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_ro
 ----------
 
 The source inputs available for the i3c1_slow_clk_root and endat3_1_fast_clk_root were updated to reflect the latest RM.
+
+SM-318: Sync cfg changes to other cfgs files {#RN_DETAIL_SM_318}
+----------
+
+Merged changes in the default EVK cfg file to the Android and NETC demo cfg files.
+
+SM-319: DRAM info not working properly when one chip select DRAMs are used {#RN_DETAIL_SM_319}
+----------
+
+Fixed code to correctly calculate the DDR size.
+
+SM-320: Incorrect info returned for power and CPU domains disabled in fuses {#RN_DETAIL_SM_320}
+----------
+
+Ensure SM returns the correct error when power domains and CPU cores are disabled in fuses. 
 

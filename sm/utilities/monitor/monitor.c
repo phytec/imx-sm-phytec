@@ -788,9 +788,9 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
     {
         string name;
 
-        status = func(0U, index, &name, NULL);
+        int32_t found = func(0U, index, &name, NULL);
 
-        if ((status == SM_ERR_SUCCESS)
+        if ((found == SM_ERR_SUCCESS)
             && (strcasecmp(rsrcName, name) == 0))
         {
             break;

@@ -61,6 +61,6 @@ Customers **must** make the following changes in their board port:
 
 Optional, but recommended:
 
-- Coverted C++ style comments to C style.
+- Converted C++ style comments to C style.
 
 

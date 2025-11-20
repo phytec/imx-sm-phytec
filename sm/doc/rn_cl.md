@@ -139,7 +139,7 @@ SM-294: Support system reset on DDR ECC multi-bit error {#RN_DETAIL_SM_294}
 
 Enabled the DDR ECC multi-bit error (MBE) fault in the FCCU config file. Added reaction settings in NXP SM cfg files (EVK, ALT) to reset the system. Like all faults, customers can specify to do nothing, reset the system, reset an LM, shutdown the system, shutdown an LM, or any of the other fault reaction types.
 
-Note if nothing is specified, then the default is to reset the system. If MBE reset is not desired any of the following will disable:  don't enable in the DDR OEI, disable in the FCCU (eMcem) config file, or specify none as the reaction type in the SM cfg file.
+Note if nothing is specified, then the default is to reset the system. If MBE reset is not desired, doing any of the following will disable MBR fault generation (and default system reset):  don't enable in the DDR OEI, disable in the FCCU (eMcem) config file, or specify none as the reaction type in the SM cfg file.
 
 SM-295: Misc. config file changes {#RN_DETAIL_SM_295}
 ----------
@@ -199,7 +199,7 @@ A new section was also added to the Configuration section on FCCU config.
 SM-303: Extend TRDC_CONFIG with information about MDAC features {#RN_DETAIL_SM_303}
 ----------
 
-The configrool was updated to support KPA enable (kpaen) and SID size (sidsz) options when configuring a TRDC with the TRDC_CONFIG_n specification in a device cfg file.
+The configtool was updated to support KPA enable (kpaen) and SID size (sidsz) options when configuring a TRDC with the TRDC_CONFIG_n specification in a device cfg file.
 
 The only impact to customers is they should rebuild their SM config headers using the configtool.
 

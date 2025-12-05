@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -39,5 +39,11 @@ VPATH += \
 	$(MB_LOOPBACK_DIR)
 
 OBJS += \
-	$(OUT)/mb_loopback.o
+	$(OUT)/mb_loopback.o 
+
+ifeq ($(T), all)
+OBJS += \
+	$(OUT)/test_mb_loopback.o
+
+endif
 

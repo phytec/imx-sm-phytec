@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -234,24 +234,6 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode);
 int32_t DEV_SM_SystemIdle(void);
 
 /*!
- * Place the system DRAM into retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_SystemDramRetentionEnter(void);
-
-/*!
- * Exit the system DRAM from retention.
- *
- * @return Returns the status (::SM_ERR_SUCCESS = success).
- *
- * Return errors (see @ref STATUS "SM error codes"):
- */
-int32_t DEV_SM_SystemDramRetentionExit(void);
-
-/*!
  * System timer tick.
  *
  * @param[in]     msec          Period in milliseconds
@@ -277,7 +259,7 @@ void DEV_SM_SystemMsgProfStart(uint32_t mu);
  * @param[in]   messageId       SCMI message ID
  */
 void DEV_SM_SystemMsgProfDescribe(uint32_t scmiChannel, uint32_t chanType,
-    uint32_t protocolId,uint32_t messageId);
+    uint32_t protocolId, uint32_t messageId);
 
 /*!
  * Message profile end notification.

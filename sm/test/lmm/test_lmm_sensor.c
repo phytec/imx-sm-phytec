@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -72,11 +72,12 @@ void TEST_LmmSensor(void)
     NECHECK(LMM_SensorEnable(lmId, sensorId, enable, timestampReporting),
         SM_ERR_INVALID_PARAMETERS);
 
-    lmId = 0U, sensorId = SM_NUM_SENSOR;
+    lmId = 0U;
+    sensorId = SM_NUM_SENSOR;
     NECHECK(LMM_SensorEnable(lmId, sensorId, enable, timestampReporting),
         SM_ERR_NOT_FOUND);
-
 #endif
+
     printf("\n");
 }
 

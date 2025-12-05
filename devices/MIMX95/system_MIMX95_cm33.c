@@ -16,7 +16,7 @@
 **         the oscillator (PLL) that is part of the microcontroller device.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2024 NXP
+**     Copyright 2016-2025 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -91,7 +91,7 @@ void SystemInit(void)
     lfast &= (~HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_CREF_EN_MASK);
     Write32(HSIO_BLK_CTRL_HSIOMIX_LFAST_IO_REG_ADDR, lfast);
 
-    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_2_2_violation]
     SystemInitHook();
 }
 
@@ -99,7 +99,7 @@ void SystemInit(void)
    -- SystemInitHook()
    ---------------------------------------------------------------------------- */
 
-// coverity[misra_c_2012_rule_1_2_violation:FALSE]
+// coverity[misra_c_2012_rule_1_2_violation]
 __attribute__((weak)) void SystemInitHook(void)
 {
     /* Void implementation of the weak function. */
@@ -135,7 +135,7 @@ void SystemDebugWaitAttach(void)
         BOARD_WdogRefresh();
     }
 
-    // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_1_2_violation]
     __BKPT(0);
 }
 
@@ -177,12 +177,8 @@ uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
             *((uint16_t *) val) = *((const uint16_t *) addr);
             break;
 
-        case 32:
+        default:
             *((uint32_t *) val) = *((const uint32_t *) addr);
-            break;
-
-        default :
-            ; /* Intentional empty default */
             break;
     }
 

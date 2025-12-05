@@ -41,14 +41,10 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
-#include "fsl_ddr.h"
 #include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_sysctr.h"
-#ifdef USES_RX_REPLICA
-#include "fsl_ddr_rx_replica.h"
-#endif
 
 /* Local defines */
 
@@ -73,11 +69,6 @@ typedef struct
 static uint32_t s_sysSleepMode = 0U;
 static uint32_t s_sysSleepFlags = 0U;
 static dev_sm_rst_rec_t s_shutdownRecord = { 0 };
-static BLK_CTRL_DDRMIX_Type s_ddrBlkCtrl;
-#ifdef USES_RX_REPLICA
-static ddr_rxclkdelay_wa_data_t s_rxClkDelay;
-static uint32_t s_ddrMseconds = 0U;
-#endif
 #ifdef DEV_SM_MSG_PROF_CNT
 static dev_sm_sys_msg_cur_t s_curMsgRecord = { 0 };
 #endif
@@ -85,11 +76,6 @@ static dev_sm_sys_msg_cur_t s_curMsgRecord = { 0 };
 /* Local functions */
 
 static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve);
-#ifdef USES_RX_REPLICA
-static void DEV_SM_RxReplicaInit(void);
-static void DEV_SM_RxReplicaDeinit(void);
-static void DEV_SM_RxReplicaReinit(void);
-#endif
 
 /*--------------------------------------------------------------------------*/
 /* Initialize system functions                                              */
@@ -141,19 +127,19 @@ int32_t DEV_SM_SystemInit(void)
         CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].AUTHEN |=
             CCM_LPCG_AUTHEN_ACK_MODE_MASK;
         CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].DIRECT =
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CNTR_CFG_MASK |
+            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
             CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
             CCM_LPCG_DIRECT_ON_MASK;
         CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].AUTHEN |=
             CCM_LPCG_AUTHEN_ACK_MODE_MASK;
         CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].DIRECT =
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CNTR_CFG_MASK |
+            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
             CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
             CCM_LPCG_DIRECT_ON_MASK;
         CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].AUTHEN |=
             CCM_LPCG_AUTHEN_ACK_MODE_MASK;
         CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].DIRECT =
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_CNTR_CFG_MASK |
+            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
             CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
             CCM_LPCG_DIRECT_ON_MASK;
     }
@@ -163,11 +149,6 @@ int32_t DEV_SM_SystemInit(void)
     {
         SRC_MixSoftPowerDown(PWR_MIX_SLICE_IDX_DDR);
     }
-
-#ifdef USES_RX_REPLICA
-    /* Init RX Replica workaround */
-    DEV_SM_RxReplicaInit();
-#endif
 
     /* Return status */
     return status;
@@ -192,7 +173,7 @@ int32_t DEV_SM_SystemReset(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -240,7 +221,7 @@ int32_t DEV_SM_SystemShutdown(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -260,7 +241,7 @@ void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Store shutdown record */
@@ -379,7 +360,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -399,7 +380,7 @@ void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
@@ -595,15 +576,24 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Disable sensor */
             (void) DEV_SM_SensorPowerDown(DEV_SM_SENSOR_TEMP_ANA);
 
-            /*! Increment system sleep counter */
-            g_syslog.sysSleepRecord.sleepCnt++;
-
-            bool dramInRetention = false;
-            /* Attempt to place DRAM into retention */
-            if (DEV_SM_SystemDramRetentionEnter() == SM_ERR_SUCCESS)
+            /* Check the value doesn't wrap */
+            if (g_syslog.sysSleepRecord.sleepCnt <= (UINT32_MAX - 1U))
             {
-                /* Set flag to indicate DRAM retention is active */
-                dramInRetention = true;
+                /*! Increment system sleep counter */
+                g_syslog.sysSleepRecord.sleepCnt++;
+            }
+            else
+            {
+                /* Initialize to zero in case of wrap */
+                g_syslog.sysSleepRecord.sleepCnt = 0U;
+            }
+
+            bool ddrInRetention = false;
+            /* Attempt to place DDR into retention */
+            if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
+            {
+                /* Set flag to indicate DDR retention is active */
+                ddrInRetention = true;
 
                 /* Power down DDRMIX */
                 if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
@@ -625,15 +615,42 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 }
             }
 
+            /* Query if any CPU in LP compute mode */
+            bool lpComputeActive = (CPU_LpComputeListGet() != 0U);
+
+            /* Track if WAKEUPMIX powered down */
+            bool wakeupMixOff = false;
+
+            /* Track if WAKEUPMIX performance level forced */
+            bool restoreWakeupMixPerf = false;
+            uint32_t savedWakeupMixPerf;
+
             /* If WAKEUPMIX powered down during SUSPEND, force power down */
             if ((lpmSettingWakeup <= sleepMode) &&
                 ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0x0U))
             {
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
-                    DEV_SM_POWER_STATE_OFF) == SM_ERR_SUCCESS)
+                /* Keep WAKEUPMIX powered at parked level during LP compute */
+                if (lpComputeActive)
                 {
-                    g_syslog.sysSleepRecord.mixPwrStat &=
-                        (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                    if (DEV_SM_PerfLevelGet(DEV_SM_PERF_WAKEUP,
+                        &savedWakeupMixPerf) == SM_ERR_SUCCESS)
+                    {
+                        if (DEV_SM_PerfLevelSet(DEV_SM_PERF_WAKEUP,
+                            DEV_SM_PERF_LVL_PRK) == SM_ERR_SUCCESS)
+                        {
+                            restoreWakeupMixPerf = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
+                        DEV_SM_POWER_STATE_OFF) == SM_ERR_SUCCESS)
+                    {
+                        g_syslog.sysSleepRecord.mixPwrStat &=
+                            (~(1UL << PWR_MIX_SLICE_IDX_WAKEUP));
+                        wakeupMixOff = true;
+                    }
                 }
             }
 
@@ -687,7 +704,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
              * and OSC24M configuration.
              */
             bool activeSleep = (perfLevelSleep != DEV_SM_PERF_LVL_PRK) ||
-                ((s_sysSleepFlags & DEV_SM_SSF_OSC24M_ACTIVE_MASK) != 0U);
+                ((s_sysSleepFlags & DEV_SM_SSF_OSC24M_ACTIVE_MASK) != 0U) ||
+                lpComputeActive;
 
             /* Check if OSC24M must remain active */
             if (activeSleep)
@@ -772,9 +790,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             /* Process SM LPIs for sleep entry */
             (void) CPU_PerLpiProcess(CPU_IDX_M33P, sleepMode);
 
-            /* Capture sleep entry latency */
-            g_syslog.sysSleepRecord.sleepEntryUsec =
-                UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+            /* Check the expression values doesn't wrap */
+            if (DEV_SM_Usec64Get() >= sleepEntryStart)
+            {
+                /* Capture sleep entry latency */
+                g_syslog.sysSleepRecord.sleepEntryUsec =
+                    UINT64_L(DEV_SM_Usec64Get() - sleepEntryStart);
+            }
+            else
+            {
+                /* Initialize to zero in case of wrap */
+                g_syslog.sysSleepRecord.sleepEntryUsec = 0U;
+            }
 
             /* Check SYSCTR system sleep mode flag */
             if ((s_sysSleepFlags & DEV_SM_SSF_SYSCTR_ACTIVE_MASK) != 0U)
@@ -783,8 +810,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                 SYSCTR_FreqMode(true, true);
             }
 
-            /* Check FRO system sleep mode flag */
-            if ((s_sysSleepFlags & DEV_SM_SSF_FRO_ACTIVE_MASK) == 0U)
+            /* Manage FRO based on system sleep flags and active sleep state */
+            if (((s_sysSleepFlags & DEV_SM_SSF_FRO_ACTIVE_MASK) == 0U) &&
+                !activeSleep)
             {
                 /* Power down FRO */
                 FRO->CSR.CLR = FRO_CSR_FROEN_MASK;
@@ -792,7 +820,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
-            // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+            // coverity[misra_c_2012_rule_1_2_violation]
             __WFI();
             __ISB();
 
@@ -872,10 +900,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             BLK_CTRL_S_AONMIX->LP_HANDSHAKE2_ELE = lpHs2Ele;
 
             /* If WAKEUPMIX powered down during SUSPEND, force power up */
-            if (lpmSettingWakeup <= sleepMode)
+            if (wakeupMixOff)
             {
                 status = DEV_SM_PowerStateSet(DEV_SM_PD_WAKEUP,
                     DEV_SM_POWER_STATE_ON);
+            }
+
+            /* Check if WAKEUPMIX forced to parked level during LP compute */
+            if ((status == SM_ERR_SUCCESS) && restoreWakeupMixPerf)
+            {
+                /* Restore saved WAKEUPMIX performance level */
+                status = DEV_SM_PerfLevelSet(DEV_SM_PERF_WAKEUP,
+                    savedWakeupMixPerf);
             }
 
             /* If NOCMIX powered down during SUSPEND, force power up */
@@ -885,8 +921,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     DEV_SM_POWER_STATE_ON);
             }
 
-            /* Check if DRAM retention active */
-            if (dramInRetention)
+            /* Check if DDR retention active */
+            if (ddrInRetention)
             {
                 if (status == SM_ERR_SUCCESS)
                 {
@@ -897,8 +933,8 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
                 if (status == SM_ERR_SUCCESS)
                 {
-                    /* Take DRAM out of retention */
-                    status = DEV_SM_SystemDramRetentionExit();
+                    /* Take DDR out of retention */
+                    status = DEV_SM_MemDdrRetentionExit();
                 }
             }
 
@@ -923,8 +959,18 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
     if (g_syslog.sysSleepRecord.wakeSource == 0U)
     {
         sleepExitStart = DEV_SM_Usec64Get();
-        g_syslog.sysSleepRecord.sleepEntryUsec =
-            UINT64_L(sleepExitStart - sleepEntryStart);
+
+        /* Check the expression doesn't wrap */
+        if (sleepExitStart >= sleepEntryStart)
+        {
+            g_syslog.sysSleepRecord.sleepEntryUsec =
+                UINT64_L(sleepExitStart - sleepEntryStart);
+        }
+        else
+        {
+            /* Initialize to zero in case of wrap */
+            g_syslog.sysSleepRecord.sleepEntryUsec = 0U;
+        }
     }
 
     /* Restore GPC wake sources modified during sleep flow */
@@ -943,8 +989,17 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
         }
     }
 
-    g_syslog.sysSleepRecord.sleepExitUsec =
-        UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+    /* Check the expression value doesn't wrap */
+    if (DEV_SM_Usec64Get() >= sleepExitStart)
+    {
+        g_syslog.sysSleepRecord.sleepExitUsec =
+            UINT64_L(DEV_SM_Usec64Get() - sleepExitStart);
+    }
+    else
+    {
+        /* Initialize to zero in case of wrap */
+        g_syslog.sysSleepRecord.sleepExitUsec = 0U;
+    }
 
     return status;
 }
@@ -974,7 +1029,7 @@ int32_t DEV_SM_SystemIdle(void)
             {
                 (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
                 __DSB();
-                // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+                // coverity[misra_c_2012_rule_1_2_violation]
                 __WFI();
                 __ISB();
             }
@@ -985,206 +1040,13 @@ int32_t DEV_SM_SystemIdle(void)
     {
         (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
         __DSB();
-        // coverity[misra_c_2012_rule_1_2_violation:FALSE]
+        // coverity[misra_c_2012_rule_1_2_violation]
         __WFI();
         __ISB();
     }
 
     __enable_irq();
 
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Place the system DRAM into retention                                     */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemDramRetentionEnter(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
-    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
-
-    /* Get power state of DDRMIX */
-    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* DDRMIX must be ON to apply retention */
-        if (powerState != DEV_SM_POWER_STATE_ON)
-        {
-            status = SM_ERR_POWER;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Save DDRMIX block control */
-        s_ddrBlkCtrl.HWFFC_CTRL = BLK_CTRL_DDRMIX->HWFFC_CTRL;
-        s_ddrBlkCtrl.DDRC_STOP_CTRL = BLK_CTRL_DDRMIX->DDRC_STOP_CTRL;
-        s_ddrBlkCtrl.AUTO_CG_CTRL = BLK_CTRL_DDRMIX->AUTO_CG_CTRL;
-        s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN = BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN;
-        s_ddrBlkCtrl.DDRC_URGENT_EN = BLK_CTRL_DDRMIX->DDRC_URGENT_EN;
-        s_ddrBlkCtrl.RT_MASTER_ID_0_1 = BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1;
-        s_ddrBlkCtrl.RT_MASTER_ID_2_3 = BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3;
-        s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT =
-            BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT;
-        s_ddrBlkCtrl.RT_MASTER_ID_4_5 = BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5;
-        s_ddrBlkCtrl.RT_MASTER_ID_6_7 = BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7;
-
-#ifdef USES_RX_REPLICA
-        DEV_SM_RxReplicaDeinit();
-#endif
-
-        /* Enter retention */
-        if (!DDR_EnterRetention(ddr))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Assert DDRPHY Reset */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
-            RST_LINE_CTRL_ASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Deassert BP_PWROK */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRMIX_PHY,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    /* Return status */
-    return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Exit the system DRAM from retention                                      */
-/*--------------------------------------------------------------------------*/
-int32_t DEV_SM_SystemDramRetentionExit(void)
-{
-    int32_t status = SM_ERR_SUCCESS;
-    const struct ddr_info* ddr = (struct ddr_info*) &__DramInfo;
-    uint8_t powerState = DEV_SM_POWER_STATE_OFF;
-
-    /* Get power state of DDRMIX */
-    status = DEV_SM_PowerStateGet(DEV_SM_PD_DDR, &powerState);
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* DDRMIX must be ON to remove retention */
-        if (powerState != DEV_SM_POWER_STATE_ON)
-        {
-            status = SM_ERR_POWER;
-        }
-    }
-
-    /**
-     * BIT(8) => src_ipc_ddrphy_presetn, PRESETN
-     * BIT(9) => src_ipc_ddrphy_reset_n, RESET_N
-     * for some reason BIT(8)=1 at this point, so PRESETN go LOW after power-up
-     * Ensure PRESETN go HIGH after power-up
-     * Ensure RESET_N go LOW  after power-up
-     */
-    if (status == SM_ERR_SUCCESS)
-    {
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN, RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* sleep for a while, just random */
-        SystemTimeDelay(15U);
-
-        /* set PRESETN LOW after power-up */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
-            RST_LINE_CTRL_ASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The delay below must be at least 16 APBCLK
-         * APBCLK is @200MHz in waveform. Timer clock is @24MHz =>
-         * => (16 * 24.000.000 / 200.000.000) = 1.92us minimum
-         * => set x4 = 8us */
-        SystemTimeDelay(15U);
-
-        /* set PRESETN HIGH */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_PRESETN,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The delay below shall be 0 according to PHY PUB, set 8 just in case */
-        SystemTimeDelay(15U);
-
-        /* set RESET_N HIGH */
-        if (!SRC_MixSetResetLine(RST_LINE_DDRPHY_RESETN,
-            RST_LINE_CTRL_DEASSERT))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* The duration for the delay below is not mentioned in PHY PUB,
-           set 8 just in case */
-        SystemTimeDelay(15U);
-
-        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL_VCO, true);
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        status = DEV_SM_ClockEnable(DEV_SM_CLK_DRAMPLL, true);
-    }
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Exit retention */
-        if (!DDR_ExitRetention(ddr))
-        {
-            status = SM_ERR_HARDWARE_ERROR;
-        }
-
-        /* Restore DDRMIX block control */
-        BLK_CTRL_DDRMIX->HWFFC_CTRL = s_ddrBlkCtrl.HWFFC_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_STOP_CTRL = s_ddrBlkCtrl.DDRC_STOP_CTRL;
-        BLK_CTRL_DDRMIX->AUTO_CG_CTRL = s_ddrBlkCtrl.AUTO_CG_CTRL;
-        BLK_CTRL_DDRMIX->DDRC_EXCLUSIVE_EN = s_ddrBlkCtrl.DDRC_EXCLUSIVE_EN;
-        BLK_CTRL_DDRMIX->DDRC_URGENT_EN = s_ddrBlkCtrl.DDRC_URGENT_EN;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_0_1 = s_ddrBlkCtrl.RT_MASTER_ID_0_1;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_2_3 = s_ddrBlkCtrl.RT_MASTER_ID_2_3;
-        BLK_CTRL_DDRMIX->AXI_PARITY_ERR_INJECT =
-            s_ddrBlkCtrl.AXI_PARITY_ERR_INJECT;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_4_5 = s_ddrBlkCtrl.RT_MASTER_ID_4_5;
-        BLK_CTRL_DDRMIX->RT_MASTER_ID_6_7 = s_ddrBlkCtrl.RT_MASTER_ID_6_7;
-
-#ifdef USES_RX_REPLICA
-        /* Perform one-time RxReplica work-around prior to DDR accesses and
-         * before enabling periodic operation */
-        DEV_SM_RxReplicaReinit();
-#endif
-    }
-
-    /* Return status */
     return status;
 }
 
@@ -1196,18 +1058,6 @@ void DEV_SM_SystemTick(uint32_t msec)
     /* Poll for CPU state changes */
     LMM_SystemCpuModeChanged(DEV_SM_CPU_M7P);
     LMM_SystemCpuModeChanged(DEV_SM_CPU_A55P);
-
-#ifdef USES_RX_REPLICA
-    /* Tick DDR */
-    s_ddrMseconds += msec;
-
-    /* Handle DDR periodic tick */
-    if (s_ddrMseconds >= 1000U)
-    {
-        s_ddrMseconds = 0U;
-        DDR_RxReplicaWa(&s_rxClkDelay, 16U);
-    }
-#endif
 }
 
 /*==========================================================================*/
@@ -1245,52 +1095,6 @@ static void DEV_SM_ClockSourceBypass(bool bypass, bool preserve)
         (void) FRACTPLL_SetBypass(CLOCK_PLL_VIDEO1, bypass);
     }
 }
-
-#ifdef USES_RX_REPLICA
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Init                                           */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaInit(void)
-{
-    uint64_t rate;
-    int32_t status = SM_ERR_SUCCESS;
-
-    status = DEV_SM_ClockRateGet(DEV_SM_CLK_DRAMPLL, &rate);
-
-    if (status == SM_ERR_SUCCESS)
-    {
-        s_rxClkDelay.dramFreqMhz = U64_U32(rate / 1000000U);
-        s_rxClkDelay.pmro = DEV_SM_FuseGet(DEV_SM_FUSE_PMRO);
-
-        /* if PMRO fuse is not set, assume default */
-        if (s_rxClkDelay.pmro == 0U)
-        {
-            s_rxClkDelay.pmro = 0x5000U;
-        }
-
-        (void) DDR_RxClkDelayInit(&s_rxClkDelay, DDR_RXCLK_DELAY_CNT);
-    }
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Deinit                                         */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaDeinit(void)
-{
-    s_rxClkDelay.initComplete = false;
-    s_ddrMseconds = 0U;
-}
-
-/*--------------------------------------------------------------------------*/
-/* DDR RX Replica workaround Reinit                                         */
-/*--------------------------------------------------------------------------*/
-static void DEV_SM_RxReplicaReinit(void)
-{
-    s_ddrMseconds = 0U;
-    s_rxClkDelay.initComplete = true;
-    DDR_RxReplicaWa(&s_rxClkDelay, 128U);
-}
-#endif
 
 #ifdef DEV_SM_MSG_PROF_CNT
 /*--------------------------------------------------------------------------*/
@@ -1372,7 +1176,7 @@ void DEV_SM_SystemMsgProfEnd(uint32_t mu)
 
             /* Insert a blank entry */
             g_syslog.sysMsgRecord.msgProf[j].scmiChannel = 0U;
-            g_syslog.sysMsgRecord.msgProf[j].chanType= 0U;
+            g_syslog.sysMsgRecord.msgProf[j].chanType = 0U;
             g_syslog.sysMsgRecord.msgProf[j].protocolId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgId = 0U;
             g_syslog.sysMsgRecord.msgProf[j].msgLatUsec = 0U;

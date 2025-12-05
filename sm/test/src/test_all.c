@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test all                                                                 */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_All(void)
 {
 #ifndef TEST_MIN
@@ -79,8 +79,10 @@ void TEST_All(void)
     TEST_DevSmPin();
     TEST_DevSmFault();
     TEST_DevSm();
+#ifndef SIMU
     TEST_DevSmFuse();
     TEST_DevSmHandler();
+#endif
 
     /* Run board SM tests */
 #ifdef SIMU
@@ -93,13 +95,17 @@ void TEST_All(void)
     TEST_LmmClock();
     TEST_LmmPerf();
     TEST_LmmSys();
+#ifdef SIMU
     TEST_LmmCpu();
     TEST_LmmSensor();
     TEST_LmmMisc();
     TEST_LmmFuSa();
+#endif
     TEST_LmmVoltage();
     TEST_LmmPower();
+#ifdef SIMU
     TEST_LmmFault();
+#endif
 #endif
 
     /* Run SCMI tests */
@@ -121,15 +127,35 @@ void TEST_All(void)
     TEST_ScmiFusa();
     TEST_ScmiMisc();
 
+    /* Test SMT */
+    TEST_Smt();
+
+    /* Run mailbox driver tests */
+#ifdef USES_MB_MU
+    TEST_MbMu();
+#endif
+#ifdef USES_MB_LOOPBACK
+    TEST_MbLoopback();
+#endif
+
+#ifdef SIMU
     /* Run Utility tests */
     TEST_UtilitiesConfig();
+#endif
 
 #if defined(GCOV) && !defined(SIMU)
     /* Dump GCOV info */
     GCOV_InfoDump();
 #endif
 
+#ifdef SIMU
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+    SM_Error(SM_ERR_SUCCESS);
+    SM_TestModeSet(SM_TEST_MODE_EXEC_LVL2);
+    SM_Error(SM_ERR_SUCCESS);
+#else
     /* Exit */
     BRD_SM_Exit(SM_ERR_SUCCESS, 0U);
+#endif
 }
 

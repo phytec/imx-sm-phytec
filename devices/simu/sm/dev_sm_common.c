@@ -64,16 +64,43 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
     int32_t status = SM_ERR_SUCCESS;
     static string siName = "Simulation";
 
-    /* Return initial data */
-    *deviceId = 0U;
-    *siRev = 0U;
-    *partNum = 0U;
-    *siNameAddr = siName;
+    /* Return device ID */
+    if (deviceId != NULL)
+    {
+        *deviceId = 0U;
+    }
+
+    /* Return silicon rev */
+    if (siRev != NULL)
+    {
+        *siRev = 0U;
+    }
+
+    /* Return part number */
+    if (partNum != NULL)
+    {
+        *partNum = 0U;
+    }
+
+    /* Return name */
+    if (siNameAddr != NULL)
+    {
+        *siNameAddr = siName;
+    }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
     /* Return result */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get silicon version                                                      */
+/*--------------------------------------------------------------------------*/
+uint32_t DEV_SM_SiVerGet(void)
+{
+    /* Return version */
+    return 0U;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -110,6 +137,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
     {
         printf("Sys sleep mode  = %u\n", syslog->sysSleepMode);
         printf("Sys sleep flags = 0x%08X\n", syslog->sysSleepFlags);
+        printf("Device err log  = 0x%08X\n", syslog->devErrLog);
     }
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
@@ -142,10 +170,22 @@ uint64_t DEV_SM_Usec64Get(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Log device errors                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_ErrorLog(uint32_t err)
+{
+    g_syslog.devErrLog |= err;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Dump device errors                                                       */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_ErrorDump(void)
 {
+    if (g_syslog.devErrLog != 0U)
+    {
+        printf("DEV init err: 0x%08X\n", g_syslog.devErrLog);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -190,10 +230,18 @@ int32_t DEV_SM_StrLen(string str)
     int32_t len = 0;
 
     /* Loop over string */
-    while (*p != '\0')
+    while ((p != NULL) && (*p != '\0'))
     {
-        len++;
-        p++;
+        /* Check for wrap */
+        if (len <= (INT32_MAX - 1))
+        {
+            len++;
+            p++;
+        }
+        else
+        {
+            break;
+        }
     }
 
     /* Return result */

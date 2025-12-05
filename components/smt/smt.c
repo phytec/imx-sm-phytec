@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -188,8 +188,13 @@ int32_t SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
     uint8_t db = s_smtConfig[smtChannel].mbDoorbell;
     smt_buf_t *buf = (smt_buf_t*) SMT_SmaGet(smtChannel);
 
+    /* Check buffer found */
+    if (buf == NULL)
+    {
+        status = SMT_ERR_COMMS_ERROR;
+    }
     /* Check length */
-    if (len > (SMT_BUFFER_SIZE - SMT_BUFFER_HEADER))
+    else if (len > (SMT_BUFFER_SIZE - SMT_BUFFER_HEADER))
     {
         status = SMT_ERR_PROTOCOL_ERROR;
     }
@@ -237,6 +242,11 @@ int32_t SMT_Tx(uint32_t smtChannel, uint32_t len, bool callee,
         switch (impStatus)
         {
             case SMT_CRC_XOR:
+                /*
+                 * Intentional: CRC includes header
+                 */
+                // coverity[misra_c_2012_rule_18_1_violation]
+                // coverity[callee_ptr_arith]
                 buf->impCrc = CRC_Xor((const uint32_t*) &buf->header,
                     len / 4U);
                 break;

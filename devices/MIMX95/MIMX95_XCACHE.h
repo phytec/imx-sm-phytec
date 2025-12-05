@@ -247,94 +247,58 @@ typedef struct
 
 /* XCACHE - Peripheral instance base addresses */
 #if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
-/** Peripheral LPCAC_PC base address */
-#define LPCAC_PC_BASE (0x54400000u)
-/** Peripheral LPCAC_PC base address */
-#define LPCAC_PC_BASE_NS (0x44400000u)
-/** Peripheral LPCAC_PC base pointer */
-#define LPCAC_PC ((XCACHE_Type *)LPCAC_PC_BASE)
-/** Peripheral LPCAC_PC base pointer */
-#define LPCAC_PC_NS ((XCACHE_Type *)LPCAC_PC_BASE_NS)
-/** Peripheral LPCAC_PS base address */
-#define LPCAC_PS_BASE (0x54400800u)
-/** Peripheral LPCAC_PS base address */
-#define LPCAC_PS_BASE_NS (0x44400800u)
-/** Peripheral LPCAC_PS base pointer */
-#define LPCAC_PS ((XCACHE_Type *)LPCAC_PS_BASE)
-/** Peripheral LPCAC_PS base pointer */
-#define LPCAC_PS_NS ((XCACHE_Type *)LPCAC_PS_BASE_NS)
-/** Array initializer of XCACHE peripheral base addresses */
-#define XCACHE_BASE_ADDRS            \
-    {                                \
-        LPCAC_PC_BASE, LPCAC_PS_BASE \
-    }
-/** Array initializer of XCACHE peripheral base pointers */
-#define XCACHE_BASE_PTRS   \
-    {                      \
-        LPCAC_PC, LPCAC_PS \
-    }
-/** Array initializer of XCACHE peripheral base addresses */
-#define XCACHE_BASE_ADDRS_NS               \
-    {                                      \
-        LPCAC_PC_BASE_NS, LPCAC_PS_BASE_NS \
-    }
-/** Array initializer of XCACHE peripheral base pointers */
-#define XCACHE_BASE_PTRS_NS      \
-    {                            \
-        LPCAC_PC_NS, LPCAC_PS_NS \
-    }
+  /** Peripheral M33_CACHE_CTRLPC base address */
+  #define M33_CACHE_CTRLPC_BASE                    (0x54400000u)
+  /** Peripheral M33_CACHE_CTRLPC base address */
+  #define M33_CACHE_CTRLPC_BASE_NS                 (0x44400000u)
+  /** Peripheral M33_CACHE_CTRLPC base pointer */
+  #define M33_CACHE_CTRLPC                         ((XCACHE_Type *)M33_CACHE_CTRLPC_BASE)
+  /** Peripheral M33_CACHE_CTRLPC base pointer */
+  #define M33_CACHE_CTRLPC_NS                      ((XCACHE_Type *)M33_CACHE_CTRLPC_BASE_NS)
+  /** Peripheral M33_CACHE_CTRLPS base address */
+  #define M33_CACHE_CTRLPS_BASE                    (0x54400800u)
+  /** Peripheral M33_CACHE_CTRLPS base address */
+  #define M33_CACHE_CTRLPS_BASE_NS                 (0x44400800u)
+  /** Peripheral M33_CACHE_CTRLPS base pointer */
+  #define M33_CACHE_CTRLPS                         ((XCACHE_Type *)M33_CACHE_CTRLPS_BASE)
+  /** Peripheral M33_CACHE_CTRLPS base pointer */
+  #define M33_CACHE_CTRLPS_NS                      ((XCACHE_Type *)M33_CACHE_CTRLPS_BASE_NS)
+  /** Array initializer of XCACHE peripheral base addresses */
+  #define XCACHE_BASE_ADDRS                        { M33_CACHE_CTRLPC_BASE, M33_CACHE_CTRLPS_BASE }
+  /** Array initializer of XCACHE peripheral base pointers */
+  #define XCACHE_BASE_PTRS                         { M33_CACHE_CTRLPC, M33_CACHE_CTRLPS }
+  /** Array initializer of XCACHE peripheral base addresses */
+  #define XCACHE_BASE_ADDRS_NS                     { M33_CACHE_CTRLPC_BASE_NS, M33_CACHE_CTRLPS_BASE_NS }
+  /** Array initializer of XCACHE peripheral base pointers */
+  #define XCACHE_BASE_PTRS_NS                      { M33_CACHE_CTRLPC_NS, M33_CACHE_CTRLPS_NS }
 #else
-/** Peripheral LPCAC_PC base address */
-#define LPCAC_PC_BASE (0x44400000u)
-/** Peripheral LPCAC_PC base pointer */
-#define LPCAC_PC      ((XCACHE_Type *)LPCAC_PC_BASE)
-/** Peripheral LPCAC_PS base address */
-#define LPCAC_PS_BASE (0x44400800u)
-/** Peripheral LPCAC_PS base pointer */
-#define LPCAC_PS      ((XCACHE_Type *)LPCAC_PS_BASE)
-/** Array initializer of XCACHE peripheral base addresses */
-#define XCACHE_BASE_ADDRS            \
-    {                                \
-        LPCAC_PC_BASE, LPCAC_PS_BASE \
-    }
-/** Array initializer of XCACHE peripheral base pointers */
-#define XCACHE_BASE_PTRS   \
-    {                      \
-        LPCAC_PC, LPCAC_PS \
-    }
+  /** Peripheral M33_CACHE_CTRLPC base address */
+  #define M33_CACHE_CTRLPC_BASE                    (0x44400000u)
+  /** Peripheral M33_CACHE_CTRLPC base pointer */
+  #define M33_CACHE_CTRLPC                         ((XCACHE_Type *)M33_CACHE_CTRLPC_BASE)
+  /** Peripheral M33_CACHE_CTRLPS base address */
+  #define M33_CACHE_CTRLPS_BASE                    (0x44400800u)
+  /** Peripheral M33_CACHE_CTRLPS base pointer */
+  #define M33_CACHE_CTRLPS                         ((XCACHE_Type *)M33_CACHE_CTRLPS_BASE)
+  /** Array initializer of XCACHE peripheral base addresses */
+  #define XCACHE_BASE_ADDRS                        { M33_CACHE_CTRLPC_BASE, M33_CACHE_CTRLPS_BASE }
+  /** Array initializer of XCACHE peripheral base pointers */
+  #define XCACHE_BASE_PTRS                         { M33_CACHE_CTRLPC, M33_CACHE_CTRLPS }
 #endif
 #if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE & 0x2))
-/** XCACHE physical memory base address */
-#define XCACHE_PHYMEM_BASES      \
-    {                            \
-        0x38000000u, 0x90000000u \
-    }
-/** XCACHE physical memory size */
-#define XCACHE_PHYMEM_SIZES      \
-    {                            \
-        0x08000000u, 0x50000000u \
-    }
-/** XCACHE physical memory base address */
-#define XCACHE_PHYMEM_BASES_NS   \
-    {                            \
-        0x28000000u, 0x80000000u \
-    }
-/** XCACHE physical memory size */
-#define XCACHE_PHYMEM_SIZES_NS   \
-    {                            \
-        0x08000000u, 0x50000000u \
-    }
+  /** XCACHE physical memory base address */
+  #define XCACHE_PHYMEM_BASES                { 0x1FFC0000u, 0x38000000u }
+  /** XCACHE physical memory size */
+  #define XCACHE_PHYMEM_SIZES                { 0x00040000u, 0x08000000u }
+  /** XCACHE physical memory base address */
+  #define XCACHE_PHYMEM_BASES_NS             { 0x0FFC0000u, 0x28000000u }
+  /** XCACHE physical memory size */
+  #define XCACHE_PHYMEM_SIZES_NS             { 0x00040000u, 0x08000000u }
 #else
-/** XCACHE physical memory base address */
-#define XCACHE_PHYMEM_BASES      \
-    {                            \
-        0x28000000u, 0x80000000u \
-    }
-/** XCACHE physical memory size */
-#define XCACHE_PHYMEM_SIZES      \
-    {                            \
-        0x08000000u, 0x50000000u \
-    }
+  /** XCACHE physical memory base address */
+  #define XCACHE_PHYMEM_BASES                { 0x0FFC0000u, 0x28000000u }
+  /** XCACHE physical memory size */
+  #define XCACHE_PHYMEM_SIZES                { 0x00040000u, 0x08000000u }
 #endif
 
 /*!

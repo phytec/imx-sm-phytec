@@ -60,6 +60,12 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Init the system */
     status = DEV_SM_SystemInit();
 
+    /* Init the memory */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = DEV_SM_MemInit();
+    }
+
     /* Init fault handling */
     if (status == SM_ERR_SUCCESS)
     {
@@ -97,7 +103,7 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
 #endif
 
     /* Init ROM data */
-    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_2_2_violation]
     DEV_SM_RomInit();
 
     /* Initialize CPU domains */

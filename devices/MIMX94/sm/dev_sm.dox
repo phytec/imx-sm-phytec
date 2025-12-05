@@ -98,6 +98,12 @@ Lots of detail here.
 */
 
 /*!
+@defgroup DEV_SM_MX94_MEM DEVICE_MX94_MEM: SM i.MX94 Device (MEM)
+
+@brief Module for the i.MX94 device memory functions.
+*/
+
+/*!
 @defgroup DEV_SM_MX94_PERF DEVICE_MX94_PERF: SM i.MX94 Device (PERF)
 
 @brief Module for the i.MX94 device performance functions.

@@ -51,5 +51,5 @@ CPPCHECK_RULES += --suppress=preprocessorErrorDirective
 
 cppcheck :
 	@echo "Checking ...."
-	$(AT)cppcheck --error-exitcode=1 -q -j 4 --std=c99 $(CPPCHECK_DEFINE) $(CPPCHECK_IGNORE) $(CPPCHECK_RULES) --template='{file}:{line}: ({id}) {message}' .
+	$(AT)cppcheck --error-exitcode=1 -q -j 4 --std=c99 $(CPPCHECK_DEFINE) $(CPPCHECK_IGNORE) $(CPPCHECK_RULES) ${INCLUDE} --template='{file}:{line}: ({id}) {message}' .
 

@@ -244,16 +244,13 @@ void RPC_SCMI_Dispatch(uint32_t scmiChannel)
     /* Check channel type */
     switch (g_scmiChannelConfig[scmiChannel].type)
     {
-        case SM_SCMI_CHN_A2P:
-            RPC_SCMI_A2pDispatch(scmiChannel);
-            break;
         case SM_SCMI_CHN_P2A:
         case SM_SCMI_CHN_P2A_NOTIFY:
         case SM_SCMI_CHN_P2A_PRIORITY:
             RPC_SCMI_P2aDispatch(scmiChannel);
             break;
-        default:
-            ; /* Intentional empty default */
+        default: /* SM_SCMI_CHN_A2P */
+            RPC_SCMI_A2pDispatch(scmiChannel);
             break;
     }
 }
@@ -287,7 +284,7 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
          * Intentional: The token value will remain in
          * sync with the agent, even if it wraps.
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        // coverity[cert_int30_c_violation]
         s_token[scmiChannel]++;
         s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 
@@ -311,16 +308,6 @@ int32_t RPC_SCMI_P2aTx(uint32_t scmiChannel, uint32_t protocolId,
 
     /* Return status */
     return status;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Receive P2A message                                                      */
-/*--------------------------------------------------------------------------*/
-int32_t RPC_SCMI_P2aRx(uint32_t scmiChannel, uint32_t minLen,
-    uint32_t header)
-{
-    /* Return status */
-    return SM_ERR_SUCCESS;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -364,8 +351,18 @@ void RPC_SCMI_P2aTxQ(uint32_t agentId, scmi_msg_id_t msgId, uint32_t *msg,
         {
             s_queue[agentId][queue].data[s_queue[agentId][queue].head]
                 = msg[idx];
+            /*
+             * Intentional: Mod keeps within a range
+             */
+            // coverity[cert_int30_c_violation]
             s_queue[agentId][queue].head = (s_queue[agentId][queue].head
                 + 1U) % SM_SCMI_MAX_NOTIFY;
+
+            /*
+             * False Positive: The max increment of count would be till
+             * SM_SCMI_MAX_NOTIFY
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             s_queue[agentId][queue].count++;
         }
 
@@ -585,14 +582,14 @@ static void *RPC_SCMI_HdrAddrGet(uint32_t scmiChannel)
     void *addr = NULL;
 
     /* Get message buffer address */
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             addr = RPC_SMT_HdrAddrGet(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            ; /* Intentional empty default */
             break;
     }
 
@@ -606,14 +603,14 @@ static bool RPC_SCMI_ChannelFree(uint32_t scmiChannel)
 {
     bool channelFree = false;
 
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             channelFree = RPC_SMT_ChannelFree(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            ; /* Intentional empty default */
             break;
     }
 
@@ -639,14 +636,14 @@ static int32_t RPC_SCMI_IsAborted(uint32_t scmiChannel)
     int32_t status;
 
     /* Get abort status */
+    /* Switch to allow transport expansion */
+    // coverity[misra_c_2012_rule_16_1_violation]
+    // coverity[misra_c_2012_rule_16_6_violation]
     switch (g_scmiChannelConfig[scmiChannel].xportType)
     {
-        case SM_XPORT_SMT:
+        default: /* SM_XPORT_SMT */
             status = RPC_SMT_IsAborted(
                 g_scmiChannelConfig[scmiChannel].xportChannel);
-            break;
-        default:
-            status = SM_ERR_NOT_SUPPORTED;
             break;
     }
 
@@ -668,18 +665,23 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
     caller.agentId = (uint32_t) g_scmiChannelConfig[scmiChannel].agentId;
 
     /* Map agent to instance */
-    caller.scmiInst= (uint32_t) g_scmiAgentConfig[caller.agentId].scmiInst;
+    caller.scmiInst = (uint32_t) g_scmiAgentConfig[caller.agentId].scmiInst;
 
     /* Map instance to LM */
-    caller.lmId= g_scmiConfig[caller.scmiInst].lmId;
+    caller.lmId = g_scmiConfig[caller.scmiInst].lmId;
 
     /* Record safety type */
-    caller.safeType= (uint32_t) g_lmmConfig[caller.lmId].safeType;
+    caller.safeType = (uint32_t) g_lmmConfig[caller.lmId].safeType;
 
     /* Record S-EENV ID */
-    caller.seenvId= (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
+    caller.seenvId = (uint32_t) g_scmiAgentConfig[caller.agentId].seenvId;
 
     /* Map agent to instance agent */
+    /*
+     * False Positive: g_scmiConfig[caller.scmiInst].firstAgent will
+     * always be less than the agentId
+     */
+    // coverity[cert_int30_c_violation:FALSE]
     caller.instAgentId = caller.agentId + 1U
         - g_scmiConfig[caller.scmiInst].firstAgent;
 
@@ -759,7 +761,11 @@ static void RPC_SCMI_A2pDispatch(uint32_t scmiChannel)
                 }
             }
 
-            /* Increment token */
+            /*
+             * Intentional: The token value will remain in
+             * sync with the agent, even if it wraps.
+             */
+            // coverity[cert_int30_c_violation]
             s_token[scmiChannel]++;
             s_token[scmiChannel] &= SCMI_HEADER_TOKEN_MASK;
 

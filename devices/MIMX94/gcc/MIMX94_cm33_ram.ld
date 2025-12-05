@@ -220,7 +220,7 @@ SECTIONS
   __StackLimit = __StackTop - STACK_SIZE;
   __FreeTcmStart = __HeapLimit;
   __FreeTcmLimit = __StackLimit;
-  __DramInfo = ORIGIN(m_draminfo);
+  __DdrInfo = ORIGIN(m_draminfo);
   PROVIDE(__stack = __StackTop);
 
   .ARM.attributes 0 : { *(.ARM.attributes) }

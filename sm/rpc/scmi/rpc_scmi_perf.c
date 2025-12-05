@@ -469,7 +469,7 @@ static int32_t PerfProtocolVersion(const scmi_caller_t *caller,
 /*   located. This value should be 64-bit aligned. The address must be in   */
 /*   the memory map of the calling agent. If the statisticsLen field is 0,  */
 /*   then this field is invalid and must be ignored                         */
-/* - out->statisticsAddressHigh: High address: The upper 32 bit of the      */
+/* - out->statisticsAddressHigh: High address: The upper 32 bits of the     */
 /*   physical address where the shared memory region is located. The        */
 /*   address must be in the memory map of the calling agent. If the         */
 /*   statisticsLen field is 0, then this field is invalid and must be       */
@@ -834,8 +834,8 @@ static int32_t PerformanceDescribeLevels(const scmi_caller_t *caller,
                 out->perfLevels[index].value = lmmDesc.value;
                 out->perfLevels[index].powerCost = lmmDesc.powerCost;
                 out->perfLevels[index].attributes = lmmDesc.latency;
-                out->perfLevels[index].indicativeFrequency= lmmDesc.value;
-                out->perfLevels[index].levelIndex= index + in->skipIndex;
+                out->perfLevels[index].indicativeFrequency = lmmDesc.value;
+                out->perfLevels[index].levelIndex = index + in->skipIndex;
 
                 /* Check value doesn't wrap */
                 if (out->numLevels <= (UINT32_MAX - 1U))

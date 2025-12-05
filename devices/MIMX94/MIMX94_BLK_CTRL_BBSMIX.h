@@ -235,14 +235,14 @@ typedef struct {
 
 
 /* BLK_CTRL_BBSMMIX - Peripheral instance base addresses */
-/** Peripheral BLK_CTRL_BBSMMIX_BBSMMIX1 base address */
-#define BLK_CTRL_BBSMMIX_BBSMMIX1_BASE     (0x44410000u)
-/** Peripheral BLK_CTRL_BBSMMIX_BBSMMIX1 base pointer */
-#define BLK_CTRL_BBSMMIX_BBSMMIX1          ((BLK_CTRL_BBSMMIX_Type *)BLK_CTRL_BBSMMIX_BBSMMIX1_BASE)
+/** Peripheral BLK_CTRL_BBSMMIX base address */
+#define BLK_CTRL_BBSMMIX_BASE     (0x44410000u)
+/** Peripheral BLK_CTRL_BBSMMIX base pointer */
+#define BLK_CTRL_BBSMMIX          ((BLK_CTRL_BBSMMIX_Type *)BLK_CTRL_BBSMMIX_BASE)
 /** Array initializer of BLK_CTRL_BBSMMIX peripheral base addresses */
-#define BLK_CTRL_BBSMMIX_BASE_ADDRS         { BLK_CTRL_BBSMMIX_BBSMMIX1_BASE }
+#define BLK_CTRL_BBSMMIX_BASE_ADDRS         { BLK_CTRL_BBSMMIX_BASE }
 /** Array initializer of BLK_CTRL_BBSMMIX peripheral base pointers */
-#define BLK_CTRL_BBSMMIX_BASE_PTRS          { BLK_CTRL_BBSMMIX_BBSMMIX1 }
+#define BLK_CTRL_BBSMMIX_BASE_PTRS          { BLK_CTRL_BBSMMIX }
 
 /*!
  * @}

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@ static lmm_seenv_info_t s_seenvInfo[SM_LM_NUM_SEENV] = { 0U };
 /* Init LMM FuSa management                                                 */
 /*--------------------------------------------------------------------------*/
 // cppcheck-suppress constParameter
-// coverity[misra_c_2012_rule_8_13_violation:FALSE]
+// coverity[misra_c_2012_rule_8_13_violation]
 int32_t LMM_FusaInit(uint32_t *mSel)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -95,6 +95,10 @@ void LMM_SsenvLmNumGet(uint32_t *num)
     {
         if (g_lmmConfig[lmId].safeType == LMM_SAFE_TYPE_SEENV)
         {
+            /*
+             * False Positive: limited by SM_NUM_LM.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (*num)++;
         }
     }
@@ -232,9 +236,9 @@ int32_t LMM_FusaScheckTestExec(const lmm_fusa_id_t *caller,
 /*--------------------------------------------------------------------------*/
 /* Complete fault handling                                                  */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_8_13_violation:FALSE]
+// coverity[misra_c_2012_rule_8_13_violation]
 int32_t LMM_FusaFaultRecover(uint32_t faultId, uint32_t *reaction,
-    // coverity[misra_c_2012_rule_8_13_violation:FALSE]
+    // coverity[misra_c_2012_rule_8_13_violation]
     uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -289,9 +293,14 @@ void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec)
 /*--------------------------------------------------------------------------*/
 /* Recover from global error                                                */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation:FALSE]
-void LMM_FusaGlobalRecovery(uint32_t status)
+// coverity[misra_c_2012_rule_17_11_violation]
+void LMM_FusaGlobalRecovery(int32_t status)
 {
+    /*
+     * Intentional: errId is a generic variable to return both signed and
+     * unsigned data depending on the reason.
+     */
+    // coverity[cert_int31_c_violation]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_FUSA_SRECO,

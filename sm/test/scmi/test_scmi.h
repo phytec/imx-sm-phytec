@@ -84,7 +84,7 @@
 /*! SCMI FuSa protocol version */
 #define SCMI_FUSA_PROT_VER      0x10000U
 /*! SCMI misc protocol version */
-#define SCMI_MISC_PROT_VER      0x10000U
+#define SCMI_MISC_PROT_VER      0x10001U
 
 /* Types */
 

@@ -1,0 +1,53 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2025-08-24T08:11:34Z",
+    "creators": [
+      "Organization: NXP"
+    ],
+    "licenseListVersion": "3.20"
+  },
+  "name": "imx-sm-LF_6.12.34_2.1.0",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "https://nxp.com/spdx/bb025cf9-2f45-467c-9d9e-5e8d3db9f683",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-package-bb025cf9-2f45-467c-9d9e-5e8d3db9f683",
+      "name": "imx-sm",
+      "versionInfo": "LF_6.12.34_2.1.0",
+      "licenseConcluded": "(BSD-3-Clause)",
+      "licenseDeclared": "(BSD-3-Clause)",
+      "downloadLocation": "https://github.com/nxp-imx/imx-sm -b rel_imx_sm_2025q3",
+      "originator": "Organization: NXP",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-f872a562-49f7-464f-a9a6-2ceb45966850",
+      "name": "CMSIS_5",
+      "versionInfo": "5.9.0",
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "homepage": "https://github.com/ARM-software/CMSIS_5",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: CMSIS_5",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-package-bb025cf9-2f45-467c-9d9e-5e8d3db9f683"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-bb025cf9-2f45-467c-9d9e-5e8d3db9f683",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-f872a562-49f7-464f-a9a6-2ceb45966850"
+    }
+  ]
+}

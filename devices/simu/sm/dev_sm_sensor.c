@@ -196,7 +196,7 @@ int32_t DEV_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
      * Intentional: To validate negative temperatures,
      * intentionally pass a negative temperature value.
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     int16_t raw1 = (int16_t) 0xF9B0;
 
     /* Check domain */

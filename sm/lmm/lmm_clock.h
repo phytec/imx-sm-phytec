@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -114,26 +114,26 @@ int32_t LMM_ClockDescribe(uint32_t lmId, uint32_t clockId,
     dev_sm_clock_range_t *range);
 
 /*!
- * Get an LM clock mux option.
+ * Get info about a parent for an LM clock.
  *
- * @param[in]     lmId      LM call is for
- * @param[in]     clockId   Clock description to get
- * @param[in]     idx       Mux index to get
- * @param[out]    mux       Pointer to return the clock index
- *                          of mux input
- * @param[out]    numMuxes  Number of mux inputs
+ * @param[in]     lmId        LM call is for
+ * @param[in]     clockId     Clock description to get
+ * @param[in]     sel         Index of the parent
+ * @param[out]    parentId    Pointer to return the clock index
+ *                            of the selected parent
+ * @param[out]    numParents  Number of parents
  *
- * This function allows the caller to get the clock ID of the mux
- * input \a idx.
+ * This function allows the caller to get the clock ID of the
+ * parent \a sel.
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  *
  * Return errors (see @ref STATUS "SM error codes"):
  * - ::SM_ERR_SUCCESS: if the mux is returned.
- * - others returned by ::SM_CLOCKMUXGET
+ * - others returned by ::SM_CLOCKPARENTDESCRIBE
  */
-int32_t LMM_ClockMuxGet(uint32_t lmId, uint32_t clockId, uint32_t idx,
-    uint32_t *mux, uint32_t *numMuxes);
+int32_t LMM_ClockParentDescribe(uint32_t lmId, uint32_t clockId,
+    uint32_t sel, uint32_t *parentId, uint32_t *numParents);
 
 /*!
  * Set an LM clock rate.

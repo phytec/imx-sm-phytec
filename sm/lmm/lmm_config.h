@@ -141,7 +141,7 @@ typedef struct
 /* Global constant data */
 
 /*! LM config */
-extern const lmm_config_t g_lmmConfig[];
+extern const lmm_config_t g_lmmConfig[SM_NUM_LM];
 
 #endif /* LMM_CONFIG_H */
 

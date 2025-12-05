@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -162,7 +162,11 @@ int32_t SCMI_A2pTx(uint32_t channel, uint32_t protocolId,
             | SCMI_HEADER_TOKEN(s_token[channel]);
         msg->header = *header;
 
-        /* Increment token */
+        /*
+         * Intentional: The token value will remain in
+         * sync with the platform, even if it wraps.
+         */
+        // coverity[cert_int30_c_violation]
         s_token[channel]++;
         s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
 
@@ -313,7 +317,11 @@ int32_t SCMI_P2aRx(uint32_t channel, uint32_t protocolId,
             status = SCMI_ERR_SEQ_ERROR;
         }
 
-        /* Increment token */
+        /*
+         * Intentional: The token value will remain in
+         * sync with the platform, even if it wraps.
+         */
+        // coverity[cert_int30_c_violation]
         s_token[channel]++;
         s_token[channel] &= SCMI_HEADER_TOKEN_MASK;
     }
@@ -360,9 +368,21 @@ int32_t SCMI_P2aTx(uint32_t channel, uint32_t len, uint32_t header)
 /*--------------------------------------------------------------------------*/
 /* Memory copy shim                                                         */
 /*--------------------------------------------------------------------------*/
-void SCMI_MemCpy(uint8_t *dst, const uint8_t *src, uint32_t len)
+void SCMI_MemCpy(uint8_t *dst, const uint8_t *src, uint32_t len,
+    uint32_t lenMul, int32_t *status)
 {
-    (void) memcpy((void*) dst, (const void*) src, len);
+    if (*status == SCMI_ERR_SUCCESS)
+    {
+        /* Check for overflow */
+        if (len <= (UINT32_MAX / lenMul))
+        {
+            (void) memcpy((void*) dst, (const void*) src, len * lenMul);
+        }
+        else
+        {
+            *status = SCMI_ERR_INVALID_PARAMETERS;
+        }
+    }
 }
 
 /*--------------------------------------------------------------------------*/

@@ -58,7 +58,7 @@
 #define CLOCK_K_HZ                          1000ULL
 
 #define CLOCK_PLL_CALC_ACCURACY_HZ          1000U
-#define CLOCK_PLL_MFD                       (CLOCK_PLL_FREF_HZ/CLOCK_PLL_CALC_ACCURACY_HZ)
+#define CLOCK_PLL_MFD                       (CLOCK_PLL_FREF_HZ / CLOCK_PLL_CALC_ACCURACY_HZ)
 
 #define CLOCK_NUM_PLL                       8U
 

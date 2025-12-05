@@ -53,6 +53,7 @@
 #include "dev_sm_config.h"
 #include "dev_sm_power.h"
 #include "dev_sm_system.h"
+#include "dev_sm_mem.h"
 #include "dev_sm_perf.h"
 #include "dev_sm_clock.h"
 #include "dev_sm_sensor.h"

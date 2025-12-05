@@ -53,8 +53,11 @@
 
 /* Defines */
 
-/*! Number of device fuse */
+/*! Number of device fuses */
 #define DEV_SM_NUM_FUSE  27U
+
+/*! Size of OTP */
+#define DEV_SM_NUM_OTP  818U
 
 /*!
  * @name Device fuse indexes
@@ -104,7 +107,7 @@ uint32_t DEV_SM_FuseSpeedGet(void);
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation:FALSE]
+// coverity[misra_c_2012_rule_20_1_violation]
 #include "dev_sm_fuse_api.h"
 
 #endif /* DEV_SM_FUSE_H */

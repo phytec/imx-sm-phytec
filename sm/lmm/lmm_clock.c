@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -101,13 +101,13 @@ int32_t LMM_ClockDescribe(uint32_t lmId, uint32_t clockId,
 }
 
 /*--------------------------------------------------------------------------*/
-/* Return supported clock mux                                               */
+/* Return clock parent info                                                 */
 /*--------------------------------------------------------------------------*/
-int32_t LMM_ClockMuxGet(uint32_t lmId, uint32_t clockId, uint32_t idx,
-    uint32_t *mux, uint32_t *numMuxes)
+int32_t LMM_ClockParentDescribe(uint32_t lmId, uint32_t clockId,
+    uint32_t sel, uint32_t *parentId, uint32_t *numParents)
 {
     /* Not shared, just passthru to device */
-    return SM_CLOCKMUXGET(clockId, idx, mux, numMuxes);
+    return SM_CLOCKPARENTDESCRIBE(clockId, sel, parentId, numParents);
 }
 
 /*--------------------------------------------------------------------------*/

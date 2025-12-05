@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -233,7 +233,7 @@ void TEST_ScmiCpu(void)
     /* CpuPdLpmConfigsSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
-        scmi_pd_lpm_config_t lpm_config = {0U};
+        scmi_pd_lpm_config_t lpm_config = { 0U };
         lpm_config.domainId = 0U;
         lpm_config.lpmSetting = 0U;
         lpm_config.retMask = 0x0U;
@@ -245,7 +245,7 @@ void TEST_ScmiCpu(void)
 
         printf("SCMI_CpuPdLpmConfigSet:(%u, %u)\n",
             SM_SCMI_NUM_CHN, numCpu);
-        NECHECK(SCMI_CpuPdLpmConfigSet(SM_SCMI_NUM_CHN, numCpu,numConfigs,
+        NECHECK(SCMI_CpuPdLpmConfigSet(SM_SCMI_NUM_CHN, numCpu, numConfigs,
             &lpm_config), SM_ERR_INVALID_PARAMETERS);
 
     }
@@ -253,12 +253,13 @@ void TEST_ScmiCpu(void)
     /* CpuPerLpmConfigSet -- Invalid cpuId and Invalid channel */
     {
         uint32_t numConfigs = 1U;
-        scmi_per_lpm_config_t per_lpm_config = {0U};
-        per_lpm_config.perId= 0U;
+        scmi_per_lpm_config_t per_lpm_config = { 0U };
         per_lpm_config.lpmSetting = 0U;
 
-#ifdef SIMU
-        per_lpm_config.perId= 1U;
+#ifndef SIMU
+        per_lpm_config.perId = 0U;
+#else
+        per_lpm_config.perId = 1U;
         printf("SCMI_CpuPerLpmConfigSet (%u, %u) Invalid perID\n",
             SM_TEST_DEFAULT_CHN, numCpu);
         NECHECK(SCMI_CpuPerLpmConfigSet(SM_TEST_DEFAULT_CHN, 1U, numConfigs,
@@ -383,16 +384,11 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
 
 #ifdef SIMU
             /* Reset Config */
-            if (pass)
-            {
-                /* Reset */
-                uint32_t sysManager = 0U;
-                printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-                CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-                    &g_swReason));
-            }
+            uint32_t sysManager = 0U;
+            printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
+            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+                &g_swReason));
 #endif
-
         }
 
         /* RPC_00310 - CPU Sleep mode set */
@@ -451,7 +447,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* RPC_00330 RPC_00340 - CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
-            scmi_pd_lpm_config_t lpm_config = {0U};
+            scmi_pd_lpm_config_t lpm_config = { 0U };
             lpm_config.domainId = domainId;
             lpm_config.lpmSetting = SCMI_CPU_LPM_SETTING_ON_NEVER;
             lpm_config.retMask = 0x0U;
@@ -465,8 +461,8 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* RPC_00330 RPC_00340 - CpuPerLpmConfigSet */
         {
             uint32_t numConfig = 1U;
-            scmi_per_lpm_config_t per_lpm_config = {0U};
-            per_lpm_config.perId= 0U;
+            scmi_per_lpm_config_t per_lpm_config = { 0U };
+            per_lpm_config.perId = 0U;
             per_lpm_config.lpmSetting = 0U;
             printf("SCMI_CpuPerLpmConfigSet (%u, %u)\n",
                 channel, domainId);
@@ -515,7 +511,7 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* CpuPdLpmConfigsSet */
         {
             uint32_t numConfig = 1U;
-            scmi_pd_lpm_config_t lpm_config = {0U};
+            scmi_pd_lpm_config_t lpm_config = { 0U };
             lpm_config.domainId = domainId;
             lpm_config.lpmSetting = SCMI_CPU_LPM_SETTING_ON_NEVER;
             lpm_config.retMask = 0x0U;
@@ -529,8 +525,8 @@ static void TEST_ScmiCpuExclusive(bool pass, uint32_t channel,
         /* CpuPerLpmConfigSet */
         {
             uint32_t numConfig = 1U;
-            scmi_per_lpm_config_t per_lpm_config = {0U};
-            per_lpm_config.perId= 0U;
+            scmi_per_lpm_config_t per_lpm_config = { 0U };
+            per_lpm_config.perId = 0U;
             per_lpm_config.lpmSetting = 0U;
 
             printf("SCMI_CpuPerLpmConfigSet (%u, %u)\n",

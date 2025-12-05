@@ -56,7 +56,7 @@
 
 static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
     uint32_t *day, uint32_t *weekday);
-static void date2days(uint32_t year, uint32_t month, uint32_t day,
+static bool date2days(uint32_t year, uint32_t month, uint32_t day,
     uint32_t *days);
 
 /*--------------------------------------------------------------------------*/
@@ -153,8 +153,16 @@ int32_t BRD_SM_BbmRtcNameGet(uint32_t rtcId, string *rtcNameAddr,
     }
     else
     {
-        /* Return pointer to name */
-        *rtcNameAddr = s_name[rtcId - DEV_SM_NUM_RTC];
+        if ((rtcId - DEV_SM_NUM_RTC) < BRD_SM_NUM_RTC)
+        {
+            /* Return pointer to name */
+            *rtcNameAddr = s_name[rtcId - DEV_SM_NUM_RTC];
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_INVALID_PARAMETERS;
+        }
     }
 
     /* Return status */
@@ -247,12 +255,12 @@ int32_t BRD_SM_BbmRtcTimeSet(uint32_t rtcId, uint64_t val, bool ticks)
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }
-    }
 
-    if (status == SM_ERR_SUCCESS)
-    {
-        /* Enable battery */
-        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Enable battery */
+            (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
+        }
     }
 
     /* Return status */
@@ -278,7 +286,7 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
         if (PCA2131_RtcGet(&g_pca2131Dev, &year, &month, &day, &hour, &min,
             &sec, &hun, &weekday))
         {
-            uint32_t days, secs;
+            uint32_t days = 0U;
 
             /* Convert year */
             if (year >= 70U)
@@ -291,25 +299,37 @@ int32_t BRD_SM_BbmRtcTimeGet(uint32_t rtcId, uint64_t *val, bool ticks)
             }
 
             /* Convert to days */
-            date2days(year, month, day, &days);
-
-            /* Calculate seconds */
-            secs = sec + (min * 60U) + (hour * 3600U);
-            secs += (days * 86400U);
-
-            /* Check time format */
-            if (ticks)
+            if (date2days(year, month, day, &days))
             {
-                *val = (((uint64_t) secs) * 100U) + hun;
+
+                /* Calculate seconds */
+                uint32_t secs = sec + (min * 60U) + (hour * 3600U);
+                secs += (days * 86400U);
+
+                /* Check time format */
+                if (ticks)
+                {
+                    *val = (((uint64_t) secs) * 100U) + hun;
+                }
+                else
+                {
+                    *val = ((uint64_t) secs);
+                }
             }
             else
             {
-                *val = ((uint64_t) secs);
+                status = SM_ERR_HARDWARE_ERROR;
             }
         }
         else
         {
             status = SM_ERR_HARDWARE_ERROR;
+        }
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            /* Enable battery */
+            (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
         }
     }
 
@@ -335,10 +355,7 @@ int32_t BRD_SM_BbmRtcStateGet(uint32_t rtcId, uint32_t *state)
         /* Default state */
         *state = 0U;
 
-        /* Enable battery */
-        (void) PCA2131_PowerModeSet(&g_pca2131Dev, 0U);
-
-        /* Get battery state */
+        /* Get time status */
         if (PCA2131_TimeStatusGet(&g_pca2131Dev, &st))
         {
             if (st)
@@ -624,7 +641,7 @@ static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
     if (rc)
     {
         /* Calculate month */
-        *month= (moy < 10U) ? (moy + 3U) : (moy - 9U);
+        *month = (moy < 10U) ? (moy + 3U) : (moy - 9U);
 
         /* Calculate day of the week */
         *weekday = (days + 4U) % 7U;
@@ -640,35 +657,65 @@ static bool days2date(uint32_t days, uint32_t *year, uint32_t *month,
 /*--------------------------------------------------------------------------*/
 /* Convert date/time to days since 1-1-1970                                 */
 /*--------------------------------------------------------------------------*/
-static void date2days(uint32_t year, uint32_t month, uint32_t day,
+static bool date2days(uint32_t year, uint32_t month, uint32_t day,
     uint32_t *days)
 {
-    uint32_t newYear;
-    uint32_t era;
-    uint32_t doe;
-    uint32_t yoe;
-    uint32_t doy;
-    uint32_t moy;
+    bool rc = true;
+    uint32_t newYear = 0U;
+    uint32_t era = 0U;
+    uint32_t yoe = 0U;
 
-    /* Adjust year */
+    /*
+     * False Positive: The value of variable year cann't be zero
+     */
+    // coverity[cert_int30_c_violation:FALSE]
     newYear = year - ((month <= 2U) ? 1U : 0U);
 
     /* Calculate era */
     era = newYear / 400U;
 
-    /* Calculate the year of era */
-    yoe = newYear - (era * 400U);
+    /* Check the expression value doesn't wrap */
+    if (newYear >= (era * 400U))
+    {
+        /* Calculate the year of era */
+        yoe = newYear - (era * 400U);
+    }
+    else
+    {
+        /* Handling if value wraps */
+        rc = false;
+    }
 
-    /* Calculate month of year */
-    moy = (month > 2U) ? (month - 3U) : (month + 9U);
+    if (rc == true)
+    {
+        /* Calculate month of year */
+        uint32_t moy = (month > 2U) ? (month - 3U) : (month + 9U);
 
-    /* Calculate day of the year */
-    doy = (((153U * moy) + 2U) / 5U) + (day - 1U);
+        /*
+         * False Positive: moy value will range 1 <=moy <= 12.
+         * Hence, the multiplication with 153 cann't overflow
+         */
+        // coverity[cert_int30_c_violation:FALSE]
+        uint32_t doy = (((153U * moy) + 2U) / 5U) + (day - 1U);
 
-    /* Calculate the day in the era */
-    doe = (yoe * 365U) + (yoe / 4U) - (yoe / 100U) + doy;
+        /*
+         * False Positive: yoe is remainder value which will be always
+         * less than 400.
+         * Hence, the multiplication with 365 cann't overflow
+         */
+        // coverity[cert_int30_c_violation:FALSE]
+        uint32_t doe = (yoe * 365U) + (yoe / 4U) - (yoe / 100U) + doy;
 
-    /* Calculate days */
-    *days = (era * 146097U) + doe - 719468U;
+        /*
+         * False Positive: era is quotient value dividing newYear with 400.
+         * The newYear variable will range from 1970 <= newYear <= 2070.
+         * Hence, the multiplication can't overflow.
+         */
+        // coverity[cert_int30_c_violation:FALSE]
+        *days = (era * 146097U) + doe - 719468U;
+    }
+
+    /* Return code */
+    return rc;
 }
 

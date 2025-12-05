@@ -132,6 +132,7 @@
 #define DEV_SM_SSF_SYSCTR_ACTIVE_MASK       (1U << 2U)  /*!< Keep SYSCTR active */
 #define DEV_SM_SSF_PMIC_STBY_INACTIVE_MASK  (1U << 3U)  /*!< No PMIC_STBY assertion */
 #define DEV_SM_SSF_OSC24M_ACTIVE_MASK       (1U << 4U)  /*!< Keep OSC24M active */
+#define DEV_SM_SSF_LPCOMP_INACTIVE_MASK     (1U << 5U)  /*!< LP compute mode inhibited */
 /** @} */
 
 /* Types */
@@ -194,16 +195,11 @@ typedef struct
 
 /* Functions */
 
-/* Externs */
-
-/*! External pointer to the DRAM info */
-extern uint32_t *__DramInfo;
-
 /** @} */
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation:FALSE]
+// coverity[misra_c_2012_rule_20_1_violation]
 #include "dev_sm_system_api.h"
 
 #endif /* DEV_SM_SYSTEM_H */

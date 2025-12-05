@@ -26,10 +26,12 @@
 /* CPU electrical spec definitions */
 #include "MIMX95_elec_spec.h"
 
-
 #else
 #error "No valid CPU defined!"
 #endif
+
+/* SWI mapping */
+#define SWI_0_IRQn Reserved110_IRQn
 
 #endif /* __FSL_DEVICE_REGISTERS_H__ */
 

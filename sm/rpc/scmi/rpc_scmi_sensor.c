@@ -400,11 +400,29 @@ int32_t RPC_SCMI_SensorDispatchCommand(scmi_caller_t *caller,
             break;
         case COMMAND_SENSOR_READING_GET:
             lenOut = sizeof(msg_tsensor6_t);
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly
+             * implemented within the underrun end function
+             * (BRD_SM_SensorTripPointSet), ensuring
+             * appropriate processing of sensorId value zero.
+             */
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
             status = SensorReadingGet(caller, (const msg_rsensor6_t*) in,
                 (msg_tsensor6_t*) out, &lenOut);
             break;
         case COMMAND_SENSOR_CONFIG_GET:
             lenOut = sizeof(msg_tsensor9_t);
+            /*
+             * False Positive: The sensorId value of zero is associated with
+             * the device layer function. Its handling is correctly
+             * implemented within the underrun end function
+             * (BRD_SM_SensorTripPointSet), ensuring
+             * appropriate processing of sensorId value zero.
+             */
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
             status = SensorConfigGet(caller, (const msg_rsensor9_t*) in,
                 (msg_tsensor9_t*) out);
             break;
@@ -705,6 +723,15 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
             /* Get the sensor name */
             if (status == SM_ERR_SUCCESS)
             {
+                /*
+                 * False Positive: The sensorId value of zero is associated
+                 * with the device layer function. Its handling is correctly
+                 * implemented within the underrun end function
+                 * (BRD_SM_SensorTripPointSet), ensuring
+                 * appropriate processing of sensorId value zero.
+                 */
+                // coverity[cert_arr30_c_violation:FALSE]
+                // coverity[cert_str31_c_violation:FALSE]
                 status = LMM_SensorNameGet(caller->lmId, sensor
                     + in->descIndex, (string*) &nameAddr, NULL);
             }
@@ -717,6 +744,15 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
             }
 
             /* Get sensor description */
+            /*
+             * False Positive: The sensorId value of zero is associated
+             * with the device layer function. Its handling is correctly
+             * implemented within the underrun end function
+             * (BRD_SM_SensorTripPointSet), ensuring
+             * appropriate processing of sensorId value zero.
+             */
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
             status = LMM_SensorDescribe(caller->lmId,
                 sensor + in->descIndex, &lmmDesc);
 
@@ -739,7 +775,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                      * Intentional: The timestamp exponent field is
                      * represented in two's complement format.
                      */
-                    // coverity[cert_int31_c_violation:FALSE]
+                    // coverity[cert_int31_c_violation]
                     attributes |= SENSOR_ATTR_LOW_TIME_EXP(
                         (uint32_t) lmmDesc.timestampExponent);
                 }
@@ -754,7 +790,7 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
                  * Intentional: The timestamp exponent field is
                  * represented in two's complement format.
                  */
-                // coverity[cert_int31_c_violation:FALSE]
+                // coverity[cert_int31_c_violation]
                 attributes |= SENSOR_ATTR_HIGH_SENSOR_EXP(
                     (uint32_t) lmmDesc.sensorExponent);
 
@@ -762,12 +798,23 @@ static int32_t SensorDescriptionGet(const scmi_caller_t *caller,
             }
 
             /* Increment count */
+            /*
+             * False Positive: The value of numLogFlags is incremented within
+             * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (out->numSensorFlags)++;
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numSensorFlags * sizeof(sensor_desc_t));
+        /*
+         * Intentional : To cause an overflow in the expression below,
+         * the value of SENSOR_MAX_DESC would need to be excessively large
+         * number (larger than all the TCM available)
+         */
+        // coverity[cert_int30_c_violation]
+        *len = (3U * sizeof(uint32_t)) + (out->numSensorFlags *
+            sizeof(sensor_desc_t));
 
         /* Append remaining levels */
         out->numSensorFlags |= SENSOR_NUM_SENSOR_FLAGS_REMAINING_DESCS(
@@ -938,7 +985,7 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation:FALSE]
+        // coverity[cert_int31_c_violation]
         uint64_t tp = ((((uint64_t) in->tripPointValHigh)
                 << 32U) | (uint64_t) in->tripPointValLow);
 
@@ -946,9 +993,17 @@ static int32_t SensorTripPointConfig(const scmi_caller_t *caller,
          * Intentional: The trip point value written in two's
          * complement form into THR_CTRLm registers.
          */
-        // coverity[cert_int31_c_violation:FALSE]
+        // coverity[cert_int31_c_violation]
         int64_t tpValue = (int64_t) tp;
 
+        /*
+         * False Positive: The sensorId value of zero is associated with the
+         * device layer function. Its handling is correctly implemented within
+         * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
+         * appropriate processing of sensorId value zero.
+         */
+        // coverity[cert_arr30_c_violation:FALSE]
+        // coverity[cert_str31_c_violation:FALSE]
         status = LMM_SensorTripPointSet(caller->lmId, in->sensorId,
             tripPoint, tpValue, eventControl);
     }
@@ -1124,6 +1179,14 @@ static int32_t SensorConfigGet(const scmi_caller_t *caller,
     /* Get sensor enable */
     if (status == SM_ERR_SUCCESS)
     {
+        /*
+         * False Positive: The sensorId value of zero is associated with the
+         * device layer function. Its handling is correctly implemented within
+         * the underrun end function (BRD_SM_SensorTripPointSet), ensuring
+         * appropriate processing of sensorId value zero.
+         */
+        // coverity[cert_arr30_c_violation:FALSE]
+        // coverity[cert_str31_c_violation:FALSE]
         status = LMM_SensorIsEnabled(caller->lmId, in->sensorId,
             &enabled, &timestampReporting);
     }

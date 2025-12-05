@@ -413,6 +413,7 @@ static cpu_per_lpi_info_t const s_cpuPerLpiInfo[CPU_NUM_PER_LPI_IDX] =
 
 static cpu_per_lpi_lpgc_t s_cpuPerLpiLpcg[CPU_NUM_PER_LPI_IDX];
 static uint32_t s_cpuSemaAddr[CPU_NUM_IDX];
+static uint32_t s_cpuLpComputeList = 0U;
 
 /* Global Variables */
 
@@ -787,7 +788,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq)
 /*--------------------------------------------------------------------------*/
 /* Set GPC shandshakes associated with CPU                                  */
 /*--------------------------------------------------------------------------*/
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake)
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake)
 {
     bool rc = false;
 
@@ -1186,6 +1187,12 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         {
                             rc = CPU_GpcHandshakeSet(cpuIdx, true);
                         }
+
+                        /* Disable LP compute mode */
+                        if (rc)
+                        {
+                            rc = CPU_LpComputeSet(cpuIdx, false);
+                        }
                     }
                     /* other current states should result in error */
                     break;
@@ -1257,6 +1264,39 @@ bool CPU_RunModeGet(uint32_t cpuIdx, uint32_t *runMode)
     }
 
     return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enable/disable CPU LP compute mode                                       */
+/*--------------------------------------------------------------------------*/
+bool CPU_LpComputeSet(uint32_t cpuIdx, bool enableLpCompute)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        /* Track LP compute enable/disable  */
+        if (enableLpCompute)
+        {
+            s_cpuLpComputeList |= (1UL << cpuIdx);
+        }
+        else
+        {
+            s_cpuLpComputeList &= (~(1UL << cpuIdx));
+        }
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get list of CPUs enabled for LP compute mode                             */
+/*--------------------------------------------------------------------------*/
+uint32_t CPU_LpComputeListGet(void)
+{
+    return s_cpuLpComputeList;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1493,7 +1533,8 @@ bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat)
     uint32_t cpuIdx = 0U;
     for (cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
     {
-        if (cpuIdx != CPU_IDX_M33P)
+        if ((cpuIdx != CPU_IDX_M33P) &&
+            ((s_cpuLpComputeList & (1UL << cpuIdx)) == 0U))
         {
             /* Check if sleep is forced for the CPU */
             bool sleepForce;
@@ -2224,8 +2265,7 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
             rc = true;
 
             /* Set lower 32-bit vector */
-            *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
-                vectorShift);
+            *vectorRegLow = U32(vector >> vectorShift);
 
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)

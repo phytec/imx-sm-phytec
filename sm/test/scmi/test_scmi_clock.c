@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -51,11 +51,12 @@
 
 /* Local functions */
 
-static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId);
+static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
+    bool cgc);
 static void TEST_ScmiClockSet(bool pass, uint32_t channel,
-    uint32_t clockId);
+    uint32_t clockId, bool sel, bool cgc);
 static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
-    uint32_t clockId, uint32_t lmId);
+    uint32_t clockId, uint32_t lmId, bool sel, bool cgc);
 
 /*--------------------------------------------------------------------------*/
 /* Test SCMI clock protocol                                                 */
@@ -238,17 +239,47 @@ void TEST_ScmiClock(void)
         &channel, &clockId, &lmId);
     while (status == SM_ERR_SUCCESS)
     {
+        bool sel = false;
+        bool cgc = false;
+        uint32_t attributes = 0U;
+        uint8_t name[SCMI_CLOCK_MAX_NAME] = { 0 };
         uint8_t perm = g_scmiAgentConfig[agentId].clkPerms[clockId];
 
+        status = SCMI_ClockAttributes(channel, clockId, &attributes, name);
+        if (status == SCMI_ERR_SUCCESS)
+        {
+            const char *cN = (char*) name;
+
+            /* Determine if sel */
+            int32_t len = DEV_SM_StrLen((string) cN);
+            if ((len > 4) && (cN[len - 4] == '_') && (cN[len - 3] == 's')
+                && (cN[len - 2] == 'e') && (cN[len - 1] == 'l'))
+            {
+                sel = true;
+            }
+
+            /* Determine if cgc */
+            if ((len > 4) && (cN[len - 4] == '_') && (cN[len - 3] == 'c')
+                && (cN[len - 2] == 'g') && (cN[len - 1] == 'c'))
+            {
+                cgc = true;
+            }
+        }
+        else
+        {
+            SM_Error(status);
+        }
+
         /* Test functions with no perm required */
-        TEST_ScmiClockNone(channel, clockId);
+        TEST_ScmiClockNone(channel, clockId, sel, cgc);
 
         /* Test functions with SET perm required */
-        TEST_ScmiClockSet(perm >= SM_SCMI_PERM_SET, channel, clockId);
+        TEST_ScmiClockSet(perm >= SM_SCMI_PERM_SET, channel, clockId, sel,
+            cgc);
 
         /* Test functions with EXCLUSIVE perm required */
         TEST_ScmiClockExclusive(perm >= SM_SCMI_PERM_EXCLUSIVE, channel,
-            clockId, lmId);
+            clockId, lmId, sel, cgc);
 
         /* Get next test case */
         status = TEST_ConfigNextGet(TEST_CLK, &agentId,
@@ -263,7 +294,8 @@ void TEST_ScmiClock(void)
 /*--------------------------------------------------------------------------*/
 /* Test SCMI clock functions with no access                                 */
 /*--------------------------------------------------------------------------*/
-static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
+static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId, bool sel,
+    bool cgc)
 {
     uint32_t attributes = 0U;
     uint8_t name[SCMI_CLOCK_MAX_NAME];
@@ -376,7 +408,7 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
         else
         {
             NECHECK(SCMI_ClockPossibleParentsGet(channel, clockId,
-                skipParents,&numParentsFlags, parents),
+                skipParents, &numParentsFlags, parents),
                 SCMI_ERR_NOT_SUPPORTED);
         }
     }
@@ -386,24 +418,29 @@ static void TEST_ScmiClockNone(uint32_t channel, uint32_t clockId)
 /* Test SCMI clock functions with SET access                                */
 /*--------------------------------------------------------------------------*/
 static void TEST_ScmiClockSet(bool pass, uint32_t channel,
-    uint32_t clockId)
+    uint32_t clockId, bool sel, bool cgc)
 {
-    uint32_t attributes = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
-
-    printf("SCMI_ClockConfigSet(%u, %u, true)\n", channel, clockId);
-    XCHECK(pass, SCMI_ClockConfigSet(channel, clockId,
-        attributes, 0U));
-
-    /* Error check for invalid enabled number*/
-    NECHECK(SCMI_ClockConfigSet(channel, clockId,
-        SCMI_CLOCK_CONFIG_SET_ENABLE(2U), 0U), SCMI_ERR_INVALID_PARAMETERS);
-
-    if (pass)
+    if (!sel)
     {
-        printf("SCMI_ClockAttributes(%u, %u)\n", channel, clockId);
-        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, NULL));
-        printf("  enabled=%u\n",
-            SCMI_CLOCK_ATTR_ENABLED(attributes));
+        uint32_t attributes = SCMI_CLOCK_CONFIG_SET_ENABLE(1U);
+
+        printf("SCMI_ClockConfigSet(%u, %u, true)\n", channel, clockId);
+        XCHECK(pass, SCMI_ClockConfigSet(channel, clockId,
+            attributes, 0U));
+
+        /* Error check for invalid enabled number */
+        NECHECK(SCMI_ClockConfigSet(channel, clockId,
+            SCMI_CLOCK_CONFIG_SET_ENABLE(2U), 0U),
+            SCMI_ERR_INVALID_PARAMETERS);
+
+        if (pass)
+        {
+            printf("SCMI_ClockAttributes(%u, %u)\n", channel, clockId);
+            CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
+                NULL));
+            printf("  enabled=%u\n",
+                SCMI_CLOCK_ATTR_ENABLED(attributes));
+        }
     }
 }
 
@@ -411,20 +448,27 @@ static void TEST_ScmiClockSet(bool pass, uint32_t channel,
 /* Test SCMI clock functions with EXCLUSIVE access                          */
 /*--------------------------------------------------------------------------*/
 static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
-    uint32_t clockId, uint32_t lmId)
+    uint32_t clockId, uint32_t lmId, bool sel, bool cgc)
 {
     uint32_t flags = SCMI_CLOCK_RATE_FLAGS_ROUND(3U);
     scmi_clock_rate_t rate = {20000000U, 0U};
+    bool ratePass = pass;
+
+    /* Alter test state for sel/cgc */
+    if (sel || cgc)
+    {
+        ratePass = false;
+    }
 
     printf("SCMI_ClockRateSet(%u, %u, 0x%08X, %u)\n", channel, clockId,
         flags, rate.lower);
-    XCHECK(pass, SCMI_ClockRateSet(channel, clockId, flags, rate));
+    XCHECK(ratePass, SCMI_ClockRateSet(channel, clockId, flags, rate));
     flags = SCMI_CLOCK_RATE_FLAGS_ROUND(SCMI_CLOCK_ROUND_AUTO);
-    XCHECK(pass, SCMI_ClockRateSet(channel, clockId, flags, rate));
+    XCHECK(ratePass, SCMI_ClockRateSet(channel, clockId, flags, rate));
     flags = SCMI_CLOCK_RATE_FLAGS_ROUND(SCMI_CLOCK_ROUND_UP);
-    XCHECK(pass, SCMI_ClockRateSet(channel, clockId, flags, rate));
+    XCHECK(ratePass, SCMI_ClockRateSet(channel, clockId, flags, rate));
     flags = SCMI_CLOCK_RATE_FLAGS_ROUND(SCMI_CLOCK_ROUND_DOWN);
-    XCHECK(pass, SCMI_ClockRateSet(channel, clockId, flags, rate));
+    XCHECK(ratePass, SCMI_ClockRateSet(channel, clockId, flags, rate));
 
     if (pass)
     {
@@ -467,11 +511,10 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
 
         /* Ensure Clock was turned off */
         uint32_t attributes = 0U;
-        uint8_t name[SCMI_CLOCK_MAX_NAME];
 
         printf("SCMI_ClockAttributes(%u)\n", clockId);
         CHECK(SCMI_ClockAttributes(channel, clockId, &attributes,
-            name));
+            NULL));
         printf("  enabled=%u\n",
             SCMI_CLOCK_ATTR_ENABLED(attributes));
 
@@ -485,9 +528,8 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
         uint32_t parentId = 0U;
         uint32_t attributes = 0U;
         uint32_t permissions = 0U;
-        uint8_t name[SCMI_CLOCK_MAX_NAME];
 
-        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, name));
+        CHECK(SCMI_ClockAttributes(channel, clockId, &attributes, NULL));
 
         printf("SCMI_ClockParentGet(%u, %u)\n", channel, clockId);
         CHECK(SCMI_ClockParentGet(channel, clockId, &parentId));
@@ -515,7 +557,7 @@ static void TEST_ScmiClockExclusive(bool pass, uint32_t channel,
             uint32_t config = 0U;
 
             attr = SCMI_CLOCK_CONFIG_SET_ENABLE(1U) |
-                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80U);
+                SCMI_CLOCK_CONFIG_SET_EXT_CONFIG(0x80UL);
 
             /* OEM defined extended config value
              * For spread spectrum (type 0x80) :

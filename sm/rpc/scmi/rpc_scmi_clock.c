@@ -781,8 +781,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
     /* Return results */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mux;
-        uint32_t numMuxes;
+        uint32_t parentId;
+        uint32_t numParents;
         bool extSupported;
 
         /* No notifications */
@@ -793,8 +793,8 @@ static int32_t ClockAttributes(const scmi_caller_t *caller,
             | CLOCK_ATTR_EXT_CONFIG(0UL);
 
         /* Parents? */
-        if (LMM_ClockMuxGet(caller->lmId, in->clockId, 0U, &mux,
-            &numMuxes) == SM_ERR_SUCCESS)
+        if (LMM_ClockParentDescribe(caller->lmId, in->clockId, 0U,
+            &parentId, &numParents) == SM_ERR_SUCCESS)
         {
             out->attributes |= CLOCK_ATTR_PARENT(1UL);
         }
@@ -1356,7 +1356,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
     const msg_rclock12_t *in, msg_tclock12_t *out, uint32_t *len)
 {
     int32_t status = SM_ERR_SUCCESS;
-    uint32_t numMuxes = 0U;
+    uint32_t numParents = 0U;
 
     /* Check request length */
     if (caller->lenCopy < sizeof(*in))
@@ -1370,17 +1370,17 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
         status = SM_ERR_NOT_FOUND;
     }
 
-    /* Get number of muxes */
+    /* Get number of parents */
     if (status == SM_ERR_SUCCESS)
     {
-        uint32_t mux;
+        uint32_t parentId;
 
-        status = LMM_ClockMuxGet(caller->lmId, in->clockId, 0U,
-            &mux, &numMuxes);
+        status = LMM_ClockParentDescribe(caller->lmId, in->clockId, 0U,
+            &parentId, &numParents);
     }
 
     /* Check parent bounds */
-    if ((status == SM_ERR_SUCCESS) && (in->skipParents >= numMuxes))
+    if ((status == SM_ERR_SUCCESS) && (in->skipParents >= numParents))
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
@@ -1393,37 +1393,55 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
         out->numParentsFlags = 0U;
         for (index = 0U; index < CLOCK_MAX_PARENTS; index++)
         {
-            uint32_t mux;
+            uint32_t parentId;
             uint32_t temp;
 
             /* Break out if done */
-            if ((index + in->skipParents) >= numMuxes)
+            if ((index + in->skipParents) >= numParents)
             {
                 break;
             }
 
             /* Get parent */
-            status = LMM_ClockMuxGet(caller->lmId, in->clockId,
-                index + in->skipParents, &mux, &temp);
+            /*
+             * False Positive: The indexing into the array in the
+             * CCM_GprSelMuxInputGet function is bounds checked
+             * in that function.
+             */
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
+            status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
+                index + in->skipParents, &parentId, &temp);
 
             /* Success? */
             if (status == SM_ERR_SUCCESS)
             {
                 /* Copy out data */
-                out->parents[index] = mux;
+                out->parents[index] = parentId;
 
                 /* Increment count */
+                /*
+                 * False Positive: Value starts at 0 and is limited by
+                 * the loop to CLOCK_MAX_PARENTS.
+                 */
+                // coverity[cert_int30_c_violation:FALSE]
                 (out->numParentsFlags)++;
             }
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numParentsFlags * sizeof(uint32_t));
+        /*
+         * Intentional : To cause an overflow in the expression below,
+         * the value of CLOCK_MAX_PARENTS would need to be excessively large
+         * number (larger than all the TCM available)
+         */
+        // coverity[cert_int30_c_violation]
+        *len = (3U * sizeof(uint32_t)) + (out->numParentsFlags *
+            sizeof(uint32_t));
 
         /* Append remaining parents */
         out->numParentsFlags |= CLOCK_NUM_PARENT_FLAGS_REMAING_PARENTS(
-            numMuxes - (index + in->skipParents));
+            numParents - (index + in->skipParents));
     }
 
     /* Return status */
@@ -1741,6 +1759,12 @@ static int32_t ClockConfigUpdate(uint32_t lmId, uint32_t agentId,
     }
 
     /* Extract enable */
+    /*
+     * Intentionally: The values of numAgent and firstAgent are derived from
+     * the configuration tool, which guarantees that these variables remain
+     * within the valid range
+     */
+    // coverity[cert_int30_c_violation]
     mask = ((1UL << numAgents) - 1UL) << firstAgent;
     clockState = s_clockState[clockId] & mask;
     clockEnable = (clockState != 0U);

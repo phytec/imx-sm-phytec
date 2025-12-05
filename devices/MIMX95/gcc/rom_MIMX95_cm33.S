@@ -7,7 +7,7 @@
 /*  @build:                                                                  */
 /* ------------------------------------------------------------------------- */
 /*                                                                           */
-/* Copyright 2023 NXP                                                        */
+/* Copyright 2023-2025 NXP                                                   */
 /*                                                                           */
 /* SPDX-License-Identifier: BSD-3-Clause                                     */
 /*****************************************************************************/
@@ -144,9 +144,9 @@ RomReset_Handler:
     .equ PLL_CTRL_CLKMUX_EN_MASK, 0x2U
     .equ PLL_CTRL_POWERUP_MASK, 0x1U
     .equ PLL_SPREAD_SPECTRUM_ENABLE_MASK, 0x8000U
-    .equ PLL_NO_OF_DFS_BYPASS_EN_MASK, 0x800000U
-    .equ PLL_NO_OF_DFS_CLKOUT_EN_MASK, 0x40000000U
-    .equ PLL_NO_OF_DFS_ENABLE_MASK, 0x80000000U
+    .equ PLL_DFS_BYPASS_EN_MASK, 0x800000U
+    .equ PLL_DFS_CLKOUT_EN_MASK, 0x40000000U
+    .equ PLL_DFS_ENABLE_MASK, 0x80000000U
 
     .equ CCM_BASE, 0x44450000U
 
@@ -211,21 +211,21 @@ RomReset_Handler:
     /**** Setput SYS PLL PFDs ****/
 
     /* Bypass DFS*/
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.SET = PLL_NO_OF_DFS_BYPASS_EN_MASK; */
-    ldr r1, =(PLL_NO_OF_DFS_BYPASS_EN_MASK)
+    /* pll->DFS[dfsIdx].DFS_CTRL.SET = PLL_DFS_BYPASS_EN_MASK; */
+    ldr r1, =(PLL_DFS_BYPASS_EN_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_SET]
     str r1, [r0, #PLL_DFS_CTRL_1_SET]
     str r1, [r0, #PLL_DFS_CTRL_2_SET]
 
     /* Disable output and DFS */
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.CLR = PLL_NO_OF_DFS_CLKOUT_EN_MASK | PLL_NO_OF_DFS_ENABLE_MASK; */
-    ldr r1, =(PLL_NO_OF_DFS_CLKOUT_EN_MASK | PLL_NO_OF_DFS_ENABLE_MASK)
+    /* pll->DFS[dfsIdx].DFS_CTRL.CLR = PLL_DFS_CLKOUT_EN_MASK | PLL_DFS_ENABLE_MASK; */
+    ldr r1, =(PLL_DFS_CLKOUT_EN_MASK | PLL_DFS_ENABLE_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_CLR]
     str r1, [r0, #PLL_DFS_CTRL_1_CLR]
     str r1, [r0, #PLL_DFS_CTRL_2_CLR]
 
     /* Set mfi and mfn */
-    /* pll->NO_OF_DFS[dfsIdx].DFS_DIV.RW = PLL_NO_OF_DFS_MFI(mfi) | PLL_NO_OF_DFS_MFN(mfn); */
+    /* pll->DFS[dfsIdx].DFS_DIV.RW = PLL_DFS_MFI(mfi) | PLL_DFS_MFN(mfn); */
     ldr r1, =(0x00000400U)
     str r1, [r0, #PLL_DFS_DIV_0_RW]
 
@@ -236,30 +236,30 @@ RomReset_Handler:
     str r1, [r0, #PLL_DFS_DIV_2_RW]
 
     /* Enable output and DFS */
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.SET = PLL_NO_OF_DFS_CLKOUT_EN_MASK; */
-    ldr r1, =(PLL_NO_OF_DFS_CLKOUT_EN_MASK)
+    /* pll->DFS[dfsIdx].DFS_CTRL.SET = PLL_DFS_CLKOUT_EN_MASK; */
+    ldr r1, =(PLL_DFS_CLKOUT_EN_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_SET]
     str r1, [r0, #PLL_DFS_CTRL_1_SET]
     str r1, [r0, #PLL_DFS_CTRL_2_SET]
 
     /* Enable DFS for locking*/
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.SET = PLL_NO_OF_DFS_ENABLE_MASK; */
+    /* pll->DFS[dfsIdx].DFS_CTRL.SET = PLL_DFS_ENABLE_MASK; */
     /* while (((pll->DFS_STATUS & PLL_DFS_STATUS_DFS_OK_MASK) & (1U << dfsIdx)) == 0U) */
-    ldr r1, =(PLL_NO_OF_DFS_ENABLE_MASK)
+    ldr r1, =(PLL_DFS_ENABLE_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_SET]
     str r1, [r0, #PLL_DFS_CTRL_1_SET]
     str r1, [r0, #PLL_DFS_CTRL_2_SET]
 
     /* Clean bypass */
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.CLR = PLL_NO_OF_DFS_BYPASS_EN_MASK; */
-    ldr r1, =(PLL_NO_OF_DFS_BYPASS_EN_MASK)
+    /* pll->DFS[dfsIdx].DFS_CTRL.CLR = PLL_DFS_BYPASS_EN_MASK; */
+    ldr r1, =(PLL_DFS_BYPASS_EN_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_CLR]
     str r1, [r0, #PLL_DFS_CTRL_1_CLR]
     str r1, [r0, #PLL_DFS_CTRL_2_CLR]
 
     /* Clean bypass */
-    /* pll->NO_OF_DFS[dfsIdx].DFS_CTRL.CLR = PLL_NO_OF_DFS_BYPASS_EN_MASK; */
-    ldr r1, =(PLL_NO_OF_DFS_BYPASS_EN_MASK)
+    /* pll->DFS[dfsIdx].DFS_CTRL.CLR = PLL_DFS_BYPASS_EN_MASK; */
+    ldr r1, =(PLL_DFS_BYPASS_EN_MASK)
     str r1, [r0, #PLL_DFS_CTRL_0_CLR]
     str r1, [r0, #PLL_DFS_CTRL_1_CLR]
     str r1, [r0, #PLL_DFS_CTRL_2_CLR]

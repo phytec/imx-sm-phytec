@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -322,6 +322,18 @@ uint64_t CCM_CgcGetRate(uint32_t cgcIdx);
  *         CGC.
  */
 bool CCM_CgcGetParent(uint32_t cgcIdx, uint32_t *rootIdx);
+
+/*!
+ * Set CCM CGC clock's parent
+ *
+ * @param[in]       cgcIdx          CGC select ID
+ * @param[in]       clkIdx          Clock ID for clock parent
+ *
+ * This function allows caller to set parent clock ID for a CGC clock.
+ *
+ * @return Returns true if CGC clock parent is updated.
+ */
+bool CCM_CgcSetParent(uint32_t cgcIdx, uint32_t clkIdx);
 
 /*!
  * Get CCM LPCG direct control enable status

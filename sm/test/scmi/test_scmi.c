@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -68,18 +68,20 @@ void TEST_Scmi(void)
     /* Test list protocols */
     {
         uint32_t numProtocols = 0U;
-        uint32_t protocols[SCMI_BASE_MAX_PROTOCOLS] = { 0 };
+        uint32_t protocols[SCMI_BASE_MAX_PROTOCOLS + 1U] = { 0 };
 
         CHECK(SCMI_BaseDiscoverListProtocols(SM_TEST_DEFAULT_CHN, 0U,
-            &numProtocols, protocols));
+            &numProtocols, &protocols[1]));
+        protocols[0] = (U32(SCMI_PROTOCOL_BASE) << 24U);
+        numProtocols += 4U;
 
         printf("Test SCMI_ProtocolVersion() and "
             "SCMI_NegotiateProtocolVersion(%u) \n", SM_TEST_DEFAULT_CHN);
 
         /* Loop over protocols */
-        for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
+        for (uint32_t protIndex = 3U; protIndex < numProtocols; protIndex++)
         {
-            uint32_t prot = (protocols[protIndex/4U]
+            uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;
 
             /* Test protocol version and negotiate protocol attributes */
@@ -123,7 +125,11 @@ void TEST_Scmi(void)
                 CHECK(SCMI_ProtocolVersion(SM_TEST_DEFAULT_CHN, prot, &ver));
                 printf("protocol=0x%x  ver=0x%08X\n", prot, ver);
 
-                BCHECK(ver == s_scmiProtInfo[index].protVer);
+                if (index < (sizeof(s_scmiProtInfo)
+                    / sizeof(scmi_prot_info_t)))
+                {
+                    BCHECK(ver == s_scmiProtInfo[index].protVer);
+                }
 
                 /* Check valid major and minor version */
                 CHECK(SCMI_NegotiateProtocolVersion(SM_TEST_DEFAULT_CHN,
@@ -142,9 +148,9 @@ void TEST_Scmi(void)
 
         printf("**** SCMI Test Invalid Message Lengths ***\n\n");
         /* Loop over protocols */
-        for (uint32_t protIndex = 0U; protIndex < numProtocols; protIndex++)
+        for (uint32_t protIndex = 3U; protIndex < numProtocols; protIndex++)
         {
-            uint32_t prot = (protocols[protIndex/4U]
+            uint32_t prot = (protocols[protIndex / 4U]
                 >> ((protIndex % 4U) * 8U)) & 0xFFU;
             uint32_t header = 0U;
 
@@ -157,7 +163,7 @@ void TEST_Scmi(void)
                 prot, 0U, NULL));
 
             /* INNER LOOP: messageIds */
-            for (uint32_t messIndex = 0U; messIndex < 32U; messIndex++)
+            for (uint32_t messIndex = 0U; messIndex < 64U; messIndex++)
             {
                 int32_t status = 0;
                 uint32_t attributes = 0U;
@@ -186,7 +192,7 @@ void TEST_Scmi(void)
 
             /* Invalid messageId */
             CHECK(SCMI_A2pTx(SM_TEST_DEFAULT_CHN, prot,
-                32U, 2U, &header));
+                64U, 2U, &header));
 
             /* Check to ensure protocol error returned */
             NECHECK(SCMI_A2pRx(SM_TEST_DEFAULT_CHN, 2U,
@@ -218,6 +224,14 @@ void TEST_Scmi(void)
         NECHECK(SCMI_BaseProtocolMessageAttributes(SM_SCMI_NUM_CHN,
             SCMI_MSG_BASE_DISCOVER_VENDOR, NULL),
             SCMI_ERR_INVALID_PARAMETERS);
+    }
+
+    {
+        uint32_t sequences[36] = { 0U };
+
+        /* Sequence save/restore */
+        SCMI_SequenceSave(sequences);
+        SCMI_SequenceRestore(sequences);
     }
 
     printf("\n");

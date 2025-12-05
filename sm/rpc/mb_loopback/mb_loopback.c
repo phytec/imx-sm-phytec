@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@ int32_t MB_LOOPBACK_Init(uint8_t inst, uint8_t db, bool noIrq,
 uint32_t *MB_LOOPBACK_SmaGet(uint8_t inst, uint8_t db)
 {
     static uint32_t s_smtBuffer[SM_NUM_MB_LOOPBACK][SM_NUM_MB_LB_DB]
-    [SM_MB_LB_BUF_SIZE/4] = { 0 };
+    [SM_MB_LB_BUF_SIZE / 4] = { 0 };
 
     return s_smtBuffer[inst][db];
 }
@@ -103,13 +103,13 @@ int32_t MB_LOOPBACK_DoorbellRing(uint8_t inst, uint8_t db)
             SM_MB_LOOPBACK_CONFIG_DATA
         };
 
+        /* Switch to allow easy addition of other transport protocols */
+        // coverity[misra_c_2012_rule_16_1_violation]
+        // coverity[misra_c_2012_rule_16_6_violation]
         switch (s_mbLbConfig[inst].xportType[db])
         {
-            case SM_XPORT_SMT:
-                RPC_SMT_Dispatch(s_mbLbConfig[inst].xportChannel[db]);
-                break;
             default:
-                ; /* Intentional empty default */
+                RPC_SMT_Dispatch(s_mbLbConfig[inst].xportChannel[db]);
                 break;
         }
     }

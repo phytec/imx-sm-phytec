@@ -97,6 +97,24 @@ struct ddr_info {
     uint32_t ZQCalCodePD;
 };
 
+/*! DRAM info. */
+struct dram_info {
+    /*! total number of regions */
+    uint32_t totalRegions;
+    /*! SDRAM type */
+    uint32_t sdramType;
+    /*! SDRAM Data Bus Width */
+    uint32_t sdramDatabusWidth;
+    /*! Inline ECC enable */
+    bool eccEnb;
+    /*! SDRAM MTS speed */
+    uint32_t mts;
+    /*! SDRAM Region Start Addr */
+    uint64_t startAddr;
+    /*! SDRAM Region End Addr */
+    uint64_t endAddr;
+};
+
 /* Defines */
 
 /*! Macro to write a DDR phy register. */
@@ -141,6 +159,16 @@ bool DDR_ExitRetention(const struct ddr_info *ddrp);
  * @return Returns the 32-bit address.
  */
 uint32_t DDR_PhyAddrRemap(uint32_t paddr);
+
+/*!
+ * Get DRAM info
+ *
+ * @param[in]     ddrp      DDR config info.
+ * @param[out]    info      DRAM config info.
+ *
+ * @return True if successful.
+ */
+bool DDR_GetDRAMInfo(const struct ddr_info *ddrp, struct dram_info *info);
 
 #if defined(__cplusplus)
 }

@@ -147,6 +147,8 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         }
     }
 
+    SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
+
     /* Return result */
     return status;
 }
@@ -162,15 +164,23 @@ uint32_t DEV_SM_SiVerGet(void)
 
     if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL) == SM_ERR_SUCCESS)
     {
-        uint32_t fuseMinor;
-
         /* Update minor version */
         tmpMinor = (deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
             >> OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_SHIFT;
-        tmpMinor -= MINOR_BASE(1U);
-        fuseMinor = MINOR_BASE(REV_BASE(siRev))
-            | MINOR_METAL(REV_METAL(siRev));
-        tmpMinor = MAX(tmpMinor, fuseMinor);
+
+        /* Check for tmpMinor value doesn't become negative */
+        if (tmpMinor >= MINOR_BASE(1U))
+        {
+            tmpMinor -= MINOR_BASE(1U);
+            uint32_t fuseMinor = MINOR_BASE(REV_BASE(siRev))
+                | MINOR_METAL(REV_METAL(siRev));
+            tmpMinor = MAX(tmpMinor, fuseMinor);
+        }
+        else
+        {
+            /* Handling in case value gets wraps */
+            tmpMinor = DEV_SM_SIVER_A0;
+        }
     }
 
     /* Return version */
@@ -218,6 +228,7 @@ int32_t DEV_SM_SyslogDump(uint32_t flags)
         printf("Sleep latency = %u usec\n", sysSleepRecord->sleepEntryUsec);
         printf("Wake latency = %u usec\n", sysSleepRecord->sleepExitUsec);
         printf("Sleep count = %u\n", sysSleepRecord->sleepCnt);
+        printf("Device err log = 0x%08X\n", syslog->devErrLog);
 
 #ifdef DEV_SM_MSG_PROF_CNT
         printf("\nMessage profile log:\n");
@@ -249,10 +260,22 @@ uint64_t DEV_SM_Usec64Get(void)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Log device errors                                                        */
+/*--------------------------------------------------------------------------*/
+void DEV_SM_ErrorLog(uint32_t err)
+{
+    g_syslog.devErrLog |= err;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Dump device errors                                                       */
 /*--------------------------------------------------------------------------*/
 void DEV_SM_ErrorDump(void)
 {
+    if (g_syslog.devErrLog != 0U)
+    {
+        printf("DEV init err: 0x%08X\n", g_syslog.devErrLog);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -289,10 +312,18 @@ int32_t DEV_SM_StrLen(string str)
     int32_t len = 0;
 
     /* Loop over string */
-    while (*p != '\0')
+    while ((p != NULL) && (*p != '\0'))
     {
-        len++;
-        p++;
+        /* Check for wrap */
+        if (len <= (INT32_MAX - 1))
+        {
+            len++;
+            p++;
+        }
+        else
+        {
+            break;
+        }
     }
 
     /* Return result */

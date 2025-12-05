@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 NXP
+ * Copyright 2024-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -34,17 +34,17 @@
 
 /* Local Defines */
 #define HZ_TO_MHZ_DIV    1000000ULL
-#define REF_CLK_FREQ     (CLOCK_OSC24M_HZ/HZ_TO_MHZ_DIV)  /* MHz */
-#define TRIM_DELAY       100UL                            /* Micro Seconds */
-#define TEXPCNT_RANGE    5U                               /* FRO Freq Tolerance */
-#define REF_CLK_DIV      0U                               /* OSC Ref. Clock Divider */
-#define REF_CNT(x, y)    ((4000U * (x)) / (y))            /* Ref. Count Calculation */
-#define TEXPCNT(x, y)    ((REF_CNT(x, y)) * (y) / (x))    /* Expected Count Calculation */
+#define REF_CLK_FREQ     (CLOCK_OSC24M_HZ / HZ_TO_MHZ_DIV)  /* MHz */
+#define TRIM_DELAY       100UL                              /* Micro Seconds */
+#define TEXPCNT_RANGE    5U                                 /* FRO Freq Tolerance */
+#define REF_CLK_DIV      0U                                 /* OSC Ref. Clock Divider */
+#define REF_CNT(x, y)    ((4000U * (x)) / (y))              /* Ref. Count Calculation */
+#define TEXPCNT(x, y)    ((REF_CNT(x, y)) * (y) / (x))      /* Expected Count Calculation */
 #define TEXPRANGE(x, y)  (uint32_t)((((FRO->CNFG1.RW) & \
     FRO_CNFG1_RFCLKCNT_MASK) >> \
     FRO_CNFG1_RFCLKCNT_SHIFT) * (y) / (x))
-#define FRO_TRIM_VFB(x)  (((x) >> 12U) & 0x3FU)           /* Extract VFB */
-#define FRO_TRIM_VREF(x) (((x) >> 0U) & 0xFFFU)           /* Extract VREF */
+#define FRO_TRIM_VFB(x)  (((x) >> 12U) & 0x3FU)             /* Extract VFB */
+#define FRO_TRIM_VREF(x) (((x) >> 0U) & 0xFFFU)             /* Extract VREF */
 
 /* Local Variables */
 

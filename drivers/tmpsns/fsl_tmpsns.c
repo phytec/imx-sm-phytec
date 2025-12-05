@@ -25,7 +25,7 @@
 void TMPSNS_Init(TMPSNS_Type *base, const tmpsns_config_t *config)
 {
     /* Clear CTRL1[ENABLE] */
-    base->CTRL1_CLR= TMPSNS_CTRL1_ENABLE(1U);
+    base->CTRL1_CLR = TMPSNS_CTRL1_ENABLE(1U);
 
     /* Configure REF_DIV[DIV] to divide MODULE_CLK to generate CONV_CLK */
     base->REF_DIV = TMPSNS_REF_DIV_DIV(config->clkDiv);
@@ -78,7 +78,7 @@ void TMPSNS_Deinit(TMPSNS_Type *base)
     base->CTRL1_SET = TMPSNS_CTRL1_STOP(1U);
 
     /* Clear CTRL1[ENABLE] */
-    base->CTRL1_CLR= TMPSNS_CTRL1_ENABLE(1U);
+    base->CTRL1_CLR = TMPSNS_CTRL1_ENABLE(1U);
 }
 
 /*!
@@ -169,7 +169,7 @@ int16_t TMPSNS_GetDataNonBlocking(const TMPSNS_Type *base)
      * Intentional: The value in the DATA register is 16-bit
      * signed value (in two's-complement form).
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     return (int16_t) value;
 }
 
@@ -183,7 +183,7 @@ void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
      * Intentional: The value store in  THR_CTRLm register is 16-bit
      * signed value (in two's-complement form).
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     uint16_t uval = (uint16_t) value;
 
     if (thresholdIdx == 0U)
@@ -240,5 +240,61 @@ void TMPSNS_SetThreshold(TMPSNS_Type *base, uint8_t thresholdIdx,
         /* Clear filter */
         base->CTRL0_SET = TMPSNS_CTRL0_FILT2_CNT_CLR(1U);
     }
+}
+
+/*
+ * Get a threshold config.
+ */
+void TMPSNS_GetThreshold(const TMPSNS_Type *base, uint8_t thresholdIdx,
+    int16_t *value, uint8_t *mode)
+{
+    uint32_t uVal = 0U;
+    uint32_t uMode = 0U;
+
+    if (thresholdIdx == 0U)
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL01
+            & TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD0_MASK)
+            >> TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD0_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR0_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR0_MODE_SHIFT;
+    }
+    else if (thresholdIdx == 1U)
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL01
+            & TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD1_MASK)
+            >> TMPSNS_THR_CTRL01_CLR_TEMPERATURE_THRESHOLD1_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR1_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR1_MODE_SHIFT;
+    }
+    else
+    {
+        /* Save threshold */
+        uVal = (base->THR_CTRL23
+            & TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2_MASK)
+            >> TMPSNS_THR_CTRL23_CLR_TEMPERATURE_THRESHOLD2_SHIFT;
+
+        /* Save mode */
+        uMode = (base->CTRL0
+            & TMPSNS_CTRL0_TOG_THR2_MODE_MASK)
+            >> TMPSNS_CTRL0_TOG_THR2_MODE_SHIFT;
+    }
+
+    /* Convert and return */
+    /*
+     * Intentional: register is U32 but field in the register
+     * is I16.
+     */
+    // coverity[cert_int31_c_violation]
+    *value = (int16_t) uVal;
+    *mode = U32_U8(uMode);
 }
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -72,11 +72,12 @@ void TEST_LmmMisc(void)
         SM_ERR_INVALID_PARAMETERS);
 
     /* Update control notification flags: Invalid LmId */
-    lmId = 0U, ctrlId = SM_NUM_CTRL;
+    lmId = 0U;
+    ctrlId = SM_NUM_CTRL;
     NECHECK(LMM_MiscControlFlagsSet(lmId, ctrlId, flags),
         SM_ERR_NOT_FOUND);
-
 #endif
+
     printf("\n");
 }
 

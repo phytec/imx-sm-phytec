@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -283,6 +283,8 @@ static void TEST_ScmiRtcPriv(bool pass, uint32_t channel,
 
             do
             {
+                /* Intentional: Test code */
+                // coverity[cert_int30_c_violation]
                 status = SCMI_P2aPending(channel + 1U, &protocolId,
                     &messageId);
             }

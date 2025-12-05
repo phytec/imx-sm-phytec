@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -58,6 +58,10 @@
 /*--------------------------------------------------------------------------*/
 void TEST_DevSmHandler(void)
 {
+#ifndef SIMU
+    const uint32_t fakeStack[10] = { 0 };
+#endif
+
     printf("TEST_DevSmHandler\n");
 #ifndef SIMU
     SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
@@ -66,19 +70,19 @@ void TEST_DevSmHandler(void)
     SCB->ICSR |= 1UL << SCB_ICSR_PENDNMISET_Pos;
 
 #ifdef BUS_FAULT_INT_TRIGGER
-    BusFault_Handler(NULL);
+    BusFault_Handler(&fakeStack[0]);
 #endif
 
 #ifdef USAGE_FAULT_INT_TRIGGER
-    UsageFault_Handler(NULL);
+    UsageFault_Handler(&fakeStack[0]);
 #endif
 
 #ifdef MEM_MANAGEMENT_FAULT_INT
-    MemManage_Handler(NULL);
+    MemManage_Handler(&fakeStack[0]);
 #endif
 
 #ifdef HARD_FAULT_INT_TRIGGER
-    HardFault_Handler(NULL);
+    HardFault_Handler(&fakeStack[0]);
 #endif
 
 #ifdef WDOG1_IRQ_HANDLER
@@ -181,9 +185,9 @@ void TEST_DevSmHandler(void)
     NVIC_SetPendingIRQ(CM33S_RESET_IRQ_HANDLER);
 #endif
 
-#ifdef CM333S_LOCKUP_IRQ_HANDLER
-    NVIC_EnableIRQ(CM333S_LOCKUP_IRQ_HANDLER);
-    NVIC_SetPendingIRQ(CM333S_LOCKUP_IRQ_HANDLER);
+#ifdef CM33S_LOCKUP_IRQ_HANDLER
+    NVIC_EnableIRQ(CM33S_LOCKUP_IRQ_HANDLER);
+    NVIC_SetPendingIRQ(CM33S_LOCKUP_IRQ_HANDLER);
 #endif
 
 #ifdef MU1_A_IRQ_HANDLER
@@ -260,6 +264,22 @@ void TEST_DevSmHandler(void)
     NVIC_EnableIRQ(MU9_B_IRQ_HANDLER);
     NVIC_SetPendingIRQ(MU9_B_IRQ_HANDLER);
 #endif
+
+#ifdef INC_LIBC
+    uint64_t timeMsec = DEV_SM_GetTimerMsec();
+    printf("TimeMsec_H: %u TimeMsec_L: %u\n",
+        UINT64_H(timeMsec), UINT64_L(timeMsec));
+#else
+    (void) DEV_SM_GetTimerMsec();
+#endif
+
+    uint32_t basePrio = 0U;
+    (void) DEV_SM_IrqPrioBaseGet(MU6_B_IRQ_HANDLER, &basePrio);
+
+    uint32_t irqCntr = 0U;
+    (void) DEV_SM_IrqPrioCntrGet(MU6_B_IRQ_HANDLER, &irqCntr);
+
+    (void) DEV_SM_IrqPrioCntrSet(MU6_B_IRQ_HANDLER, irqCntr);
 
     SM_TestModeSet(SM_TEST_MODE_OFF);
 #endif

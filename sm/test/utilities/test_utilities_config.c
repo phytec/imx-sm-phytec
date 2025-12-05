@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -79,7 +79,8 @@ void TEST_UtilitiesConfig(void)
     printf("**** Config Load Tests ***\n\n");
 
 #ifdef SIMU
-    uint32_t s_loadArr[30] __attribute__ ((aligned (65536)));
+    // coverity[misra_c_2012_rule_1_2_violation]
+    const uint32_t s_loadArr[30] __attribute__ ((aligned (65536))) = { 0 };
 
     /* STAGE 1 : =================================================== */
     {
@@ -91,13 +92,13 @@ void TEST_UtilitiesConfig(void)
         /* Comparison Array One */
         const uint32_t compArrOne[] =
         {
-            0xDEADBEEF, 0xFEEBDAED,
-            0x1, 0x2, 0x3, 0x4,
-            0x1, 0x2, 0x3, 0x4,
-            0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0,
-            0xBEEF, 0xBEEF, 0xBEEF, 0xBEEF,
-            0xABF
+            0xDEADBEEFU, 0xFEEBDAEDU,
+            0x1U, 0x2U, 0x3U, 0x4U,
+            0x1U, 0x2U, 0x3U, 0x4U,
+            0x0U, 0x0U,
+            0x0U, 0x0U, 0x0U, 0x0U,
+            0xBEEFU, 0xBEEFU, 0xBEEFU, 0xBEEFU,
+            0xABFU
         };
 
         /* Get the size of the array, used to loop through later */
@@ -106,15 +107,15 @@ void TEST_UtilitiesConfig(void)
         /* Command Array One */
         const uint32_t commandArrOne[] =
         {
-            SM_CFG_W1(OFFSET(0)), 0xDEADBEEF,
-            SM_CFG_W1(OFFSET(1)), 0xFEEBDAED,
-            SM_CFG_WN(OFFSET(2), 4), 0x1, 0x2, 0x3, 0x4,
-            SM_CFG_RP(OFFSET(6)),
-            SM_CFG_C1(OFFSET(10)), 0xDEADBEEF,
-            SM_CFG_C1(OFFSET(11)), 0xFEEBDAED,
-            SM_CFG_CN(OFFSET(12), 4), 0x6, 0x7, 0x8, 0x9,
-            SM_CFG_FN(OFFSET(16), 4), 0xBEEF,
-            SM_CFG_WA( (uint32_t) &s_loadArr[20]), 0xABF,
+            SM_CFG_W1(OFFSET(0U)), 0xDEADBEEFU,
+            SM_CFG_W1(OFFSET(1U)), 0xFEEBDAEDU,
+            SM_CFG_WN(OFFSET(2U), 4UL), 0x1U, 0x2U, 0x3U, 0x4U,
+            SM_CFG_RP(OFFSET(6U)),
+            SM_CFG_C1(OFFSET(10U)), 0xDEADBEEFU,
+            SM_CFG_C1(OFFSET(11U)), 0xFEEBDAEDU,
+            SM_CFG_CN(OFFSET(12U), 4UL), 0x6U, 0x7U, 0x8U, 0x9U,
+            SM_CFG_FN(OFFSET(16U), 4UL), 0xBEEFU,
+            SM_CFG_WA((uint32_t) &s_loadArr[20]), 0xABFU,
             SM_CFG_END
         };
 
@@ -122,7 +123,7 @@ void TEST_UtilitiesConfig(void)
         CHECK(CONFIG_Load(s_loadArr, commandArrOne));
 
         /* Check values for correctness */
-        for (uint32_t index = 0; index < COMP_SIZE_ONE; index++)
+        for (uint32_t index = 0U; index < COMP_SIZE_ONE; index++)
         {
             printf("   compArrOne[%u]=%x = s_loadArr[%u]=%x\n",
                 index, compArrOne[index], index, s_loadArr[index]);
@@ -140,12 +141,12 @@ void TEST_UtilitiesConfig(void)
         /* Comparison Array Two */
         const uint32_t compArrTwo[] =
         {
-            0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0,
-            0x0, 0x0, 0x0, 0x0,
-            0xDEADBEEF, 0xFEEBDAED,
-            0x6, 0x7, 0x8, 0x9,
-            0x0, 0x0, 0x0, 0x0
+            0x0U, 0x0U,
+            0x0U, 0x0U, 0x0U, 0x0U,
+            0x0U, 0x0U, 0x0U, 0x0U,
+            0xDEADBEEFU, 0xFEEBDAEDU,
+            0x6U, 0x7U, 0x8U, 0x9U,
+            0x0U, 0x0U, 0x0U, 0x0U
         };
 
         /* Get the size of the array, used to loop through later */
@@ -154,14 +155,14 @@ void TEST_UtilitiesConfig(void)
         /* Command Array Two */
         const uint32_t commandArrTwo[] =
         {
-            SM_CFG_Z1(OFFSET(0)),
-            SM_CFG_Z1(OFFSET(1)),
-            SM_CFG_ZN(OFFSET(2), 4),
-            SM_CFG_RP(OFFSET(6)),
-            SM_CFG_C1(OFFSET(10)), 0xDEADBEEF,
-            SM_CFG_C1(OFFSET(11)), 0xFEEBDAED,
-            SM_CFG_CN(OFFSET(12), 4), 0x6, 0x7, 0x8, 0x9,
-            SM_CFG_FN(OFFSET(16), 4), 0X0,
+            SM_CFG_Z1(OFFSET(0U)),
+            SM_CFG_Z1(OFFSET(1U)),
+            SM_CFG_ZN(OFFSET(2U), 4UL),
+            SM_CFG_RP(OFFSET(6U)),
+            SM_CFG_C1(OFFSET(10U)), 0xDEADBEEFU,
+            SM_CFG_C1(OFFSET(11U)), 0xFEEBDAEDU,
+            SM_CFG_CN(OFFSET(12U), 4UL), 0x6U, 0x7U, 0x8U, 0x9U,
+            SM_CFG_FN(OFFSET(16U), 4UL), 0X0U,
             SM_CFG_END
         };
 
@@ -169,7 +170,7 @@ void TEST_UtilitiesConfig(void)
         CHECK(CONFIG_Load(s_loadArr, commandArrTwo));
 
         /* Check values for correctness */
-        for (uint32_t index = 0; index < COMP_SIZE_TWO; index++)
+        for (uint32_t index = 0U; index < COMP_SIZE_TWO; index++)
         {
             printf("   compArrTwo[%u]=%x = s_loadArr[%u]=%x\n",
                 index, compArrTwo[index], index, s_loadArr[index]);
@@ -184,14 +185,14 @@ void TEST_UtilitiesConfig(void)
         /* Command Array Three */
         const uint32_t commandArrThree[] =
         {
-            SM_CFG_RP(OFFSET(0)),
+            SM_CFG_RP(OFFSET(0U)),
             SM_CFG_END
         };
 
         /* Command Array Four */
         const uint32_t commandArrFour[] =
         {
-            0xFFFFFFFC,
+            0xFFFFFFFCU,
             SM_CFG_END
         };
 

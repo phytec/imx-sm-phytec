@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -129,6 +129,9 @@ void TEST_DevSmVoltage(void)
             printf("voltage level: %d\n", level);
 
             /* Set the Level */
+            /* Intentional: Test code */
+            // coverity[cert_int30_c_violation]
+            // coverity[cert_int32_c_violation]
             CHECK(DEV_SM_VoltageLevelSet(0U, (level - BOARD_PERF_VDROP)));
 
             /* Get the Level */

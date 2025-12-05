@@ -49,6 +49,10 @@
 /* Local variables */
 
 static uint32_t s_cpuWakeListA55 = 0U;
+static bool cpuRunning[DEV_SM_NUM_CPU] =
+{
+    [DEV_SM_CPU_0] = true
+};
 
 /*--------------------------------------------------------------------------*/
 /* Return CPU name                                                          */
@@ -122,8 +126,14 @@ int32_t DEV_SM_CpuInfoGet(uint32_t cpuId, uint32_t *runMode,
 /*--------------------------------------------------------------------------*/
 bool DEV_SM_CpuIsActive(uint32_t cpuId)
 {
-    /* No CPUs suspended */
-    return false;
+    bool rc = cpuRunning[cpuId];
+
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, rc = true)
+
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL2, rc = false)
+
+    /* Return state */
+    return rc;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -138,6 +148,10 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
     if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        cpuRunning[cpuId] = true;
     }
 
     /* Return status */
@@ -157,6 +171,10 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
     {
         status = SM_ERR_NOT_FOUND;
     }
+    else
+    {
+        cpuRunning[cpuId] = false;
+    }
 
     /* Return status */
     return status;
@@ -174,6 +192,10 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
     if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
     {
         status = SM_ERR_NOT_FOUND;
+    }
+    else
+    {
+        cpuRunning[cpuId] = false;
     }
 
     /* Return status */

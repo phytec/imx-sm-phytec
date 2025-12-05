@@ -138,8 +138,33 @@ void TEST_LmmCpu(void)
         CpuId = 0U;
         NECHECK(LMM_CpuBootCheck(LmId, CpuId), SM_ERR_MISSING_PARAMETERS);
     }
-    printf("\n");
 
+    /* pdLPMConfigSet: Valid NUM */
+    {
+        CpuId = 3U;
+        CHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1UL << CpuId)));
+    }
+
+    /* pdLPMConfigSet: InValid NUM */
+    {
+        CpuId = 3U;
+        NECHECK(LMM_CpuPdLpmConfigSet(LmId, CpuId, 3U, 0U, (1UL << 2U)),
+            SM_ERR_INVALID_PARAMETERS);
+    }
+
+    /* CPU Stop: valid CPU NUM */
+    {
+        CpuId = 3U;
+        CHECK(LMM_CpuStop(LmId, CpuId));
+    }
+
+    /* CPU Stop: Invalid CPU NUM */
+    {
+        LmId = 0U;
+        NECHECK(LMM_CpuStop(LmId, DEV_SM_NUM_CPU), SM_ERR_NOT_FOUND);
+    }
+
+    printf("\n");
 #endif
 }
 

@@ -45,7 +45,7 @@
 /* Local defines */
 
 /* Protocol version */
-#define PROTOCOL_VERSION  0x10000U
+#define PROTOCOL_VERSION  0x10001U
 
 /* SCMI misc protocol message IDs and masks */
 #define COMMAND_PROTOCOL_VERSION             0x0U
@@ -66,7 +66,8 @@
 #define COMMAND_NEGOTIATE_PROTOCOL_VERSION   0x10U
 #define COMMAND_MISC_CONTROL_EXT_SET         0x20U
 #define COMMAND_MISC_CONTROL_EXT_GET         0x21U
-#define COMMAND_SUPPORTED_MASK               0x300017FFFULL
+#define COMMAND_MISC_DDR_INFO_GET            0x22U
+#define COMMAND_SUPPORTED_MASK               0x700017FFFULL
 
 /* SCMI max misc argument lengths */
 #define MISC_MAX_BUILDDATE  16U
@@ -87,6 +88,12 @@
 
 /* SCMI Control ID Flags */
 #define MISC_CTRL_FLAG_BRD  0x8000U
+
+/* Type of DDR */
+#define MISC_DDR_TYPE_LPDDR5   0
+#define MISC_DDR_TYPE_LPDDR5X  1
+#define MISC_DDR_TYPE_LPDDR4   2
+#define MISC_DDR_TYPE_LPDDR4X  3
 
 /* Local macros */
 
@@ -118,6 +125,12 @@
 /* SCMI misc num log flags */
 #define MISC_NUM_LOG_FLAGS_REMAING_LOGS(x)  (((x) & 0xFFFU) << 20U)
 #define MISC_NUM_LOG_FLAGS_NUM_LOGS(x)      (((x) & 0xFFFU) << 0U)
+
+/* SCMI DDR memory region attributes */
+#define MISC_DDR_ATTR_ECC(x)      (((x) & 0x1U) << 31U)
+#define MISC_DDR_ATTR_NUM_RGD(x)  (((x) & 0x3U) << 16U)
+#define MISC_DDR_ATTR_WIDTH(x)    (((x) & 0x7U) << 8U)
+#define MISC_DDR_ATTR_TYPE(x)     (((x) & 0x1FU) << 0U)
 
 /* Local types */
 
@@ -432,6 +445,36 @@ typedef struct
     uint32_t extVal[MISC_MAX_EXTVAL];
 } msg_tmisc33_t;
 
+/* Request type for MiscDdrInfoGet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Identifier for the DDR memory region */
+    uint32_t ddrRgdId;
+} msg_rmisc34_t;
+
+/* Response type for MiscDdrInfoGet() */
+typedef struct
+{
+    /* Header word */
+    uint32_t header;
+    /* Return status */
+    int32_t status;
+    /* Region attributes */
+    uint32_t attributes;
+    /* DDR speed in megatransfers per second */
+    uint32_t mts;
+    /* Low address */
+    uint32_t startLow;
+    /* High address */
+    uint32_t startHigh;
+    /* Low address */
+    uint32_t endLow;
+    /* High address */
+    uint32_t endHigh;
+} msg_tmisc34_t;
+
 /* Request type for MiscControlEvent() */
 typedef struct
 {
@@ -481,6 +524,8 @@ static int32_t MiscControlExtSet(const scmi_caller_t *caller,
     const msg_rmisc32_t *in, const scmi_msg_status_t *out);
 static int32_t MiscControlExtGet(const scmi_caller_t *caller,
     const msg_rmisc33_t *in, msg_tmisc33_t *out, uint32_t *len);
+static int32_t MiscDdrInfoGet(const scmi_caller_t *caller,
+    const msg_rmisc34_t *in, msg_tmisc34_t *out);
 static int32_t MiscControlEvent(scmi_msg_id_t msgId,
     const lmm_rpc_trigger_t *trigger);
 static int32_t MiscResetAgentConfig(uint32_t lmId, uint32_t agentId,
@@ -594,6 +639,11 @@ int32_t RPC_SCMI_MiscDispatchCommand(scmi_caller_t *caller,
             status = MiscControlExtGet(caller, (const msg_rmisc33_t*) in,
                 (msg_tmisc33_t*) out, &lenOut);
             break;
+        case COMMAND_MISC_DDR_INFO_GET:
+            lenOut = sizeof(msg_tmisc34_t);
+            status = MiscDdrInfoGet(caller, (const msg_rmisc34_t*) in,
+                (msg_tmisc34_t*) out);
+            break;
         default:
             status = SM_ERR_NOT_SUPPORTED;
             break;
@@ -666,7 +716,7 @@ static int32_t MiscControlUpdate(uint32_t lmId, uint32_t agentId,
 /* Parameters:                                                              */
 /* - caller: Caller info                                                    */
 /* - out->version: Protocol version. For this revision of the               */
-/*   specification, this value must be 0x10000                              */
+/*   specification, this value must be 0x10001                              */
 /*                                                                          */
 /* Process the PROTOCOL_VERSION message. Platform handler for               */
 /* SCMI_MiscProtocolVersion().                                              */
@@ -819,10 +869,19 @@ static int32_t MiscControlSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U + in->numVal) * sizeof(uint32_t)))
+    /* Check the numVal */
+    if (in->numVal <= MISC_MAX_VAL_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U + in->numVal) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status if numVal is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check and generate unified ctrlId */
@@ -987,10 +1046,19 @@ static int32_t MiscControlAction(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numArg) * sizeof(uint32_t)))
+    /* Check numArg value */
+    if (in->numArg <= MISC_MAX_ARG_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numArg) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check and generate unified ctrlId */
@@ -1039,7 +1107,16 @@ static int32_t MiscControlAction(const scmi_caller_t *caller,
     /* Update length */
     if (status == SM_ERR_SUCCESS)
     {
-        *len = (3U + out->numRtn) * sizeof(uint32_t);
+        /* Check numRtn is within the range */
+        if (out->numRtn <= MISC_MAX_RTN)
+        {
+            *len = (3U + out->numRtn) * sizeof(uint32_t);
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_NOT_FOUND;
+        }
     }
 
     /* Return status */
@@ -1085,12 +1162,12 @@ static int32_t MiscDiscoverBuildInfo(const scmi_caller_t *caller,
         out->buildCommit = SM_COMMIT;
 
         /* Copy out build date */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->buildDate, ((uint8_t const *) SM_DATE),
             MISC_MAX_BUILDDATE);
 
         /* Copy out build time */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->buildTime, ((uint8_t const *) SM_TIME),
             MISC_MAX_BUILDTIME);
     }
@@ -1146,6 +1223,11 @@ static int32_t MiscRomPassoverGet(const scmi_caller_t *caller,
         out->numPassover = numPassover;
 
         /* Copy data */
+        /*
+         * False Positive: Copy size is checked with a compile assert
+         * above.
+         */
+        // coverity[buffer_size:FALSE]
         (void) memcpy((void*) out->passover, (const void*) passover,
             out->numPassover * sizeof(uint32_t));
 
@@ -1524,7 +1606,7 @@ static int32_t MiscCfgInfo(const scmi_caller_t *caller,
         cfgName = LMM_CfgInfoGet(&(out->mSel));
 
         /* Copy out cfg name */
-        // coverity[misra_c_2012_rule_7_4_violation:FALSE]
+        // coverity[misra_c_2012_rule_7_4_violation]
         RPC_SCMI_StrCpy(out->cfgName, (const uint8_t*) cfgName,
             MISC_MAX_CFGNAME);
     }
@@ -1604,12 +1686,22 @@ static int32_t MiscSyslog(const scmi_caller_t *caller,
             out->syslog[index] = syslog[index + in->logIndex];
 
             /* Increment count */
+            /*
+             * False Positive: The value of numLogFlags is incremented within
+             * a loop, which can run up to a maximum of MISC_MAX_SYSLOG.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             (out->numLogFlags)++;
         }
 
         /* Update length */
-        *len = (3U * sizeof(uint32_t))
-            + (out->numLogFlags * sizeof(uint32_t));
+        /*
+         * Intentional : To cause an overflow in the expression below,
+         * the value of MISC_MAX_SYSLOG would need to be excessively large
+         * number (larger than all the TCM available)
+         */
+        // coverity[cert_int30_c_violation]
+        *len = (3U * sizeof(uint32_t)) + (out->numLogFlags * sizeof(uint32_t));
 
         /* Append remaining logs */
         out->numLogFlags |= MISC_NUM_LOG_FLAGS_REMAING_LOGS(
@@ -1739,10 +1831,19 @@ static int32_t MiscControlExtSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t uCtrlId = in->ctrlId & ~MISC_CTRL_FLAG_BRD;
 
-    /* Check request length */
-    if (caller->lenCopy < ((5U + in->numVal) * sizeof(uint32_t)))
+    /* Check the numVal is within the range */
+    if (in->numVal <= MISC_MAX_EXTVAL)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((5U + in->numVal) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check parameters */
@@ -1880,7 +1981,113 @@ static int32_t MiscControlExtGet(const scmi_caller_t *caller,
     /* Update length */
     if (status == SM_ERR_SUCCESS)
     {
-        *len = (3U + out->numVal) * sizeof(uint32_t);
+        /* Check the numVal with in range */
+        if (out->numVal <= MISC_MAX_EXTVAL)
+        {
+            *len = (3U + out->numVal) * sizeof(uint32_t);
+        }
+        else
+        {
+            /* Set the status */
+            status = SM_ERR_NOT_FOUND;
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get DDR memory region info                                               */
+/*                                                                          */
+/* Parameters:                                                              */
+/* - caller: Caller info                                                    */
+/* - in->ddrRgdId: Identifier for the DDR memory region                     */
+/* - out->attributes: Region attributes:                                    */
+/*   Bit[31] ECC enable.                                                    */
+/*   Set to 1 if ECC enabled.                                               */
+/*   Set to 0 if ECC disabled or not configured.                            */
+/*   Bits[30:18] Reserved, must be zero.                                    */
+/*   Bits[17:16] Number of DDR memory regions.                              */
+/*   Bits[15:11] Reserved, must be zero.                                    */
+/*   Bits[10:8] Width.                                                      */
+/*   Bus width is 16 << this field.                                         */
+/*   So 0=16, 1=32, 2=64, etc.                                              */
+/*   Bits[7:5] Reserved, must be zero.                                      */
+/*   Bits[4:0] DDR type.                                                    */
+/*   Set to 0 if LPDDR5.                                                    */
+/*   Set to 1 if LPDDR5X.                                                   */
+/*   Set to 2 if LPDDR4.                                                    */
+/*   Set to 3 if LPDDR4X                                                    */
+/* - out->mts: DDR speed in megatransfers per second                        */
+/* - out->startLow: Low address: The lower 32 bits of the physical start    */
+/*   address of the region                                                  */
+/* - out->startHigh: High address: The upper 32 bits of the physical start  */
+/*   address of the region                                                  */
+/* - out->endLow: Low address: The lower 32 bits of the physical end        */
+/*   address of the region. This excludes any DDR used to store ECC data    */
+/* - out->endHigh: High address: The upper 32 bits of the physical end      */
+/*   address of the region. This excludes any DDR used to store ECC data    */
+/*                                                                          */
+/* Process the MISC_DDR_INFO_GET message. Platform handler for              */
+/* SCMI_MiscDdrInfoGet().                                                   */
+/*                                                                          */
+/*  Access macros:                                                          */
+/* - MISC_DDR_ATTR_ECC() - ECC enabled                                      */
+/* - MISC_DDR_ATTR_NUM_RGD() - Number of DDR memory regions                 */
+/* - MISC_DDR_ATTR_WIDTH() - Width                                          */
+/* - MISC_DDR_ATTR_TYPE() - DDR type                                        */
+/*                                                                          */
+/* Return errors:                                                           */
+/* - SM_ERR_SUCCESS: if the info is returned successfully.                  */
+/* - SM_ERR_NOT_FOUND: if ddrRgdId does not point to a region.              */
+/* - SM_ERR_PROTOCOL_ERROR: if the incoming payload is too small.           */
+/*--------------------------------------------------------------------------*/
+static int32_t MiscDdrInfoGet(const scmi_caller_t *caller,
+    const msg_rmisc34_t *in, msg_tmisc34_t *out)
+{
+    int32_t status = SM_ERR_SUCCESS;
+    uint32_t numRdg;
+    uint32_t ddrType;
+    uint32_t ddrWidth;
+    bool eccEnb;
+    uint64_t startAddr;
+    uint64_t endAddr;
+
+    /* Check request length */
+    if (caller->lenCopy < sizeof(*in))
+    {
+        status = SM_ERR_PROTOCOL_ERROR;
+    }
+
+    /* Get info */
+    if (status == SM_ERR_SUCCESS)
+    {
+        status = LMM_MiscDdrInfoGet(caller->lmId, in->ddrRgdId, &numRdg,
+            &ddrType, &ddrWidth, &eccEnb, &out->mts, &startAddr, &endAddr);
+    }
+
+    /* Return data */
+    if (status == SM_ERR_SUCCESS)
+    {
+        /* Return attributes */
+        out->attributes
+            = MISC_DDR_ATTR_NUM_RGD(numRdg)
+            | MISC_DDR_ATTR_WIDTH(ddrWidth >> 5U)
+            | MISC_DDR_ATTR_TYPE(ddrType);
+
+        if (eccEnb)
+        {
+            out->attributes |= MISC_DDR_ATTR_ECC(1UL);
+        }
+
+        /* Return start address */
+        out->startLow = UINT64_L(startAddr);
+        out->startHigh = UINT64_H(startAddr);
+
+        /* Return end address */
+        out->endLow = UINT64_L(endAddr);
+        out->endHigh = UINT64_H(endAddr);
     }
 
     /* Return status */
@@ -1913,6 +2120,11 @@ static int32_t MiscControlEvent(scmi_msg_id_t msgId,
         }
         else
         {
+            /*
+             * False Positive: the value of uCtrlId value would always be
+             * greater than or equal to DEV_SM_NUM_CTRL.
+             */
+            // coverity[cert_int30_c_violation:FALSE]
             ctrlId = (uCtrlId - DEV_SM_NUM_CTRL) | MISC_CTRL_FLAG_BRD;
         }
 
@@ -1987,7 +2199,7 @@ static int32_t MiscControlUpdate(uint32_t lmId, uint32_t agentId,
         uint32_t newFlags = 0U;
 
         /* Record agent flags for this control */
-        s_ctrlNotify[ctrlId][agentId] =flags;
+        s_ctrlNotify[ctrlId][agentId] = flags;
 
         /* Calculate new aggregate state for the flags */
         for (uint32_t a = firstAgent; a < (firstAgent + numAgents); a++)

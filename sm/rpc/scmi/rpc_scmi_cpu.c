@@ -101,8 +101,9 @@
 #define CPU_VEC_FLAGS_TABLE(x)   (((x) & 0x1U) >> 0U)
 
 /* SCMI CPU sleep mode flags */
-#define CPU_FLAGS_IRQ_MUX(x)    (((x) & 0x1U) >> 0U)
-#define CPU_FLAGS_PLAT_WAKE(x)  (((x) & 0x2U) >> 1U)
+#define CPU_FLAGS_IRQ_MUX(x)     (((x) & 0x1U) >> 0U)
+#define CPU_FLAGS_PLAT_WAKE(x)   (((x) & 0x2U) >> 1U)
+#define CPU_FLAGS_LP_COMPUTE(x)  (((x) & 0x4U) >> 2U)
 
 /* Local types */
 
@@ -875,7 +876,13 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
 /* - caller: Caller info                                                    */
 /* - in->cpuId: Identifier for the CPU                                      */
 /* - in->flags: Sleep mode flags:                                           */
-/*   Bits[31:1] Reserved, must be zero.                                     */
+/*   Bits[31:3] Reserved, must be zero.                                     */
+/*   Bit[2] LP compute:                                                     */
+/*   If set to 1 system sleep can be entered even when the cpuId CPU is     */
+/*   running.                                                               */
+/*   Bit[1] Platform wake:                                                  */
+/*   If set to 1 the cpuId will be awakened when it's platform/cluster      */
+/*   wakes.                                                                 */
 /*   Bit[0] IRQ mux:                                                        */
 /*   If set to 1 the wakeup mux source is the GIC, else if 0 then the GPC   */
 /* - in->sleepMode: Target sleep mode                                       */
@@ -887,6 +894,7 @@ static int32_t CpuResetVectorSet(const scmi_caller_t *caller,
 /*  Access macros:                                                          */
 /* - CPU_FLAGS_IRQ_MUX() - IRQ mux                                          */
 /* - CPU_FLAGS_PLAT_WAKE() - Platform wake                                  */
+/* - CPU_FLAGS_LP_COMPUTE() - LP compute                                    */
 /*                                                                          */
 /* Return errors:                                                           */
 /* - SM_ERR_SUCCESS: if the CPU is started successfully.                    */
@@ -984,10 +992,19 @@ static int32_t CpuIrqWakeSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+    /* Check expression values doesn't wrap */
+    if (in->numMask <= CPU_MAX_MASK_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status in case values gets wrap */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1049,10 +1066,19 @@ static int32_t CpuNonIrqWakeSet(const scmi_caller_t *caller,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    /* Check request length */
-    if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+    /* Check expression values doesn't wrap */
+    if (in->numMask <= CPU_MAX_MASK_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((4U + in->numMask) * sizeof(uint32_t)))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set the status in case values gets wrap */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1115,11 +1141,20 @@ static int32_t CpuPdLpmConfigSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t numConfigs = in->numConfigs;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U * sizeof(uint32_t))
-        + (numConfigs * sizeof(pd_lpm_config_t))))
+    /* Check numConfigs*/
+    if (numConfigs <= CPU_MAX_PDCONFIGS_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U * sizeof(uint32_t))
+            + (numConfigs * sizeof(pd_lpm_config_t))))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set status if numConfigs value is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */
@@ -1184,11 +1219,20 @@ static int32_t CpuPerLpmConfigSet(const scmi_caller_t *caller,
     int32_t status = SM_ERR_SUCCESS;
     uint32_t numConfigs = in->numConfigs;
 
-    /* Check request length */
-    if (caller->lenCopy < ((3U * sizeof(uint32_t))
-        + (numConfigs * sizeof(per_lpm_config_t))))
+    /* Check numConfigs */
+    if (numConfigs <= CPU_MAX_PERCONFIGS_T)
     {
-        status = SM_ERR_PROTOCOL_ERROR;
+        /* Check request length */
+        if (caller->lenCopy < ((3U * sizeof(uint32_t))
+            + (numConfigs * sizeof(per_lpm_config_t))))
+        {
+            status = SM_ERR_PROTOCOL_ERROR;
+        }
+    }
+    else
+    {
+        /* Set status if numConfigs val is invalid */
+        status = SM_ERR_INVALID_PARAMETERS;
     }
 
     /* Check CPU */

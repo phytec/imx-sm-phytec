@@ -31,6 +31,7 @@
 
 #include "fsl_def.h"
 #include "fsl_cpu.h"
+#include "sm_test_mode.h"
 #include "fsl_power.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
@@ -422,6 +423,10 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
         }
     }
 
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        anyChildPowered = 1U);
+
     return anyChildPowered;
 }
 
@@ -430,16 +435,21 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx)
 /*--------------------------------------------------------------------------*/
 uint32_t PWR_NumChildPowered(uint32_t srcMixIdx)
 {
-
     uint32_t numChildPowered = 0U;
 
     if (srcMixIdx == PWR_MIX_SLICE_IDX_A55P)
     {
         uint32_t idx = PWR_MIX_SLICE_IDX_A55C0;
+
         while (idx <= PWR_MIX_SLICE_IDX_A55C_LAST)
         {
             if (SRC_MixIsPwrSwitchOn(idx))
             {
+                /*
+                 * False positive: The loop will go to value 14 and the
+                 * initial value is of numChildPowered = 0U;
+                 */
+                // coverity[cert_int30_c_violation:FALSE]
                 ++numChildPowered;
             }
             idx++;

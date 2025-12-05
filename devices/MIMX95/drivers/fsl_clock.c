@@ -78,6 +78,7 @@ const pll_attr_t g_pllAttrs[CLOCK_NUM_PLL] =
 
 static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
 {
+    [CLOCK_SRC_EXT] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0] = 1U,
     [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = 1U,
@@ -105,6 +106,8 @@ static const uint8_t s_clockSourceNumInputs[CLOCK_NUM_SRC] =
 
 static const uint8_t s_clockSourceParent[CLOCK_NUM_SRC] =
 {
+    [CLOCK_SRC_EXT] = CLOCK_GPR_SEL_EXT + U8(CLOCK_NUM_SRC)
+        + U8(CLOCK_NUM_ROOT),
     [CLOCK_SRC_SYSPLL1_PFD0_UNGATED] = CLOCK_SRC_SYSPLL1_VCO,
     [CLOCK_SRC_SYSPLL1_PFD0] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,
     [CLOCK_SRC_SYSPLL1_PFD0_DIV2] = CLOCK_SRC_SYSPLL1_PFD0_UNGATED,
@@ -924,47 +927,47 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 
             case CLOCK_SRC_SYSPLL1_PFD0_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD0:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD0_DIV2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1_DIV2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 1,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2_DIV2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK);
                 break;
 
             case CLOCK_SRC_AUDIOPLL1_VCO:
@@ -1004,42 +1007,42 @@ bool CLOCK_SourceGetEnable(uint32_t sourceIdx)
 
             case CLOCK_SRC_ARMPLL_PFD0_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 0U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD0:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD1_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 1U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD1:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 1U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD2_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 2U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD2:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD3_UNGATED:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 3U,
-                    PLL_NO_OF_DFS_ENABLE_MASK);
+                    PLL_DFS_ENABLE_MASK);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD3:
                 clkEnable = FRACTPLL_GetDfsEnable(CLOCK_PLL_ARM, 3U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK);
+                    PLL_DFS_CLKOUT_EN_MASK);
                 break;
 
             case CLOCK_SRC_DRAMPLL_VCO:
@@ -1111,47 +1114,47 @@ bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 
             case CLOCK_SRC_SYSPLL1_PFD0_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD0:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD0_DIV2:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 1U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 1U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD1_DIV2:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 1U,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_SYSPLL1_PFD2_DIV2:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_SYS1, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_DIVBY2_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_AUDIOPLL1_VCO:
@@ -1191,42 +1194,42 @@ bool CLOCK_SourceSetEnable(uint32_t sourceIdx, bool enable)
 
             case CLOCK_SRC_ARMPLL_PFD0_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 0U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD0:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 0U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD1_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 1U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD1:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 1U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD2_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 2U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD2:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 2U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD3_UNGATED:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 3U,
-                    PLL_NO_OF_DFS_ENABLE_MASK, enable);
+                    PLL_DFS_ENABLE_MASK, enable);
                 break;
 
             case CLOCK_SRC_ARMPLL_PFD3:
                 updateEnable = FRACTPLL_SetDfsEnable(CLOCK_PLL_ARM, 3U,
-                    PLL_NO_OF_DFS_CLKOUT_EN_MASK, enable);
+                    PLL_DFS_CLKOUT_EN_MASK, enable);
                 break;
 
             case CLOCK_SRC_DRAMPLL_VCO:

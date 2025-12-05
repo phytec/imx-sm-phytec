@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -111,7 +111,7 @@ void TEST_DrvDdrRetention(void)
         write_memory(memSrc, numbytes, pattern1, pattern2);
 
         /* Enter retention */
-        status = DEV_SM_SystemDramRetentionEnter();
+        status = DEV_SM_MemDdrRetentionEnter();
 
 #if DDRMIX_PWR_DOWN
         if (status == SM_ERR_SUCCESS)
@@ -137,7 +137,7 @@ void TEST_DrvDdrRetention(void)
         if (status == SM_ERR_SUCCESS)
         {
             printf("Exit retention\n");
-            status = DEV_SM_SystemDramRetentionExit();
+            status = DEV_SM_MemDdrRetentionExit();
         }
 
         if (status == SM_ERR_SUCCESS)
@@ -182,22 +182,22 @@ static bool verify_memory(uint32_t start_addr, uint32_t numbytes,
     j = 0U;
 
     /* Verify memory source */
-    for (i = 0U; i < numbytes; i+=8U)
+    for (i = 0U; i < numbytes; i += 8U)
     {
         static uint32_t reg;
 
-        reg=Read32((start_addr+i));
-        if (reg != (pattern1 + i*pattern1))
+        reg = Read32((start_addr + i));
+        if (reg != (pattern1 + i * pattern1))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
-                start_addr+i, (pattern1 + i*pattern1), reg);
+                start_addr + i, (pattern1 + i * pattern1), reg);
             result = false;
         }
-        reg=Read32((start_addr+(i+4U)));
-        if (reg != (pattern2 +i*pattern2))
+        reg = Read32((start_addr + (i + 4U)));
+        if (reg != (pattern2 + i * pattern2))
         {
             printf("Failure:  addr = 0x%08x, expected = 0x%08x, actual = 0x%08x\n\n",
-                start_addr+i+4, (pattern2 + i*pattern2), reg);
+                start_addr + i + 4, (pattern2 + i * pattern2), reg);
             result = false;
         }
         j++;
@@ -227,12 +227,12 @@ static void write_memory(uint32_t start_addr, uint32_t numbytes,
     uint32_t i = 0U;
 
     /* Fill memory source */
-    for (i = 0U; i < numbytes; i+=8U)
+    for (i = 0U; i < numbytes; i += 8U)
     {
         /* Update patterns pseudo-randomly by adding to them each of their
            unique patterns in an effort to eliminate repeating patterns */
-        Write32((start_addr+i), pattern1 + i*pattern1);
-        Write32((start_addr+(i+4U)), pattern2 + i*pattern2);
+        Write32((start_addr + i), pattern1 + i * pattern1);
+        Write32((start_addr + (i + 4U)), pattern2 + i * pattern2);
 
         if ((i % DOT_BYTE_CNT) == 0U)
         {

@@ -82,8 +82,6 @@ irq_prio_info_t g_brdIrqPrioInfo[BOARD_NUM_IRQ_PRIO_IDX] =
     }
 };
 
-bool g_pca2131Used = false;
-
 uint32_t g_pmicFaultFlags = 0U;
 
 /* Local functions */
@@ -324,8 +322,7 @@ void GPIO1_INT0_IRQHandler(void)
     }
 
     /* Handle PCA2131 interrupt */
-    if (g_pca2131Used && ((status & BIT16(PCAL6416A_INPUT_PCA2131_INTA))
-        != 0U))
+    if ((status & BIT16(PCAL6416A_INPUT_PCA2131_INTA)) != 0U)
     {
         /* Asserts low */
         if ((val & BIT16(PCAL6416A_INPUT_PCA2131_INTA)) == 0U)

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -59,7 +59,7 @@ static uint64_t s_lmStartTime[SM_NUM_LM];
 /* Init logical machine manager                                             */
 /*--------------------------------------------------------------------------*/
 // cppcheck-suppress constParameter
-// coverity[misra_c_2012_rule_8_13_violation:FALSE]
+// coverity[misra_c_2012_rule_8_13_violation]
 int32_t LMM_Init(uint32_t *mSel, uint32_t lmmInitFlags)
 {
     int32_t status;
@@ -325,8 +325,6 @@ void LMM_ErrorDump(void)
         /* Dump RPC errors */
         switch (g_lmmConfig[lmId].rpcType)
         {
-            case SM_RPC_NONE:
-                break;
             case SM_RPC_SCMI:
                 RPC_SCMI_ErrorDump(g_lmmConfig[lmId].rpcInst);
                 break;
@@ -337,7 +335,7 @@ void LMM_ErrorDump(void)
     }
 
     /* Dump device/board errors */
-    // coverity[misra_c_2012_rule_2_2_violation:FALSE]
+    // coverity[misra_c_2012_rule_2_2_violation]
     SM_ERRORDUMP();
 }
 

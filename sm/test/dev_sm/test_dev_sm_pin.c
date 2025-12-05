@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -90,6 +90,20 @@ void TEST_DevSmPin(void)
     /* Case 3: type=DAISY identifier=DEV_SM_NUM_PIN */
     printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_DAISY, SM (0U))\n");
     DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_DAISY, 0U, &value);
+
+    /* Case 4: type=EXT identifier=DEV_SM_NUM_PIN */
+    printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, SM (0U))\n");
+    DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, 21U, &value);
+    printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, val: %u)\n", value);
+    DEV_SM_PinConfigSet(DEV_SM_PIN_TYPE_EXT, 21U, value);
+
+    DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, 163U, &value);
+    printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, val: %u)\n", value);
+    DEV_SM_PinConfigSet(DEV_SM_PIN_TYPE_EXT, 163U, value);
+
+    DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, 108U, &value);
+    printf("DEV_SM_PinConfigGet(DEV_SM_PIN_TYPE_EXT, val: %u)\n", value);
+    DEV_SM_PinConfigSet(DEV_SM_PIN_TYPE_EXT, 108U, value);
 
     /* Invalid Identifiers */
     DEV_SM_PinConfigSet(DEV_SM_PIN_TYPE_DAISY, DEV_SM_NUM_PIN, value);

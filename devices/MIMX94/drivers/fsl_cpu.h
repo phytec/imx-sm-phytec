@@ -328,7 +328,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq);
  * @return Returns true if GPC handshake is set (enable/disable) successfully
  *         for the given CPU, otherwise false.
  */
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake);
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake);
 
 /*!
  * Get CPU FSM state
@@ -398,6 +398,30 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode);
  *         false.
  */
 bool CPU_RunModeGet(uint32_t cpuIdx, uint32_t *runMode);
+
+/*!
+ * Enable/disable CPU LP compute mode
+ *
+ * @param[in]   cpuIdx          CPU identifier
+ * @param[in]   enableLpCompute Enable flag (1=enable, 0=disable)
+ *
+ * This function allows the caller to enable/disable LP compute for the
+ * specified CPU.
+ *
+ * @return Returns true if CPU LP compute mode is successfully configured,
+ *         otherwise false.
+ */
+bool CPU_LpComputeSet(uint32_t cpuIdx, bool enableLpCompute);
+
+/*!
+ * Get list of CPUs enabled for LP compute mode
+ *
+ * This function queries for the current list of CPU enabled for LP compute
+ * mode.
+ *
+ * @return Returns the list of CPU currently enabled for LP compute mode.
+ */
+uint32_t CPU_LpComputeListGet(void);
 
 /*!
  * Set CPU sleep mode

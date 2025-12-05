@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023-2024 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -62,11 +62,12 @@
 #define SM_CONTROLGET          BRD_SM_ControlGet          /*!< Control get */
 #define SM_CONTROLEXTSET       BRD_SM_ControlExtSet       /*!< Extended control set */
 #define SM_CONTROLEXTGET       BRD_SM_ControlExtGet       /*!< Extended control get */
+#define SM_CONTROLACTION       BRD_SM_ControlAction       /*!< Control action */
 #define SM_CONTROLFLAGSSET     BRD_SM_ControlFlagsSet     /*!< Control flags */
 /** @} */
 
 /*! Number of board controls */
-#define BRD_SM_NUM_CTRL  7UL
+#define BRD_SM_NUM_CTRL  8UL
 
 /*! Total number of controls */
 #define SM_NUM_CTRL  (DEV_SM_NUM_CTRL + BRD_SM_NUM_CTRL)
@@ -82,6 +83,7 @@
 #define BRD_SM_CTRL_BUTTON      (DEV_SM_NUM_CTRL + 4U)  /*!< PCAL6408A-7 */
 #define BRD_SM_CTRL_TEST        (DEV_SM_NUM_CTRL + 5U)  /*!< Test */
 #define BRD_SM_CTRL_PCA2131     (DEV_SM_NUM_CTRL + 6U)  /*!< PCA2131 raw access */
+#define BRD_SM_CTRL_TEST_A      (DEV_SM_NUM_CTRL + 7U)  /*!< Test action */
 /** @} */
 
 /* Types */
@@ -169,6 +171,28 @@ int32_t BRD_SM_ControlExtSet(uint32_t ctrlId, uint32_t addr,
  */
 int32_t BRD_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
     uint32_t numRtn, uint32_t *rtn);
+
+/*!
+ * Perform action on a board control.
+ *
+ * @param[in]     ctrlId   Index of control to take action
+ * @param[in]     action   Action to take
+ * @param[in]     numArg   Number of argument array elements
+ * @param[in]     arg      Pointer to array of argument values
+ * @param[out]    numRtn   Return pointer to number of array elements
+ * @param[out]    rtn      Pointer to array to store return
+ *
+ * This function allows a caller to perform an action on a control. The
+ * actions are device and control specific.
+ *
+ * @return Returns the status (::SM_ERR_SUCCESS = success).
+ *
+ * Return errors (see @ref STATUS "SM error codes"):
+ * - ::SM_ERR_NOT_FOUND: if ctrlId is not valid.
+ * - ::SM_ERR_INVALID_PARAMETERS: if action or numArg are not valid.
+ */
+int32_t BRD_SM_ControlAction(uint32_t ctrlId, uint32_t action,
+    uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn);
 
 /*!
  * Configure notification flags for a control.

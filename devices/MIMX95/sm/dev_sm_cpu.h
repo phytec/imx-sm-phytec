@@ -115,6 +115,8 @@
 #define DEV_SM_CPU_SLEEP_FLAG_IRQ_MUX    0x1U
 /*! Wake A55 CPU during A55 platform wakeup */
 #define DEV_SM_CPU_SLEEP_FLAG_A55P_WAKE  0x2U
+/*! Enable LP compute during system sleep */
+#define DEV_SM_CPU_SLEEP_FLAG_LP_COMPUTE 0x4U
 /** @} */
 
 /*!
@@ -152,7 +154,7 @@
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation:FALSE]
+// coverity[misra_c_2012_rule_20_1_violation]
 #include "dev_sm_cpu_api.h"
 
 #endif /* DEV_SM_CPU_H */

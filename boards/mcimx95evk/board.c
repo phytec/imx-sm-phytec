@@ -113,8 +113,8 @@ void BOARD_ConfigMPU(void)
     uint8_t attr;
 
     /* Disable code cache(ICache) and system cache(DCache) */
-    XCACHE_DisableCache(LPCAC_PC);
-    XCACHE_DisableCache(LPCAC_PS);
+    XCACHE_DisableCache(M33_CACHE_CTRLPC);
+    XCACHE_DisableCache(M33_CACHE_CTRLPS);
 
     /* NOTE: All TCRAM is non-cacheable regardless of MPU setting. */
 
@@ -140,12 +140,12 @@ void BOARD_ConfigMPU(void)
     ARM_MPU_Disable();
 
     /* Attr0: Device-nGnRnE */
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     ARM_MPU_SetMemAttr(0U, ARM_MPU_ATTR(ARM_MPU_ATTR_DEVICE,
         ARM_MPU_ATTR_DEVICE));
 
     /* Attr1: Normal memory, Outer non-cacheable, Inner non-cacheable */
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     ARM_MPU_SetMemAttr(1U, ARM_MPU_ATTR(ARM_MPU_ATTR_NON_CACHEABLE,
         ARM_MPU_ATTR_NON_CACHEABLE));
 
@@ -237,8 +237,8 @@ void BOARD_ConfigMPU(void)
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);
 
     /* Enable ICache and DCache */
-    XCACHE_EnableCache(LPCAC_PC);
-    XCACHE_EnableCache(LPCAC_PS);
+    XCACHE_EnableCache(M33_CACHE_CTRLPC);
+    XCACHE_EnableCache(M33_CACHE_CTRLPS);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -246,32 +246,47 @@ void BOARD_ConfigMPU(void)
 /*--------------------------------------------------------------------------*/
 void BOARD_InitClocks(void)
 {
+    bool rc;
     uint32_t fuseTrim = DEV_SM_FuseGet(DEV_SM_FUSE_FRO_TRIM);
 
     if (fuseTrim == 0U)
     {
         /* Enable the FRO clock with default value */
-        (void) FRO_SetEnable(true);
+        rc = FRO_SetEnable(true);
     }
     else
     {
         /* Set the Trim value read from the fuses */
-        bool status = FRO_SetTrim(fuseTrim);
+        rc = FRO_SetTrim(fuseTrim);
 
-        if (status)
+        if (rc)
         {
             /* Enable the FRO clock with default value */
-            (void) FRO_SetEnable(true);
+            rc = FRO_SetEnable(true);
         }
     }
 
     /* Configure default EXT_CLK1 rate tied to XTAL_OUT/EXT_CLK pin */
-    (void) CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
+    if (rc)
+    {
+        rc = CLOCK_SourceSetRate(CLOCK_SRC_EXT1, BOARD_EXT_CLK_RATE, 0U);
+    }
 
     /* Configure ADC clock */
-    (void) CCM_RootSetParent(CLOCK_ROOT_ADC, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
-    (void) CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE,
-        CLOCK_ROUND_RULE_CEILING);
+    if (rc)
+    {
+        rc = CCM_RootSetParent(CLOCK_ROOT_ADC, CLOCK_SRC_SYSPLL1_PFD1_DIV2);
+    }
+    if (rc)
+    {
+        rc = CCM_RootSetRate(CLOCK_ROOT_ADC, BOARD_ADC_CLK_RATE,
+            CLOCK_ROUND_RULE_CEILING);
+    }
+
+    if (!rc)
+    {
+        DEV_SM_ErrorLog(DEV_SM_ERR_INITCLOCKS);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -301,8 +316,11 @@ void BOARD_InitDebugConsole(void)
             FSL_FEATURE_LPUART_FIFO_SIZEn(s_uartConfig.base)) - 1U;
         lpuart_config.enableTx = true;
         lpuart_config.enableRx = true;
-        (void) LPUART_Init(s_uartConfig.base, &lpuart_config,
-            U64_U32(rate));
+        if (LPUART_Init(s_uartConfig.base, &lpuart_config,
+            U64_U32(rate)) != kStatus_Success)
+        {
+            DEV_SM_ErrorLog(DEV_SM_ERR_INITCONSOLE);
+        }
     }
 }
 
@@ -315,7 +333,7 @@ void BOARD_InitHandlers(void)
     for (int32_t irq = ((int32_t) SVCall_IRQn); irq < ((int32_t)
         NUMBER_OF_INT_VECTORS); irq++)
     {
-        // coverity[misra_c_2012_rule_10_5_violation:FALSE]
+        // coverity[misra_c_2012_rule_10_5_violation]
         NVIC_SetPriority((IRQn_Type) irq, IRQ_PRIO_NOPREEMPT_NORMAL);
     }
 
@@ -357,10 +375,22 @@ void BOARD_InitTimers(void)
 
     /* Configure and enable M33 SysTick */
     uint64_t rate = CCM_RootGetRate(BOARD_SYSTICK_CLK_ROOT);
-    uint32_t reloadVal = (uint32_t) (rate & 0xFFFFFFFFU);
-    reloadVal = ((reloadVal * BOARD_TICK_PERIOD_MSEC) + 999U) / 1000U;
-    SYSTICK_Init(1U, BOARD_SYSTICK_CLKSRC, (uint32_t) (rate & 0xFFFFFFFFU),
-        reloadVal);
+    uint64_t reloadVal;
+
+    /* If value wraps/exceeds, use max reload value */
+    if (rate <= (((1000ULL * SYSTICK_MAX_RELOAD) - 999ULL)
+        / BOARD_TICK_PERIOD_MSEC))
+    {
+        reloadVal = ((rate * U64(BOARD_TICK_PERIOD_MSEC)) + 999ULL)
+            / 1000ULL;
+    }
+    else
+    {
+        reloadVal = U64(SYSTICK_MAX_RELOAD);
+        DEV_SM_ErrorLog(DEV_SM_ERR_INITTIMERS);
+    }
+
+    SYSTICK_Init(1U, BOARD_SYSTICK_CLKSRC, U32(rate), U32(reloadVal));
     NVIC_EnableIRQ(SysTick_IRQn);
 
     /* Configure and enable the WDOG */
@@ -469,7 +499,7 @@ void BOARD_InitSerialBus(void)
 {
     static LPI2C_Type *const s_i2cBases[] = LPI2C_BASE_PTRS;
     LPI2C_Type *base = s_i2cBases[BOARD_I2C_INSTANCE];
-    lpi2c_master_config_t lpi2cConfig = {0};
+    lpi2c_master_config_t lpi2cConfig = { 0 };
     static uint32_t const s_i2cClks[] =
     {
         0U,

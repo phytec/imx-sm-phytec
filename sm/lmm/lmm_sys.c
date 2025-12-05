@@ -363,6 +363,10 @@ void LM_SystemReason(uint32_t lmId, lmm_rst_rec_t *bootRec,
     /* Update boot record */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Added to improve the test coverage */
+        SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+            flags = DEV_SM_BBM_BOOT_BUTTON);
+
         if ((flags & (DEV_SM_BBM_BOOT_BUTTON | DEV_SM_BBM_BOOT_ALARM
             | DEV_SM_BBM_BOOT_ROLLOVER)) != 0U)
         {
@@ -594,7 +598,7 @@ int32_t LMM_SystemLmBoot(uint32_t lmId, uint32_t agentId, uint32_t bootLm,
 /*--------------------------------------------------------------------------*/
 /* Shutdown LM                                                              */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_2_violation:FALSE]
+// coverity[misra_c_2012_rule_17_2_violation]
 int32_t LMM_SystemLmShutdown(uint32_t lmId, uint32_t agentId,
     uint32_t shutdownLm, bool graceful, const lmm_rst_rec_t *shutdownRec)
 {
@@ -791,6 +795,10 @@ int32_t LM_SystemLmReason(uint32_t lmId, uint32_t reasonLm,
         *shutdownRec = s_lmShutdownReason[reasonLm];
     }
 
+    /*
+     * Intentional: Test code
+     */
+    // coverity[cert_int30_c_violation]
     SM_TEST_MODE_EXEC(SM_TEST_MODE_LMM_ALT1, shutdownRec->errId = \
         bootRec->errId + 1U)
     SM_TEST_MODE_ERR(SM_TEST_MODE_LMM_LVL1, SM_ERR_TEST)
@@ -868,7 +876,7 @@ void LMM_SystemCpuModeChanged(uint32_t cpuId)
 /*--------------------------------------------------------------------------*/
 /* Group boot                                                               */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_2_violation:FALSE]
+// coverity[misra_c_2012_rule_17_2_violation]
 int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
     const lmm_rst_rec_t *bootRec, uint8_t group)
 {
@@ -927,7 +935,7 @@ int32_t LMM_SystemGrpBoot(uint32_t lmId, uint32_t agentId,
 /*--------------------------------------------------------------------------*/
 /* Group shutdown                                                           */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_2_violation:FALSE]
+// coverity[misra_c_2012_rule_17_2_violation]
 int32_t LMM_SystemGrpShutdown(uint32_t lmId, uint32_t agentId,
     bool graceful, const lmm_rst_rec_t *shutdownRec, uint8_t group,
     bool *noReturn)
@@ -1058,7 +1066,7 @@ static int32_t LMM_DoBoot(lmm_rpc_trigger_t *trigger,
 /*--------------------------------------------------------------------------*/
 /* Do LM Shutdown                                                           */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_2_violation:FALSE]
+// coverity[misra_c_2012_rule_17_2_violation]
 static int32_t LMM_DoShutdown(lmm_rpc_trigger_t *trigger,
     const lmm_rst_rec_t *shutdownRec)
 {

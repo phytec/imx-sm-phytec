@@ -314,6 +314,13 @@ int32_t RPC_SCMI_VoltageDispatchCommand(scmi_caller_t *caller,
             break;
         case COMMAND_VOLTAGE_DOMAIN_ATTRIBUTES:
             lenOut = sizeof(msg_tvoltage3_t);
+            /*
+             * False Positive: The check for a domainId value of zero in the
+             * context of underrun has already been properly handled within
+             * the underlying function (BRD_SM_VoltageNameGet).
+             */
+            // coverity[cert_arr30_c_violation:FALSE]
+            // coverity[cert_str31_c_violation:FALSE]
             status = VoltageDomainAttributes(caller,
                 (const msg_rvoltage3_t*) in, (msg_tvoltage3_t*) out);
             break;
@@ -572,6 +579,13 @@ static int32_t VoltageDomainAttributes(const scmi_caller_t *caller,
     /* Get the domain name */
     if (status == SM_ERR_SUCCESS)
     {
+        /*
+         * False Positive: The check for a domainId value of zero in the
+         * context of underrun has already been properly handled within
+         * the underlying function (BRD_SM_VoltageNameGet).
+         */
+        // coverity[cert_arr30_c_violation:FALSE]
+        // coverity[cert_str31_c_violation:FALSE]
         status = LMM_VoltageNameGet(caller->lmId, in->domainId,
             (string*) &nameAddr, NULL);
     }
@@ -835,14 +849,11 @@ static int32_t VoltageConfigGet(const scmi_caller_t *caller,
     {
         switch (voltMode)
         {
-            case DEV_SM_VOLT_MODE_OFF:
-                voltMode = VOLTAGE_DOMAIN_MODES_OFF;
-                break;
             case DEV_SM_VOLT_MODE_ON:
                 voltMode = VOLTAGE_DOMAIN_MODES_ON;
                 break;
-            default:
-                ; /* Intentional empty default */
+            default: /* DEV_SM_VOLT_MODE_OFF */
+                voltMode = VOLTAGE_DOMAIN_MODES_OFF;
                 break;
         }
 

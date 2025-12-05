@@ -146,7 +146,7 @@ if (! -e $outDir)
 # Load config files
 my @cfg = &load_config_files($inputFile); 
 
-# Generate DOX file
+# Check for config sanity
 &sanity_check(\@cfg);
 
 # Generate DOX file
@@ -507,8 +507,11 @@ sub sanity_check
 {
     my ($cfgRef) = @_;
 
+	my @smClocks;
+
 	# Get list of LM and agents
-    my @list = grep(/^LM\d*\b/ || /^SCMI_AGENT\d*\b/, @$cfgRef);
+    my @list = grep(/^LM\d*\b/ || /^SCMI_AGENT\d*\b/ || /DEV_SM_CLK_\S*\b/,
+    	@$cfgRef);
 
     # Loop over the list
     my $lmCnt = -1;
@@ -603,6 +606,39 @@ sub sanity_check
 			    exit;
             }
         }
+
+		# Handle clock
+		if ($l =~ /DEV_SM_CLK_\S*\b/)
+		{
+			# Check if no clock access
+			if ($l =~ /clk=none/)
+			{
+				next;
+			}
+
+	        my @words = split(/ /, $l);
+			
+		    foreach my $w (@words)
+		    {
+				if ($w =~ /DEV_SM_(CLK_\S*)\b/)
+				{
+					my $clkStr = $1;
+
+					if ($lmCnt == 0)
+					{
+						push @smClocks, $clkStr;
+					}
+					else
+					{
+						if (grep { $clkStr eq $_} @smClocks)
+						{
+							print STDERR 'warning: LM' . $lmCnt
+								. ': has access to ' . $clkStr . "\n";
+						}
+					}
+				}
+			}
+		}
     }
 }
 
@@ -3910,12 +3946,12 @@ sub startstop
 				if (@words > 0)
 				{
 					$rtn .= ', '  . '\\' . "\n";
-					$rtn .= '     .numArg = ' . @words . ',';
+					$rtn .= '     .numArg = ' . @words . ', ';
 				}
 
 				for my $i (0 .. $#words)
 			    {
-		        	$rtn .= ' .arg[' . $i . '] = ' . $words[$i] . 'U,';
+		        	$rtn .= '.arg[' . $i . '] = ' . $words[$i] . 'U, ';
 				}				
 	        }
 

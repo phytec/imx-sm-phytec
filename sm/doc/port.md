@@ -527,8 +527,38 @@ See the SoC RM for a complete list of faults.
 Creating a New Port  {#PORT_CREATE}
 ===================
 
-Follow these stesp to create a new SM board port. Note these steps may not be comprehensive for
-complex board ports.
+Board porting usually invovles copying a port from one of the existing NXP ports and then modifying
+for a cusotmer board. Usually this starts from the associated EVK port but if a more simple starting
+point is desired a customer can start from the stub port. The stub port is a minimal port with no
+code related to PMIC, I2C, bus expanders, etc.
+
+Minimum to Boot  {#PORT_MIN}
+---------------
+
+If just wanting to use a minimal cfg and board port to boot on a new board, the existing EVK port
+can be modified to make use of the stub board port:
+
+-#  Change the board to use in the EVK cfg file. For example, change the board option in the
+    mx95evk.cfg file from board=mcimx95evk to board=mcimx95stub.
+
+-#  Remove all the board resource lines from the EVK cfg. For example, delete all BRD_* lines in
+    mx95evk.cfg.
+
+-#  Rebuild the EVK headers and compile the SM. For example:
+
+        make really-clean && make config=mx95evk cfg && make config=mx95evk all
+
+
+Then use the resulting m33_image.bin in the boot container. Note the stub port does not talk to the
+PMIC so any PMIC commands for workarounds won't be applied. In addition, it is written to halt
+on reset or shutdown. Not something a final board port should do. Also note, some SW like Linux or
+SDK may not work with this port as the board resources are missing.
+
+Full Port  {#PORT_FULL}
+---------
+
+To do the full port, follow these steps to create a new SM board port. Note these steps may not be
+comprehensive for complex board ports.
 
 -#  Copy an existing board port for the same SoC to a new board name:
 

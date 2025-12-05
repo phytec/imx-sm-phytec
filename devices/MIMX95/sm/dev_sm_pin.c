@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023, 2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -43,6 +43,9 @@
 #include "fsl_iomuxc.h"
 
 /* Local defines */
+
+/* Macro to check the iomux offset overflow */
+#define IOMUX_OFFSET_OVERFLOW_CHECK    0xF000U
 
 /* Local types */
 
@@ -213,40 +216,48 @@ int32_t DEV_SM_PinNameGet(uint32_t identifier, string *pinNameAddr,
 /*--------------------------------------------------------------------------*/
 void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
 {
-    /* Handle Mux */
-    if (type == DEV_SM_PIN_TYPE_MUX)
+    /* Check for invalid variable identifier's value */
+    if ((identifier & IOMUX_OFFSET_OVERFLOW_CHECK) == 0U)
     {
-        uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
-        uint32_t inputOnfield = 0U;
-
-        /* Extract SION */
-        if ((value & ((uint32_t) IOMUXC_PAD_SION_MASK)) != 0U)
+        /* Handle Mux */
+        if (type == DEV_SM_PIN_TYPE_MUX)
         {
-            inputOnfield = 1U;
+            uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
+            uint32_t inputOnfield = 0U;
+
+            /* Extract SION */
+            if ((value & ((uint32_t) IOMUXC_PAD_SION_MASK)) != 0U)
+            {
+                inputOnfield = 1U;
+            }
+
+            IOMUXC_SetPinMux(muxRegister, value, 0U, 0U, 0U, inputOnfield);
         }
 
-        IOMUXC_SetPinMux(muxRegister, value, 0U, 0U, 0U, inputOnfield);
+        /* Handle Config */
+        else if (type == DEV_SM_PIN_TYPE_CONFIG)
+        {
+            uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
+                + (identifier * 4U);
+
+            IOMUXC_SetPinConfig(0U, 0U, 0U, 0U, configRegister, value);
+        }
+
+        /* Handle Daisy */
+        else if (type == DEV_SM_PIN_TYPE_DAISY)
+        {
+            uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
+                + (identifier * 4U);
+
+            IOMUXC_SetPinMux(0U, 0U, daisyRegister, value, 0U, 0U);
+        }
+
+        /* Else */
+        else
+        {
+            ; /* Intentional empty else */
+        }
     }
-
-    /* Handle Config */
-    else if (type == DEV_SM_PIN_TYPE_CONFIG)
-    {
-        uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
-            + (identifier * 4U);
-
-        IOMUXC_SetPinConfig(0U, 0U, 0U, 0U, configRegister, value);
-    }
-
-    /* Handle Daisy */
-    else if (type == DEV_SM_PIN_TYPE_DAISY)
-    {
-        uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
-            + (identifier * 4U);
-
-        IOMUXC_SetPinMux(0U, 0U, daisyRegister, value, 0U, 0U);
-    }
-
-    /* Else */
     else
     {
         ; /* Intentional empty else */
@@ -258,35 +269,43 @@ void DEV_SM_PinConfigSet(uint32_t type, uint32_t identifier, uint32_t value)
 /*--------------------------------------------------------------------------*/
 void DEV_SM_PinConfigGet(uint32_t type, uint32_t identifier, uint32_t *value)
 {
-    *value = 0U;
-
-    /* Handle Mux */
-    if (type == DEV_SM_PIN_TYPE_MUX)
+    /* Check for invalid variable identifier's value */
+    if ((identifier & IOMUX_OFFSET_OVERFLOW_CHECK) == 0U)
     {
-        uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
+        *value = 0U;
 
-        *value = *((volatile uint32_t*) muxRegister);
+        /* Handle Mux */
+        if (type == DEV_SM_PIN_TYPE_MUX)
+        {
+            uint32_t muxRegister = IOMUXC_BASE + (identifier * 4U);
+
+            *value = *((volatile uint32_t*) muxRegister);
+        }
+
+        /* Handle Config */
+        else if (type == DEV_SM_PIN_TYPE_CONFIG)
+        {
+            uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
+                + (identifier * 4U);
+
+            *value =  *((volatile uint32_t*) configRegister);
+        }
+
+        /* Handle Daisy */
+        else if (type == DEV_SM_PIN_TYPE_DAISY)
+        {
+            uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
+                + (identifier * 4U);
+
+            *value = *((volatile uint32_t*) daisyRegister);
+        }
+
+        /* Else */
+        else
+        {
+            ; /* Intentional empty else */
+        }
     }
-
-    /* Handle Config */
-    else if (type == DEV_SM_PIN_TYPE_CONFIG)
-    {
-        uint32_t configRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 4U)
-            + (identifier * 4U);
-
-        *value =  *((volatile uint32_t*) configRegister);
-    }
-
-    /* Handle Daisy */
-    else if (type == DEV_SM_PIN_TYPE_DAISY)
-    {
-        uint32_t daisyRegister = IOMUXC_BASE + (DEV_SM_NUM_PIN * 8U)
-            + (identifier * 4U);
-
-        *value = *((volatile uint32_t*) daisyRegister);
-    }
-
-    /* Else */
     else
     {
         ; /* Intentional empty else */

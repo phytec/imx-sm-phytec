@@ -393,6 +393,7 @@ static cpu_per_lpi_info_t const s_cpuPerLpiInfo[CPU_NUM_PER_LPI_IDX] =
 };
 
 static uint32_t s_cpuSemaAddr[CPU_NUM_IDX];
+static uint32_t s_cpuLpComputeList = 0U;
 
 /* Global Variables */
 
@@ -773,7 +774,7 @@ bool CPU_IrqSet(uint32_t cpuIdx, bool enableCpuIrq)
 /*--------------------------------------------------------------------------*/
 /* Set GPC shandshakes associated with CPU                                  */
 /*--------------------------------------------------------------------------*/
-bool CPU_GpcHandshakeSet(uint32_t cpuIdx,bool enableHandshake)
+bool CPU_GpcHandshakeSet(uint32_t cpuIdx, bool enableHandshake)
 {
     bool rc = false;
 
@@ -1188,6 +1189,12 @@ bool CPU_RunModeSet(uint32_t cpuIdx, uint32_t runMode)
                         {
                             rc = CPU_GpcHandshakeSet(cpuIdx, true);
                         }
+
+                        /* Disable LP compute mode */
+                        if (rc)
+                        {
+                            rc = CPU_LpComputeSet(cpuIdx, false);
+                        }
                     }
                     /* other current states should result in error */
                     break;
@@ -1259,6 +1266,39 @@ bool CPU_RunModeGet(uint32_t cpuIdx, uint32_t *runMode)
     }
 
     return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enable/disable CPU LP compute mode                                       */
+/*--------------------------------------------------------------------------*/
+bool CPU_LpComputeSet(uint32_t cpuIdx, bool enableLpCompute)
+{
+    bool rc = false;
+
+    if (cpuIdx < CPU_NUM_IDX)
+    {
+        /* Track LP compute enable/disable  */
+        if (enableLpCompute)
+        {
+            s_cpuLpComputeList |= (1UL << cpuIdx);
+        }
+        else
+        {
+            s_cpuLpComputeList &= (~(1UL << cpuIdx));
+        }
+
+        rc = true;
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get list of CPUs enabled for LP compute mode                             */
+/*--------------------------------------------------------------------------*/
+uint32_t CPU_LpComputeListGet(void)
+{
+    return s_cpuLpComputeList;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -1496,7 +1536,8 @@ bool CPU_SystemSleepStatusGet(uint32_t *sysSleepStat)
     uint32_t cpuIdx = 0U;
     for (cpuIdx = 0U; cpuIdx < CPU_NUM_IDX; cpuIdx++)
     {
-        if (cpuIdx != CPU_IDX_M33P)
+        if ((cpuIdx != CPU_IDX_M33P) &&
+            ((s_cpuLpComputeList & (1UL << cpuIdx)) == 0U))
         {
             /* Check if sleep is forced for the CPU */
             bool sleepForce;
@@ -1732,12 +1773,12 @@ static bool CPU_IrqMaskSet(uint32_t cpuIdx, bool maskIrqs)
             break;
 
         case CPU_IDX_A55P:
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK0 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK1 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK2 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK3 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK4 = irqMaskVal;
-            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK5 = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[0] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[1] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[2] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[3] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[4] = irqMaskVal;
+            BLK_CTRL_S_AONMIX->CA55_IRQ_MASK[5] = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK6 = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK7 = irqMaskVal;
             BLK_CTRL_S_AONMIX->CA55_IRQ_MASK8 = irqMaskVal;
@@ -2075,7 +2116,7 @@ static bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
             uint32_t lpcgIdx = s_cpuPerLpiInfo[perLpiIdx].lpcgIdx;
 
             /* Default LPCG access list to SM only */
-            // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+            // coverity[misra_c_2012_rule_14_3_violation]
             uint32_t accessList = WHITELIST_MASK(CPU_IDX_M33P);
             rc = CCM_LpcgAccessSet(lpcgIdx, accessList);
 
@@ -2120,7 +2161,7 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
                 accessList &= (~(WHITELIST_MASK(cpuIdx)));
 
                 /* Check if only SM remains in the access list */
-                // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+                // coverity[misra_c_2012_rule_14_3_violation]
                 if (accessList == WHITELIST_MASK(CPU_IDX_M33P))
                 {
                     /* Move LPCG to software control (LPM_MODE = 0) */
@@ -2182,8 +2223,7 @@ bool CPU_ResetVectorSet(uint32_t cpuIdx, uint64_t vector)
             rc = true;
 
             /* Set lower 32-bit vector */
-            *vectorRegLow = U32((vector & 0xFFFFFFFFULL) >>
-                vectorShift);
+            *vectorRegLow = U32(vector >> vectorShift);
 
             /* Check if CPU has 64-bit vector */
             if (vectorRegHigh != NULL)

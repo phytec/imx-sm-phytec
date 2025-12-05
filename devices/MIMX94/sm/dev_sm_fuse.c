@@ -43,8 +43,6 @@
 
 /* Local defines */
 
-#define NUM_FUSES  818U
-
 /* Local types */
 
 /* Fuse map */
@@ -57,7 +55,7 @@ typedef struct
 /* Local variables */
 
 /* Fuse ID map */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
 {
     [DEV_SM_FUSE_ECID3]              = {384U,   32U},
@@ -98,7 +96,7 @@ int32_t DEV_SM_FuseInfoGet(uint32_t fuseWord, uint32_t *addr)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (fuseWord < NUM_FUSES)
+    if (fuseWord < DEV_SM_NUM_OTP)
     {
         *addr = FSB_BASE + 0x8000U + (fuseWord * 4U);
     }
@@ -126,6 +124,10 @@ uint32_t DEV_SM_FuseGet(uint32_t fuseId)
     /* Calculate shift and mask */
     shift = ((uint32_t) s_fuseMap[fuseId].bitIdx) % 32U;
 
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        s_fuseMap[fuseId].bitWidth = 33U);
+
     /* Check the mask value not exceeding the max shift value */
     if ((uint32_t) s_fuseMap[fuseId].bitWidth  <= 32U)
     {
@@ -151,6 +153,9 @@ uint32_t DEV_SM_FuseSpeedGet(void)
 
     /* Get speed */
     speed = DEV_SM_FuseGet(DEV_SM_FUSE_SPEED_GRADING) & 0xFU;
+
+    /* Added to improve the test coverage */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1, speed = 1U);
 
     if (speed != 0U)
     {
@@ -183,11 +188,13 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
     }
     else
     {
-        /* Check fuse state */
-        if ((s_fuseId[domainId] > 0U)
-            && (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U))
+        if (s_fuseId[domainId] > 0U)
         {
-            pdDisabled = true;
+            /* Check fuse state */
+            if (DEV_SM_FuseGet(s_fuseId[domainId]) != 0U)
+            {
+                pdDisabled = true;
+            }
         }
     }
 
@@ -214,17 +221,19 @@ bool DEV_SM_FuseCpuDisabled(uint32_t cpuId)
         [DEV_SM_CPU_A55P]  = DEV_SM_FUSE_A55_CORE0_DISABLE
     };
 
-    /* Check fuse state */
     if (cpuId >= DEV_SM_NUM_CPU)
     {
         cpuDisabled = true;
     }
     else
     {
-        if ((s_fuseId[cpuId] > 0U)
-            && (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U))
+        if (s_fuseId[cpuId] > 0U)
         {
-            cpuDisabled = true;
+            /* Check fuse state */
+            if (DEV_SM_FuseGet(s_fuseId[cpuId]) != 0U)
+            {
+                cpuDisabled = true;
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -255,6 +255,11 @@
 #define SM_SYSTEMERROR          DEV_SM_SystemError
 #endif
 
+#ifndef SM_MEMDDRINFOGET
+/*! Redirector (device/board) to get DDR info */
+#define SM_MEMDDRINFOGET        DEV_SM_MemDdrInfoGet
+#endif
+
 #ifndef SM_PERFNAMEGET
 /*! Redirector (device/board) to get performance domain name */
 #define SM_PERFNAMEGET          DEV_SM_PerfNameGet
@@ -295,9 +300,9 @@
 #define SM_CLOCKDESCRIBE        DEV_SM_ClockDescribe
 #endif
 
-#ifndef SM_CLOCKMUXGET
-/*! Redirector (device/board) to get clock mux */
-#define SM_CLOCKMUXGET          DEV_SM_ClockMuxGet
+#ifndef SM_CLOCKPARENTDESCRIBE
+/*! Redirector (device/board) to get clock parent info */
+#define SM_CLOCKPARENTDESCRIBE  DEV_SM_ClockParentDescribe
 #endif
 
 #ifndef SM_CLOCKRATESET

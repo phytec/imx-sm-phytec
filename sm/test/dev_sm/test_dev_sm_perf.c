@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -71,6 +71,15 @@ void TEST_DevSmPerf(void)
         CHECK(DEV_SM_PerfNameGet(domainId, &name, &len));
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
+
+        uint32_t perfLevel = 0U;
+        CHECK(DEV_SM_PerfLevelGet(domainId, &perfLevel));
+        printf("DEV_SM_PerfLevelGet(dom: %u: level: %u\n",
+            domainId, perfLevel);
+
+#ifndef SIMU
+        CHECK(DEV_SM_PerfFreqSet(domainId, perfLevel));
+#endif
     }
 
     /* Test API correct level set calls */
@@ -127,6 +136,39 @@ void TEST_DevSmPerf(void)
         printf("DEV_SM_PerfDescribe(%u)\n", 0U);
         NECHECK(DEV_SM_PerfDescribe(0U, numLevels, &desc),
             SM_ERR_OUT_OF_RANGE);
+
+#ifndef SIMU
+        uint32_t perfLevel = 4U;
+        NECHECK(DEV_SM_PerfFreqSet(0U, perfLevel),
+            SM_ERR_OUT_OF_RANGE);
+
+        printf("DEV_SM_PerfSystemSleep(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfSystemSleep(DEV_SM_NUM_PERF),
+            SM_ERR_OUT_OF_RANGE);
+
+        dev_sm_perf_info_t info = { 0 };
+        printf("DEV_SM_PerfInfoGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfInfoGet(DEV_SM_NUM_PERF, &info),
+            SM_ERR_NOT_FOUND);
+
+        numLevels = 0U;
+        printf("DEV_SM_PerfNumLevelsGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfNumLevelsGet(DEV_SM_NUM_PERF, &numLevels),
+            SM_ERR_NOT_FOUND);
+
+        uint32_t levelIndex = 0U;
+        printf("DEV_SM_PerfDescribe(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfDescribe(DEV_SM_NUM_PERF, levelIndex, &desc),
+            SM_ERR_NOT_FOUND);
+
+        printf("DEV_SM_PerfNameGet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfNameGet(DEV_SM_NUM_PERF, &name, &len),
+            SM_ERR_NOT_FOUND);
+
+        printf("DEV_SM_PerfLevelSet(%u)\n", DEV_SM_NUM_PERF);
+        NECHECK(DEV_SM_PerfLevelSet(0U /*DEV_SM_PERF_M33*/, DEV_SM_NUM_PERF),
+            SM_ERR_OUT_OF_RANGE);
+#endif
     }
 
     printf("\n");

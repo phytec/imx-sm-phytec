@@ -114,12 +114,7 @@ typedef struct {
   __IO uint32_t CM33_IRQ_MASK11;                   /**< CM33_IRQ_MASK11, offset: 0x2C */
   __IO uint32_t CM33_IRQ_MASK12;                   /**< CM33_IRQ_MASK12, offset: 0x30 */
        uint8_t RESERVED_0[12];
-  __IO uint32_t CA55_IRQ_MASK0;                    /**< CA55_IRQ_MASK0, offset: 0x40 */
-  __IO uint32_t CA55_IRQ_MASK1;                    /**< CA55_IRQ_MASK1, offset: 0x44 */
-  __IO uint32_t CA55_IRQ_MASK2;                    /**< CA55_IRQ_MASK2, offset: 0x48 */
-  __IO uint32_t CA55_IRQ_MASK3;                    /**< CA55_IRQ_MASK3, offset: 0x4C */
-  __IO uint32_t CA55_IRQ_MASK4;                    /**< CA55_IRQ_MASK4, offset: 0x50 */
-  __IO uint32_t CA55_IRQ_MASK5;                    /**< CA55_IRQ_MASK5, offset: 0x54 */
+  __IO uint32_t CA55_IRQ_MASK[6];                  /**< CA55_IRQ_MASK0, offset: 0x40 */
   __IO uint32_t CA55_IRQ_MASK6;                    /**< CA55_IRQ_MASK6, offset: 0x58 */
   __IO uint32_t CA55_IRQ_MASK7;                    /**< CA55_IRQ_MASK7, offset: 0x5C */
   __IO uint32_t CA55_IRQ_MASK8;                    /**< CA55_IRQ_MASK8, offset: 0x60 */

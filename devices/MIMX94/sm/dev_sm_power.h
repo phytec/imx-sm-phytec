@@ -56,7 +56,7 @@
 /* Defines */
 
 /*! Number of device power domains */
-#define DEV_SM_NUM_POWER        (PWR_NUM_MIX_SLICE+PWR_NUM_MIX_VSLICE)
+#define DEV_SM_NUM_POWER        (PWR_NUM_MIX_SLICE + PWR_NUM_MIX_VSLICE)
 
 /*! Number of device power states */
 #define DEV_SM_NUM_POWER_STATE  2U
@@ -106,7 +106,7 @@
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation:FALSE]
+// coverity[misra_c_2012_rule_20_1_violation]
 #include "dev_sm_power_api.h"
 
 #endif /* DEV_SM_POWER_H */

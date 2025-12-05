@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -31,8 +31,9 @@
 
 #include "fsl_clock.h"
 #include "fsl_ccm.h"
-#include "fsl_device_registers.h"
+#include "fsl_cpu.h"
 #include "fsl_power.h"
+#include "fsl_device_registers.h"
 
 /* Local Defines */
 
@@ -630,6 +631,24 @@ bool CCM_CgcGetParent(uint32_t cgcIdx, uint32_t *rootIdx)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Set CCM CGC parent                                                       */
+/*--------------------------------------------------------------------------*/
+bool CCM_CgcSetParent(uint32_t cgcIdx, uint32_t clkIdx)
+{
+    bool rc = false;
+
+    if (cgcIdx < CLOCK_NUM_CGC)
+    {
+        if (clkIdx == g_clockCgcAttr[cgcIdx].rootIdx)
+        {
+            rc = true;
+        }
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Get CCM LPCG direct control enable                                       */
 /*--------------------------------------------------------------------------*/
 bool CCM_LpcgDirectCtrlGetEnable(uint32_t lpcgIdx)
@@ -684,7 +703,7 @@ bool CCM_LpcgLpmSet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t cpuLpmSetting)
 {
     bool rc = false;
 
-    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    if ((lpcgIdx < CCM_LPCG_LPM0_COUNT) && (cpuIdx < CPU_NUM_IDX))
     {
         uint64_t lpmSetting = ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1)
                 << 32U) | ((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM0));
@@ -709,7 +728,7 @@ bool CCM_LpcgLpmGet(uint32_t lpcgIdx, uint32_t cpuIdx, uint32_t *cpuLpmSetting)
 {
     bool rc = false;
 
-    if (lpcgIdx < CCM_LPCG_LPM0_COUNT)
+    if ((lpcgIdx < CCM_LPCG_LPM0_COUNT) && (cpuIdx < CPU_NUM_IDX))
     {
         uint64_t lpmSetting =
             ((((uint64_t) CCM_CTRL->LPCG[lpcgIdx].LPM1) << 32U) |

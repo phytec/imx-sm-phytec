@@ -49,7 +49,7 @@
 #define DEV_SM_NUM_PERF_LVL_SOC     4U
 #define DEV_SM_NUM_PERF_LVL_ARM     5U
 #define DEV_SM_NUM_PERF_SLEEP       10U
-#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF-1U)
+#define DEV_SM_PERF_LAST            (DEV_SM_NUM_PERF - 1U)
 #define DEV_SM_A55_GPR_SEL_IDX      1U
 #define DEV_SM_A55_GPR_SEL_MASK     0x7FU
 
@@ -332,7 +332,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for V2X */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -448,7 +448,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp5 =
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR5) */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -457,7 +457,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 8U,                             /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
@@ -475,7 +475,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 4U,                             /* ODIV */
     }
 };
@@ -510,7 +510,7 @@ static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
 {
     .parent = DEV_SM_CLK_OSC24M,            /* root parent */
@@ -518,7 +518,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
 };
 
 /* Setpoint PLL configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -527,7 +527,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC]
          * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
          */
         .mfi = 155U,                            /* VCO MFI */
-        .mfn = VCO_MFD/2U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 2U,                    /* VCO MFN */
         .odiv = 16U,                            /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
@@ -545,7 +545,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC]
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
          */
         .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 6U,                             /* ODIV */
     }
 };
@@ -627,7 +627,7 @@ static dev_sm_perf_desc_t const s_perfDescHsio[DEV_SM_NUM_PERF_LVL_SOC] =
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
-        .value = ES_ODV_KHZ_HSIO,                    /* KHz */
+        .value = ES_ODV_KHZ_HSIO,                   /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
@@ -821,7 +821,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgVpu[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for VPUJPEG */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgVpuJpeg[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -901,7 +901,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCam[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for CAM ISI */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -927,7 +927,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for CAM CM0 */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamCm0[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1007,7 +1007,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for DISP OCRAM */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDispOcram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1069,7 +1069,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 };
 
 /* Setpoint PLL configuration for A55 */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1087,7 +1087,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
          * PLL_VCO = 24MHz * 117 = 2808MHz
          */
         .mfi = 117U,                            /* VCO MFI */
-        .mfn = VCO_MFD/3U,                      /* VCO MFN */
+        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
         .odiv = 0U                              /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
@@ -1111,7 +1111,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55 cores */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1137,7 +1137,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1198,7 +1198,7 @@ static dev_sm_perf_desc_t s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint clock root configuration for A55PER */
-// coverity[misra_c_2012_rule_8_9_violation:FALSE]
+// coverity[misra_c_2012_rule_8_9_violation]
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1390,9 +1390,9 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
 
     /* Configure SYSPLL for software control (ROM sets hardware control) */
     SYS_PLL1->CTRL.CLR = PLL_CTRL_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[0].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[1].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
-    SYS_PLL1->NO_OF_DFS[2].DFS_CTRL.CLR = PLL_NO_OF_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[0].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[1].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
+    SYS_PLL1->DFS[2].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
 
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
@@ -1561,7 +1561,14 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
          * level value is same as max sustained frequency.
          */
         uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
+        uint32_t levelIdx = 0U;
+
+        /* Check the value doesn't wrap */
+        if (s_perfNumLevels[psIdx] >= 1U)
+        {
+            levelIdx = s_perfNumLevels[psIdx] - 1U;
+        }
+
         if (domainId == DEV_SM_PERF_DRAM)
         {
             if (DEV_SM_PerfDramTypeGet() == 4U)
@@ -2347,7 +2354,7 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     }
     if (status == SM_ERR_SUCCESS)
     {
-        if (DEV_SM_PerfDramTypeGet()== 4U)
+        if (DEV_SM_PerfDramTypeGet() == 4U)
         {
             status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
                 &s_perfRootCfgDramLp4x);
@@ -2582,7 +2589,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
         case DEV_SM_PERF_DRAM:
             clockId = DEV_SM_CLK_DRAM_GPR_SEL;
 
-            if (DEV_SM_PerfDramTypeGet()== 4U)
+            if (DEV_SM_PerfDramTypeGet() == 4U)
             {
                 perfDesc = s_perfDescDramLp4x;
             }

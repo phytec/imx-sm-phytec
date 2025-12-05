@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -517,7 +517,7 @@ static void TEST_ScmiPinctrlExclusive(bool pass, uint32_t channel,
             0U, attributes, configs), SCMI_ERR_INVALID_PARAMETERS);
 
 #ifdef SIMU
-        num += 2;
+        num += 2U;
 
         configs[num - 2U].type = SCMI_PINCTRL_TYPE_DAISY_ID;
         configs[num - 2U].value = 0U;

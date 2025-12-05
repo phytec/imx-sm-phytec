@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2024 NXP
+** Copyright 2024-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -60,13 +60,14 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM CPU                                                       */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_LmmFuSa(void)
 {
     /* LM tests */
     printf("**** LMM FuSa API Tests ***\n\n");
 
 #ifdef SIMU
-    uint32_t status = 0U;
+    int32_t status = 0;
     /* Recover from global error */
     {
         LMM_FusaGlobalRecovery(status);
@@ -77,13 +78,13 @@ void TEST_LmmFuSa(void)
     }
     /* Report exception */
     {
-        dev_sm_rst_rec_t rst_rec = {0};
+        dev_sm_rst_rec_t rst_rec = { 0 };
         LMM_FuSaExceptionHandler(&rst_rec);
     }
 
     /* Invalid seenvId: Get S-EENV state */
     {
-        lmm_fusa_id_t target = {0U}, caller = {0U};
+        lmm_fusa_id_t target = { 0U }, caller = { 0U };
         uint32_t seenvState = 0U;
 
         caller.seenvId = SM_LM_NUM_SEENV;
@@ -95,7 +96,7 @@ void TEST_LmmFuSa(void)
 
     /* Invalid seenvId: Set S-EENV state */
     {
-        lmm_fusa_id_t caller = {0U};
+        lmm_fusa_id_t caller = { 0U };
         uint32_t seenvState = 0U, pingCookie = 0U;
 
         caller.seenvId = SM_LM_NUM_SEENV;
@@ -105,6 +106,7 @@ void TEST_LmmFuSa(void)
             SM_ERR_NOT_FOUND);
     }
 #endif
+
     /* Test API bounds */
     printf("\n**** LMM FuSa API Err Tests ***\n\n");
 

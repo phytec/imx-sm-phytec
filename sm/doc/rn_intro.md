@@ -32,8 +32,12 @@ The table below lists the release information:
 Highlights {#RN_HIGH}
 ==========
 
-- Added support for i.MX95 B0
-- Toolchain moved to GNU Version 14.2.rel1
+Added:
+
+- Support for low-power (LP) compute mode during system sleep
+- New SCMI MISC API to get DDR info
+- Device error log support
+- A monitor delay command
 
 Note these are highlights of the original release. These do not cover changes
 in subsequent patch releases.

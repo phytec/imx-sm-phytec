@@ -165,7 +165,7 @@
 #define DEV_SM_CLK_ENETTIMER3                (CLOCK_ROOT_ENETTIMER3 + CLOCK_NUM_SRC)              /*!< 96: ENETTIMER3 root */
 #define DEV_SM_CLK_FLEXIO3                   (CLOCK_ROOT_FLEXIO3 + CLOCK_NUM_SRC)                 /*!< 97: FLEXIO3 root */
 #define DEV_SM_CLK_FLEXIO4                   (CLOCK_ROOT_FLEXIO4 + CLOCK_NUM_SRC)                 /*!< 98: FLEXIO4 root */
-#define DEV_SM_CLK_M33SYNC                   (CLOCK_ROOT_M33SYNC+ CLOCK_NUM_SRC)                  /*!< 99: M33SYNC root */
+#define DEV_SM_CLK_M33SYNC                   (CLOCK_ROOT_M33SYNC + CLOCK_NUM_SRC)                 /*!< 99: M33SYNC root */
 #define DEV_SM_CLK_M33SYNCSYSTICK            (CLOCK_ROOT_M33SYNCSYSTICK + CLOCK_NUM_SRC)          /*!< 100: M33SYNCSYSTICK root */
 #define DEV_SM_CLK_MAC0                      (CLOCK_ROOT_MAC0 + CLOCK_NUM_SRC)                    /*!< 101: MAC0 root */
 #define DEV_SM_CLK_MAC1                      (CLOCK_ROOT_MAC1 + CLOCK_NUM_SRC)                    /*!< 102: MAC1 root */
@@ -312,7 +312,7 @@
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation:FALSE]
+// coverity[misra_c_2012_rule_20_1_violation]
 #include "dev_sm_clock_api.h"
 
 #endif /* DEV_SM_CLOCK_H */

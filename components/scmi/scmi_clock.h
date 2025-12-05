@@ -369,8 +369,8 @@ int32_t SCMI_ClockProtocolMessageAttributes(uint32_t channel,
  *                            specified in Section 4.6.2.16, can be used to
  *                            discover the restrictions in place. Set to 0 if
  *                            either of the following are true:<BR>
- *                            -- The clock’s restrictions cannot be
- *                            discovered because CLOCK_GET_PERMISSIONS is not
+ *                            -- The clocks restrictions cannot be discovered
+ *                            because CLOCK_GET_PERMISSIONS is not
  *                            implemented.<BR>
  *                            -- The clock has no restrictions on changing its
  *                            configuration or setting. Attempts to change a

@@ -58,8 +58,8 @@ void TEST_LmmClock(void)
     uint32_t lmId = 1U;
     dev_sm_clock_range_t clockRange;
 #ifdef SIMU
-    uint32_t mux = 0U;
-    uint32_t numMuxes = 0U;
+    uint32_t parentId = 0U;
+    uint32_t numParents = 0U;
     uint32_t parent = 0U;
     bool enable = true;
 #endif
@@ -71,7 +71,12 @@ void TEST_LmmClock(void)
 
     for (uint32_t clockId = 0U; clockId < (SM_NUM_CLOCK - 1U); clockId++)
     {
-        printf("LMM_ClockNameGet(%u, %u)\n",lmId, clockId);
+        if (DEV_SM_ClockIsReserved(clockId))
+        {
+            continue;
+        }
+
+        printf("LMM_ClockNameGet(%u, %u)\n", lmId, clockId);
         CHECK(LMM_ClockNameGet(lmId, clockId, &name, &len));
         printf("  name=%s\n",  name);
         printf("  len=%d\n",  len);
@@ -121,19 +126,20 @@ void TEST_LmmClock(void)
         /* Make sure clockId not clock 0*/
         if (clockId == DEV_SM_CLK_0)
         {
-            /* If it is throw err, and print number of muxes*/
-            printf("LMM_ClockMuxGet(%u, %u)\n", lmId, clockId);
-            NECHECK(LMM_ClockMuxGet(lmId, clockId, 0U, &mux, &numMuxes),
-                SM_ERR_NOT_SUPPORTED);
-            printf("  numMuxes=%d\n",  numMuxes);
+            /* If it is throw err, and print number of parents */
+            printf("LMM_ClockParentDescribe(%u, %u)\n", lmId, clockId);
+            NECHECK(LMM_ClockParentDescribe(lmId, clockId, 0U, &parentId,
+                &numParents), SM_ERR_NOT_SUPPORTED);
+            printf("  numParents=%d\n",  numParents);
         }
         else
         {
-            /* If not do MuxGet test and print mux and numMuxes*/
-            printf("LMM_ClockMuxGet(%u, %u)\n", lmId, clockId);
-            CHECK(LMM_ClockMuxGet(lmId, clockId, 0U, &mux, &numMuxes));
-            printf("  mux=%d\n", mux);
-            printf("  numMuxes=%d\n",  numMuxes);
+            /* If not do MuxGet test and print parent and  */
+            printf("LMM_ClockParentDescribe(%u, %u)\n", lmId, clockId);
+            CHECK(LMM_ClockParentDescribe(lmId, clockId, 0U, &parentId,
+                &numParents));
+            printf("  parentId=%d\n", parentId);
+            printf("  numParents=%d\n",  numParents);
         }
 #endif
         printf("LMM_ClockRateGet(%u, %u)\n", lmId, clockId);
@@ -141,18 +147,21 @@ void TEST_LmmClock(void)
         printf("  rate=%u\n", UINT64_L(rate));
 
 #ifdef SIMU
-        /* Get parent*/
-        printf("LMM_ClockParentGet(%u, %u)\n", lmId, clockId);
-        CHECK(LMM_ClockParentGet(lmId, clockId, &parent));
+        if (numParents > 0U)
+        {
+            /* Get parent*/
+            printf("LMM_ClockParentGet(%u, %u)\n", lmId, clockId);
+            CHECK(LMM_ClockParentGet(lmId, clockId, &parent));
 
-        printf("LMM_ClockParentSet(%u, %u)\n", lmId, clockId);
-        CHECK(LMM_ClockParentSet(lmId, clockId, parent));
+            printf("LMM_ClockParentSet(%u, %u)\n", lmId, clockId);
+            CHECK(LMM_ClockParentSet(lmId, clockId, parent));
+        }
 
         printf("LMM_ClockReset(%u, %u)\n", lmId, clockId);
         NECHECK(LMM_ClockReset(lmId, clockId), SM_ERR_BUSY);
 
         /* Disable clock */
-        printf("LMM_ClockEnable(%u, %u)\n", lmId, clockId);
+        printf("LMM_ClockEnable(%u, %u, %u)\n", lmId, clockId, !enable);
         CHECK(LMM_ClockEnable(lmId, clockId, !enable));
 
         /* Check to see if disabled */
@@ -179,12 +188,12 @@ void TEST_LmmClock(void)
     NECHECK(LMM_ClockEnable(lmId, SM_NUM_CLOCK, enabled),
         SM_ERR_NOT_FOUND);
 
-    printf("LMM_ClockExtendedSet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    printf("LMM_ClockExtendedSet(%lu, %u)\n", SM_NUM_CLOCK, lmId);
     NECHECK(LMM_ClockExtendedSet(lmId, SM_NUM_CLOCK, 0U, 0U),
         SM_ERR_NOT_FOUND);
 
     uint32_t extCfgValue = 0U;
-    printf("LMM_ClockExtendedGet(%lu, %u)\n",SM_NUM_CLOCK, lmId);
+    printf("LMM_ClockExtendedGet(%lu, %u)\n", SM_NUM_CLOCK, lmId);
     NECHECK(LMM_ClockExtendedGet(lmId, SM_NUM_CLOCK, 0U, &extCfgValue),
         SM_ERR_NOT_FOUND);
 

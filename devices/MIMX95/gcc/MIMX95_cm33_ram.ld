@@ -11,7 +11,7 @@
 **         Linker file for the GNU C Compiler
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2024 NXP
+**     Copyright 2016-2025 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -222,7 +222,7 @@ SECTIONS
   __StackLimit = __StackTop - STACK_SIZE;
   __FreeTcmStart = __HeapLimit;
   __FreeTcmLimit = __StackLimit;
-  __DramInfo = ORIGIN(m_draminfo);
+  __DdrInfo = ORIGIN(m_draminfo);
   PROVIDE(__stack = __StackTop);
 
   .ARM.attributes 0 : { *(.ARM.attributes) }

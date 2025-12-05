@@ -106,7 +106,7 @@ void MONITOR_Cmd(string banner)
 
     /* Zero initialize command and history buffers */
     (void)memset((void *)line, 0, (size_t)MAXLINE);
-    (void)memset((void *)hist, 0, (((size_t)MAXLINE)*((size_t)HIST_SIZE)));
+    (void)memset((void *)hist, 0, (((size_t)MAXLINE) * ((size_t)HIST_SIZE)));
 
     printf("%s", banner);
 
@@ -121,13 +121,9 @@ void MONITOR_Cmd(string banner)
         printf("\n");
 
         /* Dispatch */
-#ifdef SIMU
+        MONITOR_EnterCS();
         status = MONITOR_Dispatch(line);
-#else
-        priMask = DisableGlobalIRQ();
-        status = MONITOR_Dispatch(line);
-        EnableGlobalIRQ(priMask);
-#endif
+        MONITOR_ExitCS();
 
         /* Clean up input buffer */
         while (MONITOR_CharPending() != false)
@@ -187,49 +183,6 @@ void MONITOR_Cmd(string banner)
 }
 
 /*--------------------------------------------------------------------------*/
-/* Insert command                                                           */
-/*--------------------------------------------------------------------------*/
-void MONITOR_LineUpdateDispatch(const char *my_string)
-{
-    strcpy(line, my_string);
-    c_insert = '\n';
-}
-
-#ifdef SIMU
-/*--------------------------------------------------------------------------*/
-/* SystemMemoryProbe(addr, val, width)                                      */
-/*--------------------------------------------------------------------------*/
-uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width)
-{
-    uint32_t rtn = 0U;
-    uint32_t pAddr = (uint32_t) addr;
-
-    if ((pAddr >= 0x80000000UL) && (pAddr < 0x80010000UL))
-    {
-        // Perform the probe
-        switch (width)
-        {
-            default:
-                *((uint8_t *) val) = *((const uint8_t *) addr);
-                break;
-            case 16:
-                *((uint16_t *) val) = *((const uint16_t *) addr);
-                break;
-            case 32:
-                *((uint32_t *) val) = *((const uint32_t *) addr);
-                break;
-        }
-    }
-    else
-    {
-        rtn = 1U;
-    }
-
-    return rtn;
-}
-#endif
-
-/*--------------------------------------------------------------------------*/
 /* Search for string                                                        */
 /*--------------------------------------------------------------------------*/
 int32_t MONITOR_Find(string const *list, int32_t max, const char *str)
@@ -238,9 +191,12 @@ int32_t MONITOR_Find(string const *list, int32_t max, const char *str)
 
     for (r = 0; r < max; r++)
     {
-        if (strcasecmp(str, list[r]) == 0)
+        if (list[r] != NULL)
         {
-            break;
+            if (strcasecmp(str, list[r]) == 0)
+            {
+                break;
+            }
         }
     }
 
@@ -363,7 +319,7 @@ void MONITOR_Yield(void)
 static char MONITOR_RawCharGet(bool echo)
 {
     char buf = 0;
-    struct termios old = {0};
+    struct termios old = { 0 };
     ssize_t res;
 
     fflush(stdout);
@@ -561,7 +517,7 @@ static char* MONITOR_LineRead(void)
                         seek_cnt++;
 
                         /* Compute seek position based on offset from insert position */
-                        seek_idx = ((insert_idx-seek_cnt) + HIST_SIZE) % HIST_SIZE;
+                        seek_idx = ((insert_idx - seek_cnt) + HIST_SIZE) % HIST_SIZE;
 
                         /* Erase contents of current command buffer and
                          * replace with the previous command */
@@ -584,7 +540,7 @@ static char* MONITOR_LineRead(void)
                         seek_cnt--;
 
                         /* Compute seek position based on offset from insert position */
-                        seek_idx = ((insert_idx-seek_cnt) + HIST_SIZE) % HIST_SIZE;
+                        seek_idx = ((insert_idx - seek_cnt) + HIST_SIZE) % HIST_SIZE;
 
                         /* Erase contents of current command buffer and
                          * replace with the previous command */
@@ -849,7 +805,7 @@ int32_t MONITOR_NameToId(const char *rsrcName, uint32_t *id,
         errno = 0;
         index = strtoul(rsrcName, &endPtr, 0);
 
-        if ((errno !=0) || (*endPtr != EOL))
+        if ((errno != 0) || (*endPtr != EOL))
         {
             status = SM_ERR_INVALID_PARAMETERS;
         }
@@ -958,5 +914,25 @@ string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair)
 
     /* Return string */
     return rtn;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enter ciritical section                                                  */
+/*--------------------------------------------------------------------------*/
+void MONITOR_EnterCS(void)
+{
+#ifndef SIMU
+    priMask = DisableGlobalIRQ();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Enter ciritical section                                                  */
+/*--------------------------------------------------------------------------*/
+void MONITOR_ExitCS(void)
+{
+#ifndef SIMU
+    EnableGlobalIRQ(priMask);
+#endif
 }
 

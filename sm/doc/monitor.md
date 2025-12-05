@@ -34,6 +34,7 @@ General Commands
 | help                        | list commands                                                |
 | exit                        | exit the debug monitor                                       |
 | quit                        | exit the debug monitor                                       |
+| delay ms                    | delay *ms* milliseconds, interrupts disabled if negative     |
 
 Info Commands
 -------------
@@ -41,6 +42,7 @@ Info Commands
 | Command                     | Description                                                  |
 |-----------------------------|--------------------------------------------------------------|
 | info                        | display SM/SoC info like unique ID, etc.                     |
+| ddr                         | dump info about DDR memory regions                           |
 | ele info                    | display ELE info like FW version, lifecycle, etc.            |
 | ele ext                     | display ELE extended info like ROM patch SHA, etc.           |
 | ele dump                    | dump ELE debug data                                          |
@@ -115,14 +117,15 @@ Resource Commands
 | power.w *domain* *state*    | set power mode of *domain* to *state* (off, on)              |
 | perf.r                      | display level/rate for all performance domains               |
 | perf.w *domain* *level*     | set *level* for performance *domain*                         |
-| clock.r                     | display rate/enable for all clocks                           |
-| clock.r range               | display range for all clocks                                 |
-| clock.r parent              | display parents for all clocks                               |
-| clock.r ext *ext*           | display extended data for type *ext* for all clocks          |
+| clock.r [*clk*]             | display rate/enable of *clk* (default = all)                 |
+| clock.r [*clk*] range       | display range of *clk* (default = all)                       |
+| clock.r [*clk*] parent      | display parents of *clk* (default = all)                     |
+| clock.r [*clk*] possible    | display parents of *clk* (default = all)                     |
+| clock.r [*clk*] ex *ext*    | display extended data for type *ext* of *clk* (default = all)|
 | clock.w *clock* *state*     | enable/display *clock* (on = enable, off = disable)          |
 | clock.w *clock* reparent *parent* | set parent for *clock* to *parent*                     |
 | clock.w *clock* rate *rate* | set rate for *clock* to *rate*                               |
-| clock.w *clock* ext *ext* *extConfigValue* | set extended configuration for type *ext*     |
+| clock.w *clock* ex *ext* *extConfigValue* | set extended configuration for type *ext*      |
 | clock.reset *clock*         | reset *clock* to boot state                                  |
 | sensor.r                    | display all sensor values                                    |
 | sensor.w *sensor*           | enable/display *sensor* (on = enable, off = disable)         |
@@ -144,6 +147,7 @@ Resource Commands
 | ctrl.r                      | display values for all controls                              |
 | ctrl.w *ctrl* *list...*     | set *list* values for *ctrl* control                         |
 | ctrl.notify *ctrl* *flags*  | set notify flags to *flags* for *ctrl* control               |
+| ctrl.action *ctrl action list...* | do *action* for *ctrl* control with *list* values      |
 
 Data R/W Commands
 -----------------

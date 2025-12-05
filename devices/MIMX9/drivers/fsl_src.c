@@ -36,6 +36,7 @@
 #include "fsl_reset.h"
 #include "fsl_src.h"
 #include "fsl_device_registers.h"
+#include "sm_test_mode.h"
 
 /* Local Defines */
 
@@ -48,7 +49,7 @@ static bool SRC_MemRetentionModeInit(uint32_t srcMixIdx);
 static void SRC_MixSetA55HdskMode(uint32_t srcMixIdx, uint8_t hdskMode);
 static void SRC_MixSetA55CpuWait(uint32_t srcMixIdx, bool enableCpuWait);
 static void SRC_MixSetCpuWait(uint32_t srcMixIdx, bool enableCpuWait);
-static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx,uint32_t sleepMode);
+static void SRC_MixSetCpuSleepMode(uint32_t srcMixIdx, uint32_t sleepMode);
 static bool SRC_MixPowerDownCompleted(uint32_t srcMixIdx);
 static bool SRC_MixPowerUpCompleted(uint32_t srcMixIdx);
 static bool SRC_MixPowerDownPoll(uint32_t srcMixIdx, uint32_t timeoutUsec);
@@ -135,7 +136,7 @@ bool SRC_MixCpuLpmSet(uint32_t srcMixIdx, uint32_t cpuIdx,
 {
     bool rc = false;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+    if ((srcMixIdx < PWR_NUM_MIX_SLICE) && (cpuIdx < CPU_NUM_IDX))
     {
         if ((g_pwrMixMgmtInfo[srcMixIdx].flags & PWR_MIX_FLAG_LPMSET) != 0U)
         {
@@ -166,7 +167,7 @@ bool SRC_MixCpuLpmGet(uint32_t srcMixIdx, uint32_t cpuIdx,
 {
     bool rc = false;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+    if ((srcMixIdx < PWR_NUM_MIX_SLICE) && (cpuIdx < CPU_NUM_IDX))
     {
         const src_mix_slice_t *srcMix = s_srcMixPtrs[srcMixIdx];
 
@@ -696,10 +697,15 @@ bool SRC_MixSoftPowerUp(uint32_t srcMixIdx)
 bool SRC_MixIsPwrSwitchOn(uint32_t srcMixIdx)
 {
     bool isPwrSwitchOn = false;
+    uint32_t modSrcMixIdx = srcMixIdx;
 
-    if (srcMixIdx < PWR_NUM_MIX_SLICE)
+    /* Added to impove the test coverage for negative case */
+    SM_TEST_MODE_EXEC(SM_TEST_MODE_EXEC_LVL1,
+        modSrcMixIdx = PWR_NUM_MIX_SLICE)
+
+    if (modSrcMixIdx < PWR_NUM_MIX_SLICE)
     {
-        const src_mix_slice_t *srcMix = s_srcMixPtrs[srcMixIdx];
+        const src_mix_slice_t *srcMix = s_srcMixPtrs[modSrcMixIdx];
 
         if (0U == (srcMix->FUNC_STAT & FUNC_STAT_PSW_STAT_MASK))
         {

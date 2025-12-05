@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-**     Copyright 2023 NXP
+**     Copyright 2023-2025 NXP
 **
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
@@ -53,6 +53,7 @@
 #include "dev_sm_config.h"
 #include "dev_sm_power.h"
 #include "dev_sm_system.h"
+#include "dev_sm_mem.h"
 #include "dev_sm_perf.h"
 #include "dev_sm_clock.h"
 #include "dev_sm_sensor.h"

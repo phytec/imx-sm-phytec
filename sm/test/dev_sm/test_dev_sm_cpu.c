@@ -72,6 +72,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuNameGet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuNameGet(DEV_SM_NUM_CPU, &name, &len),
             SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        printf("DEV_SM_CpuNameGet(%u)\n", DEV_SM_CPU_M33P);
+        CHECK(DEV_SM_CpuNameGet(DEV_SM_CPU_M33P, &name, &len));
+
+        printf("DEV_SM_CPU_M33P: cpuName: %s len: %d\n", name, len);
+#endif
     }
 
     /* CPU Start */
@@ -80,6 +87,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuStart(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuStart(DEV_SM_NUM_CPU),
             SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuStart(CPU_IDX_M33P),
+            SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* CPU Hold */
@@ -88,6 +102,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuHold(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuHold(DEV_SM_NUM_CPU),
             SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuHold(CPU_IDX_M33P),
+            SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* CPU InfoGet */
@@ -99,6 +120,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuInfoGet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuInfoGet(DEV_SM_NUM_CPU, &runmode, &sleepmode,
             &vector), SM_ERR_INVALID_PARAMETERS);
+
+#ifndef SIMU
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuInfoGet(DEV_SM_NUM_CPU, &runmode, &sleepmode,
+            &vector), SM_ERR_INVALID_PARAMETERS);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* CPU Stop */
@@ -107,6 +135,12 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuStop(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuStop(DEV_SM_NUM_CPU),
             SM_ERR_NOT_FOUND);
+#ifndef SIMU
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuStop(CPU_IDX_M33P),
+            SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* Reset Vector Check */
@@ -128,6 +162,13 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuResetVectorSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuResetVectorSet(DEV_SM_NUM_CPU, resetVector),
             SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuResetVectorSet(CPU_IDX_M33P, resetVector),
+            SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* Sleep Mode Set */
@@ -139,7 +180,23 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuSleepModeSet(DEV_SM_NUM_CPU, sleepMode,
             sleepflag), SM_ERR_NOT_FOUND);
 
-#ifdef SIMU
+#ifndef SIMU
+        /* Sleep Mode = SUSPEND */
+        sleepMode = CPU_SLEEP_MODE_SUSPEND;
+        sleepflag = 0x1U;
+        printf("DEV_SM_CpuSleepModeSet(%u)\n", CPU_IDX_M33P);
+        NECHECK(DEV_SM_CpuSleepModeSet(CPU_IDX_M33P, sleepMode,
+            sleepflag), SM_ERR_INVALID_PARAMETERS);
+
+        sleepMode = CPU_SLEEP_MODE_RUN;
+        sleepflag = 0x1U;
+        printf("DEV_SM_CpuSleepModeSet(%u)\n", CPU_IDX_M33P);
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuSleepModeSet(CPU_IDX_M33P, sleepMode,
+            sleepflag), SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+
+#else
         /* Invalid Sleep Mode */
         sleepMode = 5U;
 
@@ -159,6 +216,14 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
 
+#ifndef SIMU
+        /* Valid cpuId */
+        printf("DEV_SM_CpuIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuIrqWakeSet(CPU_IDX_M33P, maskIdx,
+            maxVal), SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
         maskIdx = 500U /* >= GPC_CPU_CTRL_CMC_IRQ_WAKEUP_MASK_COUNT */;
         /* Invalid maskId */
         printf("DEV_SM_CpuIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
@@ -176,6 +241,14 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuNonIrqWakeSet(DEV_SM_NUM_CPU, maskIdx,
             maxVal), SM_ERR_NOT_FOUND);
 
+#ifndef SIMU
+        /* Valid cpuId */
+        printf("DEV_SM_CpuNonIrqWakeSet(%u)\n", CPU_IDX_M33P);
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuNonIrqWakeSet(CPU_IDX_M33P, maskIdx,
+            maxVal), SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
         maskIdx = 1U;
         /* Invalid maskIdx */
         printf("DEV_SM_CpuNonIrqWakeSet(%u)\n", DEV_SM_NUM_CPU);
@@ -193,6 +266,15 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuPdLpmConfigSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuPdLpmConfigSet(DEV_SM_NUM_CPU, domainID,
             lpmsetting, retmask), SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        /* Invalid cpuId */
+        printf("DEV_SM_CpuPdLpmConfigSet(%u)\n", CPU_IDX_M33P);
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuPdLpmConfigSet(CPU_IDX_M33P, domainID,
+            lpmsetting, retmask), SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* Set CPU power peripheral LPM */
@@ -204,6 +286,15 @@ void TEST_DevSmCpu(void)
         printf("DEV_SM_CpuPerLpmConfigSet(%u)\n", DEV_SM_NUM_CPU);
         NECHECK(DEV_SM_CpuPerLpmConfigSet(DEV_SM_NUM_CPU, perID,
             lpmsetting), SM_ERR_NOT_FOUND);
+
+#ifndef SIMU
+        /* Valid cpuId */
+        printf("DEV_SM_CpuPerLpmConfigSet(%u)\n", CPU_IDX_M33P);
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        NECHECK(DEV_SM_CpuPerLpmConfigSet(CPU_IDX_M33P, perID,
+            lpmsetting), SM_ERR_NOT_FOUND);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+#endif
     }
 
     /* Get/Set wake list for a cpu */
@@ -230,6 +321,7 @@ void TEST_DevSmCpu(void)
         NECHECK(DEV_SM_CpuWakeListSet(DEV_SM_NUM_CPU, cpuWakeList),
             SM_ERR_NOT_FOUND);
     }
+
     printf("\n");
 }
 

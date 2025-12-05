@@ -114,8 +114,8 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
          *  32-bit interface (4 bytes)
          * DBW=01b (32-bit interface) and DC=1 (Dual Channel Enable):
          *  Not an allowable configuration */
-        if (((DDRC_CTRL->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_DBW_MASK)
-            == 0x00100000U) && ((DDRC_CTRL->DDR_SDRAM_CFG
+        if (((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_DBW_MASK)
+            == 0x00100000U) && ((DDRC->DDR_SDRAM_CFG
             & DDRC_DDR_SDRAM_CFG_DC_EN_MASK) == 0U))
         {
             ddrRxcWa->dbytes = 2U;
@@ -240,15 +240,31 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
             ddrRxcWa->pathsel[idx] =
                 U32_U16(DWC_DDRPHY_APB_RD(0x10000U + (idx << 12U) + 0xadU));
 
-            while (loop-- != 0U)
+            /* Read DDRC DDR_MTP0 for special code key that indicate that
+             * the RxReplica pathPhase initialization was performed in the OEI
+             */
+            if (DDRC->DDR_MTP[0] != 0x0C0DE0E1U)
             {
-                sumpathphase += DWC_DDRPHY_APB_RD(0x10000U +
-                    (idx << 12U) + 0xd0U + ddrRxcWa->pathsel[idx]);
+                /* Initial pathphase collection must be performed in OEI;
+                 * this is left for backwards compatibility, will be removed.
+                 */
+                while (loop-- != 0U)
+                {
+                    sumpathphase += DWC_DDRPHY_APB_RD(0x10000U +
+                        (idx << 12U) + 0xd0U + ddrRxcWa->pathsel[idx]);
+                }
+
+                /* Got Pathphase init values*/
+                ddrRxcWa->init[idx] = U32_U16(DDR_SimpleDivRound(sumpathphase,
+                    count));
+            }
+            else
+            {
+                /* Read RxReplicaCtl03 which stored in OEI */
+                ddrRxcWa->init[idx] = U32_U16(DWC_DDRPHY_APB_RD(0x10000U
+                                              + (idx << 12U) + 0xafU));
             }
 
-            /* Got Pathphase init values*/
-            ddrRxcWa->init[idx] = U32_U16(DDR_SimpleDivRound(sumpathphase,
-                count));
             ddrRxcWa->rxclkoffset[idx] = 0;
         }
 
@@ -264,7 +280,7 @@ bool DDR_RxClkDelayInit(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t count)
         /* For pmro fused parts, if PMRO fuse is programmed, proceed to use
            the fuse information */
         uint32_t pmroScaleFactor = (ddrRxcWa->pmro / 4U) - PMRO_SCALE_OFFSET;
-        uint32_t pmroToTtRatio = ((PMRO_FUSE_TT- PMRO_SCALE_OFFSET)
+        uint32_t pmroToTtRatio = ((PMRO_FUSE_TT - PMRO_SCALE_OFFSET)
             * DDR_FLOAT_WA_FACTOR) / (pmroScaleFactor);
         ddrRxcWa->processScaleFactor = (pmroToTtRatio
             * TT_SCALE_FACTOR) / (DDR_FLOAT_WA_FACTOR);
@@ -373,7 +389,7 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
                     (idx << 12U) + 0xd0U + ddrRxcWa->pathsel[idx]));
 
                 ddrRxcWa->aPathphase[idx][ddrRxcWa->aIndex % ddrRxcWa->count]
-                    = pathphase;
+                    = (pathphase & 0x1FFU);
             }
 
             ddrRxcWa->aIndex++;
@@ -395,7 +411,14 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
 
             for (cnt = 0; cnt < ddrRxcWa->count; cnt++)
             {
-                sumPathphase[idx]+= ddrRxcWa->aPathphase[idx][cnt];
+                /*
+                 * False Positive: The value of aPathphase is 9 bits,
+                 * so max can be 511. Count is 128, so upon summation
+                 * it could be as big as 511*128 = 65408. which is  still
+                 * smaller then UINT16_MAX
+                 */
+                // coverity[cert_int30_c_violation]
+                sumPathphase[idx] += ddrRxcWa->aPathphase[idx][cnt];
             }
 
             avePathphase[idx] = U32_U16(DDR_SimpleDivRound(
@@ -407,17 +430,38 @@ void DDR_RxReplicaWa(ddr_rxclkdelay_wa_data_t *ddrRxcWa, uint16_t newSamples)
             /* Scale pathphase based on process corner */
             if (delta[idx] < 0)
             {
-                scaled_delta[idx] = -1 * (int32_t)(DDR_SimpleDivRound(((
+                uint32_t unsignedDeltaVal = DDR_SimpleDivRound(((
                     (uint32_t)(-delta[idx]) *
                     (processScaleFactor * DDR_FLOAT_WA_FACTOR)) /
-                    ddrRxcWa->freqRatio), DDR_FLOAT_WA_FACTOR));
+                    ddrRxcWa->freqRatio), DDR_FLOAT_WA_FACTOR);
+
+                /* Check for the overflow */
+                if (unsignedDeltaVal <= (uint32_t)INT32_MAX)
+                {
+                    scaled_delta[idx] = -1 * (int32_t)unsignedDeltaVal;
+                }
+                else
+                {
+                    /* Handle the overflow */
+                    SM_Error(SM_ERR_GENERIC_ERROR);
+                }
             }
             else
             {
-                scaled_delta[idx] = (int32_t)DDR_SimpleDivRound(((
+                uint32_t unsignedDeltaVal = DDR_SimpleDivRound(((
                     (uint32_t) delta[idx] * (processScaleFactor
                         * DDR_FLOAT_WA_FACTOR)) / ddrRxcWa->freqRatio),
                     DDR_FLOAT_WA_FACTOR);
+
+                if (unsignedDeltaVal <= (uint32_t)INT32_MAX)
+                {
+                    scaled_delta[idx] = (int32_t)unsignedDeltaVal;
+                }
+                else
+                {
+                    /* Handle the overflow */
+                    SM_Error(SM_ERR_GENERIC_ERROR);
+                }
             }
 
 #ifdef DEBUG_INIT_PRINT_EN
@@ -492,6 +536,14 @@ static uint32_t DDR_SimpleDivRound(uint32_t val, uint32_t denom)
 
     oneOrZero = ((val % denom) >= (denom / 2U)) ? 1U : 0U;
 
+    /*
+     * False Positive: The variable oneOrZero can only have values 0 or 1.
+     * There is a theoretical wraparound scenario when val equals UINT32_MAX
+     * and denom is 1. However, the count variable is always either 128 or 100,
+     * which ensures that wrapping cannot occur.
+     * Therefore, this is a false positive.
+     */
+    // coverity[cert_int30_c_violation]
     absV = (val / denom) + oneOrZero;
 
     return absV;

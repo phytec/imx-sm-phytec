@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -56,6 +56,7 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM Sys                                                       */
 /*--------------------------------------------------------------------------*/
+// coverity[misra_c_2012_rule_17_11_violation]
 void TEST_LmmSys(void)
 {
     /* LM_00010 LM tests */
@@ -71,10 +72,84 @@ void TEST_LmmSys(void)
             SM_ERR_INVALID_PARAMETERS);
     }
 
+    /* Invalid LmId: Sleep Mode Set */
+    {
+        uint32_t sleepMode = 0U;
+        uint32_t sleepFlags = 0U;
+
+        printf("LMM_SystemSleepModeSet(SM_NUM_LM)\n");
+        NECHECK(LMM_SystemSleepModeSet(SM_NUM_LM, sleepMode, sleepFlags),
+            SM_ERR_NOT_FOUND);
+    }
+
+    /* Invalid LmId: Lm status */
+    {
+        uint32_t stateLm = SM_NUM_LM, state = 0U;
+        int32_t errStatus = 0;
+        printf("LM_SystemLmStatus(%d)\n", SM_NUM_LM);
+        NECHECK(LM_SystemLmStatus(SM_NUM_LM, stateLm, &state, &errStatus),
+            SM_ERR_NOT_FOUND);
+    }
+
+    /* Invalid LmId: Shutdown LM */
+    {
+        uint32_t agentId = 0U, shutdownLm = SM_NUM_LM;
+        lmm_rst_rec_t shutdownRec = { 0 };
+
+        printf("LMM_SystemLmShutdown(%d)\n", SM_NUM_LM);
+        NECHECK(LMM_SystemLmShutdown(SM_NUM_LM, agentId, shutdownLm,
+            true /*graceful*/, &shutdownRec),
+            SM_ERR_NOT_FOUND);
+    }
+
+    /* Invalid LmId: Reset LM */
+    {
+        uint32_t agentId = 0U, resetLm = SM_NUM_LM;
+        lmm_rst_rec_t resetRec = { 0 };
+
+        printf("LMM_SystemLmReset(%d)\n", SM_NUM_LM);
+        NECHECK(LMM_SystemLmReset(SM_NUM_LM, agentId, resetLm,
+            true /*warm*/, true  /*graceful*/, &resetRec),
+            SM_ERR_NOT_FOUND);
+    }
+
+    /* LM_SystemReason */
+    {
+        lmm_rst_rec_t shutdownRec = { 0 }, bootRec = { 0 };
+
+        printf("LM_SystemReason(LmId: 0)\n");
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        LM_SystemReason(0U, &bootRec, &shutdownRec);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+
+    /* Check the LM CPU state */
+    {
+        uint32_t lmId = SM_LM_DEFAULT;
+#ifdef DEV_SM_CPU_A55C0
+        uint32_t cpuId = DEV_SM_CPU_A55C0;
+#else
+        uint32_t cpuId = DEV_SM_CPU_2;
+#endif
+
+        printf("LM_CpuCheck(%u %u)\n", lmId, cpuId);
+        bool rc = LM_CpuCheck(lmId, cpuId);
+        if (rc != true)
+        {
+            SM_Error(SM_ERR_INVALID_PARAMETERS);
+        }
+    }
+
+    /* Change the cpu run state */
+    {
+        LMM_SystemCpuModeChanged(1U);
+        LMM_SystemCpuModeChanged(1U);
+    }
+
 #ifdef SIMU
     /* SystemRstComp */
     {
-        lmm_rst_rec_t rst_rec_t = {0};
+        lmm_rst_rec_t rst_rec_t = { 0 };
         printf("LMM_SystemRstComp\n");
         CHECK(LMM_SystemRstComp(&rst_rec_t));
     }
@@ -83,6 +158,17 @@ void TEST_LmmSys(void)
     {
         printf("LMM_SystemLmCheck\n");
         CHECK(LMM_SystemLmCheck(1));
+
+        SM_TestModeSet(SM_TEST_MODE_LMM_LVL1);
+        NECHECK(LMM_SystemLmCheck(1), SM_ERR_TEST);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
+    }
+
+    /* Test converage: change cpu run state */
+    {
+        SM_TestModeSet(SM_TEST_MODE_EXEC_LVL1);
+        LMM_SystemCpuModeChanged(1U);
+        SM_TestModeSet(SM_TEST_MODE_OFF);
     }
 
     /* SystemLmWake */
@@ -95,7 +181,7 @@ void TEST_LmmSys(void)
     /* SystemGrpBoot */
     {
         uint32_t lmId = 1, agentId = 1;
-        lmm_rst_rec_t bootRec = {0};
+        lmm_rst_rec_t bootRec = { 0 };
         uint8_t group = 1;
         printf("LMM_SystemGrpBoot\n");
         CHECK(LMM_SystemGrpBoot(lmId, agentId, &bootRec, group));

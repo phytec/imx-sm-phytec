@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -413,15 +413,17 @@ static void TEST_ScmiVoltageExclusive(bool pass, uint32_t channel,
     if (pass)
     {
         /* Level Set */
-        int32_t voltageLevel = 0;
         int32_t currLevel = 0;
         int32_t checkLevel = 0;
-        printf("SCMI_VoltageLevelSet(%u, %u)\n", channel, domainId);
 
-        /* Get the current level, receive voltage array */
-        currLevel = SCMI_VoltageLevelGet(channel, domainId, &voltageLevel);
+        /* Get voltage range */
+        printf("SCMI_VoltageDescribeLevels(%u, %u)\n", channel, domainId);
         CHECK(SCMI_VoltageDescribeLevels(channel, domainId, 0U, &flags,
             voltage));
+
+        /* Get the current level */
+        printf("SCMI_VoltageLevelGet(%u, %u)\n", channel, domainId);
+        CHECK(SCMI_VoltageLevelGet(channel, domainId, &currLevel));
 
         /* Synchronous Call -- Should Set to min, then reset to original */
         printf("SCMI_VoltageLevelSet(%u, %u)\n", channel, domainId);
@@ -431,8 +433,8 @@ static void TEST_ScmiVoltageExclusive(bool pass, uint32_t channel,
             flags, voltage[0]));
 
         /* Ensure Correctness */
-        checkLevel = SCMI_VoltageLevelGet(channel, domainId,
-            &voltageLevel);
+        CHECK(SCMI_VoltageLevelGet(channel, domainId,
+            &checkLevel));
         BCHECK(checkLevel == voltage[0]);
 
         /* Reset Voltage to its original state */
@@ -440,8 +442,8 @@ static void TEST_ScmiVoltageExclusive(bool pass, uint32_t channel,
             flags, currLevel));
 
         /* Ensure Correctness */
-        checkLevel = SCMI_VoltageLevelGet(channel, domainId,
-            &voltageLevel);
+        CHECK(SCMI_VoltageLevelGet(channel, domainId,
+            &checkLevel));
         BCHECK(checkLevel == currLevel);
 
         /* Asynchronous Call -- Should Fail */

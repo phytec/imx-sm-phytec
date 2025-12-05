@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023-2024 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -40,7 +40,8 @@ TEST_INCLUDE += \
 TEST_VPATH += \
 	$(TEST_DIR) $(TEST_DIR)/dev $(TEST_DIR)/dev_sm $(TEST_DIR)/scmi \
 	$(TEST_DIR)/utilities $(TEST_DIR)/brd_sm $(TEST_DIR)/lmm \
-	$(TEST_DIR)/sm $(TEST_DIR)/drivers $(TEST_DIR)/src
+	$(TEST_DIR)/sm $(TEST_DIR)/drivers $(TEST_DIR)/src $(TEST_DIR)/mb \
+	$(TEST_DIR)/smt
 
 ifneq ($(T), NONE)
 OBJS += \
@@ -96,6 +97,8 @@ ifeq ($(T), all)
 		$(OUT)/test_scmi_bbm_button.o   \
 		$(OUT)/test_scmi_fusa.o         \
 		$(OUT)/test_scmi_misc.o         \
+		$(OUT)/test_smt.o               \
 		$(OUT)/test_utilities_config.o
+		
 endif
 

@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -281,7 +281,7 @@ void LMM_FusaExit(const lmm_rst_rec_t *shutdownRec);
  * Use to report an internal FuSa error condition. Results in a full
  * system reset with a ::DEV_SM_REASON_FUSA_SRECO reset reason.
  */
-void LMM_FusaGlobalRecovery(uint32_t status);
+void LMM_FusaGlobalRecovery(int32_t status);
 
 /*!
  * Report a full (system) reset event due to an SCP exception.

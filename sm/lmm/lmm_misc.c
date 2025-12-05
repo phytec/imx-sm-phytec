@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -152,6 +152,18 @@ int32_t LMM_MiscRomPassoverGet(uint32_t lmId,
 {
     /* Just passthru to board/device */
     return SM_ROMPASSOVERGET(passover);
+}
+
+
+/*--------------------------------------------------------------------------*/
+/* Return DDR memory region info                                            */
+/*--------------------------------------------------------------------------*/
+int32_t LMM_MiscDdrInfoGet(uint32_t lmId, uint32_t ddrRgdId, uint32_t *numRgd,
+    uint32_t *ddrType, uint32_t *ddrWidth, bool *eccEnb, uint32_t *mts,
+    uint64_t *startAddr, uint64_t *endAddr)
+{
+    return SM_MEMDDRINFOGET(ddrRgdId, numRgd, ddrType, ddrWidth, eccEnb,
+        mts, startAddr, endAddr);
 }
 
 /*--------------------------------------------------------------------------*/

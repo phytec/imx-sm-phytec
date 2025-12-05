@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -86,15 +86,6 @@ typedef int32_t (*func_t)(uint32_t lm, uint32_t id, string *addr,
 void MONITOR_Cmd(string banner);
 
 /*!
- * Insert a string into the monitor line buffer.
- *
- * @param[in]     my_string    Character string of command
- *
- * This function allows a caller to issue a monitor command.
- */
-void MONITOR_LineUpdateDispatch(const char *my_string);
-
-/*!
  * Search string list for matching string.
  *
  * @param[in]     list         List of strings to search
@@ -133,10 +124,6 @@ int32_t MONITOR_FindN(string const *list, int32_t max, const char *str);
  * pointer list to each. Note it modifies \a line.
  */
 void MONITOR_ParseLine(char *line, int32_t *argc, const char *argv[]);
-
-#ifdef SIMU
-uint32_t SystemMemoryProbe(const void *addr, void *val, uint8_t width);
-#endif
 
 /*!
  * Get character pending status.
@@ -214,6 +201,16 @@ int32_t MONITOR_ConvI32(const char *str, int32_t *val);
  * @return Matching string.
  */
 string MONITOR_Key2Str(uint32_t key, const monitor_key_pair_t *pair);
+
+/*!
+ * Enter criticial section.
+ */
+void MONITOR_EnterCS(void);
+
+/*!
+ * Exit criticial section.
+ */
+void MONITOR_ExitCS(void);
 
 #endif
 

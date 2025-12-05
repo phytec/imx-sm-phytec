@@ -69,16 +69,19 @@
 #define WRITE       1
 #define RESET       2
 #define NOTIFY      3
+#define ACTION      4
 
 /* Types */
 
 /* Local Functions */
 
 static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[]);
-#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[]);
+#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[]);
+#endif
 static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[]);
+#ifdef DEVICE_HAS_ELE
 static int32_t MONITOR_CmdEleLifecycle(int32_t argc,
     const char * const argv[]);
 static int32_t MONITOR_CmdEleEvents(int32_t argc, const char * const argv[]);
@@ -149,6 +152,8 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdSsm(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdCustom(int32_t argc, const char * const argv[]);
 static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[]);
+static int32_t MONITOR_CmdDdr(int32_t argc, const char * const argv[]);
 
 static void MONITOR_DumpLongHex(string str, uint32_t *ptr, uint32_t cnt);
 
@@ -207,6 +212,7 @@ int32_t MONITOR_Dispatch(char *line)
         "cpu.w",
         "ctrl.r",
         "ctrl.w",
+        "ctrl.action",
         "ctrl.notify",
         "extctrl.r",
         "extctrl.w",
@@ -227,6 +233,8 @@ int32_t MONITOR_Dispatch(char *line)
         "ssm",
         "custom",
         "test",
+        "delay",
+        "ddr",
         "gcov"
     };
 
@@ -255,11 +263,9 @@ int32_t MONITOR_Dispatch(char *line)
             case 4:  /* info */
                 status = MONITOR_CmdInfo(argc - 1, &argv[1]);
                 break;
-#ifdef DEVICE_HAS_ELE
             case 5:  /* ele */
                 status = MONITOR_CmdEle(argc - 1, &argv[1]);
                 break;
-#endif
 #ifdef DEVICE_HAS_V2X
             case 6: /* v2x */
                 status = MONITOR_CmdV2x(argc - 1, &argv[1]);
@@ -365,70 +371,79 @@ int32_t MONITOR_Dispatch(char *line)
             case 38:  /* ctrl.w */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 39:  /* ctrl.notify */
+            case 39:  /* ctrl.action */
+                status = MONITOR_CmdCtrl(argc - 1, &argv[1], ACTION);
+                break;
+            case 40:  /* ctrl.notify */
                 status = MONITOR_CmdCtrl(argc - 1, &argv[1], NOTIFY);
                 break;
-            case 40:  /* extctrl.r */
+            case 41:  /* extctrl.r */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], READ);
                 break;
-            case 41:  /* extctrl.w */
+            case 42:  /* extctrl.w */
                 status = MONITOR_CmdExtCtrl(argc - 1, &argv[1], WRITE);
                 break;
-            case 42:  /* md.b */
+            case 43:  /* md.b */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], BYTE);
                 break;
-            case 43:  /* md.w */
+            case 44:  /* md.w */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], WORD);
                 break;
-            case 44:  /* md.l */
+            case 45:  /* md.l */
                 status = MONITOR_CmdMd(argc - 1, &argv[1], LONG);
                 break;
-            case 45:  /* mm.b */
+            case 46:  /* mm.b */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], BYTE);
                 break;
-            case 46:  /* mm.w */
+            case 47:  /* mm.w */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], WORD);
                 break;
-            case 47:  /* mm.l */
+            case 48:  /* mm.l */
                 status = MONITOR_CmdMm(argc - 1, &argv[1], LONG);
                 break;
-            case 48:  /* fuse.r */
+            case 49:  /* fuse.r */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], READ);
                 break;
-            case 49:  /* fuse.w */
+            case 50:  /* fuse.w */
                 status = MONITOR_CmdFuse(argc - 1, &argv[1], WRITE);
                 break;
 #ifdef BOARD_HAS_PMIC
-            case 50:  /* pmic.r */
+            case 51:  /* pmic.r */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], READ);
                 break;
-            case 51:  /* pmic.w */
+            case 52:  /* pmic.w */
                 status = MONITOR_CmdPmic(argc - 1, &argv[1], WRITE);
                 break;
 #endif
-            case 52:  /* idle */
+            case 53:  /* idle */
                 status = MONITOR_CmdIdle(argc - 1, &argv[1]);
                 break;
-            case 53:  /* assert */
+            case 54:  /* assert */
                 status = MONITOR_CmdAssert(argc - 1, &argv[1]);
                 break;
-            case 54:  /* syslog */
+            case 55:  /* syslog */
                 status = MONITOR_CmdSyslog(argc - 1, &argv[1]);
                 break;
-            case 55:  /* group */
+            case 56:  /* group */
                 status = MONITOR_CmdGroup(argc - 1, &argv[1]);
                 break;
-            case 56:  /* ssm */
+            case 57:  /* ssm */
                 status = MONITOR_CmdSsm(argc - 1, &argv[1]);
                 break;
-            case 57:  /* custom */
+            case 58:  /* custom */
                 status = MONITOR_CmdCustom(argc - 1, &argv[1]);
                 break;
-            case 58:  /* test */
+            case 59:  /* test */
                 status = MONITOR_CmdTest(argc - 1, &argv[1]);
                 break;
+            case 60:  /* delay */
+                status = MONITOR_CmdDelay(argc - 1, &argv[1]);
+                break;
+            case 61:  /* ddr */
+                status = MONITOR_CmdDdr(argc - 1, &argv[1]);
+                break;
 #if defined(GCOV) && !defined(SIMU)
-            case 59:  /* gcov */
+            case 62:  /* gcov */
                 GCOV_InfoDump();
                 break;
 #endif
@@ -572,7 +587,6 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     return SM_ERR_SUCCESS;
 }
 
-#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* ELE command                                                              */
 /*--------------------------------------------------------------------------*/
@@ -598,6 +612,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
 
         switch (sub)
         {
+#ifdef DEVICE_HAS_ELE
             case 0:  /* info */
                 status = MONITOR_CmdEleInfo(argc - 1, &argv[1]);
                 break;
@@ -613,6 +628,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
             case 4:  /* abort */
                 ELE_Abort();
                 break;
+#endif
             case 5:  /* ext */
                 status = MONITOR_CmdEleExt(argc - 1, &argv[1]);
                 break;
@@ -621,11 +637,13 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
                 break;
         }
 
+#ifdef DEVICE_HAS_ELE
         if ((sub < (int32_t) ARRAY_SIZE(cmds))
             && (status != SM_ERR_SUCCESS))
         {
             printf("ELE err: 0x%X\n", ELE_ErrNumber());
         }
+#endif
     }
     else
     {
@@ -636,6 +654,7 @@ static int32_t MONITOR_CmdEle(int32_t argc, const char * const argv[])
     return status;
 }
 
+#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* Dump ELE info                                                            */
 /*--------------------------------------------------------------------------*/
@@ -739,6 +758,7 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
     /* Return status */
     return status;
 }
+#endif
 
 /*--------------------------------------------------------------------------*/
 /* Dump ELE ext                                                             */
@@ -746,6 +766,7 @@ static int32_t MONITOR_CmdEleInfo(int32_t argc, const char * const argv[])
 static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[])
 {
     int32_t status = SM_ERR_SUCCESS;
+#ifdef DEVICE_HAS_ELE
     ele_info_t info = { 0 };
 
     ELE_InfoGet(&info);
@@ -763,11 +784,27 @@ static int32_t MONITOR_CmdEleExt(int32_t argc, const char * const argv[])
         /* Display patch SHA256 */
         MONITOR_DumpLongHex("PQC SRKH  = 0x", &info.oemPqcSrkh[0], 16U);
     }
+#else
+    uint32_t info[16] = { 0 };
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("Patch SHA = 0x", &info[0], 8U);
+
+    /* Display FW SHA256 */
+    MONITOR_DumpLongHex("FW SHA    = 0x", &info[0], 8U);
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("OEM SRKH  = 0x", &info[0], 16U);
+
+    /* Display patch SHA256 */
+    MONITOR_DumpLongHex("PQC SRKH  = 0x", &info[0], 16U);
+#endif
 
     /* Return status */
     return status;
 }
 
+#ifdef DEVICE_HAS_ELE
 /*--------------------------------------------------------------------------*/
 /* Set ELE lifecycle                                                        */
 /*--------------------------------------------------------------------------*/
@@ -1298,6 +1335,7 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
     if (argc != 0)
     {
         int32_t arg = 0;
+        bool graceful = false;
 
         if (argc > 1)
         {
@@ -1313,60 +1351,51 @@ static int32_t MONITOR_CmdLm(int32_t argc, const char * const argv[])
             }
         }
 
-        if (arg >= argc)
+        int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+            argv[arg]);
+        arg++;
+
+        /* Graceful? */
+        if (arg < argc)
         {
-            status = SM_ERR_MISSING_PARAMETERS;
+            graceful = true;
         }
-        else
+
+        switch (sub)
         {
-            bool graceful = false;
-
-            int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
-                argv[arg]);
-            arg++;
-
-            /* Graceful? */
-            if (arg < argc)
-            {
-                graceful = true;
-            }
-
-            switch (sub)
-            {
-                case 0:  /* info */
-                    status = MONITOR_CmdLmInfo(argc - arg, &argv[arg]);
-                    break;
-                case 1:  /* default */
-                    s_lm = lm;
-                    break;
-                case 2:  /* boot */
-                    status = LMM_SystemLmBoot(0U, 0U, lm, &g_swReason);
-                    break;
-                case 3:  /* shutdown */
-                    status = LMM_SystemLmShutdown(0U, 0U, lm, graceful,
-                        &g_swReason);
-                    break;
-                case 4:  /* reset */
-                    status = MONITOR_CmdLmReset(argc - arg, &argv[arg],
-                        lm);
-                    break;
-                case 5:  /* wake */
-                    status = LMM_SystemLmWake(0U, 0U, lm);
-                    break;
-                case 6:  /* suspend */
-                    status = LMM_SystemLmSuspend(0U, 0U, lm);
-                    break;
-                case 7:  /* reason */
-                    status = MONITOR_CmdLmReason(argc - arg, &argv[arg],
-                        lm);
-                    break;
-                case 8:  /* power */
-                    status = LMM_SystemLmPowerOn(0U, 0U, lm);
-                    break;
-                default:
-                    status = SM_ERR_INVALID_PARAMETERS;
-                    break;
-            }
+            case 0:  /* info */
+                status = MONITOR_CmdLmInfo(argc - arg, &argv[arg]);
+                break;
+            case 1:  /* default */
+                s_lm = lm;
+                break;
+            case 2:  /* boot */
+                status = LMM_SystemLmBoot(0U, 0U, lm, &g_swReason);
+                break;
+            case 3:  /* shutdown */
+                status = LMM_SystemLmShutdown(0U, 0U, lm, graceful,
+                    &g_swReason);
+                break;
+            case 4:  /* reset */
+                status = MONITOR_CmdLmReset(argc - arg, &argv[arg],
+                    lm);
+                break;
+            case 5:  /* wake */
+                status = LMM_SystemLmWake(0U, 0U, lm);
+                break;
+            case 6:  /* suspend */
+                status = LMM_SystemLmSuspend(0U, 0U, lm);
+                break;
+            case 7:  /* reason */
+                status = MONITOR_CmdLmReason(argc - arg, &argv[arg],
+                    lm);
+                break;
+            case 8:  /* power */
+                status = LMM_SystemLmPowerOn(0U, 0U, lm);
+                break;
+            default:
+                status = SM_ERR_INVALID_PARAMETERS;
+                break;
         }
     }
     else
@@ -1674,9 +1703,30 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
     {
         default:  /* read */
             {
-                if (argc < 1)
+                int32_t firstArgv = 0;
+                int32_t newArgc = argc;
+                uint32_t startClk = 0U;
+                uint32_t stopClk = SM_NUM_CLOCK - 1U;
+
+                /* Check for clock specifier */
+                if (argc > 0)
                 {
-                    for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
+                    uint32_t num;
+
+                    if (MONITOR_NameToId(argv[0], &num,
+                        LMM_ClockNameGet, SM_NUM_CLOCK)
+                        == SM_ERR_SUCCESS)
+                    {
+                        firstArgv = 1;
+                        newArgc = argc - 1;
+                        startClk = num;
+                        stopClk = num;
+                    }
+                }
+
+                if (newArgc < 1)
+                {
+                    for (uint32_t clockId = startClk; clockId <= stopClk;
                         clockId++)
                     {
                         string clockNameAddr;
@@ -1735,22 +1785,29 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     {
                         "range",
                         "parent",
-                        "ext"
+                        "possible",
+                        "ex"
                     };
 
                     uint8_t subCmd = (uint8_t) MONITOR_Find(subCmds,
-                        (int32_t) ARRAY_SIZE(subCmds), argv[0]);
+                        (int32_t) ARRAY_SIZE(subCmds), argv[firstArgv]);
 
                     switch (subCmd)
                     {
-                        /* range/parent */
+                        /* range/parent/possible */
                         case 0:
                         case 1:
-                            for (uint32_t clockId = 0U; clockId < SM_NUM_CLOCK;
+                        case 2:
+                            for (uint32_t clockId = startClk; clockId <= stopClk;
                                 clockId++)
                             {
                                 string clockNameAddr;
                                 int32_t wName = 0;
+
+#ifndef SIMU
+                                /* Service wdog */
+                                BOARD_WdogRefresh();
+#endif
 
                                 status = LMM_ClockNameGet(s_lm, clockId,
                                     &clockNameAddr, &wName);
@@ -1766,16 +1823,16 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                         if (status == SM_ERR_SUCCESS)
                                         {
                                             uint32_t maxKHz = UINT64_L(
-                                                range.highestRate/1000UL);
+                                                range.highestRate / 1000UL);
                                             uint32_t minKHz = UINT64_L(
-                                                range.lowestRate/1000UL);
+                                                range.lowestRate / 1000UL);
                                             printf("%03u: %*s MAX = %7uKHz,"
                                                 " MIN = %7uKHz\n", clockId,
                                                 -wName, clockNameAddr, maxKHz,
                                                 minKHz);
                                         }
                                     }
-                                    else
+                                    else if (subCmd == 1U)
                                     {
                                         uint32_t parent;
                                         status = LMM_ClockParentGet(s_lm,
@@ -1796,24 +1853,68 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                                             }
                                         }
                                     }
+                                    else
+                                    {
+                                        uint32_t parent;
+                                        uint32_t numParents = 0U;
+                                        if (LMM_ClockParentDescribe(s_lm,
+                                            clockId, 0U, &parent, &numParents)
+                                            != SM_ERR_SUCCESS)
+                                        {
+                                            numParents = 0U;
+                                        }
+
+                                        for (uint32_t sel = 0U; sel < numParents;
+                                            sel++)
+                                        {
+                                            status = LMM_ClockParentDescribe(s_lm,
+                                                clockId, sel, &parent, &numParents);
+
+                                            if (status == SM_ERR_SUCCESS)
+                                            {
+                                                string parentNameAddr;
+                                                if (LMM_ClockNameGet(s_lm, parent,
+                                                    &parentNameAddr, NULL)
+                                                    == SM_ERR_SUCCESS)
+                                                {
+                                                    if (sel == 0)
+                                                    {
+                                                        printf("%03u: %*s parent "
+                                                            "= %u (%s)\n",
+                                                            clockId, -wName,
+                                                            clockNameAddr, parent,
+                                                            parentNameAddr);
+                                                    }
+                                                    else
+                                                    {
+                                                        printf("     %*s parent "
+                                                            "= %u (%s)\n",
+                                                            -wName, "", parent,
+                                                            parentNameAddr);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             break;
 
                         /* ext */
-                        case 2:
+                        case 3:
                             {
                                 errno = 0;
                                 uint32_t ext = 0x80U;
-                                if (argc > 1)
+                                if (newArgc > 1)
                                 {
-                                    ext = strtoul(argv[1], NULL, 0);
+                                    ext = strtoul(argv[firstArgv + 1U],
+                                        NULL, 0);
                                 }
 
                                 if (errno == 0)
                                 {
-                                    for (uint32_t clockId = 0U;
-                                        clockId < SM_NUM_CLOCK; clockId++)
+                                    for (uint32_t clockId = startClk;
+                                        clockId <= stopClk; clockId++)
                                     {
                                         uint32_t extCfgValue = 0U;
 
@@ -1860,9 +1961,8 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                     "on",
                     "reparent",
                     "rate",
-                    "ext"
+                    "ex"
                 };
-
 
                 if (argc < 2)
                 {
@@ -1893,9 +1993,11 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                         case 2:
                             if (argc == 3)
                             {
-                                errno = 0;
-                                uint32_t parent = strtoul(argv[2], NULL, 0);
-                                if (errno == 0)
+                                uint32_t parent = 0U;
+
+                                if (MONITOR_NameToId(argv[2], &parent,
+                                    LMM_ClockNameGet, SM_NUM_CLOCK)
+                                    == SM_ERR_SUCCESS)
                                 {
                                     status = LMM_ClockParentSet(s_lm,
                                         clockId, parent);
@@ -2381,10 +2483,10 @@ static int32_t MONITOR_CmdBb(int32_t argc, const char * const argv[],
             case 0:  /* rtc */
                 status = MONITOR_CmdBbRtc(argc - 1, &argv[1], rw);
                 break;
-            case 1:  /* lifecycle */
+            case 1:  /* ticks */
                 status = MONITOR_CmdBbTicks(argc - 1, &argv[1], rw);
                 break;
-            case 2:  /* events */
+            case 2:  /* gpr */
                 status = MONITOR_CmdBbGpr(argc - 1, &argv[1], rw);
                 break;
             default:
@@ -2810,7 +2912,6 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                         status = LMM_MiscControlSet(s_lm, ctrl, numVal,
                             val);
                     }
-
                 }
                 else
                 {
@@ -2835,6 +2936,59 @@ static int32_t MONITOR_CmdCtrl(int32_t argc, const char * const argv[],
                     {
                         status = LMM_MiscControlFlagsSet(s_lm, ctrl,
                             flags);
+                    }
+                }
+                else
+                {
+                    status = SM_ERR_MISSING_PARAMETERS;
+                }
+            }
+            break;
+        case ACTION:  /* action */
+            {
+                if (argc >= 2)
+                {
+                    uint32_t ctrl;
+                    uint32_t action = 0U;
+                    uint32_t numVal = 0U;
+                    uint32_t val[24] = { 0 };
+                    uint32_t numRtn = 0U;
+                    uint32_t rtn[24];
+
+                    status = MONITOR_ConvU32(argv[0], &ctrl);
+
+                    if ((ctrl & LMM_CTRL_FLAG_BRD) != 0U)
+                    {
+                        ctrl &= ~LMM_CTRL_FLAG_BRD;
+                        ctrl += DEV_SM_NUM_CTRL;
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = MONITOR_ConvU32(argv[1], &action);
+                    }
+
+                    while ((status == SM_ERR_SUCCESS) && (numVal <
+                        ((uint32_t) argc) - 2U))
+                    {
+                        status = MONITOR_ConvU32(argv[numVal + 2U],
+                            &val[numVal]);
+                        numVal++;
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        status = LMM_MiscControlAction(s_lm, ctrl, action,
+                            numVal, val, &numRtn, rtn);
+                    }
+
+                    if (status == SM_ERR_SUCCESS)
+                    {
+                        for (uint32_t idx = 0U; idx < numRtn; idx++)
+                        {
+                            printf("0x%08X ", rtn[idx]);
+                        }
+                        printf("\n");
                     }
                 }
                 else
@@ -2998,7 +3152,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 16U) == 0U)
+                            if (((i + 1U) % 16U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())
@@ -3032,7 +3186,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 8U) == 0U)
+                            if (((i + 1U) % 8U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())
@@ -3066,7 +3220,7 @@ static int32_t MONITOR_CmdMd(int32_t argc, const char * const argv[],
                             }
                             x++;
 
-                            if (((i+1U) % 4U) == 0U)
+                            if (((i + 1U) % 4U) == 0U)
                             {
                                 printf("\n");
                                 if (MONITOR_CharPending())
@@ -3489,6 +3643,8 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
     {
         int32_t arg = 0;
         uint32_t grp = 0U;
+        bool graceful = false;
+        bool noReturn = false;
 
         if (argc > 1)
         {
@@ -3505,42 +3661,32 @@ static int32_t MONITOR_CmdGroup(int32_t argc, const char * const argv[])
             }
         }
 
-        if (arg >= argc)
+        int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
+            argv[arg]);
+        arg++;
+
+        /* Graceful? */
+        if (arg < argc)
         {
-            status = SM_ERR_MISSING_PARAMETERS;
+            graceful = true;
         }
-        else
+
+        switch (sub)
         {
-            bool graceful = false;
-            bool noReturn = false;
-
-            int32_t sub = MONITOR_FindN(cmds, (int32_t) ARRAY_SIZE(cmds),
-                argv[arg]);
-            arg++;
-
-            /* Graceful? */
-            if (arg < argc)
-            {
-                graceful = true;
-            }
-
-            switch (sub)
-            {
-                case 0:  /* boot */
-                    status = LMM_SystemGrpBoot(0U, 0U, &g_swReason, grp);
-                    break;
-                case 1:  /* shutdown */
-                    status = LMM_SystemGrpShutdown(0U, 0U, graceful,
-                        &g_swReason, grp, &noReturn);
-                    break;
-                case 2:  /* reset */
-                    status = LMM_SystemGrpReset(0U, 0U, graceful,
-                        &g_swReason, grp, &noReturn);
-                    break;
-                default:
-                    status = SM_ERR_INVALID_PARAMETERS;
-                    break;
-            }
+            case 0:  /* boot */
+                status = LMM_SystemGrpBoot(0U, 0U, &g_swReason, grp);
+                break;
+            case 1:  /* shutdown */
+                status = LMM_SystemGrpShutdown(0U, 0U, graceful,
+                    &g_swReason, grp, &noReturn);
+                break;
+            case 2:  /* reset */
+                status = LMM_SystemGrpReset(0U, 0U, graceful,
+                    &g_swReason, grp, &noReturn);
+                break;
+            default:
+                status = SM_ERR_INVALID_PARAMETERS;
+                break;
         }
     }
     else
@@ -3612,6 +3758,95 @@ static int32_t MONITOR_CmdTest(int32_t argc, const char * const argv[])
             /* Set test mode */
             SM_TestModeSet(testMode);
         }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Delay command                                                            */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdDelay(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (argc < 1)
+    {
+        status = SM_ERR_MISSING_PARAMETERS;
+    }
+    else
+    {
+        int32_t ms;
+
+        /* Parse data */
+        status = MONITOR_ConvI32(argv[0], &ms);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            if (ms >= 0)
+            {
+                MONITOR_ExitCS();
+                SystemTimeDelay(((uint32_t) ms) * 1000U);
+                MONITOR_EnterCS();
+            }
+            else
+            {
+                SystemTimeDelay(((uint32_t) -ms) * 1000U);
+            }
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* DDR command                                                              */
+/*--------------------------------------------------------------------------*/
+static int32_t MONITOR_CmdDdr(int32_t argc, const char * const argv[])
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    uint32_t ddrRgdId = 0U;
+    uint32_t numRgd = 1U;
+
+    /* Loop over regions */
+    while ((status == SM_ERR_SUCCESS) && (ddrRgdId < numRgd))
+    {
+        uint32_t ddrType;
+        uint32_t ddrWidth;
+        bool eccEnb;
+        uint32_t mts;
+        uint64_t startAddr;
+        uint64_t endAddr;
+
+        string const ddrTypeNames[] =
+        {
+            "5",
+            "5X",
+            "4",
+            "4X"
+        };
+
+        /* Get region info */
+        status = LMM_MiscDdrInfoGet(0U, ddrRgdId, &numRgd, &ddrType,
+            &ddrWidth, &eccEnb, &mts, &startAddr, &endAddr);
+
+        if (status == SM_ERR_SUCCESS)
+        {
+            printf("%03u: LPDDR%s-%u (x%u", ddrRgdId, ddrTypeNames[ddrType],
+                mts, ddrWidth);
+            if (eccEnb)
+            {
+                printf(", ecc");
+            }
+            printf("), 0x%X%08X", INT64_H(startAddr), INT64_L(startAddr));
+            printf("-0x%X%08X\n", INT64_H(endAddr), INT64_L(endAddr));
+        }
+
+        /* Next region */
+        ddrRgdId++;
     }
 
     /* Return status */

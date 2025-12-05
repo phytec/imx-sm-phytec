@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -50,9 +50,6 @@
 
 /* Local variables */
 
-static uint32_t numDevCtrl = 0U;
-static uint32_t numBrdCtrl = 0U;
-
 /* Local functions */
 
 static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
@@ -72,6 +69,10 @@ void TEST_ScmiMisc(void)
     uint32_t channel = 0U;
     uint32_t ctrlId = 0U;
     uint32_t lmId = 0U;
+    uint32_t numDevCtrl = 0U;
+#ifdef INC_LIBC
+    uint32_t numBrdCtrl = 0U;
+#endif
 
     /* RPC_00350 RPC_00160 Misc tests */
     printf("**** Misc Protocol Tests ***\n\n");
@@ -103,7 +104,9 @@ void TEST_ScmiMisc(void)
         CHECK(SCMI_MiscProtocolAttributes(SM_TEST_DEFAULT_CHN,
             &attributes));
         numDevCtrl = SCMI_MISC_PROTO_ATTR_NUM_DEV_CTRL(attributes);
+#ifdef INC_LIBC
         numBrdCtrl = SCMI_MISC_PROTO_ATTR_NUM_BRD_CTRL(attributes);
+#endif
         printf("  numDevCtrl=%u\n", numDevCtrl);
         printf("  numBrdCtrl=%u\n", numBrdCtrl);
     }
@@ -143,6 +146,36 @@ void TEST_ScmiMisc(void)
         /* Branch -- Nullpointer */
         CHECK(SCMI_MiscDiscoverBuildInfo(SM_TEST_DEFAULT_CHN, NULL,
             NULL, NULL, NULL));
+    }
+
+    /* Test DDR info */
+    {
+        uint32_t attributes;
+        uint32_t mts;
+        uint32_t startLow;
+        uint32_t startHigh;
+        uint32_t endLow;
+        uint32_t endHigh;
+
+        printf("SCMI_MiscDdrInfoGet(%u)\n",
+            SM_TEST_DEFAULT_CHN);
+        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+            &attributes, &mts, &startLow, &startHigh,
+            &endLow, &endHigh));
+
+        printf("  attributes=0x%08X\n",  attributes);
+        printf("  mts=%u\n",  mts);
+        printf("  start=0x%X%08X\n",  startHigh, startLow);
+        printf("  end=0x%X%08X\n",  endHigh, endLow);
+
+        /* Branch -- Invalid Channel */
+        NECHECK(SCMI_MiscDdrInfoGet(SM_SCMI_NUM_CHN, 0U,
+            NULL, NULL, NULL, NULL, NULL, NULL),
+            SCMI_ERR_INVALID_PARAMETERS);
+
+        /* Branch -- Nullpointer */
+        CHECK(SCMI_MiscDdrInfoGet(SM_TEST_DEFAULT_CHN, 0U,
+            NULL, NULL, NULL, NULL, NULL, NULL));
     }
 
     /* MiscReasonAttributes */
@@ -460,7 +493,7 @@ void TEST_ScmiMisc(void)
         TEST_ScmiMiscGet(perm >= SM_SCMI_PERM_GET, channel, sCtrlId);
 
         /* RPC_00170 Test functions with notify perms required */
-        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY,channel, sCtrlId);
+        TEST_ScmiMiscNotify(perm >= SM_SCMI_PERM_NOTIFY, channel, sCtrlId);
 
         /* Test functions with EXCLUSIVE perm required */
         TEST_ScmiMiscExclusive(perm >= SM_SCMI_PERM_EXCLUSIVE, channel,
@@ -490,6 +523,12 @@ static void TEST_ScmiMiscGet(bool pass, uint32_t channel,
     {
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlGet(channel, ctrlId, &numVal, &val));
+
+#ifndef SIMU
+        printf("SCMI_MiscControlExtGet(%u, %u)\n", channel, ctrlId);
+        NECHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, 0U, &numVal, &val),
+            SM_ERR_NOT_SUPPORTED);
+#endif
 
         /* Branch -- Nullpointer */
         CHECK(SCMI_MiscControlGet(channel, ctrlId, NULL, NULL));
@@ -581,6 +620,25 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         printf("SCMI_MiscControlGet(%u, %u)\n", channel, ctrlId);
         CHECK(SCMI_MiscControlGet(channel, ctrlId, &numVal, rtnVal));
 
+#ifndef SIMU
+        printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+        NECHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal,
+            &val), SM_ERR_NOT_SUPPORTED);
+#else
+        if (ctrlId == DEV_SM_CTRL_TEST_E)
+        {
+            printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal,
+                &val));
+
+            numVal = 1U;
+            printf("SCMI_MiscControlExtGet(%u, %u)\n", channel, ctrlId);
+            CHECK(SCMI_MiscControlExtGet(channel, ctrlId, 0U, numVal, &numVal,
+                &val));
+            printf("SCMI_MiscControlExtGet: extVal: %x\n", val);
+        }
+#endif
+
 #ifdef SIMU
         if ((numVal != 1U) || (rtnVal[0] != 0x1234ABCDU))
         {
@@ -611,14 +669,10 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
 
 #ifdef SIMU
         /* Reset Config */
-        if (pass)
-        {
-            /* Reset */
-            uint32_t sysManager = 0U;
-            printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
-            CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
-                &g_swReason));
-        }
+        uint32_t sysManager = 0U;
+        printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
+        CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
+            &g_swReason));
 #endif
     }
     /* Access denied */
@@ -631,6 +685,11 @@ static void TEST_ScmiMiscExclusive(bool pass, uint32_t channel,
         /* Control Action */
         NECHECK(SCMI_MiscControlAction(channel, ctrlId, 23U, 3, arg,
             &numVal, rtnVal), SCMI_ERR_DENIED);
+
+#ifndef SIMU
+        printf("SCMI_MiscControlExtSet(%u, %u)\n", channel, ctrlId);
+        CHECK(SCMI_MiscControlExtSet(channel, ctrlId, 0U, numVal, numVal, &val));
+#endif
     }
 }
 

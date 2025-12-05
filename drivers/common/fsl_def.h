@@ -42,6 +42,9 @@
 /*! Macro to convert to a U32 */
 #define U32(X)         ((uint32_t)((X) & 0xFFFFFFFFU))
 
+/*! Macro to convert to a U64 */
+#define U64(X)         ((uint64_t)(X))
+
 /*! Macro to convert a U64 to a U32 */
 #define U64_U32(X)     ((uint32_t)(((uint64_t) (X)) & 0xFFFFFFFFULL))
 

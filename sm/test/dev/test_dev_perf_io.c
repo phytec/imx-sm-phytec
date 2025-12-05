@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **
-** Copyright 2023-2024 NXP
+** Copyright 2023-2025 NXP
 **
 ** Redistribution and use in source and binary forms, with or without modification,
 ** are permitted provided that the following conditions are met:
@@ -44,7 +44,7 @@
 #include "fsl_systick.h"
 
 /* Local defines */
-#define WRITE32(a,v)    (*(volatile uint32_t *)(a) = (v))
+#define WRITE32(a, v)    (*(volatile uint32_t *)(a) = (v))
 #define READ32(a)       (*(volatile uint32_t *)(a))
 
 /* Local types */

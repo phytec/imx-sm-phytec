@@ -312,7 +312,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
     uint32_t faultStatus, uint32_t faultAddr);
 static void FaultHandler(uint32_t faultId);
 static irq_prio_info_t *IrqPrioMap(IRQn_Type irq);
-static void IrqPrioBoost(irq_prio_info_t const * pInfo,uint32_t relPrio);
+static void IrqPrioBoost(irq_prio_info_t const * pInfo, uint32_t relPrio);
 static void IrqPrioUpdateRelative(irq_prio_info_t const *pInfo,
     uint32_t relPrio);
 static void IrqPrioUpdate(irq_prio_info_t *pInfo);
@@ -340,11 +340,11 @@ void NMI_Handler(const uint32_t *sp)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Wait for delayed FCCU reaction (PMIC reset) */
-        // coverity[infinite_loop:FALSE]
+        // coverity[infinite_loop]
         while (true)
         {
             ;  /* Intentional empty while */
@@ -409,10 +409,17 @@ void UsageFault_Handler(const uint32_t *sp)
 /*--------------------------------------------------------------------------*/
 void SysTick_Handler(void)
 {
+    /*
+     * Intentional: Upon overflow value will rollback to zero.
+     */
+    // coverity[cert_int30_c_violation]
     s_smTimeMsec += BOARD_TICK_PERIOD_MSEC;
 
     /* Call system tick */
     DEV_SM_SystemTick(BOARD_TICK_PERIOD_MSEC);
+
+    /* Call mem tick */
+    DEV_SM_MemTick(BOARD_TICK_PERIOD_MSEC);
 
     /* Call sensor tick */
     DEV_SM_SensorTick(BOARD_TICK_PERIOD_MSEC);
@@ -528,7 +535,7 @@ void TMPSNS_CORTEXA_1_IRQHandler(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         DEV_SM_SensorHandler(1U, 1U);
@@ -545,7 +552,7 @@ void TMPSNS_CORTEXA_2_IRQHandler(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         DEV_SM_SensorHandler(1U, 2U);
@@ -1012,7 +1019,7 @@ int32_t DEV_SM_IrqPrioUpdate(void)
     irq -= 16;
 
     /* Map IRQ to entry in dynamic priority table */
-    // coverity[misra_c_2012_rule_10_5_violation:FALSE]
+    // coverity[misra_c_2012_rule_10_5_violation]
     irq_prio_info_t *pInfo = IrqPrioMap((IRQn_Type) irq);
 
     if (pInfo != NULL)
@@ -1043,7 +1050,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation:FALSE]
+    // coverity[cert_int31_c_violation]
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_CM33_EXC,
@@ -1063,7 +1070,7 @@ static void ExceptionHandler(IRQn_Type excId, const uint32_t *sp,
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Finalize system reset flow */
@@ -1087,7 +1094,7 @@ static void FaultHandler(uint32_t faultId)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation:FALSE]
+    // coverity[misra_c_2012_rule_14_3_violation]
     if (status == SM_ERR_SUCCESS)
     {
         /* Finalize fault flow */

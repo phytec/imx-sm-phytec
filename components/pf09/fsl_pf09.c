@@ -771,7 +771,7 @@ bool PF09_GpioCtrlGet(const PF09_Type *dev, uint8_t gpio, uint8_t state,
 
         if (rc)
         {
-            uint8_t ctrlMask = U8((1U << (state * 4U)) + gpio);
+            uint8_t ctrlMask = U8(1U << ((state * 4U) + gpio));
 
             *ctrl = ((ctrlVal & ctrlMask) != 0U);
         }
@@ -1121,7 +1121,7 @@ bool PF09_MonitorEnable(const PF09_Type *dev, uint8_t monitor, bool monEn)
     {
         /* Write 8-bits */
         rc = PF09_PmicWrite(dev,
-            PF09_REG_VMON1_RUN_CFG + ((monitor-PF09_VMON1) * 3U),
+            PF09_REG_VMON1_RUN_CFG + ((monitor - PF09_VMON1) * 3U),
             code,
             0x80U);
     }
@@ -1336,7 +1336,7 @@ static bool PF09_ConvertCode2Volts(uint8_t regulator, uint8_t voltCode,
             {
                 microV = 500000U + ((code - 0x9U) * 6250U);
             }
-            else if (code ==0x9FU)
+            else if (code == 0x9FU)
             {
                 microV = 1500000U;
             }

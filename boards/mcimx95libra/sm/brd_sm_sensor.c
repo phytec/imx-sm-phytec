@@ -132,7 +132,10 @@ int32_t BRD_SM_SensorReadingGet(uint32_t sensorId, int64_t *sensorValue,
                         rc = PF09_TempGet(&g_pf09Dev, &temp);
                         break;
                     case BRD_SM_SENSOR_TEMP_PF5301:
-                        rc = PF53_TempGet(&g_pf5301Dev, &temp);
+                        if (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON)
+                            rc = PF53_TempGet(&g_pf5301Dev, &temp);
+                        else
+                            rc = false;
                         break;
                     case BRD_SM_SENSOR_TEMP_PF5302:
                         rc = PF53_TempGet(&g_pf5302Dev, &temp);
@@ -216,14 +219,21 @@ int32_t BRD_SM_SensorEnable(uint32_t sensorId, bool enable, bool timestampReport
         if (sensorId < DEV_SM_NUM_SENSOR) {
             status = DEV_SM_SensorEnable(sensorId, enable, timestampReporting);
         } else {
-            uint32_t brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
+            uint32_t const brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
+            uint32_t const pf5301SId = BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR;
 
             /* Timestamp not supported */
             if (timestampReporting) {
                 status = SM_ERR_NOT_SUPPORTED;
             } else {
-                /* Record sensor enable */
-                sensorEnb[brdSensorId] = enable;
+                if ((brdSensorId == pf5301SId) && enable) {
+                    if (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON)
+                        sensorEnb[pf5301SId] = enable;
+                    else
+                        status = SM_ERR_POWER;
+                } else {
+                    sensorEnb[brdSensorId] = enable;
+                }
 
                 /* Disable alarm */
                 if ((sensorId == BRD_SM_SENSOR_TEMP_PF09) && !sensorEnb[brdSensorId]) {
@@ -252,8 +262,14 @@ int32_t BRD_SM_SensorIsEnabled(uint32_t sensorId, bool *enabled, bool *timestamp
         if (sensorId < DEV_SM_NUM_SENSOR) {
             status = DEV_SM_SensorIsEnabled(sensorId, enabled, timestampReporting);
         } else {
+            uint32_t const brdSensorId = sensorId - DEV_SM_NUM_SENSOR;
+            uint32_t const pf5301SId = BRD_SM_SENSOR_TEMP_PF5301 - DEV_SM_NUM_SENSOR;
             /* Return sensor enable */
-            *enabled = sensorEnb[sensorId - DEV_SM_NUM_SENSOR];
+            if (brdSensorId == pf5301SId) {
+                *enabled = (BRD_SM_ArmVoltModeGet() == DEV_SM_VOLT_MODE_ON) && sensorEnb[pf5301SId];
+            } else {
+                *enabled = sensorEnb[brdSensorId];
+            }
             *timestampReporting = false;
         }
     } else {

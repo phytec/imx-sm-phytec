@@ -205,6 +205,16 @@ void BRD_SM_VoltageSuspend(bool offArm);
  */
 void BRD_SM_VoltageRestore(void);
 
+/*!
+ * Get the ARM voltage mode.
+ *
+ * This function return the PF5302(ARM supply) mode.
+ *
+ * @return Returns the voltage mode.
+ */
+uint32_t BRD_SM_ArmVoltModeGet(void);
+
+
 #endif /* BRD_SM_VOLTAGE_H */
 
 /** @} */

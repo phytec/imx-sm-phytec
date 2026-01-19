@@ -444,3 +444,11 @@ void BRD_SM_VoltageRestore(void) {
         /* Restore voltage as enable resets the PF53 */
         (void) BRD_SM_VoltageLevelSet(DEV_SM_VOLT_ARM, s_levelArm);
 }
+
+/*--------------------------------------------------------------------------*/
+/* Return the ARM volt mode                                                 */
+/*--------------------------------------------------------------------------*/
+uint32_t BRD_SM_ArmVoltModeGet(void) {
+    /* Return status */
+    return s_modeArm;
+}

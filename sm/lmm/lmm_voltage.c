@@ -70,8 +70,8 @@ int32_t LMM_VoltageNameGet(uint32_t lmId, uint32_t domainId,
      * of underrun has already been properly handled within the underlying
      * function (BRD_SM_VoltageNameGet).
      */
-    // coverity[cert_arr30_c_violation:FALSE]
-    // coverity[cert_str31_c_violation:FALSE]
+    /* coverity[cert_arr30_c_violation:FALSE] */
+    /* coverity[cert_str31_c_violation:FALSE] */
     return SM_VOLTAGENAMEGET(domainId, voltNameAddr, len);
 }
 

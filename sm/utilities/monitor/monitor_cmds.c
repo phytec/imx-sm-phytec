@@ -468,6 +468,7 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     uint32_t buildCommit = SM_COMMIT;
     const rom_passover_t *passover;
     const uint8_t *siName;
+    const uint8_t *pnName;
     uint32_t deviceId;
     uint32_t siRev;
     uint32_t partNum;
@@ -486,10 +487,10 @@ static int32_t MONITOR_CmdInfo(int32_t argc, const char * const argv[])
     printf("Board         = %s, attr=0x%08X\n", BRD_SM_NAME, BRD_SM_ATTR);
 
     /* Get the silicon info */
-    if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName)
-        == SM_ERR_SUCCESS)
+    if (SM_SIINFOGET(&deviceId, &siRev, &partNum, (string*) &siName,
+        (string*) &pnName) == SM_ERR_SUCCESS)
     {
-        printf("Silicon       = %s\n", siName);
+        printf("Silicon       = %s, M%s\n", siName, pnName);
     }
 
     /* Display ROM passover info */
@@ -1076,11 +1077,11 @@ static int32_t MONITOR_CmdReason(int32_t argc, const char * const argv[])
     }
     else
     {
-        /* Print boot reason */
-        BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
-
         /* Print shutdown reason */
         BRD_SM_ResetRecordPrint("Shutdown:", shutdownRec);
+
+        /* Print boot reason */
+        BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
     }
 
     /* Return status */
@@ -1524,11 +1525,11 @@ static int32_t MONITOR_CmdLmReason(int32_t argc, const char * const argv[],
         }
         else
         {
-            /* Print boot reason */
-            BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
-
             /* Print shutdown reason */
             BRD_SM_ResetRecordPrint("Shutdown:", shutdownRec);
+
+            /* Print boot reason */
+            BRD_SM_ResetRecordPrint("Boot:    ", bootRec);
         }
     }
 
@@ -1576,6 +1577,12 @@ static int32_t MONITOR_CmdPower(int32_t argc, const char * const argv[],
                             domainNameAddr, stateNameAddr);
                     }
                     MONITOR_Yield();
+                }
+
+                /* Handle reserved/fused domains */
+                if (status == SM_ERR_NOT_FOUND)
+                {
+                    status = SM_ERR_SUCCESS;
                 }
             }
             break;
@@ -1650,6 +1657,12 @@ static int32_t MONITOR_CmdPerf(int32_t argc, const char * const argv[],
                     {
                         printf("%03u: %*s = %u (%7ukHz)\n", domain, -wName,
                             perfName, perfLevel, desc.value);
+                    }
+
+                    /* Handle reserved/fused domains */
+                    if (status == SM_ERR_NOT_FOUND)
+                    {
+                        status = SM_ERR_SUCCESS;
                     }
                 }
             }
@@ -1777,6 +1790,12 @@ static int32_t MONITOR_CmdClock(int32_t argc, const char * const argv[],
                             break;
                         }
                         MONITOR_Yield();
+                    }
+
+                    /* Handle reserved clocks. */
+                    if ((startClk != stopClk) && (status == SM_ERR_NOT_FOUND))
+                    {
+                        status = SM_ERR_SUCCESS;
                     }
                 }
                 else
@@ -2301,6 +2320,12 @@ static int32_t MONITOR_CmdRst(int32_t argc, const char * const argv[],
                                 -wName, rstNameAddr);
                         }
                     }
+                }
+
+                /* Handle reserved/fused domains */
+                if (status == SM_ERR_NOT_FOUND)
+                {
+                    status = SM_ERR_SUCCESS;
                 }
             }
             break;

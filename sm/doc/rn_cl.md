@@ -2,232 +2,287 @@ Change List {#RN_CL}
 ===========
 
 The tables below also indicate which patch version, if any, in the previous release (
-imx_sm_2025q2) includes the change. Note some of these patches may not have been released yet and
+imx_sm_2025q3) includes the change. Note some of these patches may not have been released yet and
 the data could change.
 
-SM 2025Q3 Change List {#RN_P0}
+SM 2025Q4 Change List {#RN_P0}
 ====================================
 
-Below is a list of changes between the previous release (imx_sm_2025q2) and this release (imx_sm_2025q3).
+Below is a list of changes between the previous release (imx_sm_2025q3) and this release (imx_sm_2025q4).
 
 New Feature {#RN_CL_NEW}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-263](https://jira.sw.nxp.com/projects/SM/issues/SM-263) | Add monitor delay command [[detail]](@ref RN_DETAIL_SM_263) |   | Y | Y | Y | Y |
-| [SM-269](https://jira.sw.nxp.com/projects/SM/issues/SM-269) | Add device error log [[detail]](@ref RN_DETAIL_SM_269) |   | Y | Y | Y | Y |
-| [SM-275](https://jira.sw.nxp.com/projects/SM/issues/SM-275) | Add support for LP compute mode during system sleep [[detail]](@ref RN_DETAIL_SM_275) |   | Y | Y | Y | Y |
-| [SM-282](https://jira.sw.nxp.com/projects/SM/issues/SM-282) | Add SCMI message to get DDR info [[detail]](@ref RN_DETAIL_SM_282) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-240](https://jira.sw.nxp.com/projects/SM/issues/SM-240) | Add support for sending frequency/voltage change messages to ELE [[detail]](@ref RN_DETAIL_SM_240) |   | Y | Y |
+| [SM-293](https://jira.sw.nxp.com/projects/SM/issues/SM-293) | Implement misc controls for motor control BLK_CTRL register [[detail]](@ref RN_DETAIL_SM_293) |   | | Y |
+| [SM-294](https://jira.sw.nxp.com/projects/SM/issues/SM-294) | Support system reset on DDR ECC multi-bit error [[detail]](@ref RN_DETAIL_SM_294) |   | Y | Y |
 
 Improvement {#RN_CL_IMP}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-250](https://jira.sw.nxp.com/projects/SM/issues/SM-250) | Save/restore A55 TMPSNS thresholds across mix resets  [[detail]](@ref RN_DETAIL_SM_250) |   | Y | Y | Y | Y |
-| [SM-252](https://jira.sw.nxp.com/projects/SM/issues/SM-252) | Coding standard fixes and test improvements [[detail]](@ref RN_DETAIL_SM_252) |   | Y | Y | Y | Y |
-| [SM-268](https://jira.sw.nxp.com/projects/SM/issues/SM-268) | Add CGC parent nodes to discoverable clock tree attributes [[detail]](@ref RN_DETAIL_SM_268) |   | Y | Y | Y | Y |
-| [SM-270](https://jira.sw.nxp.com/projects/SM/issues/SM-270) | RTC PCA2131 miscellaneous fixes [[detail]](@ref RN_DETAIL_SM_270) |   | Y | Y | Y | Y |
-| [SM-277](https://jira.sw.nxp.com/projects/SM/issues/SM-277) | Make ports to various SoC more common [[detail]](@ref RN_DETAIL_SM_277) |   | Y | Y | Y | Y |
-| [SM-278](https://jira.sw.nxp.com/projects/SM/issues/SM-278) | Create new config file to demonstrate NETC sharing [[detail]](@ref RN_DETAIL_SM_278) |   | | | | Y |
-| [SM-279](https://jira.sw.nxp.com/projects/SM/issues/SM-279) | Support M33S DDR target boot [[detail]](@ref RN_DETAIL_SM_279) |   | | | | Y |
-| [SM-284](https://jira.sw.nxp.com/projects/SM/issues/SM-284) | Give M33S permission to PERF domain [[detail]](@ref RN_DETAIL_SM_284) |   | | | | Y |
-| [SM-292](https://jira.sw.nxp.com/projects/SM/issues/SM-292) | Move DDR RxReplica pathPhase initialization to OEI [[detail]](@ref RN_DETAIL_SM_292) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-192](https://jira.sw.nxp.com/projects/SM/issues/SM-192) | Remove support for i.MX95 A0/1 [[detail]](@ref RN_DETAIL_SM_192) |   | | |
+| [SM-286](https://jira.sw.nxp.com/projects/SM/issues/SM-286) | Improve test coverage [[detail]](@ref RN_DETAIL_SM_286) |   | Y | Y |
+| [SM-295](https://jira.sw.nxp.com/projects/SM/issues/SM-295) | Misc. config file changes [[detail]](@ref RN_DETAIL_SM_295) |   | Y | Y |
+| [SM-296](https://jira.sw.nxp.com/projects/SM/issues/SM-296) | Enable SMCT config tool to replace configtool.pl in 'make cfg' [[detail]](@ref RN_DETAIL_SM_296) |   | Y | Y |
+| [SM-300](https://jira.sw.nxp.com/projects/SM/issues/SM-300) | Change Coverity comments to C style [[detail]](@ref RN_DETAIL_SM_300) |   | Y | Y |
+| [SM-303](https://jira.sw.nxp.com/projects/SM/issues/SM-303) | Extend TRDC_CONFIG with information about MDAC features [[detail]](@ref RN_DETAIL_SM_303) |   | Y | Y |
+| [SM-308](https://jira.sw.nxp.com/projects/SM/issues/SM-308) | Display part number in monitor info command [[detail]](@ref RN_DETAIL_SM_308) |   | Y | Y |
+| [SM-309](https://jira.sw.nxp.com/projects/SM/issues/SM-309) | Update configtool to support DOM name attribute [[detail]](@ref RN_DETAIL_SM_309) |   | Y | Y |
+| [SM-312](https://jira.sw.nxp.com/projects/SM/issues/SM-312) | Assign UART3 to M33-S in the i.MX94 EVK config [[detail]](@ref RN_DETAIL_SM_312) |   | | Y |
+| [SM-313](https://jira.sw.nxp.com/projects/SM/issues/SM-313) | Enable watchdog earlier to protect boot [[detail]](@ref RN_DETAIL_SM_313) |   | Y | Y |
+| [SM-315](https://jira.sw.nxp.com/projects/SM/issues/SM-315) | Limit AP frequency based on fuses on i.MX94 [[detail]](@ref RN_DETAIL_SM_315) |   | | Y |
+| [SM-318](https://jira.sw.nxp.com/projects/SM/issues/SM-318) | Sync cfg changes to other cfgs files [[detail]](@ref RN_DETAIL_SM_318) |   | Y | Y |
 
 Bug {#RN_CL_BUG}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-265](https://jira.sw.nxp.com/projects/SM/issues/SM-265) | Some perf controlled clocks assigned to agents as clock controls [[detail]](@ref RN_DETAIL_SM_265) |   | Y | Y | Y | Y |
-| [SM-274](https://jira.sw.nxp.com/projects/SM/issues/SM-274) | A55 CORECLK mapping to ARM_PLL_DFS is incorrect on MX94 [[detail]](@ref RN_DETAIL_SM_274) |   | | | | Y |
-| [SM-276](https://jira.sw.nxp.com/projects/SM/issues/SM-276) | Monitor shows ARM voltage always on [[detail]](@ref RN_DETAIL_SM_276) |   | Y | Y | Y | |
-| [SM-281](https://jira.sw.nxp.com/projects/SM/issues/SM-281) | Incorrect rate returned for uninitialized DFS clock nodes [[detail]](@ref RN_DETAIL_SM_281) |   | Y | Y | Y | Y |
-| [SM-283](https://jira.sw.nxp.com/projects/SM/issues/SM-283) | BBNSM GPR use conflict between board port and cfg usage [[detail]](@ref RN_DETAIL_SM_283) |   | Y | Y | Y | Y |
-| [SM-288](https://jira.sw.nxp.com/projects/SM/issues/SM-288) | System unable to resume when both console and CAN are enabled as wakeups [[detail]](@ref RN_DETAIL_SM_288) |   | Y | Y | Y | Y |
-| [SM-289](https://jira.sw.nxp.com/projects/SM/issues/SM-289) | DATA definition for AP secure in default config files allows non-secure access [[detail]](@ref RN_DETAIL_SM_289) |   | Y | Y | Y | Y |
-| [SM-290](https://jira.sw.nxp.com/projects/SM/issues/SM-290) | CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit [[detail]](@ref RN_DETAIL_SM_290) |   | Y | Y | Y | Y |
-| [SM-291](https://jira.sw.nxp.com/projects/SM/issues/SM-291) | PCA2131 power mode configured even when call is for other RTC [[detail]](@ref RN_DETAIL_SM_291) |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-297](https://jira.sw.nxp.com/projects/SM/issues/SM-297) | Add LPI clock source dependency checking [[detail]](@ref RN_DETAIL_SM_297) |   | | Y |
+| [SM-298](https://jira.sw.nxp.com/projects/SM/issues/SM-298) | MU7-9 missing interrupt priority support [[detail]](@ref RN_DETAIL_SM_298) |   | | Y |
+| [SM-299](https://jira.sw.nxp.com/projects/SM/issues/SM-299) | NETC Switch MSI table not accessible [[detail]](@ref RN_DETAIL_SM_299) |   | | Y |
+| [SM-304](https://jira.sw.nxp.com/projects/SM/issues/SM-304) | Fix temp sensor anomalous behaviors [[detail]](@ref RN_DETAIL_SM_304) |   | Y | Y |
+| [SM-306](https://jira.sw.nxp.com/projects/SM/issues/SM-306) | Config tool fails to handle 'size' attribute on MRC resource assignment [[detail]](@ref RN_DETAIL_SM_306) |   | Y | Y |
+| [SM-307](https://jira.sw.nxp.com/projects/SM/issues/SM-307) | Config tool generates invalid config.mak file depending on input comment format [[detail]](@ref RN_DETAIL_SM_307) |   | Y | Y |
+| [SM-316](https://jira.sw.nxp.com/projects/SM/issues/SM-316) | Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_root  [[detail]](@ref RN_DETAIL_SM_316) |   | | Y |
+| [SM-319](https://jira.sw.nxp.com/projects/SM/issues/SM-319) | DRAM info not working properly when one chip select DRAMs are used [[detail]](@ref RN_DETAIL_SM_319) |   | Y | Y |
+| [SM-320](https://jira.sw.nxp.com/projects/SM/issues/SM-320) | Incorrect info returned for power and CPU domains disabled in fuses [[detail]](@ref RN_DETAIL_SM_320) |   | Y | Y |
 
 Silicon Workaround {#RN_CL_REQ}
 ------------
 
 These are a mix of silicon errata workarounds and recommended usage changes.
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-285](https://jira.sw.nxp.com/projects/SM/issues/SM-285) | Remove PMRO default val for i.MX95 [[detail]](@ref RN_DETAIL_SM_285) |   | Y | Y | Y | |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-310](https://jira.sw.nxp.com/projects/SM/issues/SM-310) | Block transactions to DDR memory before entering DDR retention  [[detail]](@ref RN_DETAIL_SM_310) |   | Y | Y |
+| [SM-311](https://jira.sw.nxp.com/projects/SM/issues/SM-311) | Align DDR rates to datasheet and OEI-DDR settings [[detail]](@ref RN_DETAIL_SM_311) |   | Y | Y |
 
 Documentation {#RN_CL_DOC}
 ------------
 
-| Key     | Summary                        | Patch | MX95<br> (A0) | MX95<br> (A1) | MX95<br> (B0) | MX94<br> (A0) |
-|------------|-------------------------------|-------|---|---|---|---|
-| [SM-237](https://jira.sw.nxp.com/projects/SM/issues/SM-237) | SM 2025Q3 documentation updates |   | Y | Y | Y | Y |
+| Key     | Summary                        | Patch | MX95<br> (B0) | MX94<br> (A0) |
+|------------|-------------------------------|-------|---|---|
+| [SM-287](https://jira.sw.nxp.com/projects/SM/issues/SM-287) | SM 2025Q4 documentation updates |   | Y | Y |
+| [SM-302](https://jira.sw.nxp.com/projects/SM/issues/SM-302) | Improve documentation for debugging reset issues [[detail]](@ref RN_DETAIL_SM_302) |   | Y | Y |
+| [SM-325](https://jira.sw.nxp.com/projects/SM/issues/SM-325) | Remind user build cfg if cfg file changed |   | Y | Y |
 
 Details {#CL_DETAIL}
 =======
 
 This section provides details for select changes.
 
-SM-250: Save/restore A55 TMPSNS thresholds across mix resets  {#RN_DETAIL_SM_250}
+SM-192: Remove support for i.MX95 A0/1 {#RN_DETAIL_SM_192}
 ----------
 
-Updated SM to save/restore temp sensor thresholds across sensor power down (e.g. A55 mix powered off during suspend).
+Support removed for i.MX95 A0/1. Functionality removed includes:
 
-SM-252: Coding standard fixes and test improvements {#RN_DETAIL_SM_252}
+- Workaround for errata 628654
+- Workaround for errata 52232
+- Run-time skip of MIX transaction blocking
+- Run-time skip of SMMU TBU/TCU control
+- Run-time copy of M7 boot address
+- Run-time skip of ANA sensor init
+
+If a customer needs A0/1 support, the commit can be reverted.
+
+SM-240: Add support for sending frequency/voltage change messages to ELE {#RN_DETAIL_SM_240}
 ----------
 
-Fixed the ISO21434 compliance issues (Cert-Int30C, Cert-Arr30C, Cert-Str31C, Cert-Int32C) in the SM code base. Some of these fixes are in NXP EVK board port code. Customers should make similar fixes to their board port code.
+For devices with security sensors enabled, SM must notify ELE when security-relevant clocks or supplies are being updated.  SM sends voltage/frequency update commands that are available starting with version 2.0.4 of the ELE firmware.
 
-SM-263: Add monitor delay command {#RN_DETAIL_SM_263}
+SM-286: Improve test coverage {#RN_DETAIL_SM_286}
 ----------
 
-Added a new delay command to the monitor. Used for test scripting. Takes one argument, milliseconds to delay. If positive, interrupts are enabled during the delay, and if negative interrupts are disabled during the delay.
+Added test code to increase statement/branch coverage. Areas of added tests include SCMI FuSa, LMM, and Misc. protocols.
 
-SM-265: Some perf controlled clocks assigned to agents as clock controls {#RN_DETAIL_SM_265}
+SM-293: Implement misc controls for motor control BLK_CTRL register {#RN_DETAIL_SM_293}
 ----------
 
-Reviewed clocks managed via the performance protocol. Updated the clock list for SM in all cfg files to show SM as the owner of those clocks. Modified the configtool to print a warning if any LMs are given access to those clocks via the clock protocol. Removed access in the EVK cfg files to some clocks (A55 clocks, M7 clock, and ISI clock) from the AP agents as those should be controlled only via the performance protocol. Customers should make similar changes to their cfg files.
+Implemented the following new controls:
 
-SM-268: Add CGC parent nodes to discoverable clock tree attributes {#RN_DETAIL_SM_268}
+- 11: ADC_TRIGGER
+- 12: HPF1_SYNC_SRC_CFG1
+- 13: HPF1_SYNC_SRC_CFG2
+- 14: HPF2_SYNC_SRC_CFG1
+- 15: HPF2_SYNC_SRC_CFG2
+- 16: HPF1_INTR_CTRL
+- 17: HPF2_INTR_CTRL
+- 18: ENDAT3_STATUS
+- 19: ENC_DIAG_MUX_SEL
+- 20: HPF_SYNC_OUT_CTL
+- 21: ENDAT_STRETCH_CTRL
+- 22: BISS1_PULSE_STR_CTL
+- 23: XBAR_TRIG_SYNC_2
+- 24: XBAR_TRIG_SYNC_3
+- 25: XBAR_TRIG_SYNC_4
+- 26: XBAR_DIR_CTRL_2
+
+Some of these get assigned based on ownership of related peripherals. The following must be granted explicitly in the cfg file:
+
+- DIAG_ENC_MUX_CTRL
+- ENDAT_STRCH_CTRL
+- HIPERFACE1_CTRL
+- HIPERFACE2_CTRL
+- HPF_SYNC_OUT_CTRL
+- XBAR_DIR_CTRL
+- XBAR_TRIG_CTRL
+
+Customers should assign these to any LM implementing motor control and rebuild their headers.
+
+SM-294: Support system reset on DDR ECC multi-bit error {#RN_DETAIL_SM_294}
 ----------
 
-CGC clock nodes have a single parent that should be discoverable by traversing the SCMI clock attributes.  SM was updated to return the respective parent node when using SCMI to query for possible parents of CGC nodes.
+Enabled the DDR ECC multi-bit error (MBE) fault in the FCCU config file. Added reaction settings in NXP SM cfg files (EVK, ALT) to reset the system. Like all faults, customers can specify to do nothing, reset the system, reset an LM, shutdown the system, shutdown an LM, or any of the other fault reaction types.
 
-This change also added a new SM debug monitor command 'clock.r possible' which will dump all the possible parents for the clocks (or a specified clock).
+Note if nothing is specified, then the default is to reset the system. If MBE reset is not desired, doing any of the following will disable MBR fault generation (and default system reset):  don't enable in the DDR OEI, disable in the FCCU (eMcem) config file, or specify none as the reaction type in the SM cfg file.
 
-SM-269: Add device error log {#RN_DETAIL_SM_269}
+SM-295: Misc. config file changes {#RN_DETAIL_SM_295}
 ----------
 
-Added error log word where each bit is an error flag. These are set during init of the SM if an error occurs but can't be reported and reboot is not the best response. Can be displayed with the monitor err/syslog commands. Can be retrieved as part of the syslog.
+Misc. cfg file changes:
 
-Bit flags are device specific but current definition for all is:
+- Removed PERF_DRAM from all agents (DVFS of DDR not supported).
+- Synced the Android cfg file to the EVK cfg file.
+- Changes to support fastboot. In addition, ELE must be made owner of EDMA2_MP, and EDMA2_CH0_1. The last must be removed from the AP-NS agent.
 
-- Bit0: DEV_SM_ERR_INITCLOCKS - BOARD_InitClocks() error
-- Bit1: DEV_SM_ERR_INITCONSOLE - BOARD_InitDebugConsole() error
-- Bit2: DEV_SM_ERR_INITTIMERS - BOARD_InitTimers() error
-- Bit3: DEV_SM_ERR_INITSERIAL - BOARD_InitSerialBus() error
 
-Customers should make similar changes to their board port code.
 
-SM-270: RTC PCA2131 miscellaneous fixes {#RN_DETAIL_SM_270}
+
+
+SM-296: Enable SMCT config tool to replace configtool.pl in 'make cfg' {#RN_DETAIL_SM_296}
 ----------
 
-Made miscellaneous changes to PCA2131 RTC code to:
- - Update the power management mode (PWRMNG[2:0]) in PCA2131_PowerModeSet() only when it changes.
- - Update the board code to fix the issue where the battery status is not displayed correctly during the first read.
- - Remove unnecessary checks from the iMX943 EVK board code.
+SMCT environment variable is now processed by Makefile during 'make cfg'. When SMCT variable is defined and contains a path to SM Configuration Tool directory, the tool is used to generate the output configuration files instead of the default configtool.pl. The SMCT tool needs python3 in PATH or specified as PYTHON3 variable while running `make cfg`.
 
-SM-274: A55 CORECLK mapping to ARM_PLL_DFS is incorrect on MX94 {#RN_DETAIL_SM_274}
+SM-297: Add LPI clock source dependency checking {#RN_DETAIL_SM_297}
 ----------
 
-The SM mappings for ARM_PLL_DFS[2:1] to A55 CORECLK[3:1] have been updated to reflect MX94 SoC connections.  The possible parents for a55c1_gpr_sel, a55c2_gpr_sel, and a55c3_gpr_sel have been updated accordingly.
+Clock roots of peripherals supporting the LPI function enabled must be active to complete q-channel handshakes triggered during low-power flows.  SM has added dependency checks to ensure the following:
+ 
+1. LPI clock source is active before enabling the LPI
+2. LPI clock source cannot be disabled after enabling the LPI
 
-Note that SM configures ARM_PLL_DFS[2:0] to the same frequency for A55 CPUs, so there is no impact to CPU performance levels related to updating these mappings.
+Failing to enforce this dependency can result in incomplete attempts to enter the targeted CPU sleep mode.  Such incomplete sleep mode transitions can subsequently cause hangs of the GPC hardware during reset/recovery of CPUs utilizing LPIs.
 
-SM-275: Add support for LP compute mode during system sleep {#RN_DETAIL_SM_275}
+SM-298: MU7-9 missing interrupt priority support {#RN_DETAIL_SM_298}
 ----------
 
-Support for CPU low-power compute mode has been added to enhance processing capability during system sleep mode.  CPUs requesting low-power compute mode can remain active during system sleep.  The NOCMIX and WAKEUPMIX dependencies during low-power compute can be specified for each CPU.
+Added IRQ priority support to MU7-9 handlers to match capabilities on MU1-6.
 
-The steps for a CPU to request low-power compute:
- * Use SYSTEM_POWER_STATE_SET to specify a minimum performance level during system sleep using the vendor-defined system sleep fields.
- * Use CPU_PER_LPM_CONFIG_SET to specify WAKEUPMIX/NOCMIX dependencies required by the CPU during system sleep.
- * Use CPU_SLEEP_MODE_SET with the SCMI_CPU_FLAGS_LP_COMPUTE to request low-power compute mode.
-
-CPUs must either be in SUSPEND or low-power compute mode to allow system sleep conditions.
-
-SM-276: Monitor shows ARM voltage always on {#RN_DETAIL_SM_276}
+SM-299: NETC Switch MSI table not accessible {#RN_DETAIL_SM_299}
 ----------
 
-Fixed issue in the PF09 driver with reading GPIO state.
+Added mapping in the NETC cfg file for the switch MSI-X page. Customers will need to regenerate their headers using the configtool.
 
-SM-277: Make ports to various SoC more common {#RN_DETAIL_SM_277}
+SM-300: Change Coverity comments to C style {#RN_DETAIL_SM_300}
 ----------
 
-Changes to align headers/port between i.MX95 and i.MX94. Some changes may affect customer board ports:
+Updated all Coverity-related comments to follow C-style (/* comment */) format as per coding standards. Verified that the changes do not impact functionality and that Coverity analysis runs successfully post-modification.
 
- - Renamed LPCAC_PC to M33_CACHE_CTRLPC
- - Renamed LPCAC_PS to M33_CACHE_CTRLPS
-
-Customers must make the same changes to their port. Failure to do so will break compilation.
-
-SM-278: Create new config file to demonstrate NETC sharing {#RN_DETAIL_SM_278}
+SM-302: Improve documentation for debugging reset issues {#RN_DETAIL_SM_302}
 ----------
 
-Created a new mx94evknetc.cfg file for use in demonstration/test of NETC sharing.
+Added a new top-level section to the documentation for SM debug. This section contains info on:
 
-SM-279: Support M33S DDR target boot {#RN_DETAIL_SM_279}
+- Reset/shutdown messages and causes
+- Debugging SCMI API and peripheral access issues
+- Errors during boot
+
+A new section was also added to the Configuration section on FCCU config.
+
+
+SM-303: Extend TRDC_CONFIG with information about MDAC features {#RN_DETAIL_SM_303}
 ----------
 
-Modified the mx94alt.cfg file to support an MSEL=3 option to boot just the M33S core.
+The configtool was updated to support KPA enable (kpaen) and SID size (sidsz) options when configuring a TRDC with the TRDC_CONFIG_n specification in a device cfg file.
 
-SM-281: Incorrect rate returned for uninitialized DFS clock nodes {#RN_DETAIL_SM_281}
+The only impact to customers is they should rebuild their SM config headers using the configtool.
+
+SM-304: Fix temp sensor anomalous behaviors {#RN_DETAIL_SM_304}
 ----------
 
-PLL DFS_Division_N registers reset to zero resulting in DFS MFI and MFI fields set to zero.  Requesting the rate for these PLL DFS nodes before initializing the output frequency can result in divide-by-zero operations or maximum integer values being returned during rate queries.  The PLL digital wrapper clamps the DFS MFI to be in the range of 2-255 and the DFS MFN in the range of 0-4, regardless of the value programmed into the DFS_Division_N registers.  The SM has been updated to consider the clamping behavior of the PLL digital wrapper during DFS rate calculations.
+Addressed the following anomalous behaviors in the *tmpsns* module:
 
-SM-282: Add SCMI message to get DDR info {#RN_DETAIL_SM_282}
+1. **Hardware error for board sensor (temp_pf53_arm) with mx95alt.cfg:**
+
+    Introduced a function to retrieve the ARM voltage mode prior to enabling the board sensor, ensuring proper initialization and avoiding hardware errors.
+
+2. **Incorrect sensor state visibility across agents:**
+
+    Implemented logic to reflect sensor state based on the agent's configuration. For example, if the M7 agent enables Sensor 1, only M7 will see its status as "ON". Additionally, when M7 sets trip-points and later disables the sensor, the associated trip-points are now correctly unset.
+
+Customers should make the same updates to their board port if it copies the i.MX95 EVK PMIC structure.
+
+SM-306: Config tool fails to handle 'size' attribute on MRC resource assignment {#RN_DETAIL_SM_306}
 ----------
 
-Added a new SCMI MISC API call to get information about the DDR memory regions. This function, SCMI_MiscDdrInfoGet(), takes a memory region parameter and returns info such as the associated DDR type, width, MTS, ECC, and start/end addresses. There can be multiple regions depending on the device DDR controller memory map, number of controllers, and interleave configuration. The SCMI MISC protocol version has been updated to 1.1.
+Fixed issue when using the size option for an MRC-based memory region. The end option worked but size did not.
 
-A new 'ddr' command has been added to the SM debug monitor to dump this information.
-
-In addition, this change fixed an issue with ECC and suspend/resume.
-
-SM-283: BBNSM GPR use conflict between board port and cfg usage {#RN_DETAIL_SM_283}
+SM-307: Config tool generates invalid config.mak file depending on input comment format {#RN_DETAIL_SM_307}
 ----------
 
-Changed all board ports to use GPR0-3 for shutdown record storage rather than GPR4-7. This now aligns with the default GPR ownership in the various cfg files.
+Corrected issue in the configftool where it did not correctly handle a single hash comment for the copyright.
 
- In brd_sm.c:
-
-```
-#define BRD_SM_RST_REC_FIRST  0U     /* First GPR for shutdown record */
-```
-
-If customers copied the EVK cfg file and EVK board port, they need to make the same change. The board port usage of GPR needs to align with the ownership of GPR specified in the cfg file.
-
-SM-284: Give M33S permission to PERF domain {#RN_DETAIL_SM_284}
+SM-308: Display part number in monitor info command {#RN_DETAIL_SM_308}
 ----------
 
-Updated the M33P_S resource with the PERF_M33S performance domain. Owners of this resource (usually the M33S itself) can then make SCMI calls to change performance levels.
+Added code to display the part number in the debug monitor info command. Note the package is not known on i.MX94. Also, some parts do not have the PART_NUM field programmed in fuses and the result will be 'x' in the displayed PN.
 
-Customers need to rebuild their header files using 'make cfg'.
-
-SM-285: Remove PMRO default val for i.MX95 {#RN_DETAIL_SM_285}
+SM-309: Update configtool to support DOM name attribute {#RN_DETAIL_SM_309}
 ----------
 
-i.MX95 RX Replica implementation assumed a value of 0x5000 for PMRO if the fuse was not programmed. With silicon rev B0, the PMRO fuse is always programmed as per silicon characterization. Hence, the default was removed.
+Added support for naming of DOM sections. These now require a name argument. Also added checking for names on LM and agents. Missing names will now error.
+Customers will need to add names to their DOM sections.
 
-SM-288: System unable to resume when both console and CAN are enabled as wakeups {#RN_DETAIL_SM_288}
+SM-310: Block transactions to DDR memory before entering DDR retention  {#RN_DETAIL_SM_310}
 ----------
 
-This issue was caused by a typo introduced during the MSG Coverity fixes. The resolution involved correcting the typo in the _CpuPerLpmConfigSet_ function.
+Before an LM requests to be suspended, it should first stop all bus masters. If it fails to do this, the SM can hang when it attempts to move the DDR into self-refresh. This is because the DDR controller stops responding to DDR transactions and they can then back up into the fabric and block SM access to the DDR controller.
 
-SM-289: DATA definition for AP secure in default config files allows non-secure access {#RN_DETAIL_SM_289}
+This fix uses the DDR TRDC MRC to block all accesses to DDR and return bus errors. After all LM are suspended and before the SM moves the DDR into self-refresh, all DDR MRC regions are invalidated. On resume, they are marked again as valid before starting any LM.
+
+SM-311: Align DDR rates to datasheet and OEI-DDR settings {#RN_DETAIL_SM_311}
 ----------
 
-Changed the definition for DATA in the AP secure section on the NXP cfg files to be secure R/W rather than non-secure R/W. This is already redefined as NS in the following AP non-secure section.
+DDR rates (MT/s) and the corresponding DDR PLL configuration was aligned to the latest datasheet and values programmed by OEI-DDR.  For MX95, the package type is now used to dynamically update the SCMI performance tables for DDR.
 
-The DATA define wasn't used in NXP cfg files so this did not cause any problem and the change did not result in any change to the generated headers. If customer cfg files used then secure DATA memory regions are accessible in a non-secure state. Customers should make this change and rebuild their headers.
-
-SM-290: CPU_ResetVectorSet() does not correctly handle addresses larger than 32-bit {#RN_DETAIL_SM_290}
+SM-312: Assign UART3 to M33-S in the i.MX94 EVK config {#RN_DETAIL_SM_312}
 ----------
 
-Fixed CPU vector address reconstruction in CPU_ResetVectorSet() and CPU_ResetVectorGet() APIs.
+The UART3 resource and IO30/31 pins moved from AP-NS to the M33-S. This allows for use of the same binary on OrangeBox.
 
-
-SM-291: PCA2131 power mode configured even when call is for other RTC {#RN_DETAIL_SM_291}
+SM-313: Enable watchdog earlier to protect boot {#RN_DETAIL_SM_313}
 ----------
 
-Move the PCA2131 power mode configuration into the else condition block of PCA2131 RTC support in the NXP reference board ports.
+In the startup assembly file, enable WDOG2 (one second timeout) first thing after the reset vector. Disable systick handling (and the resulting WDOG2 servicing) until all boot initialization is complete.
 
-SM-292: Move DDR RxReplica pathPhase initialization to OEI {#RN_DETAIL_SM_292}
+SM-315: Limit AP frequency based on fuses on i.MX94 {#RN_DETAIL_SM_315}
 ----------
 
-Move DDR RxReplica pathPhase initialization to OEI as more accurate to capture the pathPhase after data training. Also, Quickboot can use same set of PHY CSRs.
+Limit AP frequency based on speed grade fuses on iMX943. 
+
+SM-316: Update clock mux sources for i3c1_slow_clk_root and endat3_1_fast_clk_root  {#RN_DETAIL_SM_316}
+----------
+
+The source inputs available for the i3c1_slow_clk_root and endat3_1_fast_clk_root were updated to reflect the latest RM.
+
+SM-318: Sync cfg changes to other cfgs files {#RN_DETAIL_SM_318}
+----------
+
+Merged changes in the default EVK cfg file to the Android and NETC demo cfg files.
+
+SM-319: DRAM info not working properly when one chip select DRAMs are used {#RN_DETAIL_SM_319}
+----------
+
+Fixed code to correctly calculate the DDR size.
+
+SM-320: Incorrect info returned for power and CPU domains disabled in fuses {#RN_DETAIL_SM_320}
+----------
+
+Ensure SM returns the correct error when power domains and CPU cores are disabled in fuses. 
 

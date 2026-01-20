@@ -166,6 +166,17 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask);
  */
 int32_t DEV_SM_PowerRetMaskGet(uint32_t domainId, uint32_t *retMask);
 
+/*!
+ * Check if power domain is reserved.
+ *
+ * @param[in]     domainId            Identifier for the power domain
+ *
+ * This function allows the caller to check if a power domain is reserved.
+ *
+ * @return Returns true if reserved.
+ */
+bool DEV_SM_PdIsReserved(uint32_t domainId);
+
 #endif /* DEV_SM_POWER_API_H */
 
 /** @} */

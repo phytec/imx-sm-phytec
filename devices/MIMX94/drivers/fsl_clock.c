@@ -35,7 +35,6 @@
 #include "fsl_clock.h"
 #include "fsl_power.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 
@@ -169,7 +168,7 @@ const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
     [CLOCK_ROOT_I3C1SLOW][0] = CLOCK_SRC_OSC24M,
     [CLOCK_ROOT_I3C1SLOW][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2,
     [CLOCK_ROOT_I3C1SLOW][2] = CLOCK_SRC_SYSPLL1_PFD1_DIV2,
-    [CLOCK_ROOT_I3C1SLOW][3] = CLOCK_SRC_OSC24M,
+    [CLOCK_ROOT_I3C1SLOW][3] = CLOCK_SRC_FRO,
 
     [CLOCK_ROOT_LPI2C1][0] = CLOCK_SRC_OSC24M,
     [CLOCK_ROOT_LPI2C1][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2,
@@ -527,7 +526,7 @@ const uint8_t g_clockRootMux[CLOCK_NUM_ROOT][CLOCK_NUM_ROOT_MUX_SEL] =
     [CLOCK_ROOT_ENDAT22][3] = CLOCK_SRC_ENCPLL_PFD1,
 
     [CLOCK_ROOT_ENDAT31FAST][0] = CLOCK_SRC_OSC24M,
-    [CLOCK_ROOT_ENDAT31FAST][1] = CLOCK_SRC_SYSPLL1_PFD0_DIV2,
+    [CLOCK_ROOT_ENDAT31FAST][1] = CLOCK_SRC_SYSPLL1_PFD0,
     [CLOCK_ROOT_ENDAT31FAST][2] = CLOCK_SRC_SYSPLL1_PFD1_DIV2,
     [CLOCK_ROOT_ENDAT31FAST][3] = CLOCK_SRC_FRO,
 
@@ -1800,5 +1799,118 @@ bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     }
 
     return getSscConfig;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Query if LPI associated with the CCM root is active                      */
+/*--------------------------------------------------------------------------*/
+bool CLOCK_RootLpiIsActive(uint32_t rootIdx)
+{
+    bool rc = false;
+    bool checkLpi;
+    uint32_t lpcgIdx;
+
+    /* For LPI CCM roots managed by agents, map to LPCG instance  */
+    switch (rootIdx)
+    {
+        case CLOCK_ROOT_CAN1:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_CAN1;
+            break;
+
+        case CLOCK_ROOT_CAN2:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_CAN2;
+            break;
+
+        case CLOCK_ROOT_CAN3:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_CAN3;
+            break;
+
+        case CLOCK_ROOT_CAN4:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_CAN4;
+            break;
+
+        case CLOCK_ROOT_CAN5:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_CAN5;
+            break;
+
+        case CLOCK_ROOT_LPUART1:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART1;
+            break;
+
+        case CLOCK_ROOT_LPUART2:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART2;
+            break;
+
+        case CLOCK_ROOT_LPUART3:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART3;
+            break;
+
+        case CLOCK_ROOT_LPUART4:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART4;
+            break;
+
+        case CLOCK_ROOT_LPUART5:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART5;
+            break;
+
+        case CLOCK_ROOT_LPUART6:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART6;
+            break;
+
+        case CLOCK_ROOT_LPUART7:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART7;
+            break;
+
+        case CLOCK_ROOT_LPUART8:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART8;
+            break;
+
+        case CLOCK_ROOT_LPUART9:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART9;
+            break;
+
+        case CLOCK_ROOT_LPUART10:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART10;
+            break;
+
+        case CLOCK_ROOT_LPUART11:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART11;
+            break;
+
+        case CLOCK_ROOT_LPUART12:
+            checkLpi = true;
+            lpcgIdx = CLOCK_LPCG_LPUART12;
+            break;
+
+        default:
+            checkLpi = false;
+            break;
+    }
+
+    /* Check if LPI status should be checked */
+    if (checkLpi)
+    {
+        /* LPI is active if CPULPM_MODE is set in the corresponding LPCG */
+        rc = ((CCM_CTRL->LPCG[lpcgIdx].AUTHEN &
+            CCM_LPCG_AUTHEN_CPULPM_MODE_MASK) != 0U);
+    }
+
+    return rc;
 }
 

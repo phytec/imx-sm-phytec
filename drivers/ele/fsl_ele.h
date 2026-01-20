@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 NXP
+ * Copyright 2023-2025 NXP
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -56,13 +56,25 @@
 #define ELE_PATCH_VER(X)    ((X) & 0xFUL)           /*!< Extract ELE patch ver */
 /** @} */
 
-#ifdef NO_DEVICE_ACCESS
 /*!
- * This variable is used to access fake ELE.
+ * @name ELE DVFS flags
  */
-extern uint32_t temp_ele[];
-#define HAS_TEMP_ELE
-#endif
+/** @{ */
+#define ELE_DVFS_FLAG_BBSM              (0x01U)     /*!< Enter BBSM power mode */
+#define ELE_DVFS_FLAG_SUSPEND           (0x02U)     /*!< Enter system suspend power mode */
+#define ELE_DVFS_FLAG_UPDATE_VLT        (0x04U)     /*!< Update voltage */
+#define ELE_DVFS_FLAG_UPDATE_FREQ_ELE   (0x08U)     /*!< Update ELE frequency */
+#define ELE_DVFS_FLAG_UPDATE_FREQ_M33   (0x10U)     /*!< Update M33 frequency */
+/** @} */
+
+/*!
+ * @name ELE DVFS modes
+ */
+/** @{ */
+#define ELE_DVFS_MODE_UD                (0x10U)     /*!< Underdrive voltage mode */
+#define ELE_DVFS_MODE_NM                (0x20U)     /*!< Nominal voltage mode */
+#define ELE_DVFS_MODE_OD                (0x40U)     /*!< Overdrive voltage mode */
+/** @} */
 
 /* Types */
 
@@ -166,6 +178,8 @@ typedef struct
     uint32_t oemPqcSrkh[16]; /*!< OEM PQC SRKH */
     uint32_t reserved[8];    /*!< Reserved */
 } ele_info_t;
+
+/* Global variables */
 
 /* Functions */
 
@@ -307,6 +321,27 @@ void ELE_EnableApcRequest(void);
  * info including the CPU values.
  */
 void ELE_EnableAuxRequest(uint32_t core);
+
+/*!
+ * Start voltage/frequency change.
+ *
+ * @param[in]     flags          Change operation flags
+ * @param[in]     mode           Voltage mode
+ * @param[in]     eleMhz         New ELE frequency (Mhz)
+ * @param[in]     m33Mhz         New M33 frequency (Mhz)
+ *
+ * This function is used to notify ELE that a security-relevant voltage/frequency
+ * is being updated.  When done, ELE_StopDvfsChange() must be called.
+ */
+void ELE_StartDvfsChange(uint32_t flags, uint32_t mode, uint32_t eleMhz,
+    uint32_t m33Mhz);
+
+/*!
+ * Stop voltage/frequency change.
+ *
+ * This function is used to notify ELE that a DVFS operation has completed.
+ */
+void ELE_StopDvfsChange(void);
 
 /*!
  * Read common fuse.

@@ -314,3 +314,4 @@ uint32_t DEV_SM_RomContainerGet(void)
     /* return the current container value */
     return container;
 }
+

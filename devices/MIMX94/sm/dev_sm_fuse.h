@@ -92,6 +92,19 @@
 #define DEV_SM_FUSE_PMRO               26U  /*!< PMRO */
 /** @} */
 
+/*! Extract PN family */
+#define DEV_SM_PN_FAM(X)  ((X) / 10U)
+/*! Extract PN segment */
+#define DEV_SM_PN_SEG(X)  ((X) % 10U)
+
+/*!
+ * @name PN letter arrays
+ */
+/** @{ */
+/*! Letters for market segment/temp */
+#define DEV_SM_LTR_MKT     "DXCA"
+/** @} */
+
 /* Types */
 
 /* Functions */
@@ -107,7 +120,7 @@ uint32_t DEV_SM_FuseSpeedGet(void);
 
 /* Include SM device API */
 
-// coverity[misra_c_2012_rule_20_1_violation]
+/* coverity[misra_c_2012_rule_20_1_violation] */
 #include "dev_sm_fuse_api.h"
 
 #endif /* DEV_SM_FUSE_H */

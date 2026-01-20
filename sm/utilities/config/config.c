@@ -52,7 +52,8 @@ static bool s_cond = true;
 /* Local functions */
 
 static int32_t DEV_SM_ExecOp(uint32_t *addr, const uint32_t *pc,
-    const uint32_t **rtn);
+    const uint32_t **rtn, bool range, uint32_t start, uint32_t end,
+    bool zero);
 
 /*--------------------------------------------------------------------------*/
 /* Set condition                                                            */
@@ -67,6 +68,21 @@ void CONFIG_Condition(bool cond)
 /* Load configuration                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t CONFIG_Load(const uint32_t *base, const uint32_t *config)
+{
+    int32_t status;
+
+    /* Call without mask */
+    status = CONFIG_LoadRange(base, config, false, 0U, 0U, false);
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Load configuration                                                       */
+/*--------------------------------------------------------------------------*/
+int32_t CONFIG_LoadRange(const uint32_t *base, const uint32_t *config,
+    bool range, uint32_t start, uint32_t end, bool zero)
 {
     int32_t status = SM_ERR_SUCCESS;
     const uint32_t *pc = config;
@@ -98,13 +114,15 @@ int32_t CONFIG_Load(const uint32_t *base, const uint32_t *config)
         if (oc != SM_CFG_OC_REPEAT)
         {
             repeat = pc;
-            status = DEV_SM_ExecOp(addr, pc, &pc);
+            status = DEV_SM_ExecOp(addr, pc, &pc, range, start, end,
+                zero);
         }
         else
         {
             if (repeat != NULL)
             {
-                status = DEV_SM_ExecOp(addr, repeat, NULL);
+                status = DEV_SM_ExecOp(addr, repeat, NULL, range,
+                    start, end, zero);
                 pc++;
             }
             else
@@ -114,6 +132,7 @@ int32_t CONFIG_Load(const uint32_t *base, const uint32_t *config)
         }
     }
 
+    /* Return status */
     return status;
 }
 
@@ -123,7 +142,8 @@ int32_t CONFIG_Load(const uint32_t *base, const uint32_t *config)
 /* Execute an operation                                                     */
 /*--------------------------------------------------------------------------*/
 static int32_t DEV_SM_ExecOp(uint32_t *addr, const uint32_t *pc,
-    const uint32_t **rtn)
+    const uint32_t **rtn, bool range, uint32_t start, uint32_t end,
+    bool zero)
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t *new_addr = addr;
@@ -156,7 +176,26 @@ static int32_t DEV_SM_ExecOp(uint32_t *addr, const uint32_t *pc,
         case SM_CFG_OC_WRITE:
             while (len > 0U)
             {
-                *new_addr = *new_pc;
+                if (!range)
+                {
+                    *new_addr = *new_pc;
+                }
+                else
+                {
+                    if ((((uint32_t) new_addr) >= start)
+                        && (((uint32_t) new_addr) <= end))
+                    {
+                        if (zero)
+                        {
+                            *new_addr = 0U;
+                        }
+                        else
+                        {
+                            *new_addr = *new_pc;
+                        }
+                    }
+                }
+
                 new_addr++;
                 new_pc++;
                 len--;
@@ -187,7 +226,10 @@ static int32_t DEV_SM_ExecOp(uint32_t *addr, const uint32_t *pc,
         case SM_CFG_OC_ZERO:
             while (len > 0U)
             {
-                *new_addr = 0U;
+                if (!range)
+                {
+                    *new_addr = 0U;
+                }
                 new_addr++;
                 len--;
             }
@@ -203,6 +245,7 @@ static int32_t DEV_SM_ExecOp(uint32_t *addr, const uint32_t *pc,
         *rtn = new_pc;
     }
 
+    /* Return status */
     return status;
 }
 

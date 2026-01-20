@@ -56,10 +56,19 @@
 /*--------------------------------------------------------------------------*/
 /* Test device SM system                                                    */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 void TEST_DevSmSystem(void)
 {
     printf("**** Device SM System API Tests ***\n\n");
+
+    /* Reason Name Get: Invalid Reason */
+    {
+        const char *name[15];
+        int32_t len = 0;
+
+        NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
+            &name[0], &len), SM_ERR_NOT_FOUND);
+    }
 
 #ifdef SIMU
     /* Reset Coverage */
@@ -168,14 +177,6 @@ void TEST_DevSmSystem(void)
         SWI_Trigger();
     }
 
-    /* Reason Name Get: Invalid Reason */
-    {
-        const char *name[15];
-        int32_t len = 0;
-        NECHECK(DEV_SM_SystemReasonNameGet(DEV_SM_NUM_REASON,
-            &name[0], &len), SM_ERR_NOT_FOUND);
-    }
-
     /* Branch coverage: DEV_SM_RomHandoverGet */
     {
         const rom_handover_t *handover = NULL;
@@ -200,11 +201,11 @@ void TEST_DevSmSystem(void)
     /* Dump the error log */
     {
         /* Intentional: Test code */
-        // coverity[misra_c_2012_rule_2_2_violation]
+        /* coverity[misra_c_2012_rule_2_2_violation] */
         DEV_SM_ErrorDump();
         DEV_SM_ErrorLog(1U);
         /* Intentional: Test code */
-        // coverity[misra_c_2012_rule_2_2_violation]
+        /* coverity[misra_c_2012_rule_2_2_violation] */
         DEV_SM_ErrorDump();
     }
 
@@ -212,12 +213,13 @@ void TEST_DevSmSystem(void)
     {
         uint32_t deviceId = 0U, siRev = 0U, partNum = 0U;
         const char *siName = NULL;
+        const char *pnName = NULL;
 
-        CHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName));
-        CHECK(DEV_SM_SiInfoGet(NULL, NULL, NULL, NULL));
+        CHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName, &pnName));
+        CHECK(DEV_SM_SiInfoGet(NULL, NULL, NULL, NULL, NULL));
 
         SM_TestModeSet(SM_TEST_MODE_DEV_LVL1);
-        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName),
+        NECHECK(DEV_SM_SiInfoGet(&deviceId, &siRev, &partNum, &siName, &pnName),
             SM_ERR_TEST);
         (void) DEV_SM_SiVerGet();
         SM_TestModeSet(SM_TEST_MODE_OFF);

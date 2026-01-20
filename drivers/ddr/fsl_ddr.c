@@ -533,34 +533,35 @@ bool DDR_GetDRAMInfo(const struct ddr_info *ddrp, struct dram_info *info)
             info->eccEnb = false;
         }
 
-        /* extract MTS from DDR info */
+        /* Extract MTS from DDR info */
         info->mts = ddrp->pstate_freq[0];
 
-        /* start address from CS0 bounds (top 12 of 36 bits addr)
+        /* Start address from CS0 bounds (top 12 of 36 bits addr)
            + DDR AXI start */
-        addr = ((DDRC->CS_BNDS[0].CS_BNDS & DDRC_CS_BNDS_CS_BNDS_SA_MASK)
-            >> DDRC_CS_BNDS_CS_BNDS_SA_SHIFT);
+        addr = ((DDRC->CS_BNDS[0].CS_BNDS & DDRC_CS_BNDS_SA_MASK)
+            >> DDRC_CS_BNDS_SA_SHIFT);
         info->startAddr = U64(addr);
         info->startAddr <<= 24U;
         info->startAddr += 0x80000000ULL;
 
-        /* end address from CS0 bounds if Rank interleaving set
+        /* End address from CS0 bounds if Rank interleaving set
            + DDR AXI start */
-        if ((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_BA_INTLV_CTL_MASK)
-            != 0U)
+        if (((DDRC->DDR_SDRAM_CFG & DDRC_DDR_SDRAM_CFG_BA_INTLV_CTL_MASK)
+            != 0U) || ((DDRC->CS_CONFIG[1] & DDRC_CS_CONFIG_CS_EN_MASK)
+            == 0U))
         {
-            /* end address from CS0 bounds if Rank interleaving set
+            /* End address from CS0 bounds if Rank interleaving set
                + DDR AXI start */
             addr = ((DDRC->CS_BNDS[0].CS_BNDS
-                & DDRC_CS_BNDS_CS_BNDS_EA_MASK)
-                >> DDRC_CS_BNDS_CS_BNDS_EA_SHIFT);
+                & DDRC_CS_BNDS_EA_MASK)
+                >> DDRC_CS_BNDS_EA_SHIFT);
         }
         else
         {
-            /* end address from CS1 bounds + DDR AXI start */
+            /* End address from CS1 bounds + DDR AXI start */
             addr = ((DDRC->CS_BNDS[1].CS_BNDS
-                & DDRC_CS_BNDS_CS_BNDS_EA_MASK)
-                >> DDRC_CS_BNDS_CS_BNDS_EA_SHIFT);
+                & DDRC_CS_BNDS_EA_MASK)
+                >> DDRC_CS_BNDS_EA_SHIFT);
         }
         info->endAddr = U64(addr);
         info->endAddr <<= 24U;

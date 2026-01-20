@@ -125,7 +125,7 @@ static int32_t BRD_SM_InitComplete(uint32_t mSel);
 /*--------------------------------------------------------------------------*/
 /* Init board                                                               */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_directive_4_6_violation]
+/* coverity[misra_c_2012_directive_4_6_violation] */
 int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
 {
     int32_t status;
@@ -136,16 +136,16 @@ int32_t BRD_SM_Init(int argc, const char * const argv[], uint32_t *mSel)
     /* Init board hardware */
     BOARD_InitHardware();
 
-#if defined(MONITOR) || defined(RUN_TEST)
+#ifdef INC_LIBC
     /* Send BELL characters as indicator SM is starting */
     int32_t bellChar = (int32_t) '\a';
-    // coverity[misra_c_2012_rule_21_6_violation]
+    /* coverity[misra_c_2012_rule_21_6_violation] */
     (void) putchar(bellChar);
-    // coverity[misra_c_2012_rule_21_6_violation]
+    /* coverity[misra_c_2012_rule_21_6_violation] */
     (void) putchar(bellChar);
-    // coverity[misra_c_2012_rule_21_6_violation]
+    /* coverity[misra_c_2012_rule_21_6_violation] */
     (void) putchar(bellChar);
-    // coverity[misra_c_2012_rule_21_6_violation]
+    /* coverity[misra_c_2012_rule_21_6_violation] */
     (void) putchar(bellChar);
 #endif
 
@@ -190,12 +190,12 @@ _Noreturn void BRD_SM_Exit(int32_t status, uint32_t pc)
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 #else
     SM_SYSTEMERROR(status, pc);
-    // coverity[misra_c_2012_rule_2_2_violation]
+    /* coverity[misra_c_2012_rule_2_2_violation] */
     SystemExit();
 #endif
 
     /* Hang */
-    // coverity[infinite_loop]
+    /* coverity[infinite_loop] */
     while (true)
     {
         ; /* Intentional empty while */
@@ -223,7 +223,7 @@ int32_t BRD_SM_Custom(int32_t argc, const char * const argv[])
 /* Get fault reaction                                                       */
 /*--------------------------------------------------------------------------*/
 int32_t BRD_SM_FaultReactionGet(dev_sm_rst_rec_t resetRec,
-    // coverity[misra_c_2012_rule_8_13_violation]
+    /* coverity[misra_c_2012_rule_8_13_violation] */
     uint32_t *reaction, uint32_t *lm)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -429,7 +429,7 @@ void BRD_SM_ShutdownRecordSave(dev_sm_rst_rec_t shutdownRec)
 /*--------------------------------------------------------------------------*/
 /* Reset board                                                              */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t BRD_SM_SystemReset(void)
 {
     printf("Reset - spinning...");
@@ -437,7 +437,7 @@ int32_t BRD_SM_SystemReset(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop]
+    /* coverity[infinite_loop] */
     while (true)
     {
         ; /* Intentional empty while */
@@ -447,7 +447,7 @@ int32_t BRD_SM_SystemReset(void)
 /*--------------------------------------------------------------------------*/
 /* Reset device to a specific stage                                         */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 {
     printf("  Reset to stage %u, container %u - spinning...\n", stage,
@@ -456,7 +456,7 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop]
+    /* coverity[infinite_loop] */
     while (true)
     {
         ; /* Intentional empty while */
@@ -466,7 +466,7 @@ int32_t BRD_SM_SystemStageReset(uint32_t stage, uint32_t container)
 /*--------------------------------------------------------------------------*/
 /* Shutdown device                                                          */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_11_violation]
+/* coverity[misra_c_2012_rule_17_11_violation] */
 int32_t BRD_SM_SystemShutdown(void)
 {
     printf("Shutdown - spinning...\n");
@@ -474,7 +474,7 @@ int32_t BRD_SM_SystemShutdown(void)
     /* Disable watchdog */
     BOARD_WdogModeSet(BOARD_WDOG_MODE_OFF);
 
-    // coverity[infinite_loop]
+    /* coverity[infinite_loop] */
     while (true)
     {
         ; /* Intentional empty while */

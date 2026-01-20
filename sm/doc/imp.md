@@ -366,7 +366,8 @@ FCCU is configured to reset the system.
 
 Note if the fault isn't recovered, then the FCCU interrupt will remain disabled and the FCCU
 will start a timer to the delayed reaction (system reset). If an agent has been sent a fault
-notification it has this time to send a fault clear message to recover the fault.
+notification it has this time to send a fault clear message to recover the fault. Info on
+configuring the FCCU can be found in the @ref FCCU_CONFIG section.
 
 Event Processing {#EVENTS}
 ================

@@ -108,16 +108,9 @@ static int32_t DEV_SM_SensorThresholdSet(uint32_t sensorId, uint8_t threshold,
 int32_t DEV_SM_SensorInit(void)
 {
     int32_t status;
-    bool secAccess = false;
-
-    /* Check if A0/1 which allows SM to start */
-    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
-    {
-        secAccess = true;
-    }
 
     /* Power on ANA sensor */
-    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, secAccess);
+    status = DEV_SM_SensorConfigStart(DEV_SM_SENSOR_TEMP_ANA, false);
 
     /* Enable interrupts */
     NVIC_EnableIRQ(TMPSNS_ANA_1_IRQn);
@@ -150,7 +143,7 @@ int32_t DEV_SM_SensorConfigStart(uint32_t sensorId, bool secAccess)
         /* Panic temps */
         const int64_t panicTemp[4] =
         {
-            9700,   /* 00 - Consumer 0C to 95C */
+            9700,   /* 00 - Commercial 0C to 95C */
             12700,  /* 01 - Ext. Industrial -40C to 125C */
             10700,  /* 10 - Industrial -40C to 105C */
             12700   /* 11 - Automotive -40C to 125C */

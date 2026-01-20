@@ -1,5 +1,5 @@
-Debug Monitor {#MONITOR}
-=============
+Monitor {#MONITOR}
+=======
 
 If the SM is compiled using the M=1|2 option (default is M=1) then it will include
 a debug monitor. The debug monitor allows command-line interaction via the SM
@@ -48,7 +48,7 @@ Info Commands
 | ele dump                    | dump ELE debug data                                          |
 | v2x info                    | display V2X info like FW load status                         |
 | v2x ping                    | ask ELE to ping V2X                                          |
-| err                         | display logged errors (API or RDC captured), clears log      |
+| [err](@ref DEBUG_ERR)       | display logged errors (API or RDC captured), clears log      |
 | btime                       | display boot time info                                       |
 | trdc.raw *rdc* [*did*]      | raw dump of TRDC *rdc*, limit to *did* if specified          |
 | trdc *rdc* [*did*]          | formatted dump of TRDC *rdc*, limit to *did* if specified    |

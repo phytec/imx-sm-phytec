@@ -69,6 +69,8 @@ typedef enum
     ELE_GET_TRNG_STATE_REQ      = 0xA4,
     ELE_V2X_PING_REQ            = 0xB0,
     ELE_V2X_GET_STATE_REQ       = 0xB2,
+    ELE_START_DVFS_CHANGE       = 0xC0,
+    ELE_STOP_DVFS_CHANGE        = 0xC1,
     ELE_ENABLE_PATCH_REQ        = 0xC3,
     ELE_RELEASE_RDC_REQ         = 0xC4,
     ELE_GET_FW_STATUS_REQ       = 0xC5,
@@ -107,19 +109,19 @@ typedef struct
 } ele_msg_resp_t;
 
 typedef union
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 {
     msg_hdr_t hdr;
     uint32_t word[ELE_MSG_MAX_SIZE];
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 } ele_mu_msg_t;
 
 typedef union
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 {
     msg_hdr_t hdr;
     uint32_t word[ELE_MSG_MIN_SIZE];
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 } ele_mu_min_t;
 
 /* Local Functions */
@@ -133,7 +135,7 @@ static void ELE_ErrXlate(int32_t *err, uint32_t resp);
 
 /* Local Variables */
 
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 static ele_mu_msg_t s_msgMax;
 static bool s_aborted = false;
 static uint32_t s_eleErrno = 0U;
@@ -303,7 +305,7 @@ void ELE_FwVersionGet(uint32_t *version, uint32_t *commit, bool *dirty,
 uint32_t ELE_EventGet(uint8_t idx)
 {
     int32_t status = SM_ERR_SUCCESS;
-    // coverity[misra_c_2012_rule_19_2_violation]
+    /* coverity[misra_c_2012_rule_19_2_violation] */
     static ele_mu_msg_t s_msgEnv;
     static uint32_t s_numEvents = 0U;
     uint32_t event;
@@ -534,6 +536,54 @@ void ELE_EnableAuxRequest(uint32_t core)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Start voltage/frequency change                                           */
+/*--------------------------------------------------------------------------*/
+void ELE_StartDvfsChange(uint32_t flags, uint32_t mode, uint32_t eleMhz,
+    uint32_t m33Mhz)
+{
+    /* API LAYOUT:
+     *
+     *            |BITS[31:24|BITS[23:16]|BITS[15:08]|BITS[07:00|
+     *  word[0] = |                   header                    |
+     *  word[1] = |   rsvd   | volt mode |         flags        |
+     *  word[2] = |       M33 freq       |         ELE freq     |
+     */
+
+    /* Fill flags and voltage mode */
+    s_msgMax.word[1] = ((mode & 0xFFU) << 16U) | (flags & 0xFFFFU);
+
+    /* Fill in freq */
+    s_msgMax.word[2] = ((m33Mhz & 0xFFFFU) << 16)
+        | (eleMhz & 0xFFFFU);
+
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_START_DVFS_CHANGE, 3U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
+/* Stop voltage/frequency change                                            */
+/*--------------------------------------------------------------------------*/
+void ELE_StopDvfsChange(void)
+{
+    /* Call ELE */
+    ELE_Call(&s_msgMax, ELE_STOP_DVFS_CHANGE, 1U);
+
+    /* Translate error */
+    ELE_ErrXlate(&g_eleStatus, s_msgMax.word[1]);
+
+#ifdef DEBUG_ELE
+    ELE_DebugDump();
+#endif
+}
+
+/*--------------------------------------------------------------------------*/
 /* Read fuse                                                                */
 /*--------------------------------------------------------------------------*/
 void ELE_FuseRead(uint32_t fuseId, uint32_t *fuseVal)
@@ -725,7 +775,7 @@ int32_t ELE_Ind2Err(ele_msg_ind_t ind)
 /*--------------------------------------------------------------------------*/
 /* Call ELE function                                                        */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 {
     int32_t status = SM_ERR_SUCCESS;
@@ -780,7 +830,7 @@ static void ELE_Call(ele_mu_msg_t *msg, ele_cmd_type_t cmd, uint8_t size)
 /*--------------------------------------------------------------------------*/
 /* Send MU message to ELE                                                   */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 static void ELE_MuTx(ele_mu_msg_t *msg)
 {
     const uint32_t *buf = (const uint32_t*) msg;
@@ -819,7 +869,7 @@ static void ELE_MuTx(ele_mu_msg_t *msg)
 /*--------------------------------------------------------------------------*/
 /* Receive MU message from ELE                                              */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_19_2_violation]
+/* coverity[misra_c_2012_rule_19_2_violation] */
 static void ELE_MuRx(ele_mu_msg_t *msg, uint8_t maxLen,
     ele_cmd_type_t cmd)
 {

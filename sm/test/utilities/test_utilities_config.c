@@ -79,7 +79,7 @@ void TEST_UtilitiesConfig(void)
     printf("**** Config Load Tests ***\n\n");
 
 #ifdef SIMU
-    // coverity[misra_c_2012_rule_1_2_violation]
+    /* coverity[misra_c_2012_rule_1_2_violation] */
     const uint32_t s_loadArr[30] __attribute__ ((aligned (65536))) = { 0 };
 
     /* STAGE 1 : =================================================== */

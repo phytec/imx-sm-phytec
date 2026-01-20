@@ -1,6 +1,6 @@
 ## ###################################################################
 ##
-## Copyright 2023 NXP
+## Copyright 2023-2025 NXP
 ##
 ## Redistribution and use in source and binary forms, with or without modification,
 ## are permitted provided that the following conditions are met:
@@ -30,10 +30,37 @@
 ##
 ## ###################################################################
 
-cfg :
-	@echo "Generating ./configs/$(CONFIG)"
-	$(AT)$(ROOT_DIR)/configs/configtool.pl -i ./configs/$(CONFIG).cfg -o ./configs/$(CONFIG)
+# SMCT is expected as a path to SM Config Tool root directory
+ifdef SMCT
+# SMCT needs python3 or python in general
+ifndef PYTHON3
+	PY3_ERRCODE=$(shell (python3 --version 1>/dev/null 2>/dev/null); echo $$?)
+ifeq (0, $(PY3_ERRCODE))
+	PYTHON3 := python3
+else
+	PYTHON3 := python
+endif
+endif
+	# probe running SMCT
+	SMCT_ERRCODE=$(shell ($(PYTHON3) $(SMCT)/smct.py --version 1>/dev/null 2>/dev/null); echo $$?)
+else
+	SMCT_ERRCODE=1
+endif
 
+# Generate configuration using SMCT (if specified) or using default configtool.pl
+cfg :
+ifeq (0,$(SMCT_ERRCODE))
+	@echo "Generating ./configs/$(CONFIG) using smct.py"
+	$(AT)$(PYTHON3) $(SMCT)/smct.py -f --sm_dir $(ROOT_DIR) --load_cfg $(CONFIG).cfg -o $(CONFIG)
+else
+ifdef SMCT
+	@echo "Warning: SMCT tool directory specified ($(SMCT)) but '$(PYTHON3) smct.py' has failed"
+endif
+	@echo "Generating ./configs/$(CONFIG) using configtool.pl"
+	$(AT)$(ROOT_DIR)/configs/configtool.pl -i ./configs/$(CONFIG).cfg -o ./configs/$(CONFIG)
+endif
+
+# Generate configuration overview using configtool.pl
 info :
 	$(AT)$(ROOT_DIR)/configs/configinfo.pl -i ./configs/$(CONFIG).cfg
 

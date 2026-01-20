@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "brd_sm.h"
+#include "fsl_ele.h"
 #include "fsl_fract_pll.h"
 
 /* Local defines */
@@ -309,7 +310,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for V2X */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -425,22 +426,26 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDram =
 };
 
 /* Setpoint PLL configuration for DRAM */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
+         * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+         * PLL_OUT = PLL_VCO / 12 = 266.625MHz
+         * 266.625MHz * 8 = 2133 MTs
          */
-        .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
-        .odiv = 16U,                            /* ODIV */
+        .mfi = 133U,                            /* VCO MFI */
+        .mfn = VCO_MFD * 5U / 16U,              /* VCO MFN */
+        .odiv = 12U,                            /* ODIV */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
         /*
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_OUT = PLL_VCO / 8 = 400MHz
+         * 400MHz * 8 = 3200 MTs
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD / 3U,                    /* VCO MFN */
@@ -449,11 +454,13 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (177+3/4) = 4266MHz
+         * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+         * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+         * 533.25MHz * 8 = 4266 MTs
          */
-        .mfi = 177U,                            /* VCO MFI */
-        .mfn = VCO_MFD * 3U / 4U,               /* VCO MFN */
-        .odiv = 8U,                             /* ODIV */
+        .mfi = 133U,                            /* VCO MFI */
+        .mfn = VCO_MFD * 5U / 16U,              /* VCO MFN */
+        .odiv = 6U,                            /* ODIV */
     }
 };
 
@@ -468,19 +475,19 @@ static dev_sm_perf_desc_t const s_perfDescDram[DEV_SM_NUM_PERF_LVL_SOC] =
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
-        .value = ES_LOW_KHZ_DRAM,                   /* KHz */
+        .value = ES_LOW_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
-        .value = ES_NOM_KHZ_DRAM,                   /* KHz */
+        .value = ES_NOM_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
-        .value = ES_ODV_KHZ_DRAM,                   /* KHz */
+        .value = ES_ODV_KHZ_DRAM_19X19,             /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
@@ -710,7 +717,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 };
 
 /* Setpoint PLL configuration for A55 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -743,7 +750,7 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint PFD configuration for A55 cores */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -764,7 +771,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -814,7 +821,7 @@ static dev_sm_perf_desc_t const s_perfDescA55[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for A55PER */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -839,8 +846,11 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_SOC]
     }
 };
 
-/* Max performance level */
-static uint32_t s_perfNumLevels[PS_NUM_SUPPLY];
+/* Current power supply setting */
+static int32_t s_perfPsVoltCurrent[PS_NUM_SUPPLY];
+
+/* Tracks ELE performance update notifications */
+static bool s_perfEleUpdating = false;
 
 static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
 {
@@ -960,9 +970,16 @@ static int32_t DEV_SM_PerfWakeupFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfDispFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel);
+static int32_t DEV_SM_PerfSupplyUpdate(dev_sm_perf_ps_cfg_t const *psCfg,
+    uint32_t perfLevel);
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t * perfLevel);
+static uint32_t DEV_SM_GetNumPerfLevels(uint32_t domainId);
+static void DEV_SM_PerfEleUpdateAll(uint32_t perfLevel, bool initMode);
+static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
+    uint32_t supplyPerfLevel);
+static void DEV_SM_PerfEleDone(bool abortUpdate);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize performance domains                                           */
@@ -984,21 +1001,24 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     SYS_PLL1->DFS[1].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
     SYS_PLL1->DFS[2].DFS_CTRL.CLR = PLL_DFS_HW_CTRL_SEL_MASK;
 
-    /* Set number of perf levels */
-    s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
-
-    if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
+    if ((bootPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC) ||
+        (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC))
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
     else
     {
+        /* Track power supply voltage */
+        s_perfPsVoltCurrent[PS_VDD_SOC] = s_perfDvsTableSoc[bootPerfLevel];
+
+        /* Security-relevant update start */
+        DEV_SM_PerfEleUpdateAll(runPerfLevel, true);
+
         /* If raising performance level, increase voltage first */
         if (bootPerfLevel < runPerfLevel)
         {
             /* Update VDD_SOC setpoint */
-            status = BRD_SM_SupplyLevelSet(DEV_SM_VOLT_SOC,
-                s_perfDvsTableSoc[runPerfLevel]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, runPerfLevel);
         }
 
         /* Synchronize perf setpoints */
@@ -1011,6 +1031,12 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
              * will be set to level passed in.
              */
             uint32_t perfLevel = DEV_SM_PERF_LVL_PRK;
+
+            if (DEV_SM_PerfIsReserved(domainId))
+            {
+                domainId++;
+                continue;
+            }
 
             /* Clamp level based on MIX power dependency */
             if (DEV_SM_PerfPowerCheck(runPerfLevel, s_perfCfg[domainId].srcMixIdx)
@@ -1042,9 +1068,12 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
         if (bootPerfLevel > runPerfLevel)
         {
             /* Update VDD_SOC setpoint */
-            status = BRD_SM_SupplyLevelSet(DEV_SM_VOLT_SOC,
-                s_perfDvsTableSoc[runPerfLevel]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, runPerfLevel);
         }
+
+        /* Security-relevant update done */
+        bool abortUpdate = status != SM_ERR_SUCCESS;
+        DEV_SM_PerfEleDone(abortUpdate);
     }
 
     /* Return status */
@@ -1100,7 +1129,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1111,13 +1140,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
         /* Assume highest level frequency can be sustained.  Performance
          * level value is same as max sustained frequency.
          */
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        /*
-         * False positive:Max s_perfNumLevels would be 4.
-         */
-        // coverity[cert_int30_c_violation:FALSE]
-        uint32_t levelIdx = s_perfNumLevels[psIdx] - 1U;
-
+        uint32_t levelIdx = DEV_SM_GetNumPerfLevels(domainId) - 1U;
         info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
         info->sustainedPerfLevel = levelIdx;
     }
@@ -1139,8 +1162,7 @@ int32_t DEV_SM_PerfNumLevelsGet(uint32_t domainId, uint32_t *numLevels)
     }
     else
     {
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        *numLevels =  s_perfNumLevels[psIdx];
+        *numLevels = DEV_SM_GetNumPerfLevels(domainId);
     }
 
     /* Return status */
@@ -1162,8 +1184,8 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
     else
     {
         /* Check array bounds */
-        uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-        if (levelIndex >= s_perfNumLevels[psIdx])
+        uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
+        if (levelIndex >= maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -1191,9 +1213,8 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
     else
     {
         dev_sm_perf_ps_cfg_t const *psCfg = s_perfCfg[domainId].psCfg;
-
-        /* Check array bounds */
-        if (perfLevel >= s_perfNumLevels[psCfg->psIdx])
+        uint32_t maxPerfLevels = DEV_SM_GetNumPerfLevels(domainId);
+        if (perfLevel >= maxPerfLevels)
         {
             status = SM_ERR_OUT_OF_RANGE;
         }
@@ -1203,8 +1224,20 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
             uint32_t srcMixIdx = s_perfCfg[domainId].srcMixIdx;
             status = DEV_SM_PerfPowerCheck(perfLevel, srcMixIdx);
 
+            /* Default supply perf level to new requested level */
+            uint32_t supplyPerfLevel = perfLevel;
+
             if (status == SM_ERR_SUCCESS)
             {
+                /* Scan for highest perf level of respective power supply */
+                status = DEV_SM_PerfMaxScan(domainId, &supplyPerfLevel);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Security-relevant update start */
+                DEV_SM_PerfEleUpdate(domainId, perfLevel, supplyPerfLevel);
+
                 /* If lowering perf level, adjust frequency first */
                 if (perfLevel < s_perfLevelCurrent[domainId])
                 {
@@ -1212,20 +1245,10 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
                 }
             }
 
-            /* Default max perf level to new requested level */
-            uint32_t maxPerfLevel = perfLevel;
-
-            if (status == SM_ERR_SUCCESS)
-            {
-                /* Scan for highest perf level of respective power supply  */
-                status = DEV_SM_PerfMaxScan(domainId, &maxPerfLevel);
-            }
-
             if (status == SM_ERR_SUCCESS)
             {
                 /* Adjust voltage setpoint based on max scanned perf level */
-                status = BRD_SM_SupplyLevelSet(psCfg->psIdx,
-                    psCfg->dvsTable[maxPerfLevel]);
+                status = DEV_SM_PerfSupplyUpdate(psCfg, supplyPerfLevel);
             }
 
             if (status == SM_ERR_SUCCESS)
@@ -1236,6 +1259,10 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
                     status = DEV_SM_PerfFreqUpdate(domainId, perfLevel);
                 }
             }
+
+            /* Security-relevant update done */
+            bool abortUpdate = status != SM_ERR_SUCCESS;
+            DEV_SM_PerfEleDone(abortUpdate);
         }
     }
 
@@ -1256,7 +1283,7 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1293,13 +1320,15 @@ int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)
         /* Find wake performance level */
         uint32_t perfLevelWake = DEV_SM_PerfSystemSleepScan();
 
+        /* Security-relevant update start */
+        DEV_SM_PerfEleUpdateAll(perfLevelSleep, false);
+
         /* Raise VDD_SOC setpoint if sleep perf level higher than max
          * among sleep domains
          */
         if (perfLevelSleep > perfLevelWake)
         {
-            status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                s_perfDvsTableSoc[perfLevelSleep]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelSleep);
         }
 
         /* Update levels for perf domains in sleep list */
@@ -1346,10 +1375,13 @@ int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)
             if (perfLevelSleep < perfLevelWake)
             {
                 /* Lower VDD_SOC setpoint for sleep perf level */
-                status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                    s_perfDvsTableSoc[perfLevelSleep]);
+                status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelSleep);
             }
         }
+
+        /* Security-relevant update done */
+        bool abortUpdate = status != SM_ERR_SUCCESS;
+        DEV_SM_PerfEleDone(abortUpdate);
     }
 
     /* Return status */
@@ -1368,12 +1400,14 @@ int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep)
     /* Find wake performance level */
     uint32_t perfLevelWake = DEV_SM_PerfSystemSleepScan();
 
+    /* Security-relevant update start */
+    DEV_SM_PerfEleUpdateAll(perfLevelWake, false);
+
     /* Raise VDD_SOC setpoint if wake perf level higher than sleep level */
     if (perfLevelWake > perfLevelSleep)
     {
         /* Raise VDD_SOC setpoint for wake perf level */
-        status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-            s_perfDvsTableSoc[perfLevelWake]);
+        status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelWake);
     }
 
     /* Restore SM sleep performance level */
@@ -1408,10 +1442,13 @@ int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep)
         if (perfLevelWake < perfLevelSleep)
         {
             /* Lower VDD_SOC setpoint for wake perf level */
-            status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                s_perfDvsTableSoc[perfLevelWake]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelWake);
         }
     }
+
+    /* Security-relevant update done */
+    bool abortUpdate = status != SM_ERR_SUCCESS;
+    DEV_SM_PerfEleDone(abortUpdate);
 
     /* Return status */
     return status;
@@ -1902,13 +1939,43 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Update power supply supply of performance level                          */
+/*--------------------------------------------------------------------------*/
+static int32_t DEV_SM_PerfSupplyUpdate(dev_sm_perf_ps_cfg_t const *psCfg,
+    uint32_t perfLevel)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (psCfg == NULL)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else
+    {
+        /* Update supply level as needed based on tracked level */
+        if (s_perfPsVoltCurrent[psCfg->psIdx] != psCfg->dvsTable[perfLevel])
+        {
+            /* Adjust voltage setpoint based on max scanned perf level */
+            status = BRD_SM_SupplyLevelSet(psCfg->psIdx,
+                psCfg->dvsTable[perfLevel]);
+
+            /* Track supply level */
+            s_perfPsVoltCurrent[psCfg->psIdx] = psCfg->dvsTable[perfLevel];
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Update frequency of performance level                                    */
 /*--------------------------------------------------------------------------*/
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1959,7 +2026,7 @@ static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -2001,8 +2068,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
         if (status == SM_ERR_SUCCESS)
         {
-            uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
-            uint32_t numLevels = s_perfNumLevels[psIdx];
+            uint32_t numLevels = DEV_SM_GetNumPerfLevels(domainId);
 
             /* Convert rate to KHz */
             uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
@@ -2034,5 +2100,209 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Get maximum number of performance levels                                 */
+/*--------------------------------------------------------------------------*/
+static uint32_t DEV_SM_GetNumPerfLevels(uint32_t domainId)
+{
+    uint32_t numLevels = DEV_SM_NUM_PERF_LVL_SOC;
+
+    if (domainId == DEV_SM_PERF_A55)
+    {
+        /* Query A55 speed grade from fuses */
+        static uint32_t speedGrade = 0U;
+
+        if (speedGrade == 0U)
+        {
+            speedGrade = DEV_SM_FuseSpeedGet();
+        }
+
+        /* 1.4GHz support PRK, LOW, NOM */
+        if (speedGrade == 1400000000U)
+        {
+            numLevels = DEV_SM_NUM_PERF_LVL_SOC - 1U;
+        }
+    }
+
+    /* Return number of perf levels */
+    return numLevels;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Start ELE notification of all security-relevant domains                  */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleUpdateAll(uint32_t perfLevel, bool initMode)
+{
+    uint32_t flags = 0U;
+    uint32_t mode = 0U;
+    uint32_t m33Mhz = 0U;
+
+    if (perfLevel < DEV_SM_NUM_PERF_LVL_SOC)
+    {
+        /* Notify ELE of CLOCK_ROOT_M33 change */
+        flags |= ELE_DVFS_FLAG_UPDATE_FREQ_ELE;
+        m33Mhz =
+            s_perfCfg[DEV_SM_PERF_M33].desc[perfLevel].value / 1000U;
+
+        /* Check if security-relevant supply will be updated */
+        int32_t psVolt = s_perfDvsTableSoc[perfLevel];
+        if (initMode || (s_perfPsVoltCurrent[PS_VDD_SOC] != psVolt))
+        {
+            /* Notify ELE of voltage update */
+            flags |= ELE_DVFS_FLAG_UPDATE_VLT;
+
+            /* Map supply update to ELE DVS mode */
+            if (psVolt >= ES_ODV_UV_VDD_SOC)
+            {
+                mode = ELE_DVFS_MODE_OD;
+            }
+            else if (psVolt >= ES_NOM_UV_VDD_SOC)
+            {
+                mode = ELE_DVFS_MODE_NM;
+            }
+            else
+            {
+                mode = ELE_DVFS_MODE_UD;
+            }
+        }
+
+        /* Notify ELE of any security-relevalant change */
+        ELE_StartDvfsChange(flags, mode, m33Mhz, 0U);
+        s_perfEleUpdating = true;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Start ELE notification of a single security-relevant domain              */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
+    uint32_t supplyPerfLevel)
+{
+    uint32_t flags = 0U;
+    uint32_t mode = 0U;
+    uint32_t m33Mhz = 0U;
+
+    if (perfLevel < DEV_SM_NUM_PERF_LVL_SOC)
+    {
+        /* Check for security relevant performance domain update */
+        switch (domainId)
+        {
+            case DEV_SM_PERF_M33:
+                /* Notify ELE of CLOCK_ROOT_M33 change */
+                flags |= ELE_DVFS_FLAG_UPDATE_FREQ_ELE;
+                m33Mhz =
+                    s_perfCfg[DEV_SM_PERF_M33].desc[perfLevel].value / 1000U;
+                break;
+
+            default:
+                ; /* Intentional empty default */
+                break;
+        }
+    }
+
+    if ((domainId < DEV_SM_NUM_PERF) &&
+        (supplyPerfLevel < DEV_SM_NUM_PERF_LVL_SOC))
+    {
+        /* Check for security-relevant power supply update */
+        if (s_perfCfg[domainId].psCfg->psIdx == PS_VDD_SOC)
+        {
+            /* Check if security-relevant supply will be updated */
+            int32_t psVolt = s_perfDvsTableSoc[supplyPerfLevel];
+            if (s_perfPsVoltCurrent[PS_VDD_SOC] != psVolt)
+            {
+                /* Notify ELE of voltage update */
+                flags |= ELE_DVFS_FLAG_UPDATE_VLT;
+
+                /* Map supply update to ELE DVS mode */
+                if (psVolt >= ES_ODV_UV_VDD_SOC)
+                {
+                    mode = ELE_DVFS_MODE_OD;
+                }
+                else if (psVolt >= ES_NOM_UV_VDD_SOC)
+                {
+                    mode = ELE_DVFS_MODE_NM;
+                }
+                else
+                {
+                    mode = ELE_DVFS_MODE_UD;
+                }
+            }
+        }
+    }
+
+    /* Notify ELE of any security-relevalant change */
+    if (flags != 0U)
+    {
+        ELE_StartDvfsChange(flags, mode, m33Mhz, 0U);
+        s_perfEleUpdating = true;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Notify ELE that security-relevant update is done                         */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleDone(bool abortUpdate)
+{
+    if (s_perfEleUpdating)
+    {
+        /* Send abort if update unsuccessful */
+        if (abortUpdate)
+        {
+            ELE_StartDvfsChange(0U, 0U, 0U, 0U);
+        }
+
+        /* Send stop message */
+        ELE_StopDvfsChange();
+        s_perfEleUpdating = false;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PerfIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+    uint32_t modDomainId = 0;
+
+    switch (domainId)
+    {
+        case DEV_SM_PERF_M70:
+            modDomainId = DEV_SM_PD_M70;
+            break;
+
+        case DEV_SM_PERF_M71:
+            modDomainId = DEV_SM_PD_M71;
+            break;
+
+        case DEV_SM_PERF_NPU:
+            modDomainId = DEV_SM_PD_NPU;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (modDomainId > 0U)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(modDomainId))
+            {
+                rc = true;
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
 }
 

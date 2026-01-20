@@ -990,20 +990,9 @@ int32_t DEV_SM_ClockEnable(uint32_t clockId, bool enable)
 
                 if (clockIndex < CLOCK_NUM_CGC)
                 {
-                    /* Skip MIX-level transaction blocking on Rev A  */
-                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+                    if (!CLOCK_CgcSetEnable(clockIndex, enable))
                     {
-                        if (!CCM_CgcSetEnable(clockIndex, enable))
-                        {
-                            status = SM_ERR_INVALID_PARAMETERS;
-                        }
-                    }
-                    else
-                    {
-                        if (!CLOCK_CgcSetEnable(clockIndex, enable))
-                        {
-                            status = SM_ERR_INVALID_PARAMETERS;
-                        }
+                        status = SM_ERR_INVALID_PARAMETERS;
                     }
                 }
                 else
@@ -1358,7 +1347,6 @@ bool DEV_SM_ClockIsReserved(uint32_t clockId)
         [DEV_SM_CLK_RESERVED77] = true,
         [DEV_SM_CLK_RESERVED79] = true
     };
-
 
     if (clockId < DEV_SM_NUM_CLOCK)
     {

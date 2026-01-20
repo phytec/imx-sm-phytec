@@ -29,16 +29,11 @@
 
 /* Includes */
 
-#include "fsl_def.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
-#include "sm_test_mode.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
-#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
-#include "fsl_ccm.h"
 #include "fsl_clock.h"
-#endif
+#include "sm_test_mode.h"
 
 /* Local Defines */
 
@@ -459,7 +454,7 @@ uint32_t PWR_NumChildPowered(uint32_t srcMixIdx)
                  * False positive: The loop will go to value 14 and the
                  * initial value is of numChildPowered = 0U;
                  */
-                // coverity[cert_int30_c_violation:FALSE]
+                /* coverity[cert_int30_c_violation:FALSE] */
                 ++numChildPowered;
             }
             idx++;
@@ -467,14 +462,6 @@ uint32_t PWR_NumChildPowered(uint32_t srcMixIdx)
     }
 
     return numChildPowered;
-}
-
-/*--------------------------------------------------------------------------*/
-/* Request system power down                                                */
-/*--------------------------------------------------------------------------*/
-void PWR_SystemPowerDown(void)
-{
-    BBNSM->BBNSM_CTRL |= BBNSM_BBNSM_CTRL_TOSP(0x1U);
 }
 
 /*--------------------------------------------------------------------------*/
@@ -630,41 +617,6 @@ void PWR_LpHandshakeAck(void)
         BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
         BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(0U);
 }
-
-#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
-/*--------------------------------------------------------------------------*/
-/* Acknowledge LP handshake                                                 */
-/*--------------------------------------------------------------------------*/
-void PWR_LpHandshakeAckRevA(void)
-{
-    /* Query clock root divider for LP_HANDSHAKE module */
-    uint32_t oldDiv;
-    bool rc = CCM_RootGetDiv(CLOCK_ROOT_M33, &oldDiv);
-
-    /* Increase clock root divider for LP_HANDSHAKE module during ACK */
-    if (rc)
-    {
-        rc = CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv << 2U);
-    }
-
-    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS =
-        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
-        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(1U);
-
-    /* Ack requires a pulse of 2-3 clocks @ 24MHz = 125ns */
-    SystemTimeDelay(1U);
-
-    BLK_CTRL_S_AONMIX->SM_LP_HANDSHAKE_STATUS =
-        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_AUTOACK(0U) |
-        BLK_CTRL_S_AONMIX_SM_LP_HANDSHAKE_STATUS_ACK(0U);
-
-    /* Restore clock root divider for LP_HANDSHAKE module */
-    if (rc)
-    {
-        (void) CCM_RootSetDiv(CLOCK_ROOT_M33, oldDiv);
-    }
-}
-#endif
 
 /*--------------------------------------------------------------------------*/
 /* Configure MIX-level transaction blocking                                 */

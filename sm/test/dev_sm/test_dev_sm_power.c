@@ -75,26 +75,26 @@ void TEST_DevSmPower(void)
     /* Test API correct calls per domain */
     for (uint32_t domainId = 0U; domainId < NUM_MIX_SLICE; domainId++)
     {
-        printf("DEV_SM_PowerDomainNameGet(%u)\n", domainId);
-        CHECK(DEV_SM_PowerDomainNameGet(domainId, &name, &len));
-        printf("  name=%s\n",  name);
-        printf("  len=%d\n",  len);
-
-        printf("DEV_SM_PowerStateGet(%u)\n", domainId);
-        CHECK(DEV_SM_PowerStateGet(domainId, &powerState));
-        printf("  powerState=%u\n", powerState);
-
-        if (!DEV_SM_FusePdDisabled(domainId))
+        if (!DEV_SM_PdIsReserved(domainId))
         {
+            printf("DEV_SM_PowerDomainNameGet(%u)\n", domainId);
+            CHECK(DEV_SM_PowerDomainNameGet(domainId, &name, &len));
+            printf("  name=%s\n",  name);
+            printf("  len=%d\n",  len);
+
+            printf("DEV_SM_PowerStateGet(%u)\n", domainId);
+            CHECK(DEV_SM_PowerStateGet(domainId, &powerState));
+            printf("  powerState=%u\n", powerState);
+
             CHECK(DEV_SM_PowerStateSet(domainId, powerState));
-        }
 #ifdef SIMU
-        CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
+            CHECK(DEV_SM_PowerRetModeSet(domainId, retMask));
 #endif
 
-        /* Ret Mask Get */
-        CHECK(DEV_SM_PowerRetMaskGet(domainId, &retMask));
-        printf("   retMask=%u\n", retMask);
+            /* Ret Mask Get */
+            CHECK(DEV_SM_PowerRetMaskGet(domainId, &retMask));
+            printf("   retMask=%u\n", retMask);
+        }
     }
 
     /* Test API correct calls per power state */

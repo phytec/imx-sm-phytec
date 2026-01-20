@@ -95,7 +95,7 @@ int32_t DEV_SM_CpuNameGet(uint32_t cpuId, string *cpuNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_CPU);
 
     /* Check CPU */
-    if (cpuId >= DEV_SM_NUM_CPU)
+    if (DEV_SM_CpuIsReserved(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -166,7 +166,7 @@ int32_t DEV_SM_CpuStart(uint32_t cpuId)
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -195,7 +195,7 @@ int32_t DEV_SM_CpuHold(uint32_t cpuId)
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -223,7 +223,7 @@ int32_t DEV_SM_CpuStop(uint32_t cpuId)
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -250,10 +250,9 @@ int32_t DEV_SM_CpuResetVectorCheck(uint32_t cpuId, uint64_t resetVector,
     bool table)
 {
     int32_t status = SM_ERR_SUCCESS;
-    bool cpuDisabled = DEV_SM_FuseCpuDisabled(cpuId);
 
     /* Check CPU */
-    if (cpuDisabled || (cpuId >= DEV_SM_NUM_CPU))
+    if (DEV_SM_CpuIsReserved(cpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -271,7 +270,7 @@ int32_t DEV_SM_CpuResetVectorSet(uint32_t cpuId, uint64_t resetVector)
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -300,7 +299,7 @@ int32_t DEV_SM_CpuSleepModeSet(uint32_t cpuId, uint32_t sleepMode,
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -383,7 +382,7 @@ int32_t DEV_SM_CpuIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     else
     {
         /* Check fuse state */
-        if (DEV_SM_FuseCpuDisabled(modCpuId))
+        if (DEV_SM_CpuIsReserved(modCpuId))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -419,7 +418,7 @@ int32_t DEV_SM_CpuNonIrqWakeSet(uint32_t cpuId, uint32_t maskIdx,
     else
     {
         /* Check fuse state */
-        if (DEV_SM_FuseCpuDisabled(modCpuId))
+        if (DEV_SM_CpuIsReserved(modCpuId))
         {
             status = SM_ERR_NOT_FOUND;
         }
@@ -447,8 +446,8 @@ int32_t DEV_SM_CpuPdLpmConfigSet(uint32_t cpuId, uint32_t domainId,
 {
     int32_t status = SM_ERR_SUCCESS;
     uint32_t modCpuId = cpuId;
-    bool cpuDisabled = DEV_SM_FuseCpuDisabled(modCpuId);
-    bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
+    bool cpuDisabled = DEV_SM_CpuIsReserved(modCpuId);
+    bool pdDisabled = DEV_SM_PdIsReserved(domainId);
 
     /* Check fuse state */
     if (pdDisabled || cpuDisabled)
@@ -481,7 +480,7 @@ int32_t DEV_SM_CpuPerLpmConfigSet(uint32_t cpuId, uint32_t perId,
     uint32_t modCpuId = cpuId;
 
     /* Check fuse state */
-    if (DEV_SM_FuseCpuDisabled(modCpuId))
+    if (DEV_SM_CpuIsReserved(modCpuId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -542,5 +541,22 @@ int32_t DEV_SM_CpuWakeListSet(uint32_t cpuId, uint32_t cpuWakeList)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if CPU is disabled in fuses                                        */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_CpuIsReserved(uint32_t cpuId)
+{
+    bool rc = false;
+
+    /* Check fuse state of power domain */
+    if (DEV_SM_FuseCpuDisabled(cpuId))
+    {
+        rc = true;
+    }
+
+    /* Return status */
+    return rc;
 }
 

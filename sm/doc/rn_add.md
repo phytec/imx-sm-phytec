@@ -24,13 +24,7 @@ versions of doxygen include 1.8.17, 1.9.1, and 1.9.8.
 SCMI API Changes {#RN_ADD_API}
 ================
 
-Made some API additions:
-
-- LP compute flag for the SCMI_CpuSleepModeSet() function. This can be set
-  with the SCMI_CPU_FLAGS_LP_COMPUTE() macro.
-- SCMI MISC protocol function, SCMI_MiscDdrInfoGet(), that can be used to get
-  info about the DDR memory regions in the system. The MISC protocol version
-  updated to 1.1.
+None
 
 Configuration Changes {#RN_ADD_CONFIG}
 =====================
@@ -38,17 +32,18 @@ Configuration Changes {#RN_ADD_CONFIG}
 The following are cfg file changes that customers **must** make to their cfg files
 and rebuild their config headers.
 
-- Marked SM (LM0) API access as none.
-- Updated the list of clocks used by the SM.
+- Added name attributes to all DOM sections. Without this warnings will be generated.
+- Removed assignment of PERF_DRAM to AP-S and AP-NS as DDR frequency changes are not
+  supported.
 
 Optional:
 
-- Added access to BRD_SM_CTRL_TEST_A for all agents. Used for testing.
+- For i.MX94, assign owners for the new motor controls.
+- Defined the reaction to DDR ECC MBE errors. The default is to reset the system.
+  Other options are to do nothing or to reset an LM (assuming all of DDR is used
+  by one LM). NXP cfg files added an explicit configuration to reset the system.
 
-Note the cfg tool was enhanced to check for agent access to SM clocks. In addition,
-some clock associations removed for CPUs. Customers must rebuild their headers to
-ensure agents do not have control of CPU clocks via the SCMI clock protocol. These
-should be managed via the SCMI performance protocol.
+      FAULT_DRAM          OWNER, reaction=sys_reset
 
 Board Interface Changes {#RN_ADD_BOARD}
 =======================
@@ -60,13 +55,12 @@ Board Implementation Changes {#RN_ADD_BOARD_IMP}
 
 Customers **must** make the following changes in their board port:
 
-- Move BOARD_SWI_IRQn definition to use SWI_0_IRQn
-- On MX95, renamed LPCAC_PC to M33_CACHE_CTRLPC and LPCAC_PS to M33_CACHE_CTRLPS. 
+- Changes to check the power state of the A55 PF53 before trying to enable the
+  sensor or read the temp. This change applies only to the i.MX95 EVK and
+  customer systems that copy the EVK PMIC structure.
 
 Optional, but recommended:
 
-- Added error log support to board init functions.
-- If using the PCA2131 RTC, fix added to enable battery monitoring at boot.
-- Added BRD_SM_ControlAction() and BRD_SM_CTRL_TEST_A to facilitate testing.
-- Lots of coding standards fixes.
+- Converted C++ style comments to C style.
+
 

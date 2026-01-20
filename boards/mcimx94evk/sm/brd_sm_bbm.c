@@ -662,7 +662,7 @@ static bool date2days(uint32_t year, uint32_t month, uint32_t day,
     /*
      * False Positive: The value of variable year cann't be zero
      */
-    // coverity[cert_int30_c_violation:FALSE]
+    /* coverity[cert_int30_c_violation:FALSE] */
     newYear = year - ((month <= 2U) ? 1U : 0U);
 
     /* Calculate era */
@@ -689,7 +689,7 @@ static bool date2days(uint32_t year, uint32_t month, uint32_t day,
          * False Positive: moy value will range 1 <=moy <= 12.
          * Hence, the multiplication with 153 cann't overflow
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        /* coverity[cert_int30_c_violation:FALSE] */
         uint32_t doy = (((153U * moy) + 2U) / 5U) + (day - 1U);
 
         /*
@@ -697,7 +697,7 @@ static bool date2days(uint32_t year, uint32_t month, uint32_t day,
          * less than 400.
          * Hence, the multiplication with 365 cann't overflow
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        /* coverity[cert_int30_c_violation:FALSE] */
         uint32_t doe = (yoe * 365U) + (yoe / 4U) - (yoe / 100U) + doy;
 
         /*
@@ -705,7 +705,7 @@ static bool date2days(uint32_t year, uint32_t month, uint32_t day,
          * The newYear variable will range from 1970 <= newYear <= 2070.
          * Hence, the multiplication can't overflow.
          */
-        // coverity[cert_int30_c_violation:FALSE]
+        /* coverity[cert_int30_c_violation:FALSE] */
         *days = (era * 146097U) + doe - 719468U;
     }
 

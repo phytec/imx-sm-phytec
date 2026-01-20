@@ -103,7 +103,7 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
 #endif
 
     /* Init ROM data */
-    // coverity[misra_c_2012_rule_2_2_violation]
+    /* coverity[misra_c_2012_rule_2_2_violation] */
     DEV_SM_RomInit();
 
     /* Initialize CPU domains */
@@ -155,6 +155,10 @@ int32_t DEV_SM_Init(uint32_t bootPerfLevel, uint32_t runPerfLevel)
 
             /* Get power state */
             status = DEV_SM_PowerStateGet(domainId, &powerState);
+            if (status == SM_ERR_NOT_FOUND)
+            {
+                continue;
+            }
 
             /* Powered? */
             if (powerState != DEV_SM_POWER_STATE_OFF)

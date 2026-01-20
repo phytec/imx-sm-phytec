@@ -1408,8 +1408,8 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
              * CCM_GprSelMuxInputGet function is bounds checked
              * in that function.
              */
-            // coverity[cert_arr30_c_violation:FALSE]
-            // coverity[cert_str31_c_violation:FALSE]
+            /* coverity[cert_arr30_c_violation:FALSE] */
+            /* coverity[cert_str31_c_violation:FALSE] */
             status = LMM_ClockParentDescribe(caller->lmId, in->clockId,
                 index + in->skipParents, &parentId, &temp);
 
@@ -1424,7 +1424,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
                  * False Positive: Value starts at 0 and is limited by
                  * the loop to CLOCK_MAX_PARENTS.
                  */
-                // coverity[cert_int30_c_violation:FALSE]
+                /* coverity[cert_int30_c_violation:FALSE] */
                 (out->numParentsFlags)++;
             }
         }
@@ -1435,7 +1435,7 @@ static int32_t ClockPossibleParentsGet(const scmi_caller_t *caller,
          * the value of CLOCK_MAX_PARENTS would need to be excessively large
          * number (larger than all the TCM available)
          */
-        // coverity[cert_int30_c_violation]
+        /* coverity[cert_int30_c_violation] */
         *len = (3U * sizeof(uint32_t)) + (out->numParentsFlags *
             sizeof(uint32_t));
 
@@ -1764,7 +1764,7 @@ static int32_t ClockConfigUpdate(uint32_t lmId, uint32_t agentId,
      * the configuration tool, which guarantees that these variables remain
      * within the valid range
      */
-    // coverity[cert_int30_c_violation]
+    /* coverity[cert_int30_c_violation] */
     mask = ((1UL << numAgents) - 1UL) << firstAgent;
     clockState = s_clockState[clockId] & mask;
     clockEnable = (clockState != 0U);

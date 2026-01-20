@@ -162,8 +162,14 @@
 
 /*! @brief Computes the number of elements in an array. */
 #if !defined(ARRAY_SIZE)
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#define ARRAY_SIZE(X) (sizeof(X) / sizeof((X)[0]))
 #endif
+
+/*! @brief Returns the number of characters in a string literal. */
+#define STR_SIZE(X) (sizeof(X) - 1U)
+
+/*! @brief Returns the number of characters in a string literal. */
+#define STR_LU(X, Y, Z)  X[(Y) % (sizeof(Z) - 1U)]
 
 /*!
  * @name Min/max macros
@@ -185,8 +191,8 @@
 
 #if !defined(INC_LIBC)
 /*! Eliminate printf */
-// coverity[misra_c_2012_rule_21_1_violation]
-// coverity[misra_c_2012_rule_21_2_violation]
+/* coverity[misra_c_2012_rule_21_1_violation] */
+/* coverity[misra_c_2012_rule_21_2_violation] */
 #define printf(...)
 #endif
 
@@ -270,7 +276,7 @@ void SM_TestModeSet(uint32_t mode);
 /*!
  * Init C lib.
  */
-// coverity[misra_c_2012_rule_21_2_violation]
+/* coverity[misra_c_2012_rule_21_2_violation] */
 void __libc_init_array(void);
 #endif
 

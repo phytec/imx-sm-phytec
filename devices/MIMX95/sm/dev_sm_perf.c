@@ -41,6 +41,7 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "brd_sm.h"
+#include "fsl_ele.h"
 #include "fsl_fract_pll.h"
 
 /* Local defines */
@@ -174,8 +175,8 @@ static int32_t const s_perfDvsTableSoc[DEV_SM_NUM_PERF_LVL_SOC] =
 static dev_sm_perf_ps_cfg_t const s_psCfgSoc =
 {
     .psIdx = PS_VDD_SOC,
-    .idStart = DEV_SM_PERF_ELE,
-    .idEnd = DEV_SM_PERF_CAM,
+    .idStart = 0U,
+    .idEnd = DEV_SM_PERF_LAST,
     .dvsTable = s_perfDvsTableSoc
 };
 
@@ -332,7 +333,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeup[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for V2X */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgWakeupV2X[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -440,21 +441,22 @@ static dev_sm_perf_desc_t const s_perfDescM7[DEV_SM_NUM_PERF_LVL_SOC] =
     }
 };
 
-/* Setpoint clock root configuration for DRAM (LPDDR5) */
-static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp5 =
+/* Setpoint clock root configuration for DRAM */
+static dev_sm_perf_root_cfg_t const s_perfRootCfgDram =
 {
     .parent = DEV_SM_CLK_OSC24M,            /* root parent */
     .rootDiv = 1U,                          /* root divider */
 };
 
-/* Setpoint PLL configuration for DRAM (LPDDR5) */
-// coverity[misra_c_2012_rule_8_9_violation]
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
+/* Setpoint PLL configuration for DRAM (LP5 19x19 default) */
+static dev_sm_perf_pll_cfg_t s_perfPllCfgDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_LOW] =
     {
         /*
          * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_OUT = PLL_VCO / 8 = 400MHz
+         * 400MHz * 8 = 3200 MTs
          */
         .mfi = 133U,                            /* VCO MFI */
         .mfn = VCO_MFD / 3U,                    /* VCO MFN */
@@ -464,6 +466,8 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
     {
         /*
          * PLL_VCO = 24MHz * (200) = 4800MHz
+         * PLL_OUT = PLL_VCO / 8 = 600MHz
+         * 600MHz * 8 = 4800 MTs
          */
         .mfi = 200U,                            /* VCO MFI */
         .mfn = 0U,                              /* VCO MFN */
@@ -472,86 +476,18 @@ static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp5[DEV_SM_NUM_PERF_LVL_SOC] 
     [DEV_SM_PERF_LVL_ODV] =
     {
         /*
-         * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+         * PLL_VCO = 24MHz * (200) = 4800MHz
+         * PLL_OUT = PLL_VCO / 6 = 800MHz
+         * 800MHz * 8 = 6400 MTs
          */
-        .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
-        .odiv = 4U,                             /* ODIV */
-    }
-};
-
-/* Setpoint descriptions for DRAM (LPDDR5) */
-static dev_sm_perf_desc_t const s_perfDescDramLp5[DEV_SM_NUM_PERF_LVL_SOC] =
-{
-    [DEV_SM_PERF_LVL_PRK] =
-    {
-        .value = ES_24000KHZ,                       /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_LOW] =
-    {
-        .value = ES_LOW_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_NOM] =
-    {
-        .value = ES_NOM_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    },
-    [DEV_SM_PERF_LVL_ODV] =
-    {
-        .value = ES_ODV_KHZ_DRAM_LP5,               /* KHz */
-        .powerCost = 0U,                            /* mW */
-        .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
-    }
-};
-
-/* Setpoint clock root configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation]
-static dev_sm_perf_root_cfg_t const s_perfRootCfgDramLp4x =
-{
-    .parent = DEV_SM_CLK_OSC24M,            /* root parent */
-    .rootDiv = 1U,                          /* root divider */
-};
-
-/* Setpoint PLL configuration for DRAM (LPDDR4X) */
-// coverity[misra_c_2012_rule_8_9_violation]
-static dev_sm_perf_pll_cfg_t const s_perfPllCfgDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
-{
-    [DEV_SM_PERF_LVL_LOW] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
-         */
-        .mfi = 155U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 2U,                    /* VCO MFN */
-        .odiv = 16U,                            /* ODIV */
-    },
-    [DEV_SM_PERF_LVL_NOM] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (120) = 2880MHz
-         */
-        .mfi = 120U,                            /* VCO MFI */
+        .mfi = 200U,                            /* VCO MFI */
         .mfn = 0U,                              /* VCO MFN */
-        .odiv = 8U                              /* ODIV */
-    },
-    [DEV_SM_PERF_LVL_ODV] =
-    {
-        /*
-         * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
-         */
-        .mfi = 133U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
-        .odiv = 6U,                             /* ODIV */
+        .odiv = 6U                              /* ODIV */
     }
 };
 
-/* Setpoint descriptions for DRAM (LPDDR4X) */
-static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
+/* Setpoint descriptions for DRAM (LP5 19x19 default) */
+static dev_sm_perf_desc_t s_perfDescDram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
     {
@@ -561,19 +497,19 @@ static dev_sm_perf_desc_t const s_perfDescDramLp4x[DEV_SM_NUM_PERF_LVL_SOC] =
     },
     [DEV_SM_PERF_LVL_LOW] =
     {
-        .value = ES_LOW_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_LOW_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_NOM] =
     {
-        .value = ES_NOM_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_NOM_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     },
     [DEV_SM_PERF_LVL_ODV] =
     {
-        .value = ES_ODV_KHZ_DRAM_LP4X,              /* KHz */
+        .value = ES_ODV_KHZ_DRAM_LP5_19X19,         /* KHz */
         .powerCost = 0U,                            /* mW */
         .latency = DEV_SM_PERF_LATENCY_USEC,        /* uS */
     }
@@ -821,7 +757,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgVpu[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for VPUJPEG */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgVpuJpeg[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -901,7 +837,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCam[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for CAM ISI */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -927,7 +863,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgCamIsi[DEV_SM_NUM_PERF_LVL_SOC]
 };
 
 /* Setpoint clock root configuration for CAM CM0 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgCamCm0[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1007,7 +943,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgDisp[DEV_SM_NUM_PERF_LVL_SOC] =
 };
 
 /* Setpoint clock root configuration for DISP OCRAM */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgDispOcram[DEV_SM_NUM_PERF_LVL_SOC] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1069,7 +1005,7 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55 =
 };
 
 /* Setpoint PLL configuration for A55 */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1087,7 +1023,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
          * PLL_VCO = 24MHz * 117 = 2808MHz
          */
         .mfi = 117U,                            /* VCO MFI */
-        .mfn = VCO_MFD / 3U,                    /* VCO MFN */
+        .mfn = 0U,                              /* VCO MFN */
         .odiv = 0U                              /* ODIV */
     },
     [DEV_SM_PERF_LVL_ODV] =
@@ -1111,7 +1047,7 @@ static dev_sm_perf_pll_cfg_t s_perfPllCfgA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55 cores */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1137,7 +1073,7 @@ static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55C[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint PFD configuration for A55P */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_pfd_cfg_t s_perfPfdCfgA55P[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_LOW] =
@@ -1198,7 +1134,7 @@ static dev_sm_perf_desc_t s_perfDescA55[DEV_SM_NUM_PERF_LVL_ARM] =
 };
 
 /* Setpoint clock root configuration for A55PER */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_ARM] =
 {
     [DEV_SM_PERF_LVL_PRK] =
@@ -1230,6 +1166,12 @@ static dev_sm_perf_root_cfg_t const s_perfRootCfgA55Per[DEV_SM_NUM_PERF_LVL_ARM]
 
 /* Max performance level */
 static uint32_t s_perfNumLevels[PS_NUM_SUPPLY];
+
+/* Current power supply setting */
+static int32_t s_perfPsVoltCurrent[PS_NUM_SUPPLY];
+
+/* Tracks ELE performance update notifications */
+static bool s_perfEleUpdating = false;
 
 static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
 {
@@ -1274,8 +1216,8 @@ static dev_sm_perf_cfg_t const s_perfCfg[DEV_SM_NUM_PERF] =
         .rootClk = CLOCK_ROOT_DRAMALT,
         .srcMixIdx = PWR_MIX_SLICE_IDX_DDR,
         .psCfg = &s_psCfgSoc,
-        .desc = s_perfDescDramLp5,
-        .rootCfg = &s_perfRootCfgDramLp5,
+        .desc = s_perfDescDram,
+        .rootCfg = &s_perfRootCfgDram,
     },
 
     [DEV_SM_PERF_HSIO] =
@@ -1369,10 +1311,18 @@ static int32_t DEV_SM_PerfCamFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfDispFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel);
 static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel);
+static int32_t DEV_SM_PerfSupplyUpdate(dev_sm_perf_ps_cfg_t const *psCfg,
+    uint32_t perfLevel);
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel);
 static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t * perfLevel);
 static uint32_t DEV_SM_PerfDramTypeGet(void);
+static uint32_t DEV_SM_PerfSocPkgTypeGet(void);
+static void DEV_SM_PerfCfgInit(void);
+static void DEV_SM_PerfEleUpdateAll(uint32_t perfLevel, bool initMode);
+static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
+    uint32_t supplyPerfLevel);
+static void DEV_SM_PerfEleDone(bool abortUpdate);
 
 /*--------------------------------------------------------------------------*/
 /* Initialize performance domains                                           */
@@ -1397,55 +1347,28 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
     /* Set number of perf levels */
     s_perfNumLevels[PS_VDD_SOC] = DEV_SM_NUM_PERF_LVL_SOC;
 
-    /* Query A55 speed grade from fuses */
-    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
+    /* Initialize dynamically assigned performance configurations */
+    DEV_SM_PerfCfgInit();
 
-    if (speedGrade >= 2000000000U)
-    {
-        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
-    }
-    else if (speedGrade == 1000000000U)
-    {
-        /* 1GHz devices support PRK, LOW, NOM setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
-
-        /* 1GHz devices require updated PERF table entries for NOM setpoint */
-        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
-
-        /*
-         * PLL_VCO = 24MHz * 150 = 3600MHz
-         */
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
-        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
-
-        /*
-         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
-         */
-        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
-        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
-        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
-        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
-    }
-    else
-    {
-        /* All other devices support PRK, LOW, NOM, ODV setpoints */
-        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
-    }
-
-    if (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC)
+    if ((bootPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC) ||
+        (runPerfLevel >= DEV_SM_NUM_PERF_LVL_SOC))
     {
         status = SM_ERR_OUT_OF_RANGE;
     }
     else
     {
+        /* Track power supply voltage */
+        s_perfPsVoltCurrent[PS_VDD_SOC] = s_perfDvsTableSoc[bootPerfLevel];
+        s_perfPsVoltCurrent[PS_VDD_ARM] = s_perfDvsTableArm[bootPerfLevel];
+
+        /* Security-relevant update start */
+        DEV_SM_PerfEleUpdateAll(runPerfLevel, true);
+
         /* If raising performance level, increase voltage first */
         if (bootPerfLevel < runPerfLevel)
         {
             /* Update VDD_SOC setpoint */
-            status = BRD_SM_SupplyLevelSet(DEV_SM_VOLT_SOC,
-                s_perfDvsTableSoc[runPerfLevel]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, runPerfLevel);
         }
 
         /* Synchronize perf setpoints */
@@ -1458,6 +1381,12 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
              * will be set to level passed in.
              */
             uint32_t perfLevel = DEV_SM_PERF_LVL_PRK;
+
+            if (DEV_SM_PerfIsReserved(domainId))
+            {
+                domainId++;
+                continue;
+            }
 
             /* Clamp level based on MIX power dependency */
             if (DEV_SM_PerfPowerCheck(runPerfLevel, s_perfCfg[domainId].srcMixIdx)
@@ -1489,9 +1418,12 @@ int32_t DEV_SM_PerfInit(uint32_t bootPerfLevel, uint32_t runPerfLevel)
         if (bootPerfLevel > runPerfLevel)
         {
             /* Update VDD_SOC setpoint */
-            status = BRD_SM_SupplyLevelSet(DEV_SM_VOLT_SOC,
-                s_perfDvsTableSoc[runPerfLevel]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, runPerfLevel);
         }
+
+        /* Security-relevant update done */
+        bool abortUpdate = status != SM_ERR_SUCCESS;
+        DEV_SM_PerfEleDone(abortUpdate);
     }
 
     /* Return status */
@@ -1528,7 +1460,7 @@ int32_t DEV_SM_PerfNameGet(uint32_t domainId, string *perfNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_PERF);
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1549,7 +1481,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1569,22 +1501,7 @@ int32_t DEV_SM_PerfInfoGet(uint32_t domainId, dev_sm_perf_info_t *info)
             levelIdx = s_perfNumLevels[psIdx] - 1U;
         }
 
-        if (domainId == DEV_SM_PERF_DRAM)
-        {
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                info->sustainedFreq = s_perfDescDramLp4x[levelIdx].value;
-            }
-            else
-            {
-                info->sustainedFreq = s_perfDescDramLp5[levelIdx].value;
-            }
-        }
-        else
-        {
-            info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
-        }
-
+        info->sustainedFreq = s_perfCfg[domainId].desc[levelIdx].value;
         info->sustainedPerfLevel = levelIdx;
     }
 
@@ -1635,21 +1552,7 @@ int32_t DEV_SM_PerfDescribe(uint32_t domainId, uint32_t levelIndex,
         }
         else
         {
-            if (domainId == DEV_SM_PERF_DRAM)
-            {
-                if (DEV_SM_PerfDramTypeGet() == 4U)
-                {
-                    *desc = s_perfDescDramLp4x[levelIndex];
-                }
-                else
-                {
-                    *desc = s_perfDescDramLp5[levelIndex];
-                }
-            }
-            else
-            {
-                *desc = s_perfCfg[domainId].desc[levelIndex];
-            }
+            *desc = s_perfCfg[domainId].desc[levelIndex];
         }
     }
 
@@ -1683,8 +1586,20 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
             uint32_t srcMixIdx = s_perfCfg[domainId].srcMixIdx;
             status = DEV_SM_PerfPowerCheck(perfLevel, srcMixIdx);
 
+            /* Default supply perf level to new requested level */
+            uint32_t supplyPerfLevel = perfLevel;
+
             if (status == SM_ERR_SUCCESS)
             {
+                /* Scan for highest perf level of respective power supply */
+                status = DEV_SM_PerfMaxScan(domainId, &supplyPerfLevel);
+            }
+
+            if (status == SM_ERR_SUCCESS)
+            {
+                /* Security-relevant update start */
+                DEV_SM_PerfEleUpdate(domainId, perfLevel, supplyPerfLevel);
+
                 /* If lowering perf level, adjust frequency first */
                 if (perfLevel < s_perfLevelCurrent[domainId])
                 {
@@ -1692,20 +1607,10 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
                 }
             }
 
-            /* Default max perf level to new requested level */
-            uint32_t maxPerfLevel = perfLevel;
-
-            if (status == SM_ERR_SUCCESS)
-            {
-                /* Scan for highest perf level of respective power supply  */
-                status = DEV_SM_PerfMaxScan(domainId, &maxPerfLevel);
-            }
-
             if (status == SM_ERR_SUCCESS)
             {
                 /* Adjust voltage setpoint based on max scanned perf level */
-                status = BRD_SM_SupplyLevelSet(psCfg->psIdx,
-                    psCfg->dvsTable[maxPerfLevel]);
+                status = DEV_SM_PerfSupplyUpdate(psCfg, supplyPerfLevel);
             }
 
             if (status == SM_ERR_SUCCESS)
@@ -1716,6 +1621,10 @@ int32_t DEV_SM_PerfLevelSet(uint32_t domainId, uint32_t perfLevel)
                     status = DEV_SM_PerfFreqUpdate(domainId, perfLevel);
                 }
             }
+
+            /* Security-relevant update done */
+            bool abortUpdate = status != SM_ERR_SUCCESS;
+            DEV_SM_PerfEleDone(abortUpdate);
         }
     }
 
@@ -1736,7 +1645,7 @@ int32_t DEV_SM_PerfLevelGet(uint32_t domainId, uint32_t *perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -1773,13 +1682,15 @@ int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)
         /* Find wake performance level */
         uint32_t perfLevelWake = DEV_SM_PerfSystemSleepScan();
 
+        /* Security-relevant update start */
+        DEV_SM_PerfEleUpdateAll(perfLevelSleep, false);
+
         /* Raise VDD_SOC setpoint if sleep perf level higher than max
          * among sleep domains
          */
         if (perfLevelSleep > perfLevelWake)
         {
-            status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                s_perfDvsTableSoc[perfLevelSleep]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelSleep);
         }
 
         /* Update levels for perf domains in sleep list */
@@ -1826,10 +1737,13 @@ int32_t DEV_SM_PerfSystemSleep(uint32_t perfLevelSleep)
             if (perfLevelSleep < perfLevelWake)
             {
                 /* Lower VDD_SOC setpoint for sleep perf level */
-                status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                    s_perfDvsTableSoc[perfLevelSleep]);
+                status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelSleep);
             }
         }
+
+        /* Security-relevant update done */
+        bool abortUpdate = status != SM_ERR_SUCCESS;
+        DEV_SM_PerfEleDone(abortUpdate);
     }
 
     /* Return status */
@@ -1848,12 +1762,14 @@ int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep)
     /* Find wake performance level */
     uint32_t perfLevelWake = DEV_SM_PerfSystemSleepScan();
 
+    /* Security-relevant update start */
+    DEV_SM_PerfEleUpdateAll(perfLevelWake, false);
+
     /* Raise VDD_SOC setpoint if wake perf level higher than sleep level */
     if (perfLevelWake > perfLevelSleep)
     {
         /* Raise VDD_SOC setpoint for wake perf level */
-        status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-            s_perfDvsTableSoc[perfLevelWake]);
+        status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelWake);
     }
 
     /* Restore SM sleep performance level */
@@ -1888,10 +1804,13 @@ int32_t DEV_SM_PerfSystemWake(uint32_t perfLevelSleep)
         if (perfLevelWake < perfLevelSleep)
         {
             /* Lower VDD_SOC setpoint for wake perf level */
-            status = BRD_SM_SupplyLevelSet(PS_VDD_SOC,
-                s_perfDvsTableSoc[perfLevelWake]);
+            status = DEV_SM_PerfSupplyUpdate(&s_psCfgSoc, perfLevelWake);
         }
     }
+
+    /* Security-relevant update done */
+    bool abortUpdate = status != SM_ERR_SUCCESS;
+    DEV_SM_PerfEleDone(abortUpdate);
 
     /* Return status */
     return status;
@@ -2354,16 +2273,8 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     }
     if (status == SM_ERR_SUCCESS)
     {
-        if (DEV_SM_PerfDramTypeGet() == 4U)
-        {
-            status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
-                &s_perfRootCfgDramLp4x);
-        }
-        else
-        {
-            status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
-                &s_perfRootCfgDramLp5);
-        }
+        status = DEV_SM_PerfRootFreqUpdate(CLOCK_ROOT_DRAMALT,
+            &s_perfRootCfgDram);
     }
 
     uint32_t selIdx = g_clockGprSel[CLOCK_GPR_SEL_DRAM].selIdx;
@@ -2380,16 +2291,8 @@ static int32_t DEV_SM_PerfDramFreqUpdate(uint32_t perfLevel)
     {
         if (perfLevel > DEV_SM_PERF_LVL_PRK)
         {
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
-                    &s_perfPllCfgDramLp4x[perfLevel]);
-            }
-            else
-            {
-                status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
-                    &s_perfPllCfgDramLp5[perfLevel]);
-            }
+            status = DEV_SM_PerfPllFreqUpdate(CLOCK_PLL_DRAM,
+                &s_perfPllCfgDram[perfLevel]);
 
             if (status == SM_ERR_SUCCESS)
             {
@@ -2478,13 +2381,43 @@ static int32_t DEV_SM_PerfA55FreqUpdate(uint32_t perfLevel)
 }
 
 /*--------------------------------------------------------------------------*/
+/* Update power supply supply of performance level                          */
+/*--------------------------------------------------------------------------*/
+static int32_t DEV_SM_PerfSupplyUpdate(dev_sm_perf_ps_cfg_t const *psCfg,
+    uint32_t perfLevel)
+{
+    int32_t status = SM_ERR_SUCCESS;
+
+    if (psCfg == NULL)
+    {
+        status = SM_ERR_INVALID_PARAMETERS;
+    }
+    else
+    {
+        /* Update supply level as needed based on tracked level */
+        if (s_perfPsVoltCurrent[psCfg->psIdx] != psCfg->dvsTable[perfLevel])
+        {
+            /* Adjust voltage setpoint based on max scanned perf level */
+            status = BRD_SM_SupplyLevelSet(psCfg->psIdx,
+                psCfg->dvsTable[perfLevel]);
+
+            /* Track supply level */
+            s_perfPsVoltCurrent[psCfg->psIdx] = psCfg->dvsTable[perfLevel];
+        }
+    }
+
+    /* Return status */
+    return status;
+}
+
+/*--------------------------------------------------------------------------*/
 /* Update frequency of performance level                                    */
 /*--------------------------------------------------------------------------*/
 static int32_t DEV_SM_PerfFreqUpdate(uint32_t domainId, uint32_t perfLevel)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId >= DEV_SM_NUM_PERF)
+    if (DEV_SM_PerfIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -2560,7 +2493,7 @@ static int32_t DEV_SM_PerfCurrentUpdate(uint32_t domainId, uint32_t perfLevel)
             }
             break;
         default:
-            if (domainId >= DEV_SM_NUM_PERF)
+            if (DEV_SM_PerfIsReserved(domainId))
             {
                 status = SM_ERR_NOT_FOUND;
             }
@@ -2588,15 +2521,7 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
     {
         case DEV_SM_PERF_DRAM:
             clockId = DEV_SM_CLK_DRAM_GPR_SEL;
-
-            if (DEV_SM_PerfDramTypeGet() == 4U)
-            {
-                perfDesc = s_perfDescDramLp4x;
-            }
-            else
-            {
-                perfDesc = s_perfDescDramLp5;
-            }
+            perfDesc = s_perfDescDram;
             break;
 
         default:
@@ -2615,6 +2540,9 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             uint32_t psIdx = s_perfCfg[domainId].psCfg->psIdx;
             uint32_t numLevels = s_perfNumLevels[psIdx];
 
+            /* Convert rate to KHz */
+            uint32_t rateKHz =  UINT64_L(rate / 1000ULL);
+
             /* Default to highest level to handle overclocking case */
             if (numLevels > 0U)
             {
@@ -2626,9 +2554,8 @@ static int32_t DEV_SM_PerfCurrentGet(uint32_t domainId, uint32_t *perfLevel)
             bool bSearch = true;
             while (bSearch && (level < numLevels))
             {
-                /* Rate for level stored in value field of PERF description */
-                uint64_t perfRate = ((uint64_t) perfDesc[level].value) * 1000ULL;
-                if (perfRate >= rate)
+                /* Rate in KHz for level stored in value field of PERF description */
+                if (perfDesc[level].value >= rateKHz)
                 {
                     bSearch = false;
                     *perfLevel = level;
@@ -2666,5 +2593,380 @@ static uint32_t DEV_SM_PerfDramTypeGet(void)
     }
 
     return s_perfDramType;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Query SoC package type                                                   */
+/*--------------------------------------------------------------------------*/
+static uint32_t DEV_SM_PerfSocPkgTypeGet(void)
+{
+    static uint32_t s_perfPkgType = 0U;
+
+    /* Check if DRAM type is unknown */
+    if (s_perfPkgType == 0U)
+    {
+        uint32_t partNum = DEV_SM_FuseGet(DEV_SM_FUSE_PART_NUM);
+        s_perfPkgType = DEV_SM_PN_PKG(partNum);
+    }
+
+    return s_perfPkgType;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Update performance table entries based on SoC attributes                 */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfCfgInit(void)
+{
+    /* Query A55 speed grade from fuses */
+    uint32_t speedGrade = DEV_SM_FuseSpeedGet();
+
+    /* Check for 2+GHz device */
+    if (speedGrade >= 2000000000U)
+    {
+        /* 2+GHz devices support PRK, LOW, NOM, ODV, SOD setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM;
+    }
+    /* Check for 1GHz device */
+    else if (speedGrade == 1000000000U)
+    {
+        /* 1GHz devices support PRK, LOW, NOM setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 2U;
+
+        /* 1GHz devices require updated PERF table entries for NOM setpoint */
+        s_perfDescA55[DEV_SM_PERF_LVL_NOM].value = ES_1000000KHZ;
+
+        /*
+         * PLL_VCO = 24MHz * 150 = 3600MHz
+         */
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfi = 150U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+        s_perfPllCfgA55[DEV_SM_PERF_LVL_NOM].odiv = 0U;
+
+        /*
+         * PLL_PFD = 3600MHz / (3 + 3/5) = 1000MHz
+         */
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55C[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfi = 3U;
+        s_perfPfdCfgA55P[DEV_SM_PERF_LVL_NOM].mfn = 3U;
+    }
+    else
+    {
+        /* All other devices support PRK, LOW, NOM, ODV setpoints */
+        s_perfNumLevels[PS_VDD_ARM] = DEV_SM_NUM_PERF_LVL_ARM - 1U;
+    }
+
+    /* Check for LPDDR4X */
+    if (DEV_SM_PerfDramTypeGet() == 4U)
+    {
+        /* Check for 15x15 package */
+        if (DEV_SM_PerfSocPkgTypeGet() == DEV_SM_PN_PKG_VT)
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (175) = 4200MHz
+             * PLL_OUT = PLL_VCO / 12 = 350MHz
+             * 350MHz * 8 = 2800 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 175U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 12U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP4X_15X15;
+            /*
+             * PLL_VCO = 24MHz * (166+2/3) = 4000MHz
+             * PLL_OUT = PLL_VCO / 8 = 500MHz
+             * 500MHz * 8 = 4000 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 166U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 2U / 3U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 8U;
+        }
+        /* Else 19x19 package */
+        else
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (180) = 4320MHz
+             * PLL_OUT = PLL_VCO / 12 = 360MHz
+             * 360MHz * 8 = 2880 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 180U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = 0U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 12U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP4X_19X19;
+            /*
+             * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+             * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+             * 533.25MHz * 8 = 4266 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 5U / 16U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 6U;
+        }
+    }
+    /* Else LPDDR5 */
+    else
+    {
+        /* Check for 15x15 package */
+        if (DEV_SM_PerfSocPkgTypeGet() == DEV_SM_PN_PKG_VT)
+        {
+            s_perfDescDram[DEV_SM_PERF_LVL_LOW].value =
+                ES_LOW_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (155+1/2) = 3732MHz
+             * PLL_OUT = PLL_VCO / 16 = 233.25MHz
+             * 233.25MHz * 8 = 1866 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfi = 155U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].mfn = VCO_MFD / 2U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_LOW].odiv = 16U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_NOM].value =
+                ES_NOM_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (133+1/3) = 3200MHz
+             * PLL_OUT = PLL_VCO / 8 = 400MHz
+             * 400MHz * 8 = 3200 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].mfn = VCO_MFD / 3U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_NOM].odiv = 8U;
+
+            s_perfDescDram[DEV_SM_PERF_LVL_ODV].value =
+                ES_ODV_KHZ_DRAM_LP5_15X15;
+            /*
+             * PLL_VCO = 24MHz * (133+5/16) = 3199.5MHz
+             * PLL_OUT = PLL_VCO / 6 = 533.25MHz
+             * 533.25MHz * 8 = 4266 MTs
+             */
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfi = 133U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].mfn = VCO_MFD * 5U / 16U;
+            s_perfPllCfgDram[DEV_SM_PERF_LVL_ODV].odiv = 6U;
+        }
+
+        /* Else keep default configuration (LP5 19x19) */
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Start ELE notification of all security-relevant domains                  */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleUpdateAll(uint32_t perfLevel, bool initMode)
+{
+    uint32_t flags = 0U;
+    uint32_t mode = 0U;
+    uint32_t eleMhz = 0U;
+    uint32_t m33Mhz = 0U;
+
+    if (perfLevel < DEV_SM_NUM_PERF_LVL_SOC)
+    {
+        /* Notify ELE of CLOCK_ROOT_ELE change */
+        flags |= ELE_DVFS_FLAG_UPDATE_FREQ_ELE;
+        eleMhz =
+            s_perfCfg[DEV_SM_PERF_ELE].desc[perfLevel].value / 1000U;
+
+        /* Notify ELE of CLOCK_ROOT_M33 change */
+        flags |= ELE_DVFS_FLAG_UPDATE_FREQ_M33;
+        m33Mhz =
+            s_perfCfg[DEV_SM_PERF_M33].desc[perfLevel].value / 1000U;
+
+        /* Check if security-relevant supply will be updated */
+        int32_t psVolt = s_perfDvsTableSoc[perfLevel];
+        if (initMode || (s_perfPsVoltCurrent[PS_VDD_SOC] != psVolt))
+        {
+            /* Notify ELE of voltage update */
+            flags |= ELE_DVFS_FLAG_UPDATE_VLT;
+
+            /* Map supply update to ELE DVS mode */
+            if (psVolt >= ES_ODV_UV_VDD_SOC)
+            {
+                mode = ELE_DVFS_MODE_OD;
+            }
+            else if (psVolt >= ES_NOM_UV_VDD_SOC)
+            {
+                mode = ELE_DVFS_MODE_NM;
+            }
+            else
+            {
+                mode = ELE_DVFS_MODE_UD;
+            }
+        }
+
+        /* Notify ELE of any security-relevalant change */
+        ELE_StartDvfsChange(flags, mode, eleMhz, m33Mhz);
+        s_perfEleUpdating = true;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Start ELE notification of a single security-relevant domain              */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleUpdate(uint32_t domainId, uint32_t perfLevel,
+    uint32_t supplyPerfLevel)
+{
+    uint32_t flags = 0U;
+    uint32_t mode = 0U;
+    uint32_t eleMhz = 0U;
+    uint32_t m33Mhz = 0U;
+
+    if (perfLevel < DEV_SM_NUM_PERF_LVL_SOC)
+    {
+        /* Check for security relevant performance domain update */
+        switch (domainId)
+        {
+            case DEV_SM_PERF_ELE:
+                /* Notify ELE of CLOCK_ROOT_ELE change */
+                flags |= ELE_DVFS_FLAG_UPDATE_FREQ_ELE;
+                eleMhz =
+                    s_perfCfg[DEV_SM_PERF_ELE].desc[perfLevel].value / 1000U;
+                break;
+
+            case DEV_SM_PERF_M33:
+                /* Notify ELE of CLOCK_ROOT_M33 change */
+                flags |= ELE_DVFS_FLAG_UPDATE_FREQ_M33;
+                m33Mhz =
+                    s_perfCfg[DEV_SM_PERF_M33].desc[perfLevel].value / 1000U;
+                break;
+
+            default:
+                ; /* Intentional empty default */
+                break;
+        }
+    }
+
+    if ((domainId < DEV_SM_NUM_PERF) &&
+        (supplyPerfLevel < DEV_SM_NUM_PERF_LVL_SOC))
+    {
+        /* Check for security-relevant power supply update */
+        if (s_perfCfg[domainId].psCfg->psIdx == PS_VDD_SOC)
+        {
+            /* Check if security-relevant supply will be updated */
+            int32_t psVolt = s_perfDvsTableSoc[supplyPerfLevel];
+            if (s_perfPsVoltCurrent[PS_VDD_SOC] != psVolt)
+            {
+                /* Notify ELE of voltage update */
+                flags |= ELE_DVFS_FLAG_UPDATE_VLT;
+
+                /* Map supply update to ELE DVS mode */
+                if (psVolt >= ES_ODV_UV_VDD_SOC)
+                {
+                    mode = ELE_DVFS_MODE_OD;
+                }
+                else if (psVolt >= ES_NOM_UV_VDD_SOC)
+                {
+                    mode = ELE_DVFS_MODE_NM;
+                }
+                else
+                {
+                    mode = ELE_DVFS_MODE_UD;
+                }
+            }
+        }
+    }
+
+    /* Notify ELE of any security-relevalant change */
+    if (flags != 0U)
+    {
+        ELE_StartDvfsChange(flags, mode, eleMhz, m33Mhz);
+        s_perfEleUpdating = true;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Notify ELE that security-relevant update is done                         */
+/*--------------------------------------------------------------------------*/
+static void DEV_SM_PerfEleDone(bool abortUpdate)
+{
+    if (s_perfEleUpdating)
+    {
+        /* Send abort if update unsuccessful */
+        if (abortUpdate)
+        {
+            ELE_StartDvfsChange(0U, 0U, 0U, 0U);
+        }
+
+        /* Send stop message */
+        ELE_StopDvfsChange();
+        s_perfEleUpdating = false;
+    }
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PerfIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+    uint32_t modDomainId = 0;
+
+    switch (domainId)
+    {
+        case DEV_SM_PERF_M7:
+            modDomainId = DEV_SM_PD_M7;
+            break;
+
+        case DEV_SM_PERF_GPU:
+            modDomainId = DEV_SM_PD_GPU;
+            break;
+
+        case DEV_SM_PERF_VPU:
+            modDomainId = DEV_SM_PD_VPU;
+            break;
+
+        case DEV_SM_PERF_DISP:
+            modDomainId = DEV_SM_PD_DISPLAY;
+            break;
+
+        default:
+            ; /* Intentional empty default */
+            break;
+    }
+
+    if (domainId >= DEV_SM_NUM_PERF)
+    {
+        rc = true;
+    }
+    else
+    {
+        if (modDomainId > 0U)
+        {
+            /* Check fuse state of power domain */
+            if (DEV_SM_FusePdDisabled(modDomainId))
+            {
+                rc = true;
+            }
+        }
+    }
+
+    /* Return status */
+    return rc;
 }
 

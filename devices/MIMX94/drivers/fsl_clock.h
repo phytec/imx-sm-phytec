@@ -273,6 +273,62 @@
 #define CLOCK_ROUND_RULE_FLOOR              1U
 #define CLOCK_ROUND_RULE_CLOSEST            2U
 
+/* LPCGs */
+#define CLOCK_LPCG_NPU                      1U
+#define CLOCK_LPCG_A55_SSI                  10U
+#define CLOCK_LPCG_A55                      11U
+#define CLOCK_LPCG_GPIO1                    39U
+#define CLOCK_LPCG_LPUART1                  46U
+#define CLOCK_LPCG_LPUART2                  47U
+#define CLOCK_LPCG_CAN1                     57U
+#define CLOCK_LPCG_WDOG3                    145U
+#define CLOCK_LPCG_WDOG4                    146U
+#define CLOCK_LPCG_WDOG7                    166U
+#define CLOCK_LPCG_WDOG8                    167U
+#define CLOCK_LPCG_CAN2                     193U
+#define CLOCK_LPCG_CAN3                     194U
+#define CLOCK_LPCG_CAN4                     195U
+#define CLOCK_LPCG_CAN5                     196U
+#define CLOCK_LPCG_GPIO2                    210U
+#define CLOCK_LPCG_GPIO3                    211U
+#define CLOCK_LPCG_GPIO4                    212U
+#define CLOCK_LPCG_GPIO5                    213U
+#define CLOCK_LPCG_GPIO7                    214U
+#define CLOCK_LPCG_LPUART10                 235U
+#define CLOCK_LPCG_LPUART11                 236U
+#define CLOCK_LPCG_LPUART12                 237U
+#define CLOCK_LPCG_LPUART3                  238U
+#define CLOCK_LPCG_LPUART4                  239U
+#define CLOCK_LPCG_LPUART5                  240U
+#define CLOCK_LPCG_LPUART6                  241U
+#define CLOCK_LPCG_LPUART7                  242U
+#define CLOCK_LPCG_LPUART8                  243U
+#define CLOCK_LPCG_LPUART9                  244U
+#define CLOCK_LPCG_WDOG5                    270U
+#define CLOCK_LPCG_WDOG6                    271U
+#define CLOCK_LPCG_GPIO6                    276U
+
+#define CLOCK_LPCG_NPUMIX_START             0U
+#define CLOCK_LPCG_NPUMIX_END               9U
+#define CLOCK_LPCG_A55MIX_START             10U
+#define CLOCK_LPCG_A55MIX_END               24U
+#define CLOCK_LPCG_M70MIX_START             81U
+#define CLOCK_LPCG_M70MIX_END               90U
+#define CLOCK_LPCG_M71MIX_START             91U
+#define CLOCK_LPCG_M71MIX_END               100U
+#define CLOCK_LPCG_HSIOMIX_START            101U
+#define CLOCK_LPCG_HSIOMIX_END              110U
+#define CLOCK_LPCG_DRAMMIX_START            111U
+#define CLOCK_LPCG_DRAMMIX_END              122U
+#define CLOCK_LPCG_DISPLAYMIX_START         123U
+#define CLOCK_LPCG_DISPLAYMIX_END           136U
+#define CLOCK_LPCG_NOCMIX_START             137U
+#define CLOCK_LPCG_NOCMIX_END               146U
+#define CLOCK_LPCG_NETCMIX_START            147U
+#define CLOCK_LPCG_NETCMIX_END              186U
+#define CLOCK_LPCG_WAKEUPMIX_START          187U
+#define CLOCK_LPCG_WAKEUPMIX_END            319U
+
 #endif
 
 /* Types */
@@ -467,6 +523,18 @@ bool CLOCK_SourceSetSsc(uint32_t sourceIdx, uint32_t spreadPercent,
  */
 bool CLOCK_SourceGetSsc(uint32_t sourceIdx, uint32_t *spreadPercent,
     uint32_t *modFreq, uint32_t *enable);
+
+/*!
+ * Query if LPI associated with the CCM root is active
+ *
+ * @param[in]       rootIdx     CCM clock root ID
+ *
+ * This function queries if the LPI associated with the CCM root is active.
+ *
+ * @return Returns true if the LPI is active, otherwise returns
+ *         false.
+ */
+bool CLOCK_RootLpiIsActive(uint32_t rootIdx);
 
 /** @} */
 

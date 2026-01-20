@@ -56,6 +56,10 @@
 #define PN_DESIG(X)     (((X) >> 4U) & 0xFU)
 #define PN_CORES(X)     (((X) >> 0U) & 0xFU)
 
+#define LTR_REV  "ABCDE"
+#define LTR_DEC  "0123456789"
+#define LTR_SG   "FxxxxxLxNxQxxx"
+
 /* Local types */
 
 /* Local variables */
@@ -72,13 +76,14 @@ static void DEV_SM_StrCpy(char *dst, const char *src, uint32_t maxLen);
 /* Get silicon info                                                         */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
-    uint32_t *partNum, string *siNameAddr)
+    uint32_t *partNum, string *siNameAddr, string *pnNameAddr)
 {
     int32_t status = SM_ERR_SUCCESS;
     static uint32_t s_deviceId = 0U;
     static uint32_t s_siRev = 0U;
     static uint32_t s_partNum = 0U;
     static char s_siName[16];
+    static char s_pnName[16];
     static bool s_updated = false;
 
     if (!s_updated)
@@ -92,6 +97,7 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
 
         /* Copy name */
         DEV_SM_StrCpy(s_siName, "i.MX95 A0", 15U);
+        DEV_SM_StrCpy(s_pnName, "IMX95xxxVxXxxx", 15U);
 
         /* Update minor version */
         tmpMinor = (s_deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)
@@ -100,16 +106,57 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
         /* Check for tmpMinor value doesn't become negative */
         if (tmpMinor >= MINOR_BASE(1U))
         {
+            uint32_t mktSeg = 0U;
+            uint32_t sdpBoot = 0U;
+            uint32_t speedGrade = 0U;
+            const char *pkgLtr = DEV_SM_PN_LTR_PKG;
+            const char *segLtr = DEV_SM_PN_LTR_SEG;
+            const char *coreLtr = DEV_SM_PN_LTR_CORE;
+            const char *tempLtr = DEV_SM_LTR_MKT;
+            const char *sdpLtr = DEV_SM_LTR_SDP;
+            const char *revLtr = LTR_REV;
+            const char *decLtr = LTR_DEC;
+            const char *sgLtr = LTR_SG;
+
+            /* Get data */
+            mktSeg = DEV_SM_FuseGet(DEV_SM_FUSE_MARKET_SEGMENT);
+            sdpBoot = DEV_SM_FuseGet(DEV_SM_FUSE_SDP);
+            speedGrade = DEV_SM_FuseSpeedGet();
+
             tmpMinor -= MINOR_BASE(1U);
             uint32_t fuseMinor = MINOR_BASE(REV_BASE(s_siRev))
                 | MINOR_METAL(REV_METAL(s_siRev));
             tmpMinor = MAX(tmpMinor, fuseMinor);
 
-            /* Update name */
-            uint32_t newVal = TMP_BASE(tmpMinor);
-            s_siName[7] = 'A' + ((uint8_t) newVal);
-            newVal = TMP_METAL(tmpMinor);
-            s_siName[8] = '0' + ((uint8_t) newVal);
+            /* Update SI name */
+            uint32_t newBase = TMP_BASE(tmpMinor);
+            s_siName[7] = STR_LU(revLtr, newBase, LTR_REV);
+            uint32_t newMetal = TMP_METAL(tmpMinor);
+            s_siName[8] = STR_LU(decLtr, newMetal, LTR_DEC);
+
+            /* Update PN name */
+            uint32_t rev = (newBase * 2U) + newMetal;
+            s_pnName[7] = STR_LU(tempLtr, mktSeg, DEV_SM_LTR_MKT);
+            s_pnName[12] = STR_LU(sdpLtr, sdpBoot, DEV_SM_LTR_SDP);
+            s_pnName[13] = STR_LU(revLtr, rev, LTR_REV);
+
+            /* Update PN package/seg/cores */
+            if (s_partNum != 0U)
+            {
+                s_pnName[5] = STR_LU(segLtr, DEV_SM_PN_SEG(s_partNum),
+                    DEV_SM_PN_LTR_SEG);
+                s_pnName[6] = STR_LU(coreLtr, DEV_SM_PN_CORE(s_partNum),
+                    DEV_SM_PN_LTR_CORE);
+                s_pnName[9] = STR_LU(pkgLtr, DEV_SM_PN_PKG(s_partNum),
+                    DEV_SM_PN_LTR_PKG);
+            }
+
+            /* Decode PN speed grade */
+            /* False positive: cant underflow as speedGrade min is 1GHz */
+            /* coverity[cert_int30_c_violation:FALSE] */
+            speedGrade -= ES_SPEED_GRADE_HZ_BASE;
+            speedGrade /= ES_SPEED_GRADE_HZ_STEP;
+            s_pnName[11] = STR_LU(sgLtr, speedGrade, LTR_SG);
 
             /* Mark updated */
             s_updated = true;
@@ -120,6 +167,7 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
             status = SM_ERR_GENERIC_ERROR;
         }
     }
+
     if (status == SM_ERR_SUCCESS)
     {
         /* Return device ID */
@@ -140,10 +188,16 @@ int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
             *partNum = s_partNum;
         }
 
-        /* Return name */
+        /* Return Si name */
         if (siNameAddr != NULL)
         {
             *siNameAddr = s_siName;
+        }
+
+        /* Return PN name */
+        if (pnNameAddr != NULL)
+        {
+            *pnNameAddr = s_pnName;
         }
     }
 
@@ -162,7 +216,7 @@ uint32_t DEV_SM_SiVerGet(void)
     uint32_t siRev = 0U;
     uint32_t tmpMinor = 0U;
 
-    if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL) == SM_ERR_SUCCESS)
+    if (DEV_SM_SiInfoGet(&deviceId, &siRev, NULL, NULL, NULL) == SM_ERR_SUCCESS)
     {
         /* Update minor version */
         tmpMinor = (deviceId & OSC24M_DIGPROG_DEVICE_ID_DIGPROG_MINOR_MASK)

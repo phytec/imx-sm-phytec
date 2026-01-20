@@ -69,7 +69,7 @@ int32_t DEV_SM_ResetDomainNameGet(uint32_t domainId, string *domainNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_RESET);
 
     /* Check reset */
-    if (domainId >= DEV_SM_NUM_RESET)
+    if (DEV_SM_ResetIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -93,7 +93,7 @@ int32_t DEV_SM_ResetDomain(uint32_t domainId, uint32_t resetState,
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId < DEV_SM_NUM_RESET)
+    if (!DEV_SM_ResetIsReserved(domainId))
     {
         if (assertNegate && !toggle)
         {
@@ -120,7 +120,7 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
 {
     int32_t status = SM_ERR_SUCCESS;
 
-    if (domainId < DEV_SM_NUM_RESET)
+    if (!DEV_SM_ResetIsReserved(domainId))
     {
         *assertNegate = s_resetState[domainId];
     }
@@ -131,5 +131,20 @@ int32_t DEV_SM_ResetDomainGet(uint32_t domainId, bool *assertNegate)
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if PD/CPU is disabled in fuses                                     */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_ResetIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+
+    if (domainId >= DEV_SM_NUM_RESET)
+    {
+        rc = true;
+    }
+
+    return rc;
 }
 

@@ -55,7 +55,7 @@ typedef struct
 /* Local variables */
 
 /* Fuse ID map */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
 {
     [DEV_SM_FUSE_ECID3]              = {384U,   32U},
@@ -179,7 +179,9 @@ bool DEV_SM_FusePdDisabled(uint32_t domainId)
         [DEV_SM_PD_A55C0] =   DEV_SM_FUSE_A55_CORE0_DISABLE,
         [DEV_SM_PD_A55C1] =   DEV_SM_FUSE_A55_CORE1_DISABLE,
         [DEV_SM_PD_A55C2] =   DEV_SM_FUSE_A55_CORE2_DISABLE,
-        [DEV_SM_PD_A55C3] =   DEV_SM_FUSE_A55_CORE3_DISABLE
+        [DEV_SM_PD_A55C3] =   DEV_SM_FUSE_A55_CORE3_DISABLE,
+        [DEV_SM_PD_M70]   =   DEV_SM_FUSE_M7_0_DISABLE,
+        [DEV_SM_PD_M71]   =   DEV_SM_FUSE_M7_1_DISABLE
     };
 
     if (domainId >= DEV_SM_NUM_POWER)

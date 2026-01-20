@@ -55,7 +55,7 @@ static uint32_t s_brdExtCtrl[MAX_EXTCTRL_WORDS] = { 0 };
 /*--------------------------------------------------------------------------*/
 /* Set a control value                                                      */
 /*--------------------------------------------------------------------------*/
-// coverity[misra_c_2012_rule_17_2_violation]
+/* coverity[misra_c_2012_rule_17_2_violation] */
 int32_t BRD_SM_ControlSet(uint32_t ctrlId, uint32_t numVal,
     const uint32_t *val)
 {

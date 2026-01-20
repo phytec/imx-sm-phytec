@@ -304,13 +304,6 @@ bool PWR_AnyChildPowered(uint32_t srcMixIdx);
 uint32_t PWR_NumChildPowered(uint32_t srcMixIdx);
 
 /*!
- * Request system power down
- *
- * This function allows caller to request system power down.
- */
-void PWR_SystemPowerDown(void);
-
-/*!
  * Configure SM LP handshake mask
  *
  * @param[in]   srcMixIdx           SRC MIX identifier
@@ -344,13 +337,6 @@ void PWR_LpHandshakeModeGet(pwr_lp_hs_mode *lpHsMode);
  * Acknowledge LP handshake
  */
 void PWR_LpHandshakeAck(void);
-
-#if (defined(FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232) && FSL_FEATURE_LP_HANDSHAKE_SM_HAS_ERRATA_52232)
-/*!
- * Acknowledge LP handshake for Rev A silicon
- */
-void PWR_LpHandshakeAckRevA(void);
-#endif
 
 /*!
  * Configure MIX-level transaction blocking.

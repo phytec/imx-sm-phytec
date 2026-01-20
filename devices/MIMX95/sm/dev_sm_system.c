@@ -41,6 +41,8 @@
 #include "sm.h"
 #include "dev_sm.h"
 #include "lmm.h"
+#include "fsl_bbnsm.h"
+#include "fsl_ele.h"
 #include "fsl_fract_pll.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
@@ -101,8 +103,8 @@ int32_t DEV_SM_SystemInit(void)
     }
 
 #ifdef DEVICE_HAS_ELE
-    /* Enable GPC-to-ELE handshake */
-    GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 1U;
+    /* Configure GPC-to-ELE handshake */
+    GPC_GLOBAL->GPC_ELE_HDSK_CTRL = 0U;
 #endif
 
     /* Default to keep M7 clocks running during sleep modes */
@@ -120,29 +122,25 @@ int32_t DEV_SM_SystemInit(void)
     /* Enable bypass for clock sources */
     DEV_SM_ClockSourceBypass(true, false);
 
-    /* Rev A does not support SMMU TBU/TCU SW control  */
-    if (DEV_SM_SiVerGet() >= DEV_SM_SIVER_B0)
-    {
-        /* Configure SMMU TCU/TBU Q-channel control by SW */
-        CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].AUTHEN |=
-            CCM_LPCG_AUTHEN_ACK_MODE_MASK;
-        CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].DIRECT =
-            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
-            CCM_LPCG_DIRECT_ON_MASK;
-        CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].AUTHEN |=
-            CCM_LPCG_AUTHEN_ACK_MODE_MASK;
-        CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].DIRECT =
-            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
-            CCM_LPCG_DIRECT_ON_MASK;
-        CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].AUTHEN |=
-            CCM_LPCG_AUTHEN_ACK_MODE_MASK;
-        CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].DIRECT =
-            CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
-            CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
-            CCM_LPCG_DIRECT_ON_MASK;
-    }
+    /* Configure SMMU TCU/TBU Q-channel control by SW */
+    CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].AUTHEN |=
+        CCM_LPCG_AUTHEN_ACK_MODE_MASK;
+    CCM_CTRL->LPCG[CLOCK_LPCG_WAKEUPMIX_TBU].DIRECT =
+        CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
+        CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
+        CCM_LPCG_DIRECT_ON_MASK;
+    CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].AUTHEN |=
+        CCM_LPCG_AUTHEN_ACK_MODE_MASK;
+    CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TBU].DIRECT =
+        CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
+        CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
+        CCM_LPCG_DIRECT_ON_MASK;
+    CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].AUTHEN |=
+        CCM_LPCG_AUTHEN_ACK_MODE_MASK;
+    CCM_CTRL->LPCG[CLOCK_LPCG_NOCMIX_TCU].DIRECT =
+        CCM_LPCG_DIRECT_QACCEPT_N_TIMEOUT_MASK |
+        CCM_LPCG_DIRECT_CLKOFF_ACK_TIMEOUT_EN_MASK |
+        CCM_LPCG_DIRECT_ON_MASK;
 
     /* Power down DDRMIX if uninitialized by OEI */
     if (!CLOCK_SourceGetEnable(CLOCK_SRC_DRAMPLL_VCO))
@@ -173,7 +171,7 @@ int32_t DEV_SM_SystemReset(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request warm reset */
@@ -221,11 +219,14 @@ int32_t DEV_SM_SystemShutdown(void)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
+        /* Inform ELE */
+        ELE_StartDvfsChange(ELE_DVFS_FLAG_BBSM, 0U, 0U, 0U);
+
         /* Request shutdown */
-        PWR_SystemPowerDown();
+        BBNSM_SystemPowerOff(BBNSM);
     }
 
     /* Return status */
@@ -241,7 +242,7 @@ void DEV_SM_SystemShutdownRecSet(dev_sm_rst_rec_t shutdownRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Store shutdown record */
@@ -360,7 +361,7 @@ int32_t DEV_SM_SystemRstComp(const dev_sm_rst_rec_t *resetRec)
 
     SM_TEST_MODE_ERR(SM_TEST_MODE_DEV_LVL1, SM_ERR_TEST)
 
-    // coverity[misra_c_2012_rule_14_3_violation]
+    /* coverity[misra_c_2012_rule_14_3_violation] */
     if (status == SM_ERR_SUCCESS)
     {
         /* Request shutdown */
@@ -380,7 +381,7 @@ void DEV_SM_SystemError(int32_t errStatus, uint32_t pc)
      * Intentional: errId is a generic variable to return both signed and
      * unsigned data depending on the reason.
      */
-    // coverity[cert_int31_c_violation]
+    /* coverity[cert_int31_c_violation] */
     dev_sm_rst_rec_t resetRec =
     {
         .reason = DEV_SM_REASON_SM_ERR,
@@ -589,18 +590,22 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
 
             bool ddrInRetention = false;
-            /* Attempt to place DDR into retention */
-            if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
+            /* Limit DDR access path to SM  */
+            if (DEV_SM_RdcDdrBlock(true) == SM_ERR_SUCCESS)
             {
-                /* Set flag to indicate DDR retention is active */
-                ddrInRetention = true;
-
-                /* Power down DDRMIX */
-                if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
-                    == SM_ERR_SUCCESS)
+                /* Attempt to place DDR into retention */
+                if (DEV_SM_MemDdrRetentionEnter() == SM_ERR_SUCCESS)
                 {
-                    g_syslog.sysSleepRecord.mixPwrStat &=
-                        (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    /* Set flag to indicate DDR retention is active */
+                    ddrInRetention = true;
+
+                    /* Power down DDRMIX */
+                    if (DEV_SM_PowerStateSet(DEV_SM_PD_DDR, DEV_SM_POWER_STATE_OFF)
+                        == SM_ERR_SUCCESS)
+                    {
+                        g_syslog.sysSleepRecord.mixPwrStat &=
+                            (~(1UL << PWR_MIX_SLICE_IDX_DDR));
+                    }
                 }
             }
 
@@ -747,6 +752,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
             }
             else
             {
+                /* Notify ELE of suspend entry */
+                ELE_StartDvfsChange(ELE_DVFS_FLAG_SUSPEND, 0U, 0U, 0U);
+
                 /* Move ELE and SM clock roots to OSC_24M to allow SysPLL to be
                  * powered down. OSC_24M may be gated by hardware during final phases
                  * of system SUSPEND entry.
@@ -820,7 +828,7 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
 
             /* Enter WFI to trigger sleep entry */
             __DSB();
-            // coverity[misra_c_2012_rule_1_2_violation]
+            /* coverity[misra_c_2012_rule_1_2_violation] */
             __WFI();
             __ISB();
 
@@ -885,6 +893,9 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     CCM_CTRL->CLOCK_ROOT[rootIdx].CLOCK_ROOT_CONTROL.SET =
                         s_clkRootCtrl[sleepRootIdx] & CCM_CLOCK_ROOT_MUX_MASK;
                 }
+
+                /* Notify ELE of suspend exit */
+                ELE_StopDvfsChange();
             }
 
             /* Enable bypass for clock sources */
@@ -914,11 +925,19 @@ int32_t DEV_SM_SystemSleep(uint32_t sleepMode)
                     savedWakeupMixPerf);
             }
 
-            /* If NOCMIX powered down during SUSPEND, force power up */
-            if ((status == SM_ERR_SUCCESS) && (lpmSettingNoc <= sleepMode))
+            if (status == SM_ERR_SUCCESS)
             {
-                status = DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
-                    DEV_SM_POWER_STATE_ON);
+                /* If NOCMIX powered down during SUSPEND, force power up */
+                if (lpmSettingNoc <= sleepMode)
+                {
+                    status = DEV_SM_PowerStateSet(DEV_SM_PD_NOC,
+                        DEV_SM_POWER_STATE_ON);
+                }
+                else
+                {
+                    /* Reopen DDR access if NOCMIX TRDC is not reloaded */
+                    status = DEV_SM_RdcDdrBlock(false);
+                }
             }
 
             /* Check if DDR retention active */
@@ -1029,7 +1048,7 @@ int32_t DEV_SM_SystemIdle(void)
             {
                 (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
                 __DSB();
-                // coverity[misra_c_2012_rule_1_2_violation]
+                /* coverity[misra_c_2012_rule_1_2_violation] */
                 __WFI();
                 __ISB();
             }
@@ -1040,7 +1059,7 @@ int32_t DEV_SM_SystemIdle(void)
     {
         (void) CPU_SleepModeSet(CPU_IDX_M33P, CPU_SLEEP_MODE_RUN);
         __DSB();
-        // coverity[misra_c_2012_rule_1_2_violation]
+        /* coverity[misra_c_2012_rule_1_2_violation] */
         __WFI();
         __ISB();
     }

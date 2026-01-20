@@ -385,7 +385,8 @@ sub load_file
 				$copyright = $_;
 
 			    # Replace hashs
-			    $copyright =~ s/#/*/g;				
+                $copyright =~ s/^# /## /;
+			    $copyright =~ s/#/*/g;
 			}
 		}
 
@@ -1108,7 +1109,7 @@ sub generate_scmi
             {
                 if ($lmName eq '<invalid>')
                 {
-                    error_line('missing LM, invalid SCMI instance', $dat);
+                    error_line('missing LM name, invalid SCMI instance', $dat);
                 }
 
                 my $line = 'SCMI Instance ' . $scmiInst
@@ -1183,6 +1184,10 @@ sub generate_scmi
             {
                 $parm =~ s/\"//g;
                 $line .= ' (' . $parm . ')';
+            }
+            else
+            {
+                error_line('missing agent name', $dat);
             }
             if ((my $parm = &param($dat, 'did')) ne '!')
             {
@@ -2083,6 +2088,12 @@ sub generate_trdc
     # Loop over the TRDC list
     foreach my $trdc (sort keys %$trdcRef)
     {
+        # Check if no TRDC_CONFIG
+        if (!exists $trdcRef->{$trdc}->{ndid})
+        {
+            next;
+        }
+
 		my @avpTrdc = grep(/^$trdc: /i, @avp);
 		my $line = 'TRDC ' . $trdc . ' Config';
 	    print $out "\n" . &banner($line);
@@ -2712,6 +2723,26 @@ sub get_trdc_config
 	            $t{nmrc} = $parm;
 	        }
 
+			# Extract TRDC kpaen
+	        if ((my $parm = &param($line, 'kpaen')) ne '!')
+	        {
+	            $t{kpaen} = $parm;
+	        }
+	        else
+	        {
+	            $t{kpaen} = '1';
+	        }
+
+			# Extract TRDC sidsz
+	        if ((my $parm = &param($line, 'sidsz')) ne '!')
+	        {
+	            $t{sidsz} = $parm;
+	        }
+	        else
+	        {
+	            $t{sidsz} = '6';
+	        }
+
 	        $hash{$idx} = \%t;
 	    }
 	}
@@ -2740,6 +2771,10 @@ sub get_trdc
         # Handle DOM
         if ($line =~ /^(DOM\d*)\b/)
         {
+            if ((my $parm = &param($line, 'name')) eq '!')
+            {
+                error_line('missing DOM name', $line);
+            }
             if ((my $parm = &param($line, 'did')) ne '!')
             {
                 $did = $parm;
@@ -3219,11 +3254,25 @@ sub get_trdc
         # Handle MDAC
         if ($m =~ /MDAC_([A-Z]+)(\d+)(C*)=(\d+) mdid=(\d+) sa=(\w+) pa=(\w+) sid=(\d+) kpa=(\d+)/)
         {
+            my $idx = $1;
 			my $dfmt;
 			my $data = (1 << 31) | $5;
+			my $kpaen = $trdcRef->{$idx}->{kpaen};
+			my $sidsz = $trdcRef->{$idx}->{sidsz};
+            my $maxSid = (2 ** $sidsz) - 1;
 
-			$data |= ($8 << 22);
-			$data |= ($9 << 28);
+            if ($8 <= $maxSid)
+            {
+			    $data |= ($8 << 22);
+			}
+			else
+			{
+		        error_line('SID too big MDAC_' . $1 . $2, '');
+			}
+            if ($kpaen == 1)
+            {
+				$data |= ($9 << 28);
+			}
 
 			if ($3 eq 'C')
 			{
@@ -3254,7 +3303,7 @@ sub get_trdc
 			next;
 	    }
 
-        # Handle MRC
+        # Handle MRC (with end)
         if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) end=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
         {
             my $w0;
@@ -3278,6 +3327,30 @@ sub get_trdc
             next;
         }
 		
+        # Handle MRC (with size)
+        if ($m =~ /^MRC_([A-Z]+)(\d+)=(\d+) did=(\d+) begin=(\d+) size=(\d+) nrgns=(\d+) perm=(\d+) big=(\d+) nodbg=(\d+) clr=(\d+)/)
+        {
+            my $w0;
+            my $w1;
+            my $end = $5 + $6 - 1;
+
+            if ($9 == 1)
+            {
+			    $w0 = ($5 >> 4) & 0xFFFFFC00;
+			    $w1 = (($end >> 4) & 0xFFFFFC00) | 1;
+            }
+            else
+            {
+			    $w0 = $5 & 0xFFFFC000;
+			    $w1 = ($end & 0xFFFFC000) | 1;
+			}
+
+			my $perm = $8;
+		
+			$m = sprintf("TRDC%s_MRC%d_DOM%d_RGD%d %d, %d = %d, %d, %d",
+				$1, $2, $4, $3, $w0, $w1, $perm, $7, $11);
+            next;
+        }
 	}
 
 	# Collapse MBC

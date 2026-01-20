@@ -64,11 +64,12 @@
  * @param[out]    siRev       Pointer to return silicon revision
  * @param[out]    partNum     Pointer to return part number
  * @param[out]    siNameAddr  Pointer to return silicon name
+ * @param[out]    pnNameAddr  Pointer to return part number name
  *
  * @return Returns the status (::SM_ERR_SUCCESS = success).
  */
 int32_t DEV_SM_SiInfoGet(uint32_t *deviceId, uint32_t *siRev,
-    uint32_t *partNum, string *siNameAddr);
+    uint32_t *partNum, string *siNameAddr, string *pnNameAddr);
 
 /*!
  * Get silicon version.

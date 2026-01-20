@@ -409,7 +409,7 @@ and any larger set as the rate.
 For ::LMM_SS_RST bit[0] of arg[0] = toggle, bit[1] of arg[0] = assertNegate, arg[1] =
 resetState (default COLD). See LMM_ResetDomain().
 
-Fault reactions supported are:
+@anchor FAULT_REACTIONS Fault reactions supported are:
 
 | Reaction                   | Start                            |
 |----------------------------|----------------------------------|
@@ -461,7 +461,7 @@ It is most often stored in an MU SRAM buffer and currently is used to work aroun
 a GIC access problem when resetting the AP platform.
 
 Block Control {#BCTRL_CONFIG}
-----------------
+-------------
 
 - **File:** [config_bctrl.h](@ref configs/mx95evk/config_bctrl.h)
 
@@ -719,7 +719,8 @@ The configtool supports the following commands and key=value pairs in the input 
 | DOX         | name     | Define doxygen group CONFIG_\<VAL\>, use group for all config files |
 |             | desc     | Group description, quoted |
 | BOARD       | \<DEF\>  | Define BOARD_\<DEF\> as \<VAL\> in config_board.h |
-| DOMn        | did      | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc.,  the DID is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
+| DOMn        | name     | Starts a domain (aka DID) section *n*, ends with another DOMn or LMn command, used for resources not part of an LM such as ELE, MTR, DAP, etc., DOM name string, quoted, 15 characters max |
+|             | did      | Domain ID for the DOM, is usually defined in the RM and sometimes must be a fixed value e.g. ELE=0, MTR=1 |
 | LMn         | name     | Starts an LM section *n*, *n* starts at 0 and should increment, LM name string, quoted, 15 characters max |
 |             | rpc      | Linked RPC is SM_RPC_\<VAL\>, e.g. ::SM_RPC_SCMI |
 |             | boot     | Optional, boot order starting with 1, undefined/0 = do not boot |
@@ -808,6 +809,8 @@ Resources support the following key=value pairs.
 |                | nmstr     | Number of masters |
 |                | nmbc      | Number of MBC |
 |                | nmrc      | Number of MRC |
+|                | kpaen     | MDAC supports KPA (defaults to 1) |
+|                | sidsz     | MDAC SID size (defaults to 6) |
 | MDAC_am=r1-r2  | sa        | Security attribute (secure, nonsecure, bypass), range (-r2) optional|
 |                | pa        | Privileged attribute (privileged, user, bypass)|
 |                | mdid      | Override LM/DOM DID, mdid=none will skip MDAC |
@@ -950,77 +953,58 @@ Below is an explanation of each line:
 
 Note no memory was given to the M7 as it always has full access to its TCM.
 
+FCCU Configuration {#FCCU_CONFIG}
+==================
+
+Configuration of the FCCU is not done using the configtool. Instead it requires manual modification
+of a configuration file for the eMcem component. The default file used by the SM is in a SoC-specific
+directory under *components/SAF/devices/\<SOC\>/src*. This file can be copied to a customer config dir
+and then the following added to the config.mak:
+
+    VPATH += \
+	    $(ROOT_DIR)/configs/$(CONFIG)
+
+The eMcem_Cfg.c file contains a declaration of a CVfccuCfg structure with eMcem_CVfccuInstanceCfgType
+type. Explanation of all fields in this structure is beyond the scope of this document, but most of the
+fields just represent initialization values for the FCCU registers. So details can be found in the SoC
+RM.
+
+Fields of interest:
+
+| Name                   | Variable            | FCCU Register(s) | Description                               |
+|------------------------|---------------------|------------------|-------------------------------------------|
+| Faults Enabled         | u32FaultEnabled     | FHFLTENC0_n      | Mask array, one bit per fault             |
+| Reaction Set ID's      | u32FaultReactionSet | FHFLTRKC0_n      | Reaction index, one byte per fault        |
+| Immediate Reaction Set | u32ImmReaction      | FHIMRKC0_nn      | Reaction signals to aseert, one per index |
+| Delayed Reaction Set   | u32DelReaction      | FHDLRKC0_nn      | Reaction signals to aseert, one per index |
+| Alarm Handler Names    | eMcem_AlarmHandler  |                  | Function pointer for each fault           |
+
+
+Configuration is as follows:
+
+- Enable the fault in the u32FaultEnabled initializer. One bit per fault, faultId=0 is bit[0] of word[0].
+- Specify the reaction for the fault in u32FaultReactionSet. One byte per fault representing the index
+  into the reaction set arrays. So a 0 in the byte for a fault means use immediate reaction[0] and delayed
+  reaction[0]. Byte[0] of word[0] is for faultId=0.
+- There are a specific number of possible reactions (e.g. 8 for i.MX95). Each fault can index into one of
+  these. The immediate reaction occurs when the fault is detected and the delayed reaction occurs if the
+  immediate is not handled and acknowledged in the timeout period (~300ms on i.MX95). The reaction is a bit
+  mask of signals to drive. Bits [1:0] drive EOUT[1:0]. The next group drive the FCCU interrupts (three on
+  i.MX95). Then the last drives the reset into the reset controller (e.g. SRC). See the RM for the exact
+  mapping.
+- If a reaction is to generate FCCU interrupt 0, the SM binds that to the eMcem component which will read
+  the FCCU to determine which fault is pending. It will then call a handler pointed to by the alarm handler
+  array, one vector per faultId. By default, these all call the common eMcemCVfccuAlarmHandler() function.
+  This handler calls the LMM to perform the action specified in the cfg file. A different function might be
+  required if the fault needs to be cleared at the source.
+
+See @ref FAULT_EXAMPLE for a detailed explanation of the fault handling flow.
+
 Configuration Debug {#CONFIG_DEBUG}
 ===================
 
-This section provides suggestions for debugging configuration issues. Most configuration has to do
-with access controls, either API access or TRDC access.
+Most configuration has to do with access controls, either API access or TRDC access. These can lead
+to agent bus errors and error response to SCMI function calls. Information on debugging these issues
+can be found in the @ref DEBUG_CONFIG section.
 
-API Access Issues
------------------
-
-For API access the key to a identifying a configuration issue is to always check error responses.
-The only response related to configuration is ::SCMI_ERR_DENIED. This indicates the configuration
-does not allow the desired operation on the associated resource. The required access level for
-functions can be found in the @ref SCMI_PROTO section.
-
-The SM logs any error response to an API call. It records one error per agent and will not overwrite
-this log until cleared. The [debug monitor](@ref MONITOR) "err" command will display and clear this log.
-If it does not list any API errors then the SM did not return one to an agent.
-
-If an API access issue, then check the configuration of the associated [config_scmi.h](@ref SCMI_CONFIG)
-file. This should list the configured permission level for the resource for the agent. If not, revisit the
-configuration given to the [configtool](@ref CONFIGTOOL). When run directly, the tool can generate a log
-file that can be used to identify cfg file issues.
-
-Hardware Access Issues
-----------------------
-
-Access issues related to an RDC (e.g. TRDC) are usually discovered due to getting a bus fault accessing
-a peripheral or memory.
-
-The fist step is to identify if the issue is due to an RDC violation. Similar to the API logging above,
-the TRDC hardware will log the first occurrence of a returned bus error for each DID for each TRDC
-component. The same debug monitor "err" command mentioned above will also list and clear these for any
-component powered up. If not listed, then the TRDC was not the cause of the error. Other causes include
-not having the component powered up via the [power protocol](@ref scmi_proto_power), lack of clocks,
-incorrect address, incorrect MPU/MMU/SMMU configuration, caching, etc.
-
-If the "err" command does show a TRDC access violation, confirm the address is correct. Also confirm the
-access type (read/write/execute, secure/non-secure, privileged/user) is correct. Confirm the DID (aka
-DOM) is correct. If not then the issue could be a disconnect between the access request and the TRDC config.
-
-The TRDC can be dumped using the debug monitor "trdc" command. The first parameter is the TRDC. The list of
-TRDCs can be found in the dev_sm_rdc.c file for the SoC. The optional second parameter is the DID (aka DOM)
-and can be used to limit the output scope. For example:
-
-    trdc aon 3
-
-Will dump the TRDC_A config for DID 3. Compare this configuration using the SoC RM to the desired config and the
-error presented with the "err" command. If this is incorrect, then check the [config_trdc.h](@ref TRDC_CONFIG)
-for correctness. If wrong then debug the cfg file using the configtool log.
-
-If an access causes a client to fault, a message may be output on the SM debug UART. See @ref PORT_NXP_PRINT.
-
-Understanding SM monitor "err" output
--------------------------------------
-
-As mentioned above, the debug monitor "err" command will list all the API and Hardware access issues reported
-so far, and clear the error log. Only the first error for each agent is logged, until cleared. See below examples
-of the "err" command output, and how to interpret them:
-
-* API access issues: *SCMI err (chn=0): protocolId=0x81, messageId=0xA, status=-3*
-    - chn=0 identifies the SMT channel used. Channels numbers are assigned in their declaration order in the
-      configuration file. chn=0 is the first channel declared. In the `mx95evk.cfg` file, this is the A2P
-      channel in the SCMI_AGENT0: the communication channel from M7 to system manager.
-    - protocolId, messageId and status identify which SCMI access generated the error. As mentioned above,
-      status will always be -3 (ERR_DENIED). The protocol and message IDs are listed in the include files
-      in the `components/scmi` directory in the SM source tree.
-    - The example above will occur when the M7 agent tries and call the BBM_RTC_NOTIFY SCMI RPC.
-* Hardware access issues: *DOM3 ns prv write to 0x2002F914, MBC_A1=1.2, MBC1_DOM3_MEM1_BLK_CFG_W0[2]*
-    - DOM3 identifies the domain ID of the LM or processor performing the incorrect access.
-      For the `mx95evk.cfg` file, this corresponds to did=3, that is the LM2 (A55 processor).
-    - The next part describes the access: here a non-secure privileged write to address 0x2002F914.
-    - The last part shows the corresponding TRDC registers (sometimes this is decoded incorrectly).
-    - The example above will occur when the A55 tries to do a non-secure write to address 0x2002F914.
 

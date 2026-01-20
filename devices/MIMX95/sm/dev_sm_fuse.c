@@ -55,7 +55,7 @@ typedef struct
 /* Local variables */
 
 /* Fuse ID map */
-// coverity[misra_c_2012_rule_8_9_violation]
+/* coverity[misra_c_2012_rule_8_9_violation] */
 static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
 {
     [DEV_SM_FUSE_ECID3]              = {384U,   32U},
@@ -81,6 +81,7 @@ static dev_sm_fuse_map_t s_fuseMap[DEV_SM_NUM_FUSE] =
     [DEV_SM_FUSE_PCIE2_DISABLE]      = {615U,   1U},
     [DEV_SM_FUSE_GPU3D_DISABLE]      = {625U,   1U},
     [DEV_SM_FUSE_VPU_DISABLE]        = {626U,   1U},
+    [DEV_SM_FUSE_SDP]                = {1120,   2U},
     [DEV_SM_FUSE_TSENSOR0_TRIM1]     = {1216U,  32U},
     [DEV_SM_FUSE_TSENSOR0_TRIM2]     = {1248U,  32U},
     [DEV_SM_FUSE_TSENSOR1_TRIM1]     = {1280U,  32U},

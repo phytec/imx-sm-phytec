@@ -68,13 +68,20 @@ void TEST_LmmPerf(void)
     /* Check Level Get and Set for all domains */
     for (uint32_t domainId = 0U; domainId < SM_NUM_PERF; domainId++)
     {
-        /* Get the Level */
-        printf("LMM_PerfLevelGet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_PerfLevelGet(lmId, domainId, &perfLevel));
+        if (!DEV_SM_PerfIsReserved(domainId))
+        {
+            /* Get the Level */
+            printf("LMM_PerfLevelGet(%u, %u)\n", lmId, domainId);
+            CHECK(LMM_PerfLevelGet(lmId, domainId, &perfLevel));
 
-        /* Set the Level */
-        printf("LMM_PerfLevelSet(%u, %u)\n", lmId, domainId);
-        CHECK(LMM_PerfLevelSet(lmId, domainId, perfLevel, false));
+            /* Set the Level */
+            printf("LMM_PerfLevelSet(%u, %u)\n", lmId, domainId);
+            CHECK(LMM_PerfLevelSet(lmId, domainId, perfLevel, false));
+        }
+        else
+        {
+            printf(".. Domain %d fused off \n", domainId);
+        }
     }
 
     /* Test API bounds */

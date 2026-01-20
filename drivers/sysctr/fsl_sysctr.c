@@ -107,12 +107,12 @@ void SYSCTR_TimeDelay(uint32_t usec)
 
     startTicks = SYSCTR_GetCounter64();
     delayTicks = SYSCTR_USEC_TO_TICKS64(usec);
-    
+
     /*
      * False Positive: cannot underflow as values of read from an
      * increasing timer. Start must be less or equal to current counter.
      */
-    // coverity[cert_int30_c_violation:FALSE]
+    /* coverity[cert_int30_c_violation:FALSE] */
     while ((SYSCTR_GetCounter64() - startTicks) < delayTicks)
     {
     }

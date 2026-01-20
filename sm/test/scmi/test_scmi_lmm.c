@@ -350,6 +350,10 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
     {
         uint32_t flags;
 
+        /* LMM Wake */
+        printf("SCMI_LMMWake(%u %u)\n", channel, lm);
+        CHECK(SCMI_LmmWake(channel, lm));
+
         /* Cause Event to Occur */
         flags = SCMI_LMM_FLAGS_GRACEFUL(0U);
         printf("SCMI_LmmBoot(%u, %u)\n", channel, lm);
@@ -375,7 +379,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
 
             printf("SCMI_LmmEvent(%u, %u)\n", channel, lm);
             /* Intentional: Test code */
-            // coverity[cert_int30_c_violation]
+            /* coverity[cert_int30_c_violation] */
             CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, &flags));
 
             BCHECK(SCMI_LMM_EVENT_SHUTDOWN(flags) == 1U);
@@ -400,7 +404,7 @@ static void TEST_ScmiLmmSet(bool pass, uint32_t channel, uint32_t lm,
             /*
              * Intentional: Test code
              */
-            // coverity[cert_int30_c_violation]
+            /* coverity[cert_int30_c_violation] */
             CHECK(SCMI_LmmEvent(channel + 1U, &recId, &eventLm, &flags));
 
             BCHECK(SCMI_LMM_EVENT_BOOT(flags) == 1U);
@@ -469,6 +473,7 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
         /* LmmShutdown */
         {
             uint32_t bootFlags = 0U, shutdownFlags = 0U, extInfo = 0U;
+
             printf("SCMI_LmmResetReason(%u, %u)\n", channel, lm);
             CHECK(SCMI_LmmResetReason(channel, lmId, &bootFlags,
                 &shutdownFlags, &extInfo));
@@ -503,11 +508,13 @@ static void TEST_ScmiLmmPriv(bool pass, uint32_t channel, uint32_t lm,
 #ifdef SIMU
         /* LM_00020 Reset Config */
         uint32_t sysManager = 0U;
+
         printf("LMM_SystemLmShutdown(%u, %u)\n", sysManager, lmId);
         CHECK(LMM_SystemLmShutdown(sysManager, 0U, lmId, false,
             &g_swReason));
 #endif
     }
+
     /* Access denied */
     else
     {

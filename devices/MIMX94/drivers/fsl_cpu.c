@@ -29,13 +29,12 @@
 
 /* Includes */
 
-#include "fsl_def.h"
 #include "fsl_ccm.h"
+#include "fsl_clock.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 
@@ -243,152 +242,182 @@ static cpu_per_lpi_info_t const s_cpuPerLpiInfo[CPU_NUM_PER_LPI_IDX] =
 {
     [CPU_PER_LPI_IDX_GPIO1] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO1,
+        .lpcgIdx = CLOCK_LPCG_GPIO1,
+        .rootIdx = CLOCK_ROOT_M33,
     },
 
     [CPU_PER_LPI_IDX_GPIO2] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO2,
+        .lpcgIdx = CLOCK_LPCG_GPIO2,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_GPIO3] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO3,
+        .lpcgIdx = CLOCK_LPCG_GPIO3,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_GPIO4] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO4,
+        .lpcgIdx = CLOCK_LPCG_GPIO4,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_GPIO5] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO5,
+        .lpcgIdx = CLOCK_LPCG_GPIO5,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_GPIO6] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO6,
+        .lpcgIdx = CLOCK_LPCG_GPIO6,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_GPIO7] =
     {
-        .lpcgIdx = CCM_LPCG_GPIO7,
+        .lpcgIdx = CLOCK_LPCG_GPIO7,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_CAN1] =
     {
-        .lpcgIdx = CCM_LPCG_CAN1,
+        .lpcgIdx = CLOCK_LPCG_CAN1,
+        .rootIdx = CLOCK_ROOT_CAN1,
     },
 
     [CPU_PER_LPI_IDX_CAN2] =
     {
-        .lpcgIdx = CCM_LPCG_CAN2,
+        .lpcgIdx = CLOCK_LPCG_CAN2,
+        .rootIdx = CLOCK_ROOT_CAN2,
     },
 
     [CPU_PER_LPI_IDX_CAN3] =
     {
-        .lpcgIdx = CCM_LPCG_CAN3,
+        .lpcgIdx = CLOCK_LPCG_CAN3,
+        .rootIdx = CLOCK_ROOT_CAN3,
     },
 
     [CPU_PER_LPI_IDX_CAN4] =
     {
-        .lpcgIdx = CCM_LPCG_CAN4,
+        .lpcgIdx = CLOCK_LPCG_CAN4,
+        .rootIdx = CLOCK_ROOT_CAN4,
     },
 
     [CPU_PER_LPI_IDX_CAN5] =
     {
-        .lpcgIdx = CCM_LPCG_CAN5,
+        .lpcgIdx = CLOCK_LPCG_CAN5,
+        .rootIdx = CLOCK_ROOT_CAN5,
     },
 
     [CPU_PER_LPI_IDX_LPUART1] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART1,
+        .lpcgIdx = CLOCK_LPCG_LPUART1,
+        .rootIdx = CLOCK_ROOT_LPUART1,
     },
 
     [CPU_PER_LPI_IDX_LPUART2] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART2,
+        .lpcgIdx = CLOCK_LPCG_LPUART2,
+        .rootIdx = CLOCK_ROOT_LPUART2,
     },
 
     [CPU_PER_LPI_IDX_LPUART3] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART3,
+        .lpcgIdx = CLOCK_LPCG_LPUART3,
+        .rootIdx = CLOCK_ROOT_LPUART3,
     },
 
     [CPU_PER_LPI_IDX_LPUART4] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART4,
+        .lpcgIdx = CLOCK_LPCG_LPUART4,
+        .rootIdx = CLOCK_ROOT_LPUART4,
     },
 
     [CPU_PER_LPI_IDX_LPUART5] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART5,
+        .lpcgIdx = CLOCK_LPCG_LPUART5,
+        .rootIdx = CLOCK_ROOT_LPUART5,
     },
 
     [CPU_PER_LPI_IDX_LPUART6] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART6,
+        .lpcgIdx = CLOCK_LPCG_LPUART6,
+        .rootIdx = CLOCK_ROOT_LPUART6,
     },
 
     [CPU_PER_LPI_IDX_LPUART7] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART7,
+        .lpcgIdx = CLOCK_LPCG_LPUART7,
+        .rootIdx = CLOCK_ROOT_LPUART7,
     },
 
     [CPU_PER_LPI_IDX_LPUART8] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART8,
+        .lpcgIdx = CLOCK_LPCG_LPUART8,
+        .rootIdx = CLOCK_ROOT_LPUART8,
     },
 
     [CPU_PER_LPI_IDX_LPUART9] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART9,
+        .lpcgIdx = CLOCK_LPCG_LPUART9,
+        .rootIdx = CLOCK_ROOT_LPUART9,
     },
 
     [CPU_PER_LPI_IDX_LPUART10] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART10,
+        .lpcgIdx = CLOCK_LPCG_LPUART10,
+        .rootIdx = CLOCK_ROOT_LPUART10,
     },
 
     [CPU_PER_LPI_IDX_LPUART11] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART11,
+        .lpcgIdx = CLOCK_LPCG_LPUART11,
+        .rootIdx = CLOCK_ROOT_LPUART11,
     },
 
     [CPU_PER_LPI_IDX_LPUART12] =
     {
-        .lpcgIdx = CCM_LPCG_LPUART12,
+        .lpcgIdx = CLOCK_LPCG_LPUART12,
+        .rootIdx = CLOCK_ROOT_LPUART12,
     },
 
     [CPU_PER_LPI_IDX_WDOG3] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG3,
+        .lpcgIdx = CLOCK_LPCG_WDOG3,
+        .rootIdx = CLOCK_ROOT_NOCAPB,
     },
 
     [CPU_PER_LPI_IDX_WDOG4] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG4,
+        .lpcgIdx = CLOCK_LPCG_WDOG4,
+        .rootIdx = CLOCK_ROOT_NOCAPB,
     },
 
     [CPU_PER_LPI_IDX_WDOG5] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG5,
+        .lpcgIdx = CLOCK_LPCG_WDOG5,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_WDOG6] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG6,
+        .lpcgIdx = CLOCK_LPCG_WDOG6,
+        .rootIdx = CLOCK_ROOT_BUSWAKEUP,
     },
 
     [CPU_PER_LPI_IDX_WDOG7] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG7,
+        .lpcgIdx = CLOCK_LPCG_WDOG7,
+        .rootIdx = CLOCK_ROOT_BUSNETCMIX,
     },
 
     [CPU_PER_LPI_IDX_WDOG8] =
     {
-        .lpcgIdx = CCM_LPCG_WDOG8,
+        .lpcgIdx = CLOCK_LPCG_WDOG8,
+        .rootIdx = CLOCK_ROOT_BUSNETCMIX,
     }
 };
 
@@ -2116,7 +2145,7 @@ static bool CPU_PerLpiConfigInit(uint32_t cpuIdx)
             uint32_t lpcgIdx = s_cpuPerLpiInfo[perLpiIdx].lpcgIdx;
 
             /* Default LPCG access list to SM only */
-            // coverity[misra_c_2012_rule_14_3_violation]
+            /* coverity[misra_c_2012_rule_14_3_violation] */
             uint32_t accessList = WHITELIST_MASK(CPU_IDX_M33P);
             rc = CCM_LpcgAccessSet(lpcgIdx, accessList);
 
@@ -2161,7 +2190,7 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
                 accessList &= (~(WHITELIST_MASK(cpuIdx)));
 
                 /* Check if only SM remains in the access list */
-                // coverity[misra_c_2012_rule_14_3_violation]
+                /* coverity[misra_c_2012_rule_14_3_violation] */
                 if (accessList == WHITELIST_MASK(CPU_IDX_M33P))
                 {
                     /* Move LPCG to software control (LPM_MODE = 0) */
@@ -2184,6 +2213,22 @@ static bool CPU_PerLpiConfigDeInit(uint32_t cpuIdx)
 
             perLpiIdx++;
         } while (rc && (perLpiIdx < CPU_NUM_PER_LPI_IDX));
+    }
+
+    return rc;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Query if CCM root of LPI is active                                       */
+/*--------------------------------------------------------------------------*/
+bool CPU_PerLpiRootEnabled(uint32_t perLpiIdx)
+{
+    bool rc = false;
+
+    if (perLpiIdx < CPU_NUM_PER_LPI_IDX)
+    {
+        /* Return status of CCM root corresponding to the LPI */
+        rc = CCM_RootGetEnable(s_cpuPerLpiInfo[perLpiIdx].rootIdx);
     }
 
     return rc;

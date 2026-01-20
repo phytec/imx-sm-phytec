@@ -29,13 +29,11 @@
 
 /* Includes */
 
-#include "fsl_def.h"
 #include "fsl_ccm.h"
 #include "fsl_cpu.h"
 #include "fsl_power.h"
 #include "fsl_reset.h"
 #include "fsl_src.h"
-#include "fsl_device_registers.h"
 
 /* Local Defines */
 
@@ -1486,8 +1484,9 @@ bool CPU_IsActive(uint32_t cpuIdx)
 
     if (cpuIdx < CPU_NUM_IDX)
     {
-        /* Check if sleep is forced for the CPU */
         bool sleepForce;
+
+        /* Check if sleep is forced for the CPU */
         if (CPU_SleepForceGet(cpuIdx, &sleepForce))
         {
             /* If sleep is not forced, consider the CPU mode */
@@ -2332,7 +2331,6 @@ bool CPU_ResetVectorGet(uint32_t cpuIdx, uint64_t *vector)
                 /* Get 32-bit vector */
                 *vector = ((uint64_t) *vectorRegLow) << vectorShift;
             }
-
         }
     }
 

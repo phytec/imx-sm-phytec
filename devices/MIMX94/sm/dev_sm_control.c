@@ -111,6 +111,86 @@ static const dev_sm_ctrl_t s_control[DEV_SM_NUM_CTRL] =
     {
         .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x254U,
         .words = 4U,
+    },
+    [DEV_SM_CTRL_ADC_TRIGGER] =
+    {
+        .addr = BLK_CTRL_NS_AONMIX_BASE + 0xB4U,
+        .mask = 0x0000000FU,
+    },
+    [DEV_SM_CTRL_HPF1_SYNC_SRC_CFG1] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x210U,
+        .mask = 0x1FFFFFFFU,
+    },
+    [DEV_SM_CTRL_HPF1_SYNC_SRC_CFG2] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x214U,
+        .mask = 0x000001FFU,
+    },
+    [DEV_SM_CTRL_HPF2_SYNC_SRC_CFG1] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x218U,
+        .mask = 0x1FFFFFFFU,
+    },
+    [DEV_SM_CTRL_HPF2_SYNC_SRC_CFG2] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x21CU,
+        .mask = 0x000001FFU,
+    },
+    [DEV_SM_CTRL_HPF1_INTR_CTRL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x220U,
+        .mask = 0x000001FFU,
+    },
+    [DEV_SM_CTRL_HPF2_INTR_CTRL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x224U,
+        .mask = 0x000001FFU,
+    },
+    [DEV_SM_CTRL_ENDAT3_STATUS] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x22CU,
+        .mask = 0x000000FFU,
+    },
+    [DEV_SM_CTRL_ENC_DIAG_MUX_SEL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x244U,
+        .mask = 0x00000033U,
+    },
+    [DEV_SM_CTRL_HPF_SYNC_OUT_CTL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x2A8U,
+        .mask = 0x00000003U,
+    },
+    [DEV_SM_CTRL_ENDAT_STRETCH_CTRL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x2ECU,
+        .mask = 0x001FFFFFU,
+    },
+    [DEV_SM_CTRL_BISS1_PULSE_STR_CTL] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x308U,
+        .mask = 0x0000007FU,
+    },
+    [DEV_SM_CTRL_XBAR_TRIG_SYNC_2] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x258U,
+        .mask = 0x0000FFFFU,
+    },
+    [DEV_SM_CTRL_XBAR_TRIG_SYNC_3] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x25CU,
+        .mask = 0xFFFFFFFFU,
+    },
+    [DEV_SM_CTRL_XBAR_TRIG_SYNC_4] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x260U,
+        .mask = 0xFFFFFFFFU,
+    },
+    [DEV_SM_CTRL_XBAR_DIR_CTRL_2] =
+    {
+        .addr = BLK_CTRL_WAKEUPMIX_BASE + 0x274U,
+        .mask = 0x1FFFFU,
     }
 };
 
@@ -239,7 +319,7 @@ int32_t DEV_SM_ControlExtGet(uint32_t ctrlId, uint32_t addr,
 /* Do a control action                                                      */
 /*--------------------------------------------------------------------------*/
 int32_t DEV_SM_ControlAction(uint32_t ctrlId, uint32_t action,
-    // coverity[misra_c_2012_rule_8_13_violation]
+    /* coverity[misra_c_2012_rule_8_13_violation] */
     uint32_t numArg, const uint32_t *arg, uint32_t *numRtn, uint32_t *rtn)
 {
     int32_t status = SM_ERR_SUCCESS;

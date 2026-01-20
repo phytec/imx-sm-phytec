@@ -112,7 +112,7 @@ int32_t DEV_SM_PowerDomainNameGet(uint32_t domainId, string *domainNameAddr,
     DEV_SM_MaxStringGet(len, &s_maxLen, s_name, DEV_SM_NUM_POWER);
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -165,9 +165,8 @@ int32_t DEV_SM_PowerStateNameGet(uint32_t powerState, string *stateNameAddr,
 int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
 {
     int32_t status = SM_ERR_SUCCESS;
-    bool pdDisabled = DEV_SM_FusePdDisabled(domainId);
 
-    if (pdDisabled || (domainId >= DEV_SM_NUM_POWER))
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -178,25 +177,16 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_ON:
                 if (PWR_IsParentPowered(domainId))
                 {
-                    /* Skip MIX-level transaction blocking on Rev A  */
-                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+                    /* Disable MIX-level transaction blocking */
+                    PWR_MixSsiBlockingSet(domainId, false);
+                    if (SRC_MixSoftPowerUp(domainId))
                     {
-                        if (SRC_MixSoftPowerUp(domainId))
-                        {
-                            status = DEV_SM_PowerUpPost(domainId);
-                        }
-                    }
-                    else
-                    {
-                        PWR_MixSsiBlockingSet(domainId, false);
-                        if (SRC_MixSoftPowerUp(domainId))
-                        {
-                            status = DEV_SM_PowerUpPost(domainId);
+                        status = DEV_SM_PowerUpPost(domainId);
 
-                            if (status == SM_ERR_SUCCESS)
-                            {
-                                PWR_MixSsiBlockingUpdate(domainId);
-                            }
+                        if (status == SM_ERR_SUCCESS)
+                        {
+                            /* Restore MIX-level transaction blocking */
+                            PWR_MixSsiBlockingUpdate(domainId);
                         }
                     }
                 }
@@ -208,21 +198,11 @@ int32_t DEV_SM_PowerStateSet(uint32_t domainId, uint8_t powerState)
             case DEV_SM_POWER_STATE_OFF:
                 if (!PWR_AnyChildPowered(domainId))
                 {
-                    /* Skip MIX-level transaction blocking on Rev A  */
-                    if (DEV_SM_SiVerGet() < DEV_SM_SIVER_B0)
+                    /* Disable MIX-level transaction blocking */
+                    PWR_MixSsiBlockingSet(domainId, false);
+                    if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
                     {
-                        if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
-                        {
-                            SRC_MixSoftPowerDown(domainId);
-                        }
-                    }
-                    else
-                    {
-                        PWR_MixSsiBlockingSet(domainId, false);
-                        if (DEV_SM_PowerDownPre(domainId) == SM_ERR_SUCCESS)
-                        {
-                            SRC_MixSoftPowerDown(domainId);
-                        }
+                        SRC_MixSoftPowerDown(domainId);
                     }
                 }
                 else
@@ -249,7 +229,7 @@ int32_t DEV_SM_PowerStateGet(uint32_t domainId, uint8_t *powerState)
     *powerState = DEV_SM_POWER_STATE_OFF;
 
     /* Check domain */
-    if (domainId >= DEV_SM_NUM_POWER)
+    if (DEV_SM_PdIsReserved(domainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -274,7 +254,7 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
     uint32_t modDomainId = domainId;
 
     /* Check fuse state of power domain */
-    if (DEV_SM_FusePdDisabled(modDomainId))
+    if (DEV_SM_PdIsReserved(modDomainId))
     {
         status = SM_ERR_NOT_FOUND;
     }
@@ -301,14 +281,33 @@ int32_t DEV_SM_PowerRetModeSet(uint32_t domainId, uint32_t memRetMask)
 int32_t DEV_SM_PowerRetMaskGet(uint32_t domainId, uint32_t *retMask)
 {
     int32_t status = SM_ERR_SUCCESS;
+    bool pdDisabled = DEV_SM_PdIsReserved(domainId);
+    bool rc = SRC_MemMaskGet(domainId, retMask);
 
     /* Check domain */
-    if (!(SRC_MemMaskGet(domainId, retMask)))
+    if ((!rc) || pdDisabled)
     {
         status = SM_ERR_NOT_FOUND;
     }
 
     /* Return status */
     return status;
+}
+
+/*--------------------------------------------------------------------------*/
+/* Check if power domain is disabled in fuses                               */
+/*--------------------------------------------------------------------------*/
+bool DEV_SM_PdIsReserved(uint32_t domainId)
+{
+    bool rc = false;
+
+    /* Check fuse state of power domain */
+    if (DEV_SM_FusePdDisabled(domainId))
+    {
+        rc = true;
+    }
+
+    /* Return status */
+    return rc;
 }
 
